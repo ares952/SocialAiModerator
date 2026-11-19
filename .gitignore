@@ -1,27 +1,23 @@
-# CakePHP 3
+# Per-server files (see AGENTS.md "Directory Layout" and deploy/README.md)
+/.env
+/docker-compose.override.yaml
+/config/local.neon
+/local/
 
-/vendor/*
-/config/app.php
+# Local working data (specification, notes, labeled samples)
+/data/
 
-/tmp/cache/models/*
-!/tmp/cache/models/empty
-/tmp/cache/persistent/*
-!/tmp/cache/persistent/empty
-/tmp/cache/views/*
-!/tmp/cache/views/empty
-/tmp/sessions/*
-!/tmp/sessions/empty
-/tmp/tests/*
-!/tmp/tests/empty
+# Composer
+/vendor/
 
-/logs/*
-!/logs/empty
+# Nette runtime
+/log/*
+!/log/.gitignore
+/temp/*
+!/temp/.gitignore
 
-# CakePHP 2
-
-/app/tmp/*
-/app/Config/core.php
-/app/Config/database.php
-/vendors/*
-
-/data/*
+# Tooling
+/.phpunit.cache/
+/tests/**/output/
+/.idea/
+/.vscode/
