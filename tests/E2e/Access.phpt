@@ -23,6 +23,10 @@ test('health and the sign-in page are public, everything else redirects to sign-
 	Assert::same(200, $signIn->status);
 	Assert::contains('name="_token_"', $signIn->body);
 	Assert::contains('/assets/vendor/bootstrap-5.3.9/css/bootstrap.min.css', $signIn->body);
+	Assert::contains('<link rel="icon" href="/favicon.ico" sizes="any">', $signIn->body);
+	foreach (['/favicon.ico', '/assets/admin/icon-192.png', '/assets/admin/apple-touch-icon.png'] as $icon) {
+		Assert::same(200, $anonymous->get($icon)->status, $icon);
+	}
 
 	foreach (['/', '/admin/events', '/admin/policy', '/admin/operators', '/en/admin/audit'] as $path) {
 		$response = $anonymous->get($path);
