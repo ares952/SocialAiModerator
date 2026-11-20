@@ -2923,5 +2923,14 @@
    "2": "Úprava účtu",
    "5": "Úprava účtu"
   }
+ },
+ {
+  "key": "decision.reason.message_not_hideable",
+  "lang": "cs",
+  "translations": {
+   "1": "soukromou zprávu nelze skrýt",
+   "2": "soukromou zprávu nelze skrýt",
+   "5": "soukromou zprávu nelze skrýt"
+  }
  }
 ]

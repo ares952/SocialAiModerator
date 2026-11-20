@@ -78,6 +78,7 @@ final class EvaluationRunner
 
 		$decision = $this->engine->decide(
 			$classified->classification,
+			$sample->kind,
 			$classified->moderationFlagged,
 			$policy,
 			new AutomationContext(paused: false, accountActive: true),

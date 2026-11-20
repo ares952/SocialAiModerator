@@ -155,6 +155,18 @@ test('evaluation: a sample is added, a run without a model is refused', function
 });
 
 
+test('the starter evaluation set imports and lists', function () use ($browser): void {
+	$root = dirname(__DIR__, 2);
+	exec(PHP_BINARY . " $root/bin/console evaluation:import $root/docs/evaluation/starter-samples.json 2>&1", $output, $code);
+	Assert::same(0, $code, implode("\n", $output));
+	Assert::contains('72 samples imported', implode("\n", $output));
+
+	$samples = $browser->get('/admin/evaluation/samples');
+	Assert::same('73 vzorků | Social AI Moderator', $samples->title());
+	Assert::contains('Gibt es den Kurs auch auf Deutsch?', $samples->body);
+});
+
+
 test('operators: a moderator is added and can sign in', function () use ($browser): void {
 	Assert::same(303, $browser->submit('/admin/operators/add', 'addForm', [
 		'email' => 'moderator-e2e@example.test',

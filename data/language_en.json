@@ -2598,5 +2598,13 @@
    "1": "Account updated",
    "2": "Account updated"
   }
+ },
+ {
+  "key": "decision.reason.message_not_hideable",
+  "lang": "en",
+  "translations": {
+   "1": "a private message cannot be hidden",
+   "2": "a private message cannot be hidden"
+  }
  }
 ]

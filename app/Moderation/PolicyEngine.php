@@ -12,7 +12,8 @@ namespace App\Moderation;
  * - no classification (model error, invalid output) => review (fail closed);
  * - complaints, billing, refunds, health, legal, or the model asking for a human => handoff;
  * - legitimate criticism and praise are kept, whatever the model recommends;
- * - spam/scam is hidden only above both hide thresholds, otherwise review;
+ * - spam/scam is hidden only above both hide thresholds, otherwise review; a private message
+ *   cannot be hidden, so it goes to review;
  * - abuse and unknown => review;
  * - FAQ is answered only above the reply threshold and in a supported language;
  * - the action runs without a human only in `automatic` mode, without a pause, for an active
@@ -22,6 +23,7 @@ final class PolicyEngine
 {
 	public function decide(
 		?Classification $classification,
+		ContentKind $kind,
 		bool $moderationFlagged,
 		Policy $policy,
 		AutomationContext $context,
@@ -30,6 +32,10 @@ final class PolicyEngine
 		$action = $classification === null
 			? $this->fail($reasons)
 			: $this->action($classification, $moderationFlagged, $policy->settings, $reasons);
+		if ($action === Action::Hide && $kind === ContentKind::Message) {
+			$reasons[] = 'message_not_hideable';
+			$action = Action::Review;
+		}
 
 		$automatic = $action->isExternal()
 			&& $classification !== null
