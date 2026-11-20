@@ -1,0 +1,120 @@
+{varType Nette\Database\Row $run}
+{varType array<string, mixed> $report}
+{varType list<Nette\Database\Row> $results}
+{varType array<int, string> $texts}
+{varType list<App\Moderation\Category> $categories}
+
+{block content}
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a n:href="default">{_'evaluation.title'}</a></li>
+		<li class="breadcrumb-item active" aria-current="page">{_'evaluation.run', 1, [id => $run->id]}</li>
+	</ol>
+</nav>
+
+<h1 class="h3 mb-1" n:block="title">{_'evaluation.run', 1, [id => $run->id]}</h1>
+<p class="text-body-secondary">
+	<code>{$run->model}</code> · {$run->prompt_version} · {_'evaluation.policy', 1, [version => $run->policy_version]} · {$run->created_at|localTime}
+</p>
+
+<div n:if="$report['pending'] > 0" class="alert alert-info">{_'evaluation.pending', $report['pending']}</div>
+
+{var $done = max(1, $report['done'])}
+<div class="row g-3 mb-4">
+	<div class="col-6 col-lg-3">
+		<div class="card h-100"><div class="card-body">
+			<div class="small text-body-secondary">{_'evaluation.metric.category'}</div>
+			<div class="fs-4">{round(100 * $report['categoryCorrect'] / $done)} %</div>
+			<div class="small text-body-secondary">{$report['categoryCorrect']} / {$report['done']}</div>
+		</div></div>
+	</div>
+	<div class="col-6 col-lg-3">
+		<div class="card h-100"><div class="card-body">
+			<div class="small text-body-secondary">{_'evaluation.metric.action'}</div>
+			<div class="fs-4">{round(100 * $report['actionCorrect'] / $done)} %</div>
+			<div class="small text-body-secondary">{$report['actionCorrect']} / {$report['done']}</div>
+		</div></div>
+	</div>
+	<div class="col-6 col-lg-3">
+		<div n:class="card, h-100, $report['criticismHidden'] + $report['missedHandoff'] > 0 ? 'border-danger' : 'border-success'"><div class="card-body">
+			<div class="small text-body-secondary">{_'evaluation.metric.critical'}</div>
+			<div class="small">{_'evaluation.metric.criticism-hidden'}: <strong>{$report['criticismHidden']}</strong></div>
+			<div class="small">{_'evaluation.metric.missed-handoff'}: <strong>{$report['missedHandoff']}</strong></div>
+		</div></div>
+	</div>
+	<div class="col-6 col-lg-3">
+		<div class="card h-100"><div class="card-body">
+			<div class="small">{_'evaluation.metric.false-hide'}: <strong>{$report['falseHide']}</strong></div>
+			<div class="small">{_'evaluation.metric.missed-hide'}: <strong>{$report['missedHide']}</strong></div>
+			<div class="small">{_'evaluation.metric.automatic'}: <strong>{$report['automatic']}</strong></div>
+			<div class="small">{_'evaluation.metric.failed'}: <strong>{$report['failed']}</strong></div>
+			<div class="small text-body-secondary">{_'evaluation.metric.tokens', 1, ['in' => $report['inputTokens'], 'out' => $report['outputTokens']]}</div>
+		</div></div>
+	</div>
+</div>
+
+{if $report['confusion'] !== []}
+	<h2 class="h5">{_'evaluation.confusion'}</h2>
+	<p class="small text-body-secondary">{_'evaluation.confusion-note'}</p>
+	<div class="table-responsive mb-4">
+		<table class="table table-sm table-bordered text-center align-middle small">
+			<thead>
+				<tr>
+					<th></th>
+					<th n:foreach="$categories as $category" scope="col" class="text-nowrap">{_"category.{$category->value}"}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$categories as $expected" n:if="isset($report['confusion'][$expected->value])">
+					<th scope="row" class="text-start text-nowrap">{_"category.{$expected->value}"}</th>
+					<td n:foreach="$categories as $predicted"
+						n:class="$expected === $predicted && isset($report['confusion'][$expected->value][$predicted->value]) ? 'table-success', $expected !== $predicted && isset($report['confusion'][$expected->value][$predicted->value]) ? 'table-warning'">
+						{$report['confusion'][$expected->value][$predicted->value] ?? ''}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+{/if}
+
+<h2 class="h5">{_'evaluation.results'}</h2>
+<div class="table-responsive">
+	<table class="table table-sm align-middle">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col" n:if="$texts !== []">{_'evaluation.sample.text'}</th>
+				<th scope="col">{_'evaluation.column.expected'}</th>
+				<th scope="col">{_'evaluation.column.result'}</th>
+				<th scope="col">{_'evaluation.column.reasons'}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr n:foreach="$results as $result"
+				n:class="$result->status === 'failed' ? 'table-danger', $result->status === 'done' && $result->action !== $result->expected_action ? 'table-warning'">
+				<td class="text-body-secondary">{$result->sample_id ?? '—'}</td>
+				<td n:if="$texts !== []" class="text-break small">{($texts[$result->sample_id] ?? '')|truncate:160}</td>
+				<td class="small text-nowrap">{_"category.{$result->expected_category}"}<br>{_"action.{$result->expected_action}"}</td>
+				<td class="small text-nowrap">
+					{if $result->status === 'done'}
+						{_"category.{$result->category}"} ({$result->confidence|number:2})<br>
+						{_"action.{$result->action}"}
+						<span n:if="$result->automatic" class="badge text-bg-warning">{_'evaluation.automatic'}</span>
+						<span n:if="$result->moderation_flagged" class="badge text-bg-danger">{_'evaluation.flagged'}</span>
+					{elseif $result->status === 'failed'}
+						<span class="text-danger-emphasis">{$result->error}</span>
+					{else}
+						{_'evaluation.result.pending'}
+					{/if}
+				</td>
+				<td class="small">
+					{if $result->reasons_json}
+						{foreach Nette\Utils\Json::decode($result->reasons_json, forceArrays: true) as $reason}
+							<span class="badge text-bg-light border">{_"decision.reason.$reason"}</span>
+						{/foreach}
+					{/if}
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

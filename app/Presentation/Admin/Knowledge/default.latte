@@ -1,0 +1,42 @@
+{varType list<Nette\Database\Row> $sources}
+{varType bool $canEdit}
+
+{block content}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<h1 class="h3 mb-0" n:block="title">{_'knowledge.title'}</h1>
+	<a n:if="$canEdit" class="btn btn-primary" n:href="add">{_'knowledge.add'}</a>
+</div>
+<p class="text-body-secondary">{_'knowledge.note'}</p>
+
+{if $sources === []}
+	<div class="alert alert-secondary">{_'knowledge.empty'}</div>
+{else}
+	<div class="table-responsive">
+		<table class="table table-hover align-middle">
+			<thead>
+				<tr>
+					<th scope="col">{_'knowledge.column.key'}</th>
+					<th scope="col">{_'knowledge.column.locale'}</th>
+					<th scope="col">{_'knowledge.column.title'}</th>
+					<th scope="col">{_'knowledge.column.latest'}</th>
+					<th scope="col">{_'knowledge.column.published'}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$sources as $source">
+					<td><code>{$source->key}</code></td>
+					<td>{$source->locale}</td>
+					<td><a n:href="detail, id: $source->id">{$source->title}</a></td>
+					<td>v{$source->latest_version} <span class="badge text-bg-light border">{_"knowledge.status.{$source->latest_status}"}</span></td>
+					<td>
+						{if $source->published_version !== null}
+							<span class="badge text-bg-success">v{$source->published_version}</span>
+						{else}
+							<span class="text-body-secondary">—</span>
+						{/if}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+{/if}

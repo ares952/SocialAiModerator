@@ -15,6 +15,18 @@ Formát sekce:
 - **Ověření:** jak potvrdit, že je hotovo
 ```
 
+## 0.4.0
+
+- **Týká se:** všech instancí
+- **Kdy:** v kroku 6 (lokální konfigurace)
+- **Akce:** aplikace nově používá `OPENAI_API_KEY`, `OPENAI_CLASSIFIER_MODEL` a
+  `OPENAI_MODERATION_MODEL` z `config/secrets/app.env` pro běhy vyhodnocení AI. Bez klíče a modelu
+  aplikace běží, jen nejde spustit vyhodnocení (administrace to oznámí). `AUTOMATION_DEFAULT_MODE`
+  musí být `observe`, `assisted` nebo `automatic` (jiná hodnota zastaví start aplikace); dokud admin
+  neuloží první verzi pravidel, platí tento režim.
+- **Ověření:** stránka Pravidla zobrazuje platnou verzi 0 a zvolený režim; po doplnění klíče
+  a modelu doběhne vyhodnocení alespoň jednoho vzorku bez chyby.
+
 ## 0.3.0
 
 - **Týká se:** všech instancí

@@ -1,0 +1,49 @@
+{varType list<Nette\Database\Row> $samples}
+
+{block content}
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a n:href="default">{_'evaluation.title'}</a></li>
+		<li class="breadcrumb-item active" aria-current="page">{_'evaluation.samples', count($samples)}</li>
+	</ol>
+</nav>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<h1 class="h3 mb-0" n:block="title">{_'evaluation.samples', count($samples)}</h1>
+	<a class="btn btn-primary" n:href="sample">{_'evaluation.sample.add'}</a>
+</div>
+<p class="text-body-secondary">{_'evaluation.samples-note'}</p>
+
+{if $samples === []}
+	<div class="alert alert-secondary">{_'evaluation.samples-empty'}</div>
+{else}
+	<div class="table-responsive">
+		<table class="table table-sm table-hover align-middle">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">{_'evaluation.sample.text'}</th>
+					<th scope="col">{_'evaluation.sample.expectedCategory'}</th>
+					<th scope="col">{_'evaluation.sample.expectedAction'}</th>
+					<th scope="col"><span class="visually-hidden">{_'common.actions'}</span></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$samples as $sample">
+					<td class="text-body-secondary">{$sample->id}</td>
+					<td>
+						<div class="text-break">{$sample->text|truncate:200}</div>
+						<div class="small text-body-secondary">{_"platform.{$sample->platform}"} · {_"content.kind.{$sample->kind}"} · {$sample->language}<span n:if="$sample->note"> · {$sample->note}</span></div>
+					</td>
+					<td>{_"category.{$sample->expected_category}"}</td>
+					<td>{_"action.{$sample->expected_action}"}</td>
+					<td class="text-end text-nowrap">
+						<a class="btn btn-sm btn-outline-secondary" n:href="sample, id: $sample->id">{_'common.edit'}</a>
+						<a class="btn btn-sm btn-outline-danger" n:href="delete!, id: $sample->id"
+							onclick="return confirm({_'evaluation.sample.confirm-delete'})">{_'common.delete'}</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+{/if}

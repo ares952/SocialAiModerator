@@ -125,6 +125,15 @@ final class JobQueue
 	 * its primary key, so this never locks index ranges that other workers reserve from.
 	 */
 	/**
+	 * Whether a failure of this attempt makes the job `failed` (no retry follows).
+	 */
+	public function isLastAttempt(Job $job): bool
+	{
+		return $job->attempts >= $this->maxAttempts;
+	}
+
+
+	/**
 	 * @return array<string, int> status => number of jobs
 	 */
 	public function counts(): array

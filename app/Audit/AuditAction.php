@@ -11,4 +11,14 @@ enum AuditAction: string
 	case OperatorCreate = 'operator.create';
 	case OperatorUpdate = 'operator.update';
 	case OperatorPassword = 'operator.password';
+	case PolicyUpdate = 'policy.update';
+	case AutomationPause = 'automation.pause';
+	case AutomationResume = 'automation.resume';
+	case KnowledgeCreate = 'knowledge.create';
+	case KnowledgePublish = 'knowledge.publish';
+	case KnowledgeUnpublish = 'knowledge.unpublish';
+	case SampleCreate = 'evaluation.sample.create';
+	case SampleUpdate = 'evaluation.sample.update';
+	case SampleDelete = 'evaluation.sample.delete';
+	case EvaluationRun = 'evaluation.run';
 }

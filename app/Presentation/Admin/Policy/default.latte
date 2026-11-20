@@ -1,0 +1,84 @@
+{varType App\Moderation\Policy $policy}
+{varType list<Nette\Database\Row> $history}
+{varType Nette\Database\Row|null $pause}
+{varType bool $canManage}
+
+{block content}
+<h1 class="h3 mb-4" n:block="title">{_'policy.title'}</h1>
+
+<div n:class="card, mb-4, $pause ? 'border-danger' : 'border-success'">
+	<div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
+		<div>
+			<h2 class="h5 mb-1">{_'automation.title'}</h2>
+			{if $pause}
+				<p class="mb-0 text-danger-emphasis">
+					{_'automation.state.paused', 1, [name => $pause->paused_by_name ?? '—', time => ($pause->paused_at|localTime)]}
+				</p>
+				<p n:if="$pause->reason" class="mb-0 small text-body-secondary">{$pause->reason}</p>
+			{else}
+				<p class="mb-0 text-success-emphasis">{_'automation.state.running'}</p>
+			{/if}
+			<p class="mb-0 small text-body-secondary">{_'automation.note'}</p>
+		</div>
+		<div n:if="$canManage">
+			{if $pause}
+				{control resumeForm}
+			{else}
+				<form n:name="pauseForm" class="d-flex flex-wrap gap-2 align-items-start">
+					<input n:name="reason" class="form-control" placeholder="{_'automation.form.reason'}">
+					<button n:name="pause" class="btn btn-danger">{_'automation.form.pause'}</button>
+				</form>
+			{/if}
+		</div>
+	</div>
+</div>
+
+<div class="row g-4">
+	<div class="col-12 col-xl-7">
+		<div class="card">
+			<div class="card-header">
+				{_'policy.current', 1, [version => $policy->version]}
+				<span class="badge text-bg-info ms-2">{_"mode.{$policy->mode->value}"}</span>
+			</div>
+			<div class="card-body">
+				<p n:if="$policy->version === 0" class="small text-body-secondary">{_'policy.default-note'}</p>
+				{if $canManage}
+					{control policyForm}
+				{else}
+					{var $settings = $policy->settings}
+					<dl class="row mb-0">
+						<dt class="col-sm-7">{_'policy.form.hideMinConfidence'}</dt><dd class="col-sm-5">{$settings->hideMinConfidence}</dd>
+						<dt class="col-sm-7">{_'policy.form.hideMinSpamProbability'}</dt><dd class="col-sm-5">{$settings->hideMinSpamProbability}</dd>
+						<dt class="col-sm-7">{_'policy.form.replyMinConfidence'}</dt><dd class="col-sm-5">{$settings->replyMinConfidence}</dd>
+						<dt class="col-sm-7">{_'policy.form.autoHide'}</dt><dd class="col-sm-5">{if $settings->autoHide}{_'common.yes'}{else}{_'common.no'}{/if}</dd>
+						<dt class="col-sm-7">{_'policy.form.autoReplyCategories'}</dt>
+						<dd class="col-sm-5">
+							{foreach $settings->autoReplyCategories as $category}{_"category.{$category->value}"}{sep}, {/sep}{else}—{/foreach}
+						</dd>
+						<dt class="col-sm-7">{_'policy.form.languages'}</dt><dd class="col-sm-5">{implode(', ', $settings->languages)}</dd>
+						<dt class="col-sm-7">{_'policy.form.otherLanguage'}</dt><dd class="col-sm-5">{_"action.{$settings->otherLanguage->value}"}</dd>
+					</dl>
+				{/if}
+			</div>
+		</div>
+	</div>
+
+	<div class="col-12 col-xl-5">
+		<div class="card">
+			<div class="card-header">{_'policy.history'}</div>
+			{if $history === []}
+				<div class="card-body text-body-secondary">{_'policy.history-empty'}</div>
+			{else}
+				<ul class="list-group list-group-flush">
+					<li n:foreach="$history as $item" class="list-group-item d-flex justify-content-between align-items-center gap-2">
+						<span>
+							v{$item->version} · {_"mode.{$item->mode}"}
+							<span n:if="$item->active" class="badge text-bg-success ms-1">{_'policy.active'}</span>
+						</span>
+						<small class="text-body-secondary text-end">{$item->created_at|localTime}<br>{$item->created_by_name}</small>
+					</li>
+				</ul>
+			{/if}
+		</div>
+	</div>
+</div>

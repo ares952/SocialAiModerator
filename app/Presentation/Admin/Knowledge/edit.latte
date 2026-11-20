@@ -1,0 +1,18 @@
+{varType Nette\Database\Row $source}
+
+{block content}
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a n:href="default">{_'knowledge.title'}</a></li>
+		<li class="breadcrumb-item"><a n:href="detail, id: $source->id">{$source->key} ({$source->locale})</a></li>
+		<li class="breadcrumb-item active" aria-current="page">{_'knowledge.edit'}</li>
+	</ol>
+</nav>
+
+<div class="row">
+	<div class="col-12 col-lg-8">
+		<h1 class="h3 mb-2" n:block="title">{_'knowledge.edit'}</h1>
+		<p class="text-body-secondary">{_'knowledge.edit-note', 1, [version => $source->version]}</p>
+		{control sourceForm}
+	</div>
+</div>

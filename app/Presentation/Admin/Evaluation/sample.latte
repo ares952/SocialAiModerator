@@ -1,0 +1,17 @@
+{varType int|null $sampleId}
+
+{block content}
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a n:href="default">{_'evaluation.title'}</a></li>
+		<li class="breadcrumb-item"><a n:href="samples">{_'evaluation.samples', 2}</a></li>
+		<li class="breadcrumb-item active" aria-current="page">{if $sampleId}#{$sampleId}{else}{_'evaluation.sample.add'}{/if}</li>
+	</ol>
+</nav>
+
+<div class="row">
+	<div class="col-12 col-lg-8">
+		<h1 class="h3 mb-4" n:block="title">{if $sampleId}{_'evaluation.sample.edit'} #{$sampleId}{else}{_'evaluation.sample.add'}{/if}</h1>
+		{control sampleForm}
+	</div>
+</div>

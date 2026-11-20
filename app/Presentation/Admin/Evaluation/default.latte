@@ -1,0 +1,43 @@
+{varType list<Nette\Database\Row> $runs}
+{varType int $sampleCount}
+{varType bool $canEdit}
+{varType bool $canRun}
+
+{block content}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<h1 class="h3 mb-0" n:block="title">{_'evaluation.title'}</h1>
+	<div class="d-flex gap-2">
+		<a n:if="$canEdit" class="btn btn-outline-primary" n:href="samples">{_'evaluation.samples', $sampleCount}</a>
+		<a n:if="$canRun" class="btn btn-primary" n:href="start!">{_'evaluation.start'}</a>
+	</div>
+</div>
+<p class="text-body-secondary">{_'evaluation.note'}</p>
+
+{if $runs === []}
+	<div class="alert alert-secondary">{_'evaluation.runs-empty'}</div>
+{else}
+	<div class="table-responsive">
+		<table class="table table-hover align-middle">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">{_'evaluation.column.created'}</th>
+					<th scope="col">{_'evaluation.column.model'}</th>
+					<th scope="col">{_'evaluation.column.progress'}</th>
+					<th scope="col">{_'evaluation.column.category'}</th>
+					<th scope="col">{_'evaluation.column.action'}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$runs as $run">
+					<td><a n:href="run, id: $run->id">{$run->id}</a></td>
+					<td>{$run->created_at|localTime}<div class="small text-body-secondary">{$run->created_by_name}</div></td>
+					<td><code>{$run->model}</code><div class="small text-body-secondary">{$run->prompt_version} · {_'evaluation.policy', 1, [version => $run->policy_version]}</div></td>
+					<td>{(int) $run->done + (int) $run->failed} / {$run->sample_count}<span n:if="$run->failed > 0" class="badge text-bg-danger ms-1">{$run->failed}</span></td>
+					<td>{(int) $run->category_correct} / {(int) $run->done}</td>
+					<td>{(int) $run->action_correct} / {(int) $run->done}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+{/if}

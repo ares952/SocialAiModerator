@@ -798,5 +798,1413 @@
    "1": "The current password is not correct.",
    "2": "The current password is not correct."
   }
+ },
+ {
+  "key": "admin.menu.policy",
+  "lang": "en",
+  "translations": {
+   "1": "Policy",
+   "2": "Policy"
+  }
+ },
+ {
+  "key": "admin.menu.knowledge",
+  "lang": "en",
+  "translations": {
+   "1": "Knowledge",
+   "2": "Knowledge"
+  }
+ },
+ {
+  "key": "admin.menu.evaluation",
+  "lang": "en",
+  "translations": {
+   "1": "Evaluation",
+   "2": "Evaluation"
+  }
+ },
+ {
+  "key": "common.yes",
+  "lang": "en",
+  "translations": {
+   "1": "yes",
+   "2": "yes"
+  }
+ },
+ {
+  "key": "common.no",
+  "lang": "en",
+  "translations": {
+   "1": "no",
+   "2": "no"
+  }
+ },
+ {
+  "key": "common.edit",
+  "lang": "en",
+  "translations": {
+   "1": "Edit",
+   "2": "Edit"
+  }
+ },
+ {
+  "key": "common.delete",
+  "lang": "en",
+  "translations": {
+   "1": "Delete",
+   "2": "Delete"
+  }
+ },
+ {
+  "key": "common.actions",
+  "lang": "en",
+  "translations": {
+   "1": "Actions",
+   "2": "Actions"
+  }
+ },
+ {
+  "key": "dashboard.mode",
+  "lang": "en",
+  "translations": {
+   "1": "Mode",
+   "2": "Mode"
+  }
+ },
+ {
+  "key": "dashboard.policy-link",
+  "lang": "en",
+  "translations": {
+   "1": "Policy and panic switch",
+   "2": "Policy and panic switch"
+  }
+ },
+ {
+  "key": "mode.observe",
+  "lang": "en",
+  "translations": {
+   "1": "Observe only",
+   "2": "Observe only"
+  }
+ },
+ {
+  "key": "mode.assisted",
+  "lang": "en",
+  "translations": {
+   "1": "Assisted",
+   "2": "Assisted"
+  }
+ },
+ {
+  "key": "mode.automatic",
+  "lang": "en",
+  "translations": {
+   "1": "Automatic",
+   "2": "Automatic"
+  }
+ },
+ {
+  "key": "category.spam",
+  "lang": "en",
+  "translations": {
+   "1": "Spam",
+   "2": "Spam"
+  }
+ },
+ {
+  "key": "category.scam",
+  "lang": "en",
+  "translations": {
+   "1": "Scam",
+   "2": "Scam"
+  }
+ },
+ {
+  "key": "category.abuse",
+  "lang": "en",
+  "translations": {
+   "1": "Abuse",
+   "2": "Abuse"
+  }
+ },
+ {
+  "key": "category.legitimate_criticism",
+  "lang": "en",
+  "translations": {
+   "1": "Legitimate criticism",
+   "2": "Legitimate criticism"
+  }
+ },
+ {
+  "key": "category.praise",
+  "lang": "en",
+  "translations": {
+   "1": "Praise",
+   "2": "Praise"
+  }
+ },
+ {
+  "key": "category.faq",
+  "lang": "en",
+  "translations": {
+   "1": "FAQ",
+   "2": "FAQ"
+  }
+ },
+ {
+  "key": "category.support_issue",
+  "lang": "en",
+  "translations": {
+   "1": "Support issue",
+   "2": "Support issue"
+  }
+ },
+ {
+  "key": "category.billing",
+  "lang": "en",
+  "translations": {
+   "1": "Billing",
+   "2": "Billing"
+  }
+ },
+ {
+  "key": "category.refund",
+  "lang": "en",
+  "translations": {
+   "1": "Refund",
+   "2": "Refund"
+  }
+ },
+ {
+  "key": "category.health",
+  "lang": "en",
+  "translations": {
+   "1": "Health",
+   "2": "Health"
+  }
+ },
+ {
+  "key": "category.legal",
+  "lang": "en",
+  "translations": {
+   "1": "Legal",
+   "2": "Legal"
+  }
+ },
+ {
+  "key": "category.unknown",
+  "lang": "en",
+  "translations": {
+   "1": "Unknown",
+   "2": "Unknown"
+  }
+ },
+ {
+  "key": "action.ignore",
+  "lang": "en",
+  "translations": {
+   "1": "Ignore",
+   "2": "Ignore"
+  }
+ },
+ {
+  "key": "action.keep",
+  "lang": "en",
+  "translations": {
+   "1": "Keep",
+   "2": "Keep"
+  }
+ },
+ {
+  "key": "action.hide",
+  "lang": "en",
+  "translations": {
+   "1": "Hide",
+   "2": "Hide"
+  }
+ },
+ {
+  "key": "action.reply",
+  "lang": "en",
+  "translations": {
+   "1": "Reply",
+   "2": "Reply"
+  }
+ },
+ {
+  "key": "action.review",
+  "lang": "en",
+  "translations": {
+   "1": "Review",
+   "2": "Review"
+  }
+ },
+ {
+  "key": "action.handoff",
+  "lang": "en",
+  "translations": {
+   "1": "Hand off",
+   "2": "Hand off"
+  }
+ },
+ {
+  "key": "content.kind.comment",
+  "lang": "en",
+  "translations": {
+   "1": "Comment",
+   "2": "Comment"
+  }
+ },
+ {
+  "key": "content.kind.message",
+  "lang": "en",
+  "translations": {
+   "1": "Private message",
+   "2": "Private message"
+  }
+ },
+ {
+  "key": "policy.title",
+  "lang": "en",
+  "translations": {
+   "1": "Moderation policy",
+   "2": "Moderation policy"
+  }
+ },
+ {
+  "key": "policy.current",
+  "lang": "en",
+  "translations": {
+   "1": "Current version %version%",
+   "2": "Current version %version%"
+  }
+ },
+ {
+  "key": "policy.default-note",
+  "lang": "en",
+  "translations": {
+   "1": "No version has been saved yet; the defaults apply (mode from AUTOMATION_DEFAULT_MODE).",
+   "2": "No version has been saved yet; the defaults apply (mode from AUTOMATION_DEFAULT_MODE)."
+  }
+ },
+ {
+  "key": "policy.history",
+  "lang": "en",
+  "translations": {
+   "1": "Version history",
+   "2": "Version history"
+  }
+ },
+ {
+  "key": "policy.history-empty",
+  "lang": "en",
+  "translations": {
+   "1": "No saved versions.",
+   "2": "No saved versions."
+  }
+ },
+ {
+  "key": "policy.active",
+  "lang": "en",
+  "translations": {
+   "1": "active",
+   "2": "active"
+  }
+ },
+ {
+  "key": "policy.saved",
+  "lang": "en",
+  "translations": {
+   "1": "Policy version %version% has been saved.",
+   "2": "Policy version %version% has been saved."
+  }
+ },
+ {
+  "key": "policy.form.mode",
+  "lang": "en",
+  "translations": {
+   "1": "Mode",
+   "2": "Mode"
+  }
+ },
+ {
+  "key": "policy.form.mode-note",
+  "lang": "en",
+  "translations": {
+   "1": "Until actions can be sent, no mode changes anything on Meta.",
+   "2": "Until actions can be sent, no mode changes anything on Meta."
+  }
+ },
+ {
+  "key": "policy.form.hideMinConfidence",
+  "lang": "en",
+  "translations": {
+   "1": "Hide: minimum category confidence",
+   "2": "Hide: minimum category confidence"
+  }
+ },
+ {
+  "key": "policy.form.hideMinSpamProbability",
+  "lang": "en",
+  "translations": {
+   "1": "Hide: minimum spam probability",
+   "2": "Hide: minimum spam probability"
+  }
+ },
+ {
+  "key": "policy.form.replyMinConfidence",
+  "lang": "en",
+  "translations": {
+   "1": "Reply: minimum category confidence",
+   "2": "Reply: minimum category confidence"
+  }
+ },
+ {
+  "key": "policy.form.autoHide",
+  "lang": "en",
+  "translations": {
+   "1": "Allow automatic hiding of spam",
+   "2": "Allow automatic hiding of spam"
+  }
+ },
+ {
+  "key": "policy.form.autoReplyCategories",
+  "lang": "en",
+  "translations": {
+   "1": "Categories allowed for automatic replies",
+   "2": "Categories allowed for automatic replies"
+  }
+ },
+ {
+  "key": "policy.form.languages",
+  "lang": "en",
+  "translations": {
+   "1": "Reply languages (comma-separated codes)",
+   "2": "Reply languages (comma-separated codes)"
+  }
+ },
+ {
+  "key": "policy.form.otherLanguage",
+  "lang": "en",
+  "translations": {
+   "1": "Other language",
+   "2": "Other language"
+  }
+ },
+ {
+  "key": "policy.form.save",
+  "lang": "en",
+  "translations": {
+   "1": "Save new version",
+   "2": "Save new version"
+  }
+ },
+ {
+  "key": "policy.error.threshold",
+  "lang": "en",
+  "translations": {
+   "1": "Thresholds must be between 0.5 and 1.",
+   "2": "Thresholds must be between 0.5 and 1."
+  }
+ },
+ {
+  "key": "policy.error.other-language",
+  "lang": "en",
+  "translations": {
+   "1": "Other languages can only be handed off or reviewed.",
+   "2": "Other languages can only be handed off or reviewed."
+  }
+ },
+ {
+  "key": "policy.error.handoff-category",
+  "lang": "en",
+  "translations": {
+   "1": "Complaints, billing, refunds, health and legal topics cannot be answered automatically.",
+   "2": "Complaints, billing, refunds, health and legal topics cannot be answered automatically."
+  }
+ },
+ {
+  "key": "policy.error.category",
+  "lang": "en",
+  "translations": {
+   "1": "Unknown category.",
+   "2": "Unknown category."
+  }
+ },
+ {
+  "key": "policy.error.languages",
+  "lang": "en",
+  "translations": {
+   "1": "Enter two-letter language codes separated by commas, e.g. cs, en, es.",
+   "2": "Enter two-letter language codes separated by commas, e.g. cs, en, es."
+  }
+ },
+ {
+  "key": "automation.title",
+  "lang": "en",
+  "translations": {
+   "1": "Panic switch",
+   "2": "Panic switch"
+  }
+ },
+ {
+  "key": "automation.state.paused",
+  "lang": "en",
+  "translations": {
+   "1": "Automatic actions are PAUSED (%name%, %time%).",
+   "2": "Automatic actions are PAUSED (%name%, %time%)."
+  }
+ },
+ {
+  "key": "automation.state.paused-short",
+  "lang": "en",
+  "translations": {
+   "1": "automation paused",
+   "2": "automation paused"
+  }
+ },
+ {
+  "key": "automation.state.running",
+  "lang": "en",
+  "translations": {
+   "1": "Automatic actions are not paused.",
+   "2": "Automatic actions are not paused."
+  }
+ },
+ {
+  "key": "automation.note",
+  "lang": "en",
+  "translations": {
+   "1": "Pausing blocks every automatic write to Meta; events are still received and stored.",
+   "2": "Pausing blocks every automatic write to Meta; events are still received and stored."
+  }
+ },
+ {
+  "key": "automation.form.reason",
+  "lang": "en",
+  "translations": {
+   "1": "Reason (optional)",
+   "2": "Reason (optional)"
+  }
+ },
+ {
+  "key": "automation.form.pause",
+  "lang": "en",
+  "translations": {
+   "1": "Pause automation",
+   "2": "Pause automation"
+  }
+ },
+ {
+  "key": "automation.form.resume",
+  "lang": "en",
+  "translations": {
+   "1": "Resume automation",
+   "2": "Resume automation"
+  }
+ },
+ {
+  "key": "automation.paused",
+  "lang": "en",
+  "translations": {
+   "1": "Automatic actions have been paused.",
+   "2": "Automatic actions have been paused."
+  }
+ },
+ {
+  "key": "automation.resumed",
+  "lang": "en",
+  "translations": {
+   "1": "Automatic actions have been resumed.",
+   "2": "Automatic actions have been resumed."
+  }
+ },
+ {
+  "key": "knowledge.title",
+  "lang": "en",
+  "translations": {
+   "1": "Knowledge base",
+   "2": "Knowledge base"
+  }
+ },
+ {
+  "key": "knowledge.add",
+  "lang": "en",
+  "translations": {
+   "1": "Add knowledge",
+   "2": "Add knowledge"
+  }
+ },
+ {
+  "key": "knowledge.edit",
+  "lang": "en",
+  "translations": {
+   "1": "New version",
+   "2": "New version"
+  }
+ },
+ {
+  "key": "knowledge.note",
+  "lang": "en",
+  "translations": {
+   "1": "AI replies may use only published knowledge that is currently valid. Every edit creates a new version to approve.",
+   "2": "AI replies may use only published knowledge that is currently valid. Every edit creates a new version to approve."
+  }
+ },
+ {
+  "key": "knowledge.empty",
+  "lang": "en",
+  "translations": {
+   "1": "The knowledge base is empty.",
+   "2": "The knowledge base is empty."
+  }
+ },
+ {
+  "key": "knowledge.column.key",
+  "lang": "en",
+  "translations": {
+   "1": "Key",
+   "2": "Key"
+  }
+ },
+ {
+  "key": "knowledge.column.locale",
+  "lang": "en",
+  "translations": {
+   "1": "Language",
+   "2": "Language"
+  }
+ },
+ {
+  "key": "knowledge.column.title",
+  "lang": "en",
+  "translations": {
+   "1": "Title",
+   "2": "Title"
+  }
+ },
+ {
+  "key": "knowledge.column.latest",
+  "lang": "en",
+  "translations": {
+   "1": "Latest version",
+   "2": "Latest version"
+  }
+ },
+ {
+  "key": "knowledge.column.published",
+  "lang": "en",
+  "translations": {
+   "1": "Published",
+   "2": "Published"
+  }
+ },
+ {
+  "key": "knowledge.status.draft",
+  "lang": "en",
+  "translations": {
+   "1": "draft",
+   "2": "draft"
+  }
+ },
+ {
+  "key": "knowledge.status.published",
+  "lang": "en",
+  "translations": {
+   "1": "published",
+   "2": "published"
+  }
+ },
+ {
+  "key": "knowledge.status.archived",
+  "lang": "en",
+  "translations": {
+   "1": "archived",
+   "2": "archived"
+  }
+ },
+ {
+  "key": "knowledge.type.faq",
+  "lang": "en",
+  "translations": {
+   "1": "FAQ",
+   "2": "FAQ"
+  }
+ },
+ {
+  "key": "knowledge.type.pricing",
+  "lang": "en",
+  "translations": {
+   "1": "Pricing",
+   "2": "Pricing"
+  }
+ },
+ {
+  "key": "knowledge.type.product",
+  "lang": "en",
+  "translations": {
+   "1": "Product",
+   "2": "Product"
+  }
+ },
+ {
+  "key": "knowledge.type.terms",
+  "lang": "en",
+  "translations": {
+   "1": "Terms",
+   "2": "Terms"
+  }
+ },
+ {
+  "key": "knowledge.type.other",
+  "lang": "en",
+  "translations": {
+   "1": "Other",
+   "2": "Other"
+  }
+ },
+ {
+  "key": "knowledge.locale.cs",
+  "lang": "en",
+  "translations": {
+   "1": "Czech",
+   "2": "Czech"
+  }
+ },
+ {
+  "key": "knowledge.locale.en",
+  "lang": "en",
+  "translations": {
+   "1": "English",
+   "2": "English"
+  }
+ },
+ {
+  "key": "knowledge.locale.es",
+  "lang": "en",
+  "translations": {
+   "1": "Spanish",
+   "2": "Spanish"
+  }
+ },
+ {
+  "key": "knowledge.form.key",
+  "lang": "en",
+  "translations": {
+   "1": "Key",
+   "2": "Key"
+  }
+ },
+ {
+  "key": "knowledge.form.key-note",
+  "lang": "en",
+  "translations": {
+   "1": "Lowercase letters, digits and underscores, e.g. pricing_current. The same key joins the language versions.",
+   "2": "Lowercase letters, digits and underscores, e.g. pricing_current. The same key joins the language versions."
+  }
+ },
+ {
+  "key": "knowledge.form.locale",
+  "lang": "en",
+  "translations": {
+   "1": "Language",
+   "2": "Language"
+  }
+ },
+ {
+  "key": "knowledge.form.type",
+  "lang": "en",
+  "translations": {
+   "1": "Type",
+   "2": "Type"
+  }
+ },
+ {
+  "key": "knowledge.form.title",
+  "lang": "en",
+  "translations": {
+   "1": "Title",
+   "2": "Title"
+  }
+ },
+ {
+  "key": "knowledge.form.content",
+  "lang": "en",
+  "translations": {
+   "1": "Content",
+   "2": "Content"
+  }
+ },
+ {
+  "key": "knowledge.form.content-note",
+  "lang": "en",
+  "translations": {
+   "1": "Only verified information the AI may tell customers.",
+   "2": "Only verified information the AI may tell customers."
+  }
+ },
+ {
+  "key": "knowledge.form.validFrom",
+  "lang": "en",
+  "translations": {
+   "1": "Valid from",
+   "2": "Valid from"
+  }
+ },
+ {
+  "key": "knowledge.form.validTo",
+  "lang": "en",
+  "translations": {
+   "1": "Valid to",
+   "2": "Valid to"
+  }
+ },
+ {
+  "key": "knowledge.form.save",
+  "lang": "en",
+  "translations": {
+   "1": "Save draft",
+   "2": "Save draft"
+  }
+ },
+ {
+  "key": "knowledge.edit-note",
+  "lang": "en",
+  "translations": {
+   "1": "Saving creates a new draft version; version %version% stays unchanged.",
+   "2": "Saving creates a new draft version; version %version% stays unchanged."
+  }
+ },
+ {
+  "key": "knowledge.publish",
+  "lang": "en",
+  "translations": {
+   "1": "Publish",
+   "2": "Publish"
+  }
+ },
+ {
+  "key": "knowledge.unpublish",
+  "lang": "en",
+  "translations": {
+   "1": "Withdraw",
+   "2": "Withdraw"
+  }
+ },
+ {
+  "key": "knowledge.published",
+  "lang": "en",
+  "translations": {
+   "1": "The version has been published; the previously published version was archived.",
+   "2": "The version has been published; the previously published version was archived."
+  }
+ },
+ {
+  "key": "knowledge.unpublished",
+  "lang": "en",
+  "translations": {
+   "1": "The version has been withdrawn.",
+   "2": "The version has been withdrawn."
+  }
+ },
+ {
+  "key": "knowledge.saved",
+  "lang": "en",
+  "translations": {
+   "1": "The draft has been saved.",
+   "2": "The draft has been saved."
+  }
+ },
+ {
+  "key": "knowledge.validity",
+  "lang": "en",
+  "translations": {
+   "1": "Validity",
+   "2": "Validity"
+  }
+ },
+ {
+  "key": "knowledge.versions",
+  "lang": "en",
+  "translations": {
+   "1": "Versions",
+   "2": "Versions"
+  }
+ },
+ {
+  "key": "knowledge.approved",
+  "lang": "en",
+  "translations": {
+   "1": "Approved",
+   "2": "Approved"
+  }
+ },
+ {
+  "key": "knowledge.error.key",
+  "lang": "en",
+  "translations": {
+   "1": "The key may contain only lowercase letters, digits and underscores.",
+   "2": "The key may contain only lowercase letters, digits and underscores."
+  }
+ },
+ {
+  "key": "knowledge.error.locale",
+  "lang": "en",
+  "translations": {
+   "1": "Unsupported language.",
+   "2": "Unsupported language."
+  }
+ },
+ {
+  "key": "knowledge.error.validity",
+  "lang": "en",
+  "translations": {
+   "1": "The start of validity must precede the end.",
+   "2": "The start of validity must precede the end."
+  }
+ },
+ {
+  "key": "knowledge.error.not-found",
+  "lang": "en",
+  "translations": {
+   "1": "The knowledge does not exist.",
+   "2": "The knowledge does not exist."
+  }
+ },
+ {
+  "key": "evaluation.title",
+  "lang": "en",
+  "translations": {
+   "1": "AI evaluation",
+   "2": "AI evaluation"
+  }
+ },
+ {
+  "key": "evaluation.note",
+  "lang": "en",
+  "translations": {
+   "1": "A run sends every sample through the classifier and the policy and compares the outcome with the manual label. Thresholds are tuned from the results.",
+   "2": "A run sends every sample through the classifier and the policy and compares the outcome with the manual label. Thresholds are tuned from the results."
+  }
+ },
+ {
+  "key": "evaluation.samples",
+  "lang": "en",
+  "translations": {
+   "1": "%count% sample",
+   "2": "%count% samples"
+  }
+ },
+ {
+  "key": "evaluation.start",
+  "lang": "en",
+  "translations": {
+   "1": "Start evaluation",
+   "2": "Start evaluation"
+  }
+ },
+ {
+  "key": "evaluation.started",
+  "lang": "en",
+  "translations": {
+   "1": "The evaluation has been queued.",
+   "2": "The evaluation has been queued."
+  }
+ },
+ {
+  "key": "evaluation.runs-empty",
+  "lang": "en",
+  "translations": {
+   "1": "No runs yet.",
+   "2": "No runs yet."
+  }
+ },
+ {
+  "key": "evaluation.column.created",
+  "lang": "en",
+  "translations": {
+   "1": "Started",
+   "2": "Started"
+  }
+ },
+ {
+  "key": "evaluation.column.model",
+  "lang": "en",
+  "translations": {
+   "1": "Model",
+   "2": "Model"
+  }
+ },
+ {
+  "key": "evaluation.column.progress",
+  "lang": "en",
+  "translations": {
+   "1": "Done",
+   "2": "Done"
+  }
+ },
+ {
+  "key": "evaluation.column.category",
+  "lang": "en",
+  "translations": {
+   "1": "Correct category",
+   "2": "Correct category"
+  }
+ },
+ {
+  "key": "evaluation.column.action",
+  "lang": "en",
+  "translations": {
+   "1": "Correct action",
+   "2": "Correct action"
+  }
+ },
+ {
+  "key": "evaluation.column.expected",
+  "lang": "en",
+  "translations": {
+   "1": "Expected",
+   "2": "Expected"
+  }
+ },
+ {
+  "key": "evaluation.column.result",
+  "lang": "en",
+  "translations": {
+   "1": "Result",
+   "2": "Result"
+  }
+ },
+ {
+  "key": "evaluation.column.reasons",
+  "lang": "en",
+  "translations": {
+   "1": "Reasons",
+   "2": "Reasons"
+  }
+ },
+ {
+  "key": "evaluation.policy",
+  "lang": "en",
+  "translations": {
+   "1": "policy v%version%",
+   "2": "policy v%version%"
+  }
+ },
+ {
+  "key": "evaluation.samples-note",
+  "lang": "en",
+  "translations": {
+   "1": "Synthetic or anonymized texts only. Include legitimate criticism, prompt injection attempts and all three languages.",
+   "2": "Synthetic or anonymized texts only. Include legitimate criticism, prompt injection attempts and all three languages."
+  }
+ },
+ {
+  "key": "evaluation.samples-empty",
+  "lang": "en",
+  "translations": {
+   "1": "No samples yet.",
+   "2": "No samples yet."
+  }
+ },
+ {
+  "key": "evaluation.sample.add",
+  "lang": "en",
+  "translations": {
+   "1": "Add sample",
+   "2": "Add sample"
+  }
+ },
+ {
+  "key": "evaluation.sample.edit",
+  "lang": "en",
+  "translations": {
+   "1": "Edit sample",
+   "2": "Edit sample"
+  }
+ },
+ {
+  "key": "evaluation.sample.platform",
+  "lang": "en",
+  "translations": {
+   "1": "Platform",
+   "2": "Platform"
+  }
+ },
+ {
+  "key": "evaluation.sample.kind",
+  "lang": "en",
+  "translations": {
+   "1": "Kind",
+   "2": "Kind"
+  }
+ },
+ {
+  "key": "evaluation.sample.language",
+  "lang": "en",
+  "translations": {
+   "1": "Language (code)",
+   "2": "Language (code)"
+  }
+ },
+ {
+  "key": "evaluation.sample.text",
+  "lang": "en",
+  "translations": {
+   "1": "Text",
+   "2": "Text"
+  }
+ },
+ {
+  "key": "evaluation.sample.text-note",
+  "lang": "en",
+  "translations": {
+   "1": "Do not enter real personal data.",
+   "2": "Do not enter real personal data."
+  }
+ },
+ {
+  "key": "evaluation.sample.expectedCategory",
+  "lang": "en",
+  "translations": {
+   "1": "Expected category",
+   "2": "Expected category"
+  }
+ },
+ {
+  "key": "evaluation.sample.expectedAction",
+  "lang": "en",
+  "translations": {
+   "1": "Expected action",
+   "2": "Expected action"
+  }
+ },
+ {
+  "key": "evaluation.sample.note",
+  "lang": "en",
+  "translations": {
+   "1": "Note",
+   "2": "Note"
+  }
+ },
+ {
+  "key": "evaluation.sample.save",
+  "lang": "en",
+  "translations": {
+   "1": "Save",
+   "2": "Save"
+  }
+ },
+ {
+  "key": "evaluation.sample.saved",
+  "lang": "en",
+  "translations": {
+   "1": "The sample has been saved.",
+   "2": "The sample has been saved."
+  }
+ },
+ {
+  "key": "evaluation.sample.deleted",
+  "lang": "en",
+  "translations": {
+   "1": "The sample has been deleted.",
+   "2": "The sample has been deleted."
+  }
+ },
+ {
+  "key": "evaluation.sample.confirm-delete",
+  "lang": "en",
+  "translations": {
+   "1": "Really delete the sample?",
+   "2": "Really delete the sample?"
+  }
+ },
+ {
+  "key": "evaluation.error.language",
+  "lang": "en",
+  "translations": {
+   "1": "Enter a two-letter language code.",
+   "2": "Enter a two-letter language code."
+  }
+ },
+ {
+  "key": "evaluation.error.no-model",
+  "lang": "en",
+  "translations": {
+   "1": "The classifier model is not set (OPENAI_CLASSIFIER_MODEL).",
+   "2": "The classifier model is not set (OPENAI_CLASSIFIER_MODEL)."
+  }
+ },
+ {
+  "key": "evaluation.error.no-samples",
+  "lang": "en",
+  "translations": {
+   "1": "There are no samples to evaluate.",
+   "2": "There are no samples to evaluate."
+  }
+ },
+ {
+  "key": "evaluation.run",
+  "lang": "en",
+  "translations": {
+   "1": "Run %id%",
+   "2": "Run %id%"
+  }
+ },
+ {
+  "key": "evaluation.pending",
+  "lang": "en",
+  "translations": {
+   "1": "%count% sample is still being processed.",
+   "2": "%count% samples are still being processed."
+  }
+ },
+ {
+  "key": "evaluation.metric.category",
+  "lang": "en",
+  "translations": {
+   "1": "Correct category",
+   "2": "Correct category"
+  }
+ },
+ {
+  "key": "evaluation.metric.action",
+  "lang": "en",
+  "translations": {
+   "1": "Correct action",
+   "2": "Correct action"
+  }
+ },
+ {
+  "key": "evaluation.metric.critical",
+  "lang": "en",
+  "translations": {
+   "1": "Critical errors (must be 0)",
+   "2": "Critical errors (must be 0)"
+  }
+ },
+ {
+  "key": "evaluation.metric.criticism-hidden",
+  "lang": "en",
+  "translations": {
+   "1": "hidden legitimate criticism",
+   "2": "hidden legitimate criticism"
+  }
+ },
+ {
+  "key": "evaluation.metric.missed-handoff",
+  "lang": "en",
+  "translations": {
+   "1": "sensitive topic not handed off",
+   "2": "sensitive topic not handed off"
+  }
+ },
+ {
+  "key": "evaluation.metric.false-hide",
+  "lang": "en",
+  "translations": {
+   "1": "Wrongly hidden",
+   "2": "Wrongly hidden"
+  }
+ },
+ {
+  "key": "evaluation.metric.missed-hide",
+  "lang": "en",
+  "translations": {
+   "1": "Spam not hidden",
+   "2": "Spam not hidden"
+  }
+ },
+ {
+  "key": "evaluation.metric.automatic",
+  "lang": "en",
+  "translations": {
+   "1": "Would run automatically",
+   "2": "Would run automatically"
+  }
+ },
+ {
+  "key": "evaluation.metric.failed",
+  "lang": "en",
+  "translations": {
+   "1": "Failed",
+   "2": "Failed"
+  }
+ },
+ {
+  "key": "evaluation.metric.tokens",
+  "lang": "en",
+  "translations": {
+   "1": "Tokens: %in% input, %out% output",
+   "2": "Tokens: %in% input, %out% output"
+  }
+ },
+ {
+  "key": "evaluation.confusion",
+  "lang": "en",
+  "translations": {
+   "1": "Category confusion matrix",
+   "2": "Category confusion matrix"
+  }
+ },
+ {
+  "key": "evaluation.confusion-note",
+  "lang": "en",
+  "translations": {
+   "1": "Rows: expected category, columns: category from the model.",
+   "2": "Rows: expected category, columns: category from the model."
+  }
+ },
+ {
+  "key": "evaluation.results",
+  "lang": "en",
+  "translations": {
+   "1": "Sample results",
+   "2": "Sample results"
+  }
+ },
+ {
+  "key": "evaluation.automatic",
+  "lang": "en",
+  "translations": {
+   "1": "automatic",
+   "2": "automatic"
+  }
+ },
+ {
+  "key": "evaluation.flagged",
+  "lang": "en",
+  "translations": {
+   "1": "moderation",
+   "2": "moderation"
+  }
+ },
+ {
+  "key": "evaluation.result.pending",
+  "lang": "en",
+  "translations": {
+   "1": "pending",
+   "2": "pending"
+  }
+ },
+ {
+  "key": "decision.reason.classification_unavailable",
+  "lang": "en",
+  "translations": {
+   "1": "classification failed",
+   "2": "classification failed"
+  }
+ },
+ {
+  "key": "decision.reason.handoff_category",
+  "lang": "en",
+  "translations": {
+   "1": "sensitive topic",
+   "2": "sensitive topic"
+  }
+ },
+ {
+  "key": "decision.reason.model_requires_human",
+  "lang": "en",
+  "translations": {
+   "1": "model asks for a human",
+   "2": "model asks for a human"
+  }
+ },
+ {
+  "key": "decision.reason.category_needs_review",
+  "lang": "en",
+  "translations": {
+   "1": "category needs review",
+   "2": "category needs review"
+  }
+ },
+ {
+  "key": "decision.reason.model_disagrees",
+  "lang": "en",
+  "translations": {
+   "1": "model recommended another action",
+   "2": "model recommended another action"
+  }
+ },
+ {
+  "key": "decision.reason.moderation_flagged",
+  "lang": "en",
+  "translations": {
+   "1": "flagged by moderation",
+   "2": "flagged by moderation"
+  }
+ },
+ {
+  "key": "decision.reason.below_hide_threshold",
+  "lang": "en",
+  "translations": {
+   "1": "below the hide threshold",
+   "2": "below the hide threshold"
+  }
+ },
+ {
+  "key": "decision.reason.unsupported_language",
+  "lang": "en",
+  "translations": {
+   "1": "unsupported language",
+   "2": "unsupported language"
+  }
+ },
+ {
+  "key": "decision.reason.below_reply_threshold",
+  "lang": "en",
+  "translations": {
+   "1": "below the reply threshold",
+   "2": "below the reply threshold"
+  }
+ },
+ {
+  "key": "decision.reason.mode_observe",
+  "lang": "en",
+  "translations": {
+   "1": "observe mode",
+   "2": "observe mode"
+  }
+ },
+ {
+  "key": "decision.reason.mode_assisted",
+  "lang": "en",
+  "translations": {
+   "1": "assisted mode",
+   "2": "assisted mode"
+  }
+ },
+ {
+  "key": "decision.reason.automation_paused",
+  "lang": "en",
+  "translations": {
+   "1": "automation paused",
+   "2": "automation paused"
+  }
+ },
+ {
+  "key": "decision.reason.account_inactive",
+  "lang": "en",
+  "translations": {
+   "1": "account inactive",
+   "2": "account inactive"
+  }
+ },
+ {
+  "key": "decision.reason.auto_hide_disabled",
+  "lang": "en",
+  "translations": {
+   "1": "automatic hiding not allowed",
+   "2": "automatic hiding not allowed"
+  }
+ },
+ {
+  "key": "decision.reason.auto_reply_not_allowed",
+  "lang": "en",
+  "translations": {
+   "1": "automatic reply not allowed",
+   "2": "automatic reply not allowed"
+  }
  }
 ]

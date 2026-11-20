@@ -7,6 +7,7 @@ services:
 	- App\Console\OperatorCreateCommand
 	- App\Console\OperatorPasswordCommand
 	- App\Console\PasswordPrompt
+	- App\Console\EvaluationImportCommand
 	- App\Core\Encryptor(%env.APP_ENCRYPTION_KEY%)
 	- App\Core\Correlation
 	- App\Core\Logger(file: %rootDir%/log/app.log)
@@ -32,6 +33,15 @@ services:
 			maxPerAddress: %login.maxFailuresPerAddress%
 			windowMinutes: %login.windowMinutes%
 	- App\Presentation\FormFactory
+	- App\Moderation\PolicyEngine
+	- App\Moderation\Policies(defaultMode: App\Moderation\Mode::from(%env.AUTOMATION_DEFAULT_MODE%))
+	- App\Moderation\AutomationSwitch
+	- App\Knowledge\KnowledgeBase(locales: %knowledge.locales%, timezone: %timezone%)
+	- App\Ai\HttpOpenAiClient(%env.OPENAI_API_KEY%)
+	- App\Ai\Classifier(model: %env.OPENAI_CLASSIFIER_MODEL%, moderationModel: %env.OPENAI_MODERATION_MODEL%)
+	- App\Evaluation\EvaluationSamples
+	- App\Evaluation\EvaluationRuns
+	- App\Evaluation\EvaluationRunner
 
 
 decorator:

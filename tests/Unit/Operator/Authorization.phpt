@@ -30,3 +30,16 @@ test('admin may do everything', function () use ($acl): void {
 	Assert::true($acl->isAllowed('admin', Authorization::Operators, Authorization::Manage));
 	Assert::true($acl->isAllowed('admin', Authorization::Events, Authorization::Manage));
 });
+
+
+test('policy, knowledge and evaluation: viewers read, moderators edit, admins manage', function () use ($acl): void {
+	foreach ([Authorization::Policy, Authorization::Knowledge, Authorization::Evaluation] as $resource) {
+		Assert::true($acl->isAllowed('viewer', $resource, Authorization::View));
+		Assert::false($acl->isAllowed('viewer', $resource, Authorization::Edit));
+		Assert::false($acl->isAllowed('moderator', $resource, Authorization::Manage));
+		Assert::true($acl->isAllowed('admin', $resource, Authorization::Manage));
+	}
+	Assert::true($acl->isAllowed('moderator', Authorization::Knowledge, Authorization::Edit));
+	Assert::true($acl->isAllowed('moderator', Authorization::Evaluation, Authorization::Edit));
+	Assert::false($acl->isAllowed('moderator', Authorization::Policy, Authorization::Edit));
+});

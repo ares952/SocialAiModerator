@@ -19,6 +19,13 @@ parameters:
 	# Display time zone of the administration; the application and the database work in UTC.
 	timezone: Europe/Prague
 
+	knowledge:
+		# Languages of the knowledge base content (specification §1.1).
+		locales:
+			- cs
+			- en
+			- es
+
 	# Failed sign-ins (App\Operator\LoginThrottle) within the window block further attempts.
 	login:
 		maxFailuresPerEmail: 5
@@ -65,6 +72,9 @@ tracy:
 		- App\Core\Encryptor::$key
 		- App\Meta\WebhookVerifier::$appSecret
 		- App\Meta\WebhookVerifier::$verifyToken
+		- App\Ai\HttpOpenAiClient::$apiKey
+		- App\Moderation\CustomerContent::$text
+		- App\Evaluation\Sample::$text
 
 
 # Sessions live in the `redis` service (phpredis, persistent). The expiration also sets

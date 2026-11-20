@@ -898,5 +898,1589 @@
    "2": "Současné heslo není správné.",
    "5": "Současné heslo není správné."
   }
+ },
+ {
+  "key": "admin.menu.policy",
+  "lang": "cs",
+  "translations": {
+   "1": "Pravidla",
+   "2": "Pravidla",
+   "5": "Pravidla"
+  }
+ },
+ {
+  "key": "admin.menu.knowledge",
+  "lang": "cs",
+  "translations": {
+   "1": "Znalosti",
+   "2": "Znalosti",
+   "5": "Znalosti"
+  }
+ },
+ {
+  "key": "admin.menu.evaluation",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyhodnocení",
+   "2": "Vyhodnocení",
+   "5": "Vyhodnocení"
+  }
+ },
+ {
+  "key": "common.yes",
+  "lang": "cs",
+  "translations": {
+   "1": "ano",
+   "2": "ano",
+   "5": "ano"
+  }
+ },
+ {
+  "key": "common.no",
+  "lang": "cs",
+  "translations": {
+   "1": "ne",
+   "2": "ne",
+   "5": "ne"
+  }
+ },
+ {
+  "key": "common.edit",
+  "lang": "cs",
+  "translations": {
+   "1": "Upravit",
+   "2": "Upravit",
+   "5": "Upravit"
+  }
+ },
+ {
+  "key": "common.delete",
+  "lang": "cs",
+  "translations": {
+   "1": "Smazat",
+   "2": "Smazat",
+   "5": "Smazat"
+  }
+ },
+ {
+  "key": "common.actions",
+  "lang": "cs",
+  "translations": {
+   "1": "Akce",
+   "2": "Akce",
+   "5": "Akce"
+  }
+ },
+ {
+  "key": "dashboard.mode",
+  "lang": "cs",
+  "translations": {
+   "1": "Režim",
+   "2": "Režim",
+   "5": "Režim"
+  }
+ },
+ {
+  "key": "dashboard.policy-link",
+  "lang": "cs",
+  "translations": {
+   "1": "Pravidla a nouzové vypnutí",
+   "2": "Pravidla a nouzové vypnutí",
+   "5": "Pravidla a nouzové vypnutí"
+  }
+ },
+ {
+  "key": "mode.observe",
+  "lang": "cs",
+  "translations": {
+   "1": "Jen pozorování",
+   "2": "Jen pozorování",
+   "5": "Jen pozorování"
+  }
+ },
+ {
+  "key": "mode.assisted",
+  "lang": "cs",
+  "translations": {
+   "1": "Se schvalováním",
+   "2": "Se schvalováním",
+   "5": "Se schvalováním"
+  }
+ },
+ {
+  "key": "mode.automatic",
+  "lang": "cs",
+  "translations": {
+   "1": "Automatický",
+   "2": "Automatický",
+   "5": "Automatický"
+  }
+ },
+ {
+  "key": "category.spam",
+  "lang": "cs",
+  "translations": {
+   "1": "Spam",
+   "2": "Spam",
+   "5": "Spam"
+  }
+ },
+ {
+  "key": "category.scam",
+  "lang": "cs",
+  "translations": {
+   "1": "Podvod",
+   "2": "Podvod",
+   "5": "Podvod"
+  }
+ },
+ {
+  "key": "category.abuse",
+  "lang": "cs",
+  "translations": {
+   "1": "Urážka / obtěžování",
+   "2": "Urážka / obtěžování",
+   "5": "Urážka / obtěžování"
+  }
+ },
+ {
+  "key": "category.legitimate_criticism",
+  "lang": "cs",
+  "translations": {
+   "1": "Oprávněná kritika",
+   "2": "Oprávněná kritika",
+   "5": "Oprávněná kritika"
+  }
+ },
+ {
+  "key": "category.praise",
+  "lang": "cs",
+  "translations": {
+   "1": "Pochvala",
+   "2": "Pochvala",
+   "5": "Pochvala"
+  }
+ },
+ {
+  "key": "category.faq",
+  "lang": "cs",
+  "translations": {
+   "1": "Běžný dotaz",
+   "2": "Běžný dotaz",
+   "5": "Běžný dotaz"
+  }
+ },
+ {
+  "key": "category.support_issue",
+  "lang": "cs",
+  "translations": {
+   "1": "Stížnost / problém",
+   "2": "Stížnost / problém",
+   "5": "Stížnost / problém"
+  }
+ },
+ {
+  "key": "category.billing",
+  "lang": "cs",
+  "translations": {
+   "1": "Platby",
+   "2": "Platby",
+   "5": "Platby"
+  }
+ },
+ {
+  "key": "category.refund",
+  "lang": "cs",
+  "translations": {
+   "1": "Vrácení peněz",
+   "2": "Vrácení peněz",
+   "5": "Vrácení peněz"
+  }
+ },
+ {
+  "key": "category.health",
+  "lang": "cs",
+  "translations": {
+   "1": "Zdraví",
+   "2": "Zdraví",
+   "5": "Zdraví"
+  }
+ },
+ {
+  "key": "category.legal",
+  "lang": "cs",
+  "translations": {
+   "1": "Právní",
+   "2": "Právní",
+   "5": "Právní"
+  }
+ },
+ {
+  "key": "category.unknown",
+  "lang": "cs",
+  "translations": {
+   "1": "Neurčeno",
+   "2": "Neurčeno",
+   "5": "Neurčeno"
+  }
+ },
+ {
+  "key": "action.ignore",
+  "lang": "cs",
+  "translations": {
+   "1": "Ignorovat",
+   "2": "Ignorovat",
+   "5": "Ignorovat"
+  }
+ },
+ {
+  "key": "action.keep",
+  "lang": "cs",
+  "translations": {
+   "1": "Ponechat",
+   "2": "Ponechat",
+   "5": "Ponechat"
+  }
+ },
+ {
+  "key": "action.hide",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrýt",
+   "2": "Skrýt",
+   "5": "Skrýt"
+  }
+ },
+ {
+  "key": "action.reply",
+  "lang": "cs",
+  "translations": {
+   "1": "Odpovědět",
+   "2": "Odpovědět",
+   "5": "Odpovědět"
+  }
+ },
+ {
+  "key": "action.review",
+  "lang": "cs",
+  "translations": {
+   "1": "Ke kontrole",
+   "2": "Ke kontrole",
+   "5": "Ke kontrole"
+  }
+ },
+ {
+  "key": "action.handoff",
+  "lang": "cs",
+  "translations": {
+   "1": "Předat člověku",
+   "2": "Předat člověku",
+   "5": "Předat člověku"
+  }
+ },
+ {
+  "key": "content.kind.comment",
+  "lang": "cs",
+  "translations": {
+   "1": "Komentář",
+   "2": "Komentář",
+   "5": "Komentář"
+  }
+ },
+ {
+  "key": "content.kind.message",
+  "lang": "cs",
+  "translations": {
+   "1": "Soukromá zpráva",
+   "2": "Soukromá zpráva",
+   "5": "Soukromá zpráva"
+  }
+ },
+ {
+  "key": "policy.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Pravidla moderace",
+   "2": "Pravidla moderace",
+   "5": "Pravidla moderace"
+  }
+ },
+ {
+  "key": "policy.current",
+  "lang": "cs",
+  "translations": {
+   "1": "Platná verze %version%",
+   "2": "Platná verze %version%",
+   "5": "Platná verze %version%"
+  }
+ },
+ {
+  "key": "policy.default-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Zatím nebyla uložena žádná verze, platí výchozí nastavení (režim z AUTOMATION_DEFAULT_MODE).",
+   "2": "Zatím nebyla uložena žádná verze, platí výchozí nastavení (režim z AUTOMATION_DEFAULT_MODE).",
+   "5": "Zatím nebyla uložena žádná verze, platí výchozí nastavení (režim z AUTOMATION_DEFAULT_MODE)."
+  }
+ },
+ {
+  "key": "policy.history",
+  "lang": "cs",
+  "translations": {
+   "1": "Historie verzí",
+   "2": "Historie verzí",
+   "5": "Historie verzí"
+  }
+ },
+ {
+  "key": "policy.history-empty",
+  "lang": "cs",
+  "translations": {
+   "1": "Žádné uložené verze.",
+   "2": "Žádné uložené verze.",
+   "5": "Žádné uložené verze."
+  }
+ },
+ {
+  "key": "policy.active",
+  "lang": "cs",
+  "translations": {
+   "1": "platná",
+   "2": "platná",
+   "5": "platná"
+  }
+ },
+ {
+  "key": "policy.saved",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložena verze %version% pravidel.",
+   "2": "Uložena verze %version% pravidel.",
+   "5": "Uložena verze %version% pravidel."
+  }
+ },
+ {
+  "key": "policy.form.mode",
+  "lang": "cs",
+  "translations": {
+   "1": "Režim",
+   "2": "Režim",
+   "5": "Režim"
+  }
+ },
+ {
+  "key": "policy.form.mode-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Dokud neexistuje odesílání akcí, žádný režim nic na Metě nemění.",
+   "2": "Dokud neexistuje odesílání akcí, žádný režim nic na Metě nemění.",
+   "5": "Dokud neexistuje odesílání akcí, žádný režim nic na Metě nemění."
+  }
+ },
+ {
+  "key": "policy.form.hideMinConfidence",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrytí: minimální jistota kategorie",
+   "2": "Skrytí: minimální jistota kategorie",
+   "5": "Skrytí: minimální jistota kategorie"
+  }
+ },
+ {
+  "key": "policy.form.hideMinSpamProbability",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrytí: minimální pravděpodobnost spamu",
+   "2": "Skrytí: minimální pravděpodobnost spamu",
+   "5": "Skrytí: minimální pravděpodobnost spamu"
+  }
+ },
+ {
+  "key": "policy.form.replyMinConfidence",
+  "lang": "cs",
+  "translations": {
+   "1": "Odpověď: minimální jistota kategorie",
+   "2": "Odpověď: minimální jistota kategorie",
+   "5": "Odpověď: minimální jistota kategorie"
+  }
+ },
+ {
+  "key": "policy.form.autoHide",
+  "lang": "cs",
+  "translations": {
+   "1": "Povolit automatické skrytí spamu",
+   "2": "Povolit automatické skrytí spamu",
+   "5": "Povolit automatické skrytí spamu"
+  }
+ },
+ {
+  "key": "policy.form.autoReplyCategories",
+  "lang": "cs",
+  "translations": {
+   "1": "Kategorie s povolenou automatickou odpovědí",
+   "2": "Kategorie s povolenou automatickou odpovědí",
+   "5": "Kategorie s povolenou automatickou odpovědí"
+  }
+ },
+ {
+  "key": "policy.form.languages",
+  "lang": "cs",
+  "translations": {
+   "1": "Jazyky odpovědí (kódy oddělené čárkou)",
+   "2": "Jazyky odpovědí (kódy oddělené čárkou)",
+   "5": "Jazyky odpovědí (kódy oddělené čárkou)"
+  }
+ },
+ {
+  "key": "policy.form.otherLanguage",
+  "lang": "cs",
+  "translations": {
+   "1": "Jiný jazyk",
+   "2": "Jiný jazyk",
+   "5": "Jiný jazyk"
+  }
+ },
+ {
+  "key": "policy.form.save",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložit novou verzi",
+   "2": "Uložit novou verzi",
+   "5": "Uložit novou verzi"
+  }
+ },
+ {
+  "key": "policy.error.threshold",
+  "lang": "cs",
+  "translations": {
+   "1": "Prahy musí být mezi 0,5 a 1.",
+   "2": "Prahy musí být mezi 0,5 a 1.",
+   "5": "Prahy musí být mezi 0,5 a 1."
+  }
+ },
+ {
+  "key": "policy.error.other-language",
+  "lang": "cs",
+  "translations": {
+   "1": "Pro jiný jazyk lze zvolit jen předání člověku nebo kontrolu.",
+   "2": "Pro jiný jazyk lze zvolit jen předání člověku nebo kontrolu.",
+   "5": "Pro jiný jazyk lze zvolit jen předání člověku nebo kontrolu."
+  }
+ },
+ {
+  "key": "policy.error.handoff-category",
+  "lang": "cs",
+  "translations": {
+   "1": "Stížnosti, platby, vracení peněz, zdraví a právní témata nelze odpovídat automaticky.",
+   "2": "Stížnosti, platby, vracení peněz, zdraví a právní témata nelze odpovídat automaticky.",
+   "5": "Stížnosti, platby, vracení peněz, zdraví a právní témata nelze odpovídat automaticky."
+  }
+ },
+ {
+  "key": "policy.error.category",
+  "lang": "cs",
+  "translations": {
+   "1": "Neznámá kategorie.",
+   "2": "Neznámá kategorie.",
+   "5": "Neznámá kategorie."
+  }
+ },
+ {
+  "key": "policy.error.languages",
+  "lang": "cs",
+  "translations": {
+   "1": "Zadejte dvoupísmenné kódy jazyků oddělené čárkou, např. cs, en, es.",
+   "2": "Zadejte dvoupísmenné kódy jazyků oddělené čárkou, např. cs, en, es.",
+   "5": "Zadejte dvoupísmenné kódy jazyků oddělené čárkou, např. cs, en, es."
+  }
+ },
+ {
+  "key": "automation.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Nouzové vypnutí automatiky",
+   "2": "Nouzové vypnutí automatiky",
+   "5": "Nouzové vypnutí automatiky"
+  }
+ },
+ {
+  "key": "automation.state.paused",
+  "lang": "cs",
+  "translations": {
+   "1": "Automatické zásahy jsou VYPNUTÉ (%name%, %time%).",
+   "2": "Automatické zásahy jsou VYPNUTÉ (%name%, %time%).",
+   "5": "Automatické zásahy jsou VYPNUTÉ (%name%, %time%)."
+  }
+ },
+ {
+  "key": "automation.state.paused-short",
+  "lang": "cs",
+  "translations": {
+   "1": "automatika vypnuta",
+   "2": "automatika vypnuta",
+   "5": "automatika vypnuta"
+  }
+ },
+ {
+  "key": "automation.state.running",
+  "lang": "cs",
+  "translations": {
+   "1": "Automatické zásahy nejsou nouzově vypnuté.",
+   "2": "Automatické zásahy nejsou nouzově vypnuté.",
+   "5": "Automatické zásahy nejsou nouzově vypnuté."
+  }
+ },
+ {
+  "key": "automation.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Vypnutí zablokuje všechny automatické zápisy na Metu, události se dál přijímají a ukládají.",
+   "2": "Vypnutí zablokuje všechny automatické zápisy na Metu, události se dál přijímají a ukládají.",
+   "5": "Vypnutí zablokuje všechny automatické zápisy na Metu, události se dál přijímají a ukládají."
+  }
+ },
+ {
+  "key": "automation.form.reason",
+  "lang": "cs",
+  "translations": {
+   "1": "Důvod (nepovinný)",
+   "2": "Důvod (nepovinný)",
+   "5": "Důvod (nepovinný)"
+  }
+ },
+ {
+  "key": "automation.form.pause",
+  "lang": "cs",
+  "translations": {
+   "1": "Vypnout automatiku",
+   "2": "Vypnout automatiku",
+   "5": "Vypnout automatiku"
+  }
+ },
+ {
+  "key": "automation.form.resume",
+  "lang": "cs",
+  "translations": {
+   "1": "Znovu zapnout automatiku",
+   "2": "Znovu zapnout automatiku",
+   "5": "Znovu zapnout automatiku"
+  }
+ },
+ {
+  "key": "automation.paused",
+  "lang": "cs",
+  "translations": {
+   "1": "Automatické zásahy byly vypnuty.",
+   "2": "Automatické zásahy byly vypnuty.",
+   "5": "Automatické zásahy byly vypnuty."
+  }
+ },
+ {
+  "key": "automation.resumed",
+  "lang": "cs",
+  "translations": {
+   "1": "Automatické zásahy byly znovu zapnuty.",
+   "2": "Automatické zásahy byly znovu zapnuty.",
+   "5": "Automatické zásahy byly znovu zapnuty."
+  }
+ },
+ {
+  "key": "knowledge.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Znalostní báze",
+   "2": "Znalostní báze",
+   "5": "Znalostní báze"
+  }
+ },
+ {
+  "key": "knowledge.add",
+  "lang": "cs",
+  "translations": {
+   "1": "Přidat znalost",
+   "2": "Přidat znalost",
+   "5": "Přidat znalost"
+  }
+ },
+ {
+  "key": "knowledge.edit",
+  "lang": "cs",
+  "translations": {
+   "1": "Nová verze",
+   "2": "Nová verze",
+   "5": "Nová verze"
+  }
+ },
+ {
+  "key": "knowledge.note",
+  "lang": "cs",
+  "translations": {
+   "1": "AI smí při odpovědích použít jen publikované a právě platné znalosti. Každá úprava vytvoří novou verzi ke schválení.",
+   "2": "AI smí při odpovědích použít jen publikované a právě platné znalosti. Každá úprava vytvoří novou verzi ke schválení.",
+   "5": "AI smí při odpovědích použít jen publikované a právě platné znalosti. Každá úprava vytvoří novou verzi ke schválení."
+  }
+ },
+ {
+  "key": "knowledge.empty",
+  "lang": "cs",
+  "translations": {
+   "1": "Znalostní báze je prázdná.",
+   "2": "Znalostní báze je prázdná.",
+   "5": "Znalostní báze je prázdná."
+  }
+ },
+ {
+  "key": "knowledge.column.key",
+  "lang": "cs",
+  "translations": {
+   "1": "Klíč",
+   "2": "Klíč",
+   "5": "Klíč"
+  }
+ },
+ {
+  "key": "knowledge.column.locale",
+  "lang": "cs",
+  "translations": {
+   "1": "Jazyk",
+   "2": "Jazyk",
+   "5": "Jazyk"
+  }
+ },
+ {
+  "key": "knowledge.column.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Název",
+   "2": "Název",
+   "5": "Název"
+  }
+ },
+ {
+  "key": "knowledge.column.latest",
+  "lang": "cs",
+  "translations": {
+   "1": "Poslední verze",
+   "2": "Poslední verze",
+   "5": "Poslední verze"
+  }
+ },
+ {
+  "key": "knowledge.column.published",
+  "lang": "cs",
+  "translations": {
+   "1": "Publikováno",
+   "2": "Publikováno",
+   "5": "Publikováno"
+  }
+ },
+ {
+  "key": "knowledge.status.draft",
+  "lang": "cs",
+  "translations": {
+   "1": "koncept",
+   "2": "koncept",
+   "5": "koncept"
+  }
+ },
+ {
+  "key": "knowledge.status.published",
+  "lang": "cs",
+  "translations": {
+   "1": "publikováno",
+   "2": "publikováno",
+   "5": "publikováno"
+  }
+ },
+ {
+  "key": "knowledge.status.archived",
+  "lang": "cs",
+  "translations": {
+   "1": "archivováno",
+   "2": "archivováno",
+   "5": "archivováno"
+  }
+ },
+ {
+  "key": "knowledge.type.faq",
+  "lang": "cs",
+  "translations": {
+   "1": "Časté dotazy",
+   "2": "Časté dotazy",
+   "5": "Časté dotazy"
+  }
+ },
+ {
+  "key": "knowledge.type.pricing",
+  "lang": "cs",
+  "translations": {
+   "1": "Ceník",
+   "2": "Ceník",
+   "5": "Ceník"
+  }
+ },
+ {
+  "key": "knowledge.type.product",
+  "lang": "cs",
+  "translations": {
+   "1": "Produkt",
+   "2": "Produkt",
+   "5": "Produkt"
+  }
+ },
+ {
+  "key": "knowledge.type.terms",
+  "lang": "cs",
+  "translations": {
+   "1": "Obchodní podmínky",
+   "2": "Obchodní podmínky",
+   "5": "Obchodní podmínky"
+  }
+ },
+ {
+  "key": "knowledge.type.other",
+  "lang": "cs",
+  "translations": {
+   "1": "Ostatní",
+   "2": "Ostatní",
+   "5": "Ostatní"
+  }
+ },
+ {
+  "key": "knowledge.locale.cs",
+  "lang": "cs",
+  "translations": {
+   "1": "čeština",
+   "2": "čeština",
+   "5": "čeština"
+  }
+ },
+ {
+  "key": "knowledge.locale.en",
+  "lang": "cs",
+  "translations": {
+   "1": "angličtina",
+   "2": "angličtina",
+   "5": "angličtina"
+  }
+ },
+ {
+  "key": "knowledge.locale.es",
+  "lang": "cs",
+  "translations": {
+   "1": "španělština",
+   "2": "španělština",
+   "5": "španělština"
+  }
+ },
+ {
+  "key": "knowledge.form.key",
+  "lang": "cs",
+  "translations": {
+   "1": "Klíč",
+   "2": "Klíč",
+   "5": "Klíč"
+  }
+ },
+ {
+  "key": "knowledge.form.key-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Malá písmena, číslice a podtržítko, např. pricing_current. Stejný klíč spojuje jazykové verze.",
+   "2": "Malá písmena, číslice a podtržítko, např. pricing_current. Stejný klíč spojuje jazykové verze.",
+   "5": "Malá písmena, číslice a podtržítko, např. pricing_current. Stejný klíč spojuje jazykové verze."
+  }
+ },
+ {
+  "key": "knowledge.form.locale",
+  "lang": "cs",
+  "translations": {
+   "1": "Jazyk",
+   "2": "Jazyk",
+   "5": "Jazyk"
+  }
+ },
+ {
+  "key": "knowledge.form.type",
+  "lang": "cs",
+  "translations": {
+   "1": "Typ",
+   "2": "Typ",
+   "5": "Typ"
+  }
+ },
+ {
+  "key": "knowledge.form.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Název",
+   "2": "Název",
+   "5": "Název"
+  }
+ },
+ {
+  "key": "knowledge.form.content",
+  "lang": "cs",
+  "translations": {
+   "1": "Obsah",
+   "2": "Obsah",
+   "5": "Obsah"
+  }
+ },
+ {
+  "key": "knowledge.form.content-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Jen ověřené informace, které smí AI sdělit zákazníkům.",
+   "2": "Jen ověřené informace, které smí AI sdělit zákazníkům.",
+   "5": "Jen ověřené informace, které smí AI sdělit zákazníkům."
+  }
+ },
+ {
+  "key": "knowledge.form.validFrom",
+  "lang": "cs",
+  "translations": {
+   "1": "Platí od",
+   "2": "Platí od",
+   "5": "Platí od"
+  }
+ },
+ {
+  "key": "knowledge.form.validTo",
+  "lang": "cs",
+  "translations": {
+   "1": "Platí do",
+   "2": "Platí do",
+   "5": "Platí do"
+  }
+ },
+ {
+  "key": "knowledge.form.save",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložit koncept",
+   "2": "Uložit koncept",
+   "5": "Uložit koncept"
+  }
+ },
+ {
+  "key": "knowledge.edit-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložením vznikne nová verze jako koncept; verze %version% zůstane beze změny.",
+   "2": "Uložením vznikne nová verze jako koncept; verze %version% zůstane beze změny.",
+   "5": "Uložením vznikne nová verze jako koncept; verze %version% zůstane beze změny."
+  }
+ },
+ {
+  "key": "knowledge.publish",
+  "lang": "cs",
+  "translations": {
+   "1": "Publikovat",
+   "2": "Publikovat",
+   "5": "Publikovat"
+  }
+ },
+ {
+  "key": "knowledge.unpublish",
+  "lang": "cs",
+  "translations": {
+   "1": "Stáhnout",
+   "2": "Stáhnout",
+   "5": "Stáhnout"
+  }
+ },
+ {
+  "key": "knowledge.published",
+  "lang": "cs",
+  "translations": {
+   "1": "Verze byla publikována, předchozí publikovaná verze byla archivována.",
+   "2": "Verze byla publikována, předchozí publikovaná verze byla archivována.",
+   "5": "Verze byla publikována, předchozí publikovaná verze byla archivována."
+  }
+ },
+ {
+  "key": "knowledge.unpublished",
+  "lang": "cs",
+  "translations": {
+   "1": "Verze byla stažena.",
+   "2": "Verze byla stažena.",
+   "5": "Verze byla stažena."
+  }
+ },
+ {
+  "key": "knowledge.saved",
+  "lang": "cs",
+  "translations": {
+   "1": "Koncept byl uložen.",
+   "2": "Koncept byl uložen.",
+   "5": "Koncept byl uložen."
+  }
+ },
+ {
+  "key": "knowledge.validity",
+  "lang": "cs",
+  "translations": {
+   "1": "Platnost",
+   "2": "Platnost",
+   "5": "Platnost"
+  }
+ },
+ {
+  "key": "knowledge.versions",
+  "lang": "cs",
+  "translations": {
+   "1": "Verze",
+   "2": "Verze",
+   "5": "Verze"
+  }
+ },
+ {
+  "key": "knowledge.approved",
+  "lang": "cs",
+  "translations": {
+   "1": "Schváleno",
+   "2": "Schváleno",
+   "5": "Schváleno"
+  }
+ },
+ {
+  "key": "knowledge.error.key",
+  "lang": "cs",
+  "translations": {
+   "1": "Klíč smí obsahovat jen malá písmena, číslice a podtržítko.",
+   "2": "Klíč smí obsahovat jen malá písmena, číslice a podtržítko.",
+   "5": "Klíč smí obsahovat jen malá písmena, číslice a podtržítko."
+  }
+ },
+ {
+  "key": "knowledge.error.locale",
+  "lang": "cs",
+  "translations": {
+   "1": "Nepodporovaný jazyk.",
+   "2": "Nepodporovaný jazyk.",
+   "5": "Nepodporovaný jazyk."
+  }
+ },
+ {
+  "key": "knowledge.error.validity",
+  "lang": "cs",
+  "translations": {
+   "1": "Začátek platnosti musí být před koncem.",
+   "2": "Začátek platnosti musí být před koncem.",
+   "5": "Začátek platnosti musí být před koncem."
+  }
+ },
+ {
+  "key": "knowledge.error.not-found",
+  "lang": "cs",
+  "translations": {
+   "1": "Znalost neexistuje.",
+   "2": "Znalost neexistuje.",
+   "5": "Znalost neexistuje."
+  }
+ },
+ {
+  "key": "evaluation.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyhodnocení AI",
+   "2": "Vyhodnocení AI",
+   "5": "Vyhodnocení AI"
+  }
+ },
+ {
+  "key": "evaluation.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Běh pošle všechny vzorky klasifikátoru a pravidlům a porovná výsledek s ručním označením. Podle výsledků se nastavují prahy.",
+   "2": "Běh pošle všechny vzorky klasifikátoru a pravidlům a porovná výsledek s ručním označením. Podle výsledků se nastavují prahy.",
+   "5": "Běh pošle všechny vzorky klasifikátoru a pravidlům a porovná výsledek s ručním označením. Podle výsledků se nastavují prahy."
+  }
+ },
+ {
+  "key": "evaluation.samples",
+  "lang": "cs",
+  "translations": {
+   "1": "%count% vzorek",
+   "2": "%count% vzorky",
+   "5": "%count% vzorků"
+  }
+ },
+ {
+  "key": "evaluation.start",
+  "lang": "cs",
+  "translations": {
+   "1": "Spustit vyhodnocení",
+   "2": "Spustit vyhodnocení",
+   "5": "Spustit vyhodnocení"
+  }
+ },
+ {
+  "key": "evaluation.started",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyhodnocení bylo zařazeno do fronty.",
+   "2": "Vyhodnocení bylo zařazeno do fronty.",
+   "5": "Vyhodnocení bylo zařazeno do fronty."
+  }
+ },
+ {
+  "key": "evaluation.runs-empty",
+  "lang": "cs",
+  "translations": {
+   "1": "Zatím žádné běhy.",
+   "2": "Zatím žádné běhy.",
+   "5": "Zatím žádné běhy."
+  }
+ },
+ {
+  "key": "evaluation.column.created",
+  "lang": "cs",
+  "translations": {
+   "1": "Spuštěno",
+   "2": "Spuštěno",
+   "5": "Spuštěno"
+  }
+ },
+ {
+  "key": "evaluation.column.model",
+  "lang": "cs",
+  "translations": {
+   "1": "Model",
+   "2": "Model",
+   "5": "Model"
+  }
+ },
+ {
+  "key": "evaluation.column.progress",
+  "lang": "cs",
+  "translations": {
+   "1": "Hotovo",
+   "2": "Hotovo",
+   "5": "Hotovo"
+  }
+ },
+ {
+  "key": "evaluation.column.category",
+  "lang": "cs",
+  "translations": {
+   "1": "Správná kategorie",
+   "2": "Správná kategorie",
+   "5": "Správná kategorie"
+  }
+ },
+ {
+  "key": "evaluation.column.action",
+  "lang": "cs",
+  "translations": {
+   "1": "Správná akce",
+   "2": "Správná akce",
+   "5": "Správná akce"
+  }
+ },
+ {
+  "key": "evaluation.column.expected",
+  "lang": "cs",
+  "translations": {
+   "1": "Očekáváno",
+   "2": "Očekáváno",
+   "5": "Očekáváno"
+  }
+ },
+ {
+  "key": "evaluation.column.result",
+  "lang": "cs",
+  "translations": {
+   "1": "Výsledek",
+   "2": "Výsledek",
+   "5": "Výsledek"
+  }
+ },
+ {
+  "key": "evaluation.column.reasons",
+  "lang": "cs",
+  "translations": {
+   "1": "Důvody",
+   "2": "Důvody",
+   "5": "Důvody"
+  }
+ },
+ {
+  "key": "evaluation.policy",
+  "lang": "cs",
+  "translations": {
+   "1": "pravidla v%version%",
+   "2": "pravidla v%version%",
+   "5": "pravidla v%version%"
+  }
+ },
+ {
+  "key": "evaluation.samples-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Jen smyšlené nebo anonymizované texty. Zahrňte oprávněnou kritiku, pokusy o prompt injection a všechny tři jazyky.",
+   "2": "Jen smyšlené nebo anonymizované texty. Zahrňte oprávněnou kritiku, pokusy o prompt injection a všechny tři jazyky.",
+   "5": "Jen smyšlené nebo anonymizované texty. Zahrňte oprávněnou kritiku, pokusy o prompt injection a všechny tři jazyky."
+  }
+ },
+ {
+  "key": "evaluation.samples-empty",
+  "lang": "cs",
+  "translations": {
+   "1": "Zatím žádné vzorky.",
+   "2": "Zatím žádné vzorky.",
+   "5": "Zatím žádné vzorky."
+  }
+ },
+ {
+  "key": "evaluation.sample.add",
+  "lang": "cs",
+  "translations": {
+   "1": "Přidat vzorek",
+   "2": "Přidat vzorek",
+   "5": "Přidat vzorek"
+  }
+ },
+ {
+  "key": "evaluation.sample.edit",
+  "lang": "cs",
+  "translations": {
+   "1": "Upravit vzorek",
+   "2": "Upravit vzorek",
+   "5": "Upravit vzorek"
+  }
+ },
+ {
+  "key": "evaluation.sample.platform",
+  "lang": "cs",
+  "translations": {
+   "1": "Platforma",
+   "2": "Platforma",
+   "5": "Platforma"
+  }
+ },
+ {
+  "key": "evaluation.sample.kind",
+  "lang": "cs",
+  "translations": {
+   "1": "Druh",
+   "2": "Druh",
+   "5": "Druh"
+  }
+ },
+ {
+  "key": "evaluation.sample.language",
+  "lang": "cs",
+  "translations": {
+   "1": "Jazyk (kód)",
+   "2": "Jazyk (kód)",
+   "5": "Jazyk (kód)"
+  }
+ },
+ {
+  "key": "evaluation.sample.text",
+  "lang": "cs",
+  "translations": {
+   "1": "Text",
+   "2": "Text",
+   "5": "Text"
+  }
+ },
+ {
+  "key": "evaluation.sample.text-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Nevkládejte skutečné osobní údaje.",
+   "2": "Nevkládejte skutečné osobní údaje.",
+   "5": "Nevkládejte skutečné osobní údaje."
+  }
+ },
+ {
+  "key": "evaluation.sample.expectedCategory",
+  "lang": "cs",
+  "translations": {
+   "1": "Očekávaná kategorie",
+   "2": "Očekávaná kategorie",
+   "5": "Očekávaná kategorie"
+  }
+ },
+ {
+  "key": "evaluation.sample.expectedAction",
+  "lang": "cs",
+  "translations": {
+   "1": "Očekávaná akce",
+   "2": "Očekávaná akce",
+   "5": "Očekávaná akce"
+  }
+ },
+ {
+  "key": "evaluation.sample.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Poznámka",
+   "2": "Poznámka",
+   "5": "Poznámka"
+  }
+ },
+ {
+  "key": "evaluation.sample.save",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložit",
+   "2": "Uložit",
+   "5": "Uložit"
+  }
+ },
+ {
+  "key": "evaluation.sample.saved",
+  "lang": "cs",
+  "translations": {
+   "1": "Vzorek byl uložen.",
+   "2": "Vzorek byl uložen.",
+   "5": "Vzorek byl uložen."
+  }
+ },
+ {
+  "key": "evaluation.sample.deleted",
+  "lang": "cs",
+  "translations": {
+   "1": "Vzorek byl smazán.",
+   "2": "Vzorek byl smazán.",
+   "5": "Vzorek byl smazán."
+  }
+ },
+ {
+  "key": "evaluation.sample.confirm-delete",
+  "lang": "cs",
+  "translations": {
+   "1": "Opravdu smazat vzorek?",
+   "2": "Opravdu smazat vzorek?",
+   "5": "Opravdu smazat vzorek?"
+  }
+ },
+ {
+  "key": "evaluation.error.language",
+  "lang": "cs",
+  "translations": {
+   "1": "Zadejte dvoupísmenný kód jazyka.",
+   "2": "Zadejte dvoupísmenný kód jazyka.",
+   "5": "Zadejte dvoupísmenný kód jazyka."
+  }
+ },
+ {
+  "key": "evaluation.error.no-model",
+  "lang": "cs",
+  "translations": {
+   "1": "Není nastaven model klasifikátoru (OPENAI_CLASSIFIER_MODEL).",
+   "2": "Není nastaven model klasifikátoru (OPENAI_CLASSIFIER_MODEL).",
+   "5": "Není nastaven model klasifikátoru (OPENAI_CLASSIFIER_MODEL)."
+  }
+ },
+ {
+  "key": "evaluation.error.no-samples",
+  "lang": "cs",
+  "translations": {
+   "1": "Nejsou žádné vzorky k vyhodnocení.",
+   "2": "Nejsou žádné vzorky k vyhodnocení.",
+   "5": "Nejsou žádné vzorky k vyhodnocení."
+  }
+ },
+ {
+  "key": "evaluation.run",
+  "lang": "cs",
+  "translations": {
+   "1": "Běh %id%",
+   "2": "Běh %id%",
+   "5": "Běh %id%"
+  }
+ },
+ {
+  "key": "evaluation.pending",
+  "lang": "cs",
+  "translations": {
+   "1": "Ještě se zpracovává %count% vzorek.",
+   "2": "Ještě se zpracovávají %count% vzorky.",
+   "5": "Ještě se zpracovává %count% vzorků."
+  }
+ },
+ {
+  "key": "evaluation.metric.category",
+  "lang": "cs",
+  "translations": {
+   "1": "Správná kategorie",
+   "2": "Správná kategorie",
+   "5": "Správná kategorie"
+  }
+ },
+ {
+  "key": "evaluation.metric.action",
+  "lang": "cs",
+  "translations": {
+   "1": "Správná akce",
+   "2": "Správná akce",
+   "5": "Správná akce"
+  }
+ },
+ {
+  "key": "evaluation.metric.critical",
+  "lang": "cs",
+  "translations": {
+   "1": "Kritické chyby (musí být 0)",
+   "2": "Kritické chyby (musí být 0)",
+   "5": "Kritické chyby (musí být 0)"
+  }
+ },
+ {
+  "key": "evaluation.metric.criticism-hidden",
+  "lang": "cs",
+  "translations": {
+   "1": "skrytá oprávněná kritika",
+   "2": "skrytá oprávněná kritika",
+   "5": "skrytá oprávněná kritika"
+  }
+ },
+ {
+  "key": "evaluation.metric.missed-handoff",
+  "lang": "cs",
+  "translations": {
+   "1": "nepředané citlivé téma",
+   "2": "nepředané citlivé téma",
+   "5": "nepředané citlivé téma"
+  }
+ },
+ {
+  "key": "evaluation.metric.false-hide",
+  "lang": "cs",
+  "translations": {
+   "1": "Skryto neprávem",
+   "2": "Skryto neprávem",
+   "5": "Skryto neprávem"
+  }
+ },
+ {
+  "key": "evaluation.metric.missed-hide",
+  "lang": "cs",
+  "translations": {
+   "1": "Neskrytý spam",
+   "2": "Neskrytý spam",
+   "5": "Neskrytý spam"
+  }
+ },
+ {
+  "key": "evaluation.metric.automatic",
+  "lang": "cs",
+  "translations": {
+   "1": "Automaticky by proběhlo",
+   "2": "Automaticky by proběhlo",
+   "5": "Automaticky by proběhlo"
+  }
+ },
+ {
+  "key": "evaluation.metric.failed",
+  "lang": "cs",
+  "translations": {
+   "1": "Selhalo",
+   "2": "Selhalo",
+   "5": "Selhalo"
+  }
+ },
+ {
+  "key": "evaluation.metric.tokens",
+  "lang": "cs",
+  "translations": {
+   "1": "Tokeny: %in% vstup, %out% výstup",
+   "2": "Tokeny: %in% vstup, %out% výstup",
+   "5": "Tokeny: %in% vstup, %out% výstup"
+  }
+ },
+ {
+  "key": "evaluation.confusion",
+  "lang": "cs",
+  "translations": {
+   "1": "Matice záměn kategorií",
+   "2": "Matice záměn kategorií",
+   "5": "Matice záměn kategorií"
+  }
+ },
+ {
+  "key": "evaluation.confusion-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Řádky: očekávaná kategorie, sloupce: kategorie od modelu.",
+   "2": "Řádky: očekávaná kategorie, sloupce: kategorie od modelu.",
+   "5": "Řádky: očekávaná kategorie, sloupce: kategorie od modelu."
+  }
+ },
+ {
+  "key": "evaluation.results",
+  "lang": "cs",
+  "translations": {
+   "1": "Výsledky vzorků",
+   "2": "Výsledky vzorků",
+   "5": "Výsledky vzorků"
+  }
+ },
+ {
+  "key": "evaluation.automatic",
+  "lang": "cs",
+  "translations": {
+   "1": "automaticky",
+   "2": "automaticky",
+   "5": "automaticky"
+  }
+ },
+ {
+  "key": "evaluation.flagged",
+  "lang": "cs",
+  "translations": {
+   "1": "moderace",
+   "2": "moderace",
+   "5": "moderace"
+  }
+ },
+ {
+  "key": "evaluation.result.pending",
+  "lang": "cs",
+  "translations": {
+   "1": "čeká",
+   "2": "čeká",
+   "5": "čeká"
+  }
+ },
+ {
+  "key": "decision.reason.classification_unavailable",
+  "lang": "cs",
+  "translations": {
+   "1": "klasifikace selhala",
+   "2": "klasifikace selhala",
+   "5": "klasifikace selhala"
+  }
+ },
+ {
+  "key": "decision.reason.handoff_category",
+  "lang": "cs",
+  "translations": {
+   "1": "citlivé téma",
+   "2": "citlivé téma",
+   "5": "citlivé téma"
+  }
+ },
+ {
+  "key": "decision.reason.model_requires_human",
+  "lang": "cs",
+  "translations": {
+   "1": "model žádá člověka",
+   "2": "model žádá člověka",
+   "5": "model žádá člověka"
+  }
+ },
+ {
+  "key": "decision.reason.category_needs_review",
+  "lang": "cs",
+  "translations": {
+   "1": "kategorie vyžaduje kontrolu",
+   "2": "kategorie vyžaduje kontrolu",
+   "5": "kategorie vyžaduje kontrolu"
+  }
+ },
+ {
+  "key": "decision.reason.model_disagrees",
+  "lang": "cs",
+  "translations": {
+   "1": "model doporučil jinou akci",
+   "2": "model doporučil jinou akci",
+   "5": "model doporučil jinou akci"
+  }
+ },
+ {
+  "key": "decision.reason.moderation_flagged",
+  "lang": "cs",
+  "translations": {
+   "1": "označeno moderací",
+   "2": "označeno moderací",
+   "5": "označeno moderací"
+  }
+ },
+ {
+  "key": "decision.reason.below_hide_threshold",
+  "lang": "cs",
+  "translations": {
+   "1": "pod prahem pro skrytí",
+   "2": "pod prahem pro skrytí",
+   "5": "pod prahem pro skrytí"
+  }
+ },
+ {
+  "key": "decision.reason.unsupported_language",
+  "lang": "cs",
+  "translations": {
+   "1": "nepodporovaný jazyk",
+   "2": "nepodporovaný jazyk",
+   "5": "nepodporovaný jazyk"
+  }
+ },
+ {
+  "key": "decision.reason.below_reply_threshold",
+  "lang": "cs",
+  "translations": {
+   "1": "pod prahem pro odpověď",
+   "2": "pod prahem pro odpověď",
+   "5": "pod prahem pro odpověď"
+  }
+ },
+ {
+  "key": "decision.reason.mode_observe",
+  "lang": "cs",
+  "translations": {
+   "1": "režim pozorování",
+   "2": "režim pozorování",
+   "5": "režim pozorování"
+  }
+ },
+ {
+  "key": "decision.reason.mode_assisted",
+  "lang": "cs",
+  "translations": {
+   "1": "režim se schvalováním",
+   "2": "režim se schvalováním",
+   "5": "režim se schvalováním"
+  }
+ },
+ {
+  "key": "decision.reason.automation_paused",
+  "lang": "cs",
+  "translations": {
+   "1": "automatika vypnuta",
+   "2": "automatika vypnuta",
+   "5": "automatika vypnuta"
+  }
+ },
+ {
+  "key": "decision.reason.account_inactive",
+  "lang": "cs",
+  "translations": {
+   "1": "účet není aktivní",
+   "2": "účet není aktivní",
+   "5": "účet není aktivní"
+  }
+ },
+ {
+  "key": "decision.reason.auto_hide_disabled",
+  "lang": "cs",
+  "translations": {
+   "1": "automatické skrytí nepovoleno",
+   "2": "automatické skrytí nepovoleno",
+   "5": "automatické skrytí nepovoleno"
+  }
+ },
+ {
+  "key": "decision.reason.auto_reply_not_allowed",
+  "lang": "cs",
+  "translations": {
+   "1": "automatická odpověď nepovolena",
+   "2": "automatická odpověď nepovolena",
+   "5": "automatická odpověď nepovolena"
+  }
  }
 ]

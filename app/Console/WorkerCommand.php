@@ -6,6 +6,7 @@ namespace App\Console;
 
 use App\Core\Correlation;
 use App\Core\Logger;
+use App\Evaluation\EvaluationRunner;
 use App\Ingest\EventProcessor;
 use App\Queue\Job;
 use App\Queue\JobQueue;
@@ -33,6 +34,7 @@ final class WorkerCommand extends Command
 		private readonly int $idleSeconds,
 		private readonly JobQueue $queue,
 		private readonly EventProcessor $events,
+		private readonly EvaluationRunner $evaluation,
 		private readonly Correlation $correlation,
 		private readonly Logger $logger,
 	) {
@@ -90,11 +92,15 @@ final class WorkerCommand extends Command
 			JobType::ProcessEvent => [
 				'event_id' => $job->subjectId,
 			],
+			JobType::EvaluateSample => [
+				'evaluation_result_id' => $job->subjectId,
+			],
 		};
 
 		try {
 			match ($job->type) {
 				JobType::ProcessEvent => $this->events->process($job->subjectId),
+				JobType::EvaluateSample => $this->evaluation->evaluate($job->subjectId, $this->queue->isLastAttempt($job)),
 			};
 		} catch (\Throwable $e) {
 			$status = $this->queue->fail($job, $e::class . ': ' . $e->getMessage());

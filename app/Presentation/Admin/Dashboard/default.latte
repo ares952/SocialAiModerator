@@ -2,9 +2,20 @@
 {varType list<App\Ingest\EventStatus> $eventStatuses}
 {varType array<string, int> $jobCounts}
 {varType list<App\Queue\JobStatus> $jobStatuses}
+{varType App\Moderation\Policy $policy}
+{varType bool $paused}
 
 {block content}
 <h1 class="h3 mb-4" n:block="title">{_'dashboard.title'}</h1>
+
+<div n:class="alert, d-flex, flex-wrap, justify-content-between, align-items-center, gap-2, $paused ? 'alert-danger' : 'alert-secondary'">
+	<span>
+		{_'dashboard.mode'}: <strong>{_"mode.{$policy->mode->value}"}</strong>
+		({_'policy.current', 1, [version => $policy->version]})
+		· {if $paused}<strong>{_'automation.state.paused-short'}</strong>{else}{_'automation.state.running'}{/if}
+	</span>
+	<a n:href=":Admin:Policy:" class="alert-link">{_'dashboard.policy-link'}</a>
+</div>
 
 <div class="row g-4">
 	<div class="col-12 col-lg-6">

@@ -11,8 +11,10 @@ use App\Ingest\WebhookBatch;
 use App\Queue\JobQueue;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tester\Assert;
+use Tests\Fakes\FakeOpenAiClient;
 use Tests\Support\TestDatabase;
 use Tests\Support\TestLog;
+use Tests\Support\TestServices;
 
 require __DIR__ . '/../../bootstrap.php';
 
@@ -43,6 +45,7 @@ $work = static function (Encryptor $encryptor) use ($database, $queue, $log): vo
 		idleSeconds: 1,
 		queue: $queue,
 		events: new EventProcessor($database, $encryptor),
+		evaluation: TestServices::evaluationRunner($database, $encryptor, new FakeOpenAiClient),
 		correlation: new Correlation,
 		logger: $log->logger,
 	));

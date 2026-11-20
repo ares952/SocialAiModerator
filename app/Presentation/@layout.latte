@@ -49,6 +49,15 @@
 					<li class="nav-item" n:if="$user->isAllowed('events', 'view')">
 						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Events:*') ? active" n:href=":Admin:Events:">{_'admin.menu.events'}</a>
 					</li>
+					<li class="nav-item" n:if="$user->isAllowed('policy', 'view')">
+						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Policy:*') ? active" n:href=":Admin:Policy:">{_'admin.menu.policy'}</a>
+					</li>
+					<li class="nav-item" n:if="$user->isAllowed('knowledge', 'view')">
+						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Knowledge:*') ? active" n:href=":Admin:Knowledge:">{_'admin.menu.knowledge'}</a>
+					</li>
+					<li class="nav-item" n:if="$user->isAllowed('evaluation', 'view')">
+						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Evaluation:*') ? active" n:href=":Admin:Evaluation:">{_'admin.menu.evaluation'}</a>
+					</li>
 					<li class="nav-item" n:if="$user->isAllowed('operators', 'manage')">
 						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Operators:*') ? active" n:href=":Admin:Operators:">{_'admin.menu.operators'}</a>
 					</li>
