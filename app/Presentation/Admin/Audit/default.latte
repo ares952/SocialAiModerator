@@ -11,9 +11,9 @@
 			{if $filter}{_"audit.action.{$filter->value}"}{else}{_'audit.filter.all'}{/if}
 		</button>
 		<ul class="dropdown-menu dropdown-menu-end">
-			<li><a n:class="dropdown-item, $filter === null ? 'active'" n:href="this, action: null, page: null">{_'audit.filter.all'}</a></li>
+			<li><a n:class="dropdown-item, $filter === null ? 'active'" n:href="this, type: null, page: null">{_'audit.filter.all'}</a></li>
 			<li n:foreach="$actions as $item">
-				<a n:class="dropdown-item, $filter === $item ? 'active'" n:href="this, action: $item->value, page: null">{_"audit.action.{$item->value}"}</a>
+				<a n:class="dropdown-item, $filter === $item ? 'active'" n:href="this, type: $item->value, page: null">{_"audit.action.{$item->value}"}</a>
 			</li>
 		</ul>
 	</div>
