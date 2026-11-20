@@ -4,6 +4,9 @@ services:
 	- App\Translation\TranslationImporter(dataDir: %rootDir%/data)
 	- App\Console\TranslationsImportCommand
 	- App\Console\WorkerCommand(%tempDir%/worker.heartbeat)
+	- App\Core\Encryptor(%env.APP_ENCRYPTION_KEY%)
+	- App\Meta\WebhookVerifier(appSecret: %env.META_APP_SECRET%, verifyToken: %env.META_WEBHOOK_VERIFY_TOKEN%)
+	- App\Ingest\EventStore
 
 
 decorator:

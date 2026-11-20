@@ -22,6 +22,7 @@ final class RouterFactory
 		$router = new RouteList;
 		$router->addRoute('health/live', 'Health:live');
 		$router->addRoute('health/ready', 'Health:ready');
+		$router->addRoute('api/meta/webhook', 'Api:MetaWebhook:default');
 		$router->addRoute($lang, 'Home:default');
 
 		return $router;

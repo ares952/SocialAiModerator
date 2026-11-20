@@ -24,7 +24,13 @@ test('health endpoints are routed', function () use ($match): void {
 });
 
 
-test('homepage defaults to the first language', function () use ($match): void {
+test('Meta webhook is routed without a language', function () use ($match): void {
+	Assert::same('Api:MetaWebhook', $match('/api/meta/webhook')['presenter'] ?? null);
+	Assert::null($match('/en/api/meta/webhook'));
+});
+
+
+test('homepage defaults to the first language',function () use ($match): void {
 	Assert::same('cs', $match('/')['lang'] ?? null);
 	Assert::same('en', $match('/en/')['lang'] ?? null);
 	Assert::null($match('/de/'));

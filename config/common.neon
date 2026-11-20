@@ -25,6 +25,24 @@ latte:
 	strictParsing: true
 
 
+tracy:
+	# PHP-FPM keeps the environment (clear_env = no), so secrets from config/secrets/app.env are
+	# in $_SERVER and in the `env` parameter. Bluescreens logged to log/ must never show them, nor
+	# customer content. SensitiveParameterValue::$value: Tracy 2.12 writes the .md variant of a
+	# bluescreen without the parameter names and would otherwise dump #[\SensitiveParameter] values.
+	keysToHide:
+		- SensitiveParameterValue::$value
+		- App\Ingest\IncomingEvent::$payload
+		- DB_PASSWORD
+		- APP_ENCRYPTION_KEY
+		- META_APP_SECRET
+		- META_WEBHOOK_VERIFY_TOKEN
+		- OPENAI_API_KEY
+		- App\Core\Encryptor::$key
+		- App\Meta\WebhookVerifier::$appSecret
+		- App\Meta\WebhookVerifier::$verifyToken
+
+
 session:
 	expiration: 14 days
 	cookieSecure: auto
