@@ -1341,6 +1341,42 @@
   }
  },
  {
+  "key": "policy.form.blockedDomains",
+  "lang": "cs",
+  "translations": {
+   "1": "Blokované domény",
+   "2": "Blokované domény",
+   "5": "Blokované domény"
+  }
+ },
+ {
+  "key": "policy.form.blockedDomains-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Jedna doména na řádek, např. spam.example; platí i pro její subdomény. Obsah s odkazem na ni jde ke kontrole člověkem místo ponechání nebo odpovědi. Pravidlo samo nic neskryje.",
+   "2": "Jedna doména na řádek, např. spam.example; platí i pro její subdomény. Obsah s odkazem na ni jde ke kontrole člověkem místo ponechání nebo odpovědi. Pravidlo samo nic neskryje.",
+   "5": "Jedna doména na řádek, např. spam.example; platí i pro její subdomény. Obsah s odkazem na ni jde ke kontrole člověkem místo ponechání nebo odpovědi. Pravidlo samo nic neskryje."
+  }
+ },
+ {
+  "key": "policy.form.maxLinks",
+  "lang": "cs",
+  "translations": {
+   "1": "Maximální počet odkazů",
+   "2": "Maximální počet odkazů",
+   "5": "Maximální počet odkazů"
+  }
+ },
+ {
+  "key": "policy.form.maxLinks-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Obsah s více odkazy jde ke kontrole člověkem místo ponechání nebo odpovědi. Prázdné pole pravidlo vypne.",
+   "2": "Obsah s více odkazy jde ke kontrole člověkem místo ponechání nebo odpovědi. Prázdné pole pravidlo vypne.",
+   "5": "Obsah s více odkazy jde ke kontrole člověkem místo ponechání nebo odpovědi. Prázdné pole pravidlo vypne."
+  }
+ },
+ {
   "key": "policy.form.save",
   "lang": "cs",
   "translations": {
@@ -1392,6 +1428,24 @@
    "1": "Zadejte dvoupísmenné kódy jazyků oddělené čárkou, např. cs, en, es.",
    "2": "Zadejte dvoupísmenné kódy jazyků oddělené čárkou, např. cs, en, es.",
    "5": "Zadejte dvoupísmenné kódy jazyků oddělené čárkou, např. cs, en, es."
+  }
+ },
+ {
+  "key": "policy.error.domain",
+  "lang": "cs",
+  "translations": {
+   "1": "Neplatná doména. Zadejte jen názvy domén (např. spam.example), každou na samostatný řádek.",
+   "2": "Neplatná doména. Zadejte jen názvy domén (např. spam.example), každou na samostatný řádek.",
+   "5": "Neplatná doména. Zadejte jen názvy domén (např. spam.example), každou na samostatný řádek."
+  }
+ },
+ {
+  "key": "policy.error.max-links",
+  "lang": "cs",
+  "translations": {
+   "1": "Maximální počet odkazů musí být mezi 0 a 20.",
+   "2": "Maximální počet odkazů musí být mezi 0 a 20.",
+   "5": "Maximální počet odkazů musí být mezi 0 a 20."
   }
  },
  {
@@ -2931,6 +2985,24 @@
    "1": "soukromou zprávu nelze skrýt",
    "2": "soukromou zprávu nelze skrýt",
    "5": "soukromou zprávu nelze skrýt"
+  }
+ },
+ {
+  "key": "decision.reason.blocked_domain",
+  "lang": "cs",
+  "translations": {
+   "1": "odkaz na blokovanou doménu",
+   "2": "odkaz na blokovanou doménu",
+   "5": "odkaz na blokovanou doménu"
+  }
+ },
+ {
+  "key": "decision.reason.too_many_links",
+  "lang": "cs",
+  "translations": {
+   "1": "příliš mnoho odkazů",
+   "2": "příliš mnoho odkazů",
+   "5": "příliš mnoho odkazů"
   }
  }
 ]

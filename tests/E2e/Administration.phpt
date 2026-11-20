@@ -59,15 +59,23 @@ test('policy: switches, validation, new version and the panic switch', function 
 		'autoReplyCategories' => ['faq'],
 		'languages' => 'cs, en, es',
 		'otherLanguage' => 'handoff',
+		'blockedDomains' => "Spam.example\nwin.example, spam.example",
+		'maxLinks' => '3',
 		'send' => '1',
 	];
 	$invalid = $browser->submit('/admin/policy', 'policyForm', ['hideMinConfidence' => '0.2'] + $fields);
 	Assert::same(200, $invalid->status);
 	Assert::contains('Prahy musí být mezi 0,5 a 1.', $invalid->messages());
 
+	$domain = $browser->submit('/admin/policy', 'policyForm', ['blockedDomains' => 'https://spam.example/x'] + $fields);
+	Assert::same(200, $domain->status);
+	Assert::contains('Neplatná doména. Zadejte jen názvy domén (např. spam.example), každou na samostatný řádek.', $domain->messages());
+
 	$saved = $browser->submit('/admin/policy', 'policyForm', $fields);
 	Assert::same(303, $saved->status);
-	Assert::contains('Uložena verze 1 pravidel.', $browser->get($saved->location() ?? '')->messages());
+	$page = $browser->get($saved->location() ?? '');
+	Assert::contains('Uložena verze 1 pravidel.', $page->messages());
+	Assert::contains("spam.example\nwin.example</textarea>", $page->body);
 
 	Assert::same(303, $browser->submit('/admin/policy', 'pauseForm', ['reason' => 'e2e', 'pause' => '1'])->status);
 	Assert::contains('automatika vypnuta', $browser->get('/')->body);

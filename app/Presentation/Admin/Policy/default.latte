@@ -57,6 +57,11 @@
 						</dd>
 						<dt class="col-sm-7">{_'policy.form.languages'}</dt><dd class="col-sm-5">{implode(', ', $settings->languages)}</dd>
 						<dt class="col-sm-7">{_'policy.form.otherLanguage'}</dt><dd class="col-sm-5">{_"action.{$settings->otherLanguage->value}"}</dd>
+						<dt class="col-sm-7">{_'policy.form.maxLinks'}</dt><dd class="col-sm-5">{$settings->maxLinks ?? '—'}</dd>
+						<dt class="col-sm-7">{_'policy.form.blockedDomains'}</dt>
+						<dd class="col-sm-5 text-break">
+							{foreach $settings->blockedDomains as $domain}{$domain}{sep}, {/sep}{else}—{/foreach}
+						</dd>
 					</dl>
 				{/if}
 			</div>

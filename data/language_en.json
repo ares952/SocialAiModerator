@@ -1192,6 +1192,38 @@
   }
  },
  {
+  "key": "policy.form.blockedDomains",
+  "lang": "en",
+  "translations": {
+   "1": "Blocked domains",
+   "2": "Blocked domains"
+  }
+ },
+ {
+  "key": "policy.form.blockedDomains-note",
+  "lang": "en",
+  "translations": {
+   "1": "One domain per line, e.g. spam.example; its subdomains are included. Content linking to it goes to human review instead of being kept or answered. The rule alone hides nothing.",
+   "2": "One domain per line, e.g. spam.example; its subdomains are included. Content linking to it goes to human review instead of being kept or answered. The rule alone hides nothing."
+  }
+ },
+ {
+  "key": "policy.form.maxLinks",
+  "lang": "en",
+  "translations": {
+   "1": "Maximum number of links",
+   "2": "Maximum number of links"
+  }
+ },
+ {
+  "key": "policy.form.maxLinks-note",
+  "lang": "en",
+  "translations": {
+   "1": "Content with more links goes to human review instead of being kept or answered. Leave empty to turn the rule off.",
+   "2": "Content with more links goes to human review instead of being kept or answered. Leave empty to turn the rule off."
+  }
+ },
+ {
   "key": "policy.form.save",
   "lang": "en",
   "translations": {
@@ -1237,6 +1269,22 @@
   "translations": {
    "1": "Enter two-letter language codes separated by commas, e.g. cs, en, es.",
    "2": "Enter two-letter language codes separated by commas, e.g. cs, en, es."
+  }
+ },
+ {
+  "key": "policy.error.domain",
+  "lang": "en",
+  "translations": {
+   "1": "Invalid domain. Enter domain names only (e.g. spam.example), one per line.",
+   "2": "Invalid domain. Enter domain names only (e.g. spam.example), one per line."
+  }
+ },
+ {
+  "key": "policy.error.max-links",
+  "lang": "en",
+  "translations": {
+   "1": "The maximum number of links must be between 0 and 20.",
+   "2": "The maximum number of links must be between 0 and 20."
   }
  },
  {
@@ -2605,6 +2653,22 @@
   "translations": {
    "1": "a private message cannot be hidden",
    "2": "a private message cannot be hidden"
+  }
+ },
+ {
+  "key": "decision.reason.blocked_domain",
+  "lang": "en",
+  "translations": {
+   "1": "link to a blocked domain",
+   "2": "link to a blocked domain"
+  }
+ },
+ {
+  "key": "decision.reason.too_many_links",
+  "lang": "en",
+  "translations": {
+   "1": "too many links",
+   "2": "too many links"
   }
  }
 ]

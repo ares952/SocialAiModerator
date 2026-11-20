@@ -17,7 +17,8 @@ use Nette\Application\UI\Form;
 
 
 /**
- * Moderation policy (mode, thresholds, allowed automatic actions) and the global panic switch.
+ * Moderation policy (mode, thresholds, allowed automatic actions, content rules) and the global
+ * panic switch.
  * Everyone may read it; only an admin changes it. Every save is a new audited version.
  */
 final class PolicyPresenter extends AdminPresenter
@@ -90,6 +91,16 @@ final class PolicyPresenter extends AdminPresenter
 			Action::Handoff->value => 'action.handoff',
 			Action::Review->value => 'action.review',
 		])->setDefaultValue($settings->otherLanguage->value);
+		$form->addTextArea('blockedDomains', 'policy.form.blockedDomains')
+			->setHtmlAttribute('rows', 5)
+			->setOption('description', 'policy.form.blockedDomains-note')
+			->setDefaultValue(implode("\n", $settings->blockedDomains));
+		$form->addInteger('maxLinks', 'policy.form.maxLinks')
+			->setNullable()
+			->setOption('description', 'policy.form.maxLinks-note')
+			->setDefaultValue($settings->maxLinks)
+			->addCondition(Form::Filled)
+				->addRule(Form::Range, 'policy.error.max-links', [0, PolicySettings::MaxLinksLimit]);
 		$form->addSubmit('send', 'policy.form.save');
 
 		$form->onSuccess[] = function (Form $form): void {
@@ -105,6 +116,8 @@ final class PolicyPresenter extends AdminPresenter
 					autoReplyCategories: array_map(fn($value) => Category::from((string) $value), array_values($categories)),
 					languages: array_values(array_unique(array_map('trim', explode(',', (string) $values['languages'])))),
 					otherLanguage: Action::from((string) $values['otherLanguage']),
+					blockedDomains: self::domains((string) $values['blockedDomains']),
+					maxLinks: is_int($values['maxLinks']) ? $values['maxLinks'] : null,
 				);
 			} catch (InvalidPolicy $e) {
 				$form->addError($e->getMessage());
@@ -155,5 +168,18 @@ final class PolicyPresenter extends AdminPresenter
 		};
 
 		return $form;
+	}
+
+
+	/**
+	 * One domain per line (commas and spaces also separate), case-insensitive, without duplicates.
+	 *
+	 * @return list<string>
+	 */
+	private static function domains(string $input): array
+	{
+		$domains = preg_split('~[\s,]+~', mb_strtolower($input), flags: PREG_SPLIT_NO_EMPTY) ?: [];
+
+		return array_values(array_unique($domains));
 	}
 }

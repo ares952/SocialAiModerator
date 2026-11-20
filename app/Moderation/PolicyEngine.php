@@ -11,9 +11,12 @@ namespace App\Moderation;
  *
  * - no classification (model error, invalid output) => review (fail closed);
  * - complaints, billing, refunds, health, legal, or the model asking for a human => handoff;
- * - legitimate criticism and praise are kept, whatever the model recommends;
+ * - legitimate criticism and praise are kept, whatever the model recommends, unless a content
+ *   rule matched;
  * - spam/scam is hidden only above both hide thresholds, otherwise review; a private message
  *   cannot be hidden, so it goes to review;
+ * - a content rule hit (blocked domain, too many links) turns keep and reply into review, so a text
+ *   that talks the model into "praise" or "faq" still reaches a human; it never hides on its own;
  * - abuse and unknown => review;
  * - FAQ is answered only above the reply threshold and in a supported language;
  * - the action runs without a human only in `automatic` mode, without a pause, for an active
@@ -23,7 +26,7 @@ final class PolicyEngine
 {
 	public function decide(
 		?Classification $classification,
-		ContentKind $kind,
+		CustomerContent $content,
 		bool $moderationFlagged,
 		Policy $policy,
 		AutomationContext $context,
@@ -32,10 +35,11 @@ final class PolicyEngine
 		$action = $classification === null
 			? $this->fail($reasons)
 			: $this->action($classification, $moderationFlagged, $policy->settings, $reasons);
-		if ($action === Action::Hide && $kind === ContentKind::Message) {
+		if ($action === Action::Hide && $content->kind === ContentKind::Message) {
 			$reasons[] = 'message_not_hideable';
 			$action = Action::Review;
 		}
+		$action = $this->rules($content, $action, $policy->settings, $reasons);
 
 		$automatic = $action->isExternal()
 			&& $classification !== null
@@ -98,6 +102,22 @@ final class PolicyEngine
 		}
 
 		return $action;
+	}
+
+
+	/**
+	 * @param list<string> $reasons
+	 */
+	private function rules(CustomerContent $content, Action $action, PolicySettings $settings, array &$reasons): Action
+	{
+		$hits = ContentRules::hits($content->text, $settings);
+		foreach ($hits as $hit) {
+			$reasons[] = $hit->value;
+		}
+
+		return $hits !== [] && ($action === Action::Keep || $action === Action::Reply)
+			? Action::Review
+			: $action;
 	}
 
 

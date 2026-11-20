@@ -57,12 +57,13 @@ final class EvaluationRunner
 			return;
 		}
 
+		$content = new CustomerContent(
+			$sample->platform,
+			$sample->kind,
+			$sample->text,
+		);
 		try {
-			$classified = $this->classifier->classify(new CustomerContent(
-				$sample->platform,
-				$sample->kind,
-				$sample->text,
-			));
+			$classified = $this->classifier->classify($content);
 		} catch (OpenAiFailure $e) {
 			if ($e->transient && !$lastAttempt) {
 				throw $e;
@@ -78,7 +79,7 @@ final class EvaluationRunner
 
 		$decision = $this->engine->decide(
 			$classified->classification,
-			$sample->kind,
+			$content,
 			$classified->moderationFlagged,
 			$policy,
 			new AutomationContext(paused: false, accountActive: true),
