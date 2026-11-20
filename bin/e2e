@@ -1,0 +1,103 @@
+#!/bin/bash
+# End-to-end tests in an isolated stack (deploy/compose/e2e.yaml) with throwaway data.
+# Never runs against the data of an instance.
+#
+#   bin/e2e            build, start, migrate, run tests/E2e, stop and discard everything
+#   bin/e2e run --keep same, but leave the stack running (inspect with bin/e2e compose ...)
+#   bin/e2e up         start and prepare the stack
+#   bin/e2e test       run tests/E2e in a running stack
+#   bin/e2e down       stop and discard the stack
+#   bin/e2e compose …  any docker compose command for the e2e project
+set -euo pipefail
+umask 0077
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$root"
+project="$(basename "$root" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9_-]/-/g')-e2e"
+envdir="temp/e2e"
+
+compose() {
+    docker compose -p "$project" -f deploy/compose/e2e.yaml --project-directory "$root" --env-file .env "$@"
+}
+
+random() {
+    openssl rand -hex "$1"
+}
+
+# Fresh random credentials for every stack; the files stay outside the containers' view.
+environment() {
+    mkdir -p "$envdir"
+    chmod 0700 "$envdir"
+    local db_password
+    db_password="$(random 16)"
+    cat > "$envdir/db.env" <<EOF
+MARIADB_ROOT_PASSWORD=$(random 16)
+MARIADB_DATABASE=socialai_e2e
+MARIADB_USER=socialai
+MARIADB_PASSWORD=$db_password
+EOF
+    cat > "$envdir/app.env" <<EOF
+APP_ENV=e2e
+APP_DEBUG=0
+APP_URL=http://web
+DB_NAME=socialai_e2e
+DB_USER=socialai
+DB_PASSWORD=$db_password
+APP_ENCRYPTION_KEY=$(openssl rand -base64 32)
+META_APP_ID=
+META_APP_SECRET=$(random 16)
+META_WEBHOOK_VERIFY_TOKEN=$(random 16)
+META_GRAPH_API_VERSION=v27.0
+OPENAI_API_KEY=
+OPENAI_CLASSIFIER_MODEL=
+OPENAI_REPLY_MODEL=
+OPENAI_MODERATION_MODEL=
+AUTOMATION_DEFAULT_MODE=observe
+MAX_AUTO_REPLIES_PER_CONVERSATION_PER_DAY=2
+WORKER_CONCURRENCY=1
+EOF
+}
+
+up() {
+    if [[ -z "$(compose ps -q 2>/dev/null)" ]]; then
+        environment
+    fi
+    # Like a release: the worker starts only after the migrations.
+    compose build
+    compose up -d --wait web
+    compose exec -T php bin/console migrations:continue
+    compose exec -T php bin/console translations:import
+    compose up -d --wait worker
+}
+
+run_tests() {
+    compose exec -T php vendor/bin/tester tests/E2e -C -s
+}
+
+down() {
+    [[ -f "$envdir/app.env" ]] || environment
+    compose down --volumes --remove-orphans
+    rm -rf "$envdir"
+}
+
+command="${1:-run}"
+shift || true
+case "$command" in
+    run)
+        keep=0
+        [[ "${1:-}" == "--keep" ]] && keep=1
+        up
+        status=0
+        run_tests || status=$?
+        [[ $keep == 1 ]] || down
+        exit $status
+        ;;
+    up) up ;;
+    test) run_tests ;;
+    down) down ;;
+    compose) compose "$@" ;;
+    *)
+        sed -n '2,12p' "$0"
+        exit 2
+        ;;
+esac

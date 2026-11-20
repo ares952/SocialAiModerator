@@ -71,7 +71,9 @@ s potvrzením uživatele.
     - `docker compose exec -T web wget -qO- http://127.0.0.1/` vrací stránku aplikace
       (127.0.0.1 je v `config/nginx/maintenance-allowlist.geo`);
     - `docker compose exec -T php bin/console translations:import --check`;
-    - na testovací instanci `docker compose exec -T php composer test` a `composer analyse`.
+    - na testovací instanci `docker compose exec -T php composer test` a `composer analyse`;
+    - end-to-end testy kódu nasazované verze `bin/e2e` (samostatný stack s dočasnými daty, data
+      instance nepoužívá).
 12. **Spuštění:** `docker compose up -d --wait` (worker), `bin/maintenance off`, ověřit veřejnou URL
     (`APP_URL` v `config/secrets/app.env`) a `docker compose ps`.
 

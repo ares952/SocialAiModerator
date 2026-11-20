@@ -78,6 +78,7 @@ The repository root is also the Docker Compose project directory. It follows the
 │       └── Error/
 ├── assets/                         admin JS/CSS sources (if a build step is ever needed)
 ├── bin/console                     CLI entry point (worker runs as `bin/console worker:run`)
+├── bin/e2e                         end-to-end tests in an isolated stack with throwaway data
 ├── bin/maintenance                 maintenance page on|off|status (temp/maintenance.lock)
 ├── config/                         everything except the tracked files below is LOCAL (gitignored)
 │   ├── common.neon, services.neon  tracked application configuration
@@ -95,6 +96,7 @@ The repository root is also the Docker Compose project directory. It follows the
 │   ├── bootstrap.php
 │   ├── Unit/                       PolicyEngine, classification mapping, windows, limits
 │   ├── Integration/                webhook HMAC, queue concurrency, outbox, fake Meta/OpenAI
+│   ├── E2e/                        HTTP tests through nginx, run only by bin/e2e
 │   ├── Fakes/                      FakeMetaClient, FakeOpenAiClient
 │   └── fixtures/                   synthetic or anonymized payloads only
 ├── docs/                           architecture notes, ADRs, Meta permissions checklist (Czech)
@@ -102,7 +104,8 @@ The repository root is also the Docker Compose project directory. It follows the
 │   ├── README.md                   how to bootstrap a server, what goes into local/
 │   ├── bootstrap-environment.sh    creates all LOCAL files from templates, never overwrites
 │   ├── compose/
-│   │   ├── docker-compose.yaml     services: web, php, worker, db
+│   │   ├── docker-compose.yaml     services: web, php, worker, db, redis
+│   │   ├── e2e.yaml                isolated end-to-end stack (bin/e2e), tmpfs data, no ports
 │   │   ├── Dockerfile.php          shared image for php-fpm and the worker
 │   │   ├── env.template            -> /.env
 │   │   ├── override.template.yaml  -> /docker-compose.override.yaml
@@ -206,10 +209,11 @@ Never connect a live production Page or real accounts in tests or during develop
   - `docker compose exec php composer install`
   - `docker compose exec php composer test` (Nette Tester)
   - `docker compose exec php composer analyse` (PHPStan level 8)
+  - `bin/e2e` (end-to-end tests in an isolated stack, discarded afterwards)
   - `docker compose exec php bin/console migrations:continue`
   - `docker compose exec php bin/console translations:import` (after changing `data/language_*.json`)
 - Never run `migrations:reset`. It drops the database.
-- Tests use a separate test database and never the development data. Tests use only fake Meta and OpenAI clients. Temporary files go under `temp/tests/` and are cleaned up after the run. Never leave large files in `/tmp`.
+- Tests use a separate test database and never the development data. Smoke and end-to-end tests run only in the e2e stack (`bin/e2e`, docs/testing.md): never create test operators, accounts or other test data on an instance, and never send test requests to it. Tests use only fake Meta and OpenAI clients. Temporary files go under `temp/tests/` and are cleaned up after the run. Never leave large files in `/tmp`.
 - Before you finish, run PHPStan and the relevant tests, and report the results honestly. If you could not run them, say so.
 - Do not mark a Meta feature as done until the required permissions are actually granted and verified (specification §3.2). Before implementing concrete Graph endpoints, confirm the login flow and scopes with the user.
 - Ask before committing or pushing. Never commit LOCAL files (`config/` outside the whitelist, `data/`, `.env`, `docker-compose.override.yaml`), real payloads, or tokens.

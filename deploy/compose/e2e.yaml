@@ -1,0 +1,130 @@
+# End-to-end test stack, started only by bin/e2e as a separate Compose project
+# (<checkout>-e2e) with its own network and containers. It runs the code of this checkout
+# (read-only) against throwaway data: the database, Redis, temp/ and log/ live in tmpfs and vanish
+# with `bin/e2e down`. Credentials are random per run (temp/e2e/*.env). No port is published and
+# OpenAI/Meta are never called; the tests run inside the `php` container against http://web.
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "2"
+
+x-php-app: &php-app
+  build:
+    context: ./deploy
+    dockerfile: compose/Dockerfile.php
+  user: "${APP_UID:?APP_UID musi byt v .env}:${APP_GID:?APP_GID musi byt v .env}"
+  working_dir: /var/www
+  env_file:
+    - ./temp/e2e/app.env
+  environment:
+    TZ: "${TZ:-Europe/Prague}"
+    DB_HOST: db
+    # Enables tests/E2e; they are skipped anywhere else.
+    E2E: "1"
+    E2E_BASE_URL: http://web
+  volumes:
+    - ./:/var/www:ro
+    - ./deploy/php/php.ini:/usr/local/etc/php/php.ini:ro
+    - ./deploy/php/umask.php:/usr/local/etc/php/umask.php:ro
+  tmpfs:
+    - /var/www/temp:mode=1777
+    - /var/www/log:mode=1777
+    - /var/www/config/secrets:size=1k,mode=0500
+  depends_on:
+    db:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+  networks:
+    - e2e
+  logging: *default-logging
+
+services:
+  web:
+    image: nginx:1.30-alpine
+    volumes:
+      - ./www:/var/www/www:ro
+      - ./www-maintenance:/var/www/www-maintenance:ro
+      - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./deploy/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./deploy/nginx/maintenance-allowlist.geo.template:/etc/nginx/local/maintenance-allowlist.geo:ro
+      - ./deploy/nginx/trusted-proxies.inc.template:/etc/nginx/local/trusted-proxies.inc:ro
+    # Own empty temp/: the maintenance lock of the instance never applies here.
+    tmpfs:
+      - /var/www/temp
+    depends_on:
+      php:
+        condition: service_healthy
+    networks:
+      - e2e
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-T", "3", "-O", "/dev/null", "http://127.0.0.1/health/live"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  php:
+    <<: *php-app
+    volumes:
+      - ./:/var/www:ro
+      - ./deploy/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./deploy/php/umask.php:/usr/local/etc/php/umask.php:ro
+      - ./deploy/php/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@fsockopen('127.0.0.1', 9000) ? 0 : 1);"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  worker:
+    <<: *php-app
+    command: ["php", "bin/console", "worker:run"]
+    stop_signal: SIGTERM
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(time() - (int) @filemtime('/var/www/temp/worker.heartbeat') < 60 ? 0 : 1);"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  db:
+    image: mariadb:12.3.3
+    env_file:
+      - ./temp/e2e/db.env
+    environment:
+      TZ: "${TZ:-Europe/Prague}"
+    volumes:
+      - ./deploy/mariadb/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      - ./deploy/mariadb/init:/docker-entrypoint-initdb.d:ro
+    tmpfs:
+      - /var/lib/mysql
+    networks:
+      - e2e
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:8.10-alpine
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    volumes:
+      - ./deploy/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    tmpfs:
+      - /data
+    networks:
+      - e2e
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+networks:
+  e2e:
+    driver: bridge
