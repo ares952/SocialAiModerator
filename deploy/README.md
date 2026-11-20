@@ -19,6 +19,7 @@ Repozitář je zároveň adresářem Docker Compose projektu. Kořenový `docker
 | `config/nginx/maintenance-allowlist.geo` | ne | klienti, kteří obcházejí maintenance |
 | `data/language_cs.json`, `data/language_en.json` | ano | zdroj překladů UI, importuje `bin/console translations:import` |
 | `data/mariadb/`, `data/backups/` | ne | datadir MariaDB, zálohy DB |
+| `data/redis/` | ne | data Redisu (sessions administrace, AOF) |
 | `www-maintenance/` | ano | stránka údržby (`bin/maintenance on\|off\|status`) |
 
 Kontejnery `php` a `worker` adresář `config/secrets/` nevidí (překrytý `tmpfs`), tajemství dostávají
@@ -34,7 +35,24 @@ docker compose up -d --build --wait
 docker compose exec php composer install
 docker compose exec php bin/console migrations:continue
 docker compose exec php bin/console translations:import
+docker compose exec php bin/console operator:create admin@example.com "Jméno Příjmení"
 ```
+
+`operator:create` založí prvního administrátora (role `admin`, jinou lze zvolit přes `--role`).
+Heslo (alespoň 12 znaků) se zadává dvakrát interaktivně, nikdy jako argument. Další operátory
+přidává administrátor v administraci (Operátoři).
+
+## Přístup do administrace
+
+- Celá administrace včetně úvodní stránky vyžaduje přihlášení. Přihlášení platí rok od poslední
+  aktivity; sessions jsou v Redisu (služba `redis`, data v `data/redis/`), takže přežijí restart.
+- Role: `admin` (vše včetně operátorů), `moderator` (moderace, převzetí konverzací), `viewer`
+  (jen čtení, bez obsahu DM). Vždy musí zůstat alespoň jeden aktivní administrátor.
+- Deaktivace operátora nebo změna hesla ho okamžitě odhlásí ze všech zařízení.
+- Po 5 neúspěšných pokusech na jeden e-mail (20 z jedné adresy) za 15 minut se přihlášení
+  dočasně zablokuje (`login` v `config/common.neon`).
+- Zapomenuté heslo (např. jediného administrátora):
+  `docker compose exec php bin/console operator:password admin@example.com`
 
 Aktualizace, vydání, maintenance a aktualizace image: [docs/release-lifecycle.md](../docs/release-lifecycle.md).
 

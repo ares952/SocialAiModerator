@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Core\Encryptor;
 use App\Ingest\EventStore;
 use App\Meta\WebhookVerifier;
+use App\Queue\JobQueue;
 use App\Presentation\Api\MetaWebhook\MetaWebhookPresenter;
 use Nette\Application\Request as AppRequest;
 use Nette\Application\Responses\TextResponse;
@@ -14,8 +15,8 @@ use Nette\Http\Response;
 use Nette\Http\UrlScript;
 use Nette\Utils\Json;
 use Tester\Assert;
-use Tracy\ILogger;
 use Tests\Support\TestDatabase;
+use Tests\Support\TestLog;
 
 require __DIR__ . '/../../bootstrap.php';
 
@@ -27,6 +28,13 @@ const VerifyToken = 'test-verify-token';
 
 $database = TestDatabase::create();
 $encryptor = new Encryptor(base64_encode(random_bytes(32)));
+$queue = new JobQueue(
+	$database,
+	maxAttempts: 3,
+	backoffSeconds: 30,
+	backoffCapSeconds: 3600,
+	leaseSeconds: 600,
+);
 $database->query('INSERT INTO social_accounts ?', [
 	[
 		'platform' => 'facebook',
@@ -51,21 +59,12 @@ $call = static function (
 	string $query = '',
 	string $body = '',
 	?string $signature = null,
-) use ($database, $encryptor): array {
-	$logger = new class implements ILogger {
-		/** @var list<string> */
-		public array $messages = [];
-
-
-		public function log(mixed $value, string $level = self::INFO): void
-		{
-			$this->messages[] = $level . ': ' . (is_string($value) ? $value : get_debug_type($value));
-		}
-	};
+) use ($database, $encryptor, $queue): array {
+	$log = new TestLog('webhook-' . uniqid() . '.log');
 	$httpResponse = new Response;
 	$presenter = new MetaWebhookPresenter(
 		new WebhookVerifier(AppSecret, VerifyToken),
-		new EventStore($database, $encryptor),
+		new EventStore($database, $encryptor, $queue),
 		new Request(
 			new UrlScript('https://moderator.test/api/meta/webhook' . $query, '/'),
 			headers: $signature === null ? [] : ['X-Hub-Signature-256' => $signature],
@@ -73,7 +72,7 @@ $call = static function (
 			rawBodyCallback: static fn(): string => $body,
 		),
 		$httpResponse,
-		$logger,
+		$log->logger,
 	);
 
 	$response = $presenter->run(new AppRequest('Api:MetaWebhook'));
@@ -81,7 +80,7 @@ $call = static function (
 		throw new LogicException('Expected a TextResponse, got ' . get_debug_type($response));
 	}
 
-	return [$httpResponse->getCode(), (string) $response->getSource(), $logger->messages];
+	return [$httpResponse->getCode(), (string) $response->getSource(), $log->messages()];
 };
 
 $sign = static fn(string $body): string => 'sha256=' . hash_hmac('sha256', $body, AppSecret);
@@ -163,6 +162,10 @@ test('signed multi-entry webhook stores every event encrypted', function () use 
 	Assert::same(['feed', 'feed', 'messaging'], array_map(fn($row) => $row->topic, $rows));
 	Assert::same(['received', 'received', 'received'], array_map(fn($row) => $row->status, $rows));
 	Assert::notNull($rows[0]->account_id);
+	Assert::same(
+		3,
+		$database->query("SELECT COUNT(*) FROM queue_jobs WHERE type = 'event.process' AND status = 'pending'")->fetchField(),
+	);
 
 	$stored = $database->query('SELECT payload_encrypted FROM social_events ORDER BY id LIMIT 1')->fetchField();
 	Assert::type('string', $stored);
@@ -182,11 +185,13 @@ test('redelivered and reordered events are stored once', function () use ($call,
 	Assert::same(200, $call('POST', body: $body, signature: $sign($body))[0]);
 	Assert::same(200, $call('POST', body: $body, signature: $sign($body))[0]);
 	Assert::same(4, $database->table('social_events')->count('*'));
+	Assert::same(4, $database->table('queue_jobs')->count('*'));
 });
 
 
 test('events of unknown or disabled accounts are kept as ignored', function () use ($call, $batch, $comment, $sign, $database): void {
 	$database->query('DELETE FROM social_events');
+	$database->query('DELETE FROM queue_jobs');
 	foreach (['1000000000000002', '1000000000000003'] as $pageId) {
 		$body = $batch($pageId, [$comment('c1', 'Synthetic')]);
 		Assert::same(200, $call('POST', body: $body, signature: $sign($body))[0]);
@@ -198,6 +203,7 @@ test('events of unknown or disabled accounts are kept as ignored', function () u
 	Assert::same('ignored', $rows[0]->status);
 	Assert::notNull($rows[1]->account_id);
 	Assert::same('ignored', $rows[1]->status);
+	Assert::same(0, $database->table('queue_jobs')->count('*'));
 });
 
 

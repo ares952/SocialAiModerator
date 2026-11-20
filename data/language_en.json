@@ -16,14 +16,6 @@
   }
  },
  {
-  "key": "system.home.running",
-  "lang": "en",
-  "translations": {
-   "1": "The instance is running.",
-   "2": "The instance is running."
-  }
- },
- {
   "key": "system.language.cs",
   "lang": "en",
   "translations": {
@@ -53,6 +45,758 @@
   "translations": {
    "1": "The requested page is not available.",
    "2": "The requested page is not available."
+  }
+ },
+ {
+  "key": "system.error.forbidden",
+  "lang": "en",
+  "translations": {
+   "1": "You are not allowed to access this page.",
+   "2": "You are not allowed to access this page."
+  }
+ },
+ {
+  "key": "system.error.home",
+  "lang": "en",
+  "translations": {
+   "1": "Back to the dashboard",
+   "2": "Back to the dashboard"
+  }
+ },
+ {
+  "key": "admin.menu.toggle",
+  "lang": "en",
+  "translations": {
+   "1": "Toggle navigation",
+   "2": "Toggle navigation"
+  }
+ },
+ {
+  "key": "admin.menu.dashboard",
+  "lang": "en",
+  "translations": {
+   "1": "Dashboard",
+   "2": "Dashboard"
+  }
+ },
+ {
+  "key": "admin.menu.events",
+  "lang": "en",
+  "translations": {
+   "1": "Events",
+   "2": "Events"
+  }
+ },
+ {
+  "key": "admin.menu.operators",
+  "lang": "en",
+  "translations": {
+   "1": "Operators",
+   "2": "Operators"
+  }
+ },
+ {
+  "key": "admin.menu.language",
+  "lang": "en",
+  "translations": {
+   "1": "Language",
+   "2": "Language"
+  }
+ },
+ {
+  "key": "admin.menu.theme",
+  "lang": "en",
+  "translations": {
+   "1": "Theme",
+   "2": "Theme"
+  }
+ },
+ {
+  "key": "admin.menu.password",
+  "lang": "en",
+  "translations": {
+   "1": "Change password",
+   "2": "Change password"
+  }
+ },
+ {
+  "key": "admin.menu.logout",
+  "lang": "en",
+  "translations": {
+   "1": "Sign out",
+   "2": "Sign out"
+  }
+ },
+ {
+  "key": "admin.close",
+  "lang": "en",
+  "translations": {
+   "1": "Close",
+   "2": "Close"
+  }
+ },
+ {
+  "key": "admin.theme.light",
+  "lang": "en",
+  "translations": {
+   "1": "Light",
+   "2": "Light"
+  }
+ },
+ {
+  "key": "admin.theme.dark",
+  "lang": "en",
+  "translations": {
+   "1": "Dark",
+   "2": "Dark"
+  }
+ },
+ {
+  "key": "admin.theme.auto",
+  "lang": "en",
+  "translations": {
+   "1": "System",
+   "2": "System"
+  }
+ },
+ {
+  "key": "sign.in.title",
+  "lang": "en",
+  "translations": {
+   "1": "Sign in",
+   "2": "Sign in"
+  }
+ },
+ {
+  "key": "sign.in.email",
+  "lang": "en",
+  "translations": {
+   "1": "E-mail",
+   "2": "E-mail"
+  }
+ },
+ {
+  "key": "sign.in.password",
+  "lang": "en",
+  "translations": {
+   "1": "Password",
+   "2": "Password"
+  }
+ },
+ {
+  "key": "sign.in.submit",
+  "lang": "en",
+  "translations": {
+   "1": "Sign in",
+   "2": "Sign in"
+  }
+ },
+ {
+  "key": "sign.in.failed",
+  "lang": "en",
+  "translations": {
+   "1": "Incorrect e-mail or password.",
+   "2": "Incorrect e-mail or password."
+  }
+ },
+ {
+  "key": "sign.in.throttled",
+  "lang": "en",
+  "translations": {
+   "1": "Too many failed attempts. Please try again later.",
+   "2": "Too many failed attempts. Please try again later."
+  }
+ },
+ {
+  "key": "sign.in.expired",
+  "lang": "en",
+  "translations": {
+   "1": "Your session has expired, please sign in again.",
+   "2": "Your session has expired, please sign in again."
+  }
+ },
+ {
+  "key": "sign.out.done",
+  "lang": "en",
+  "translations": {
+   "1": "You have been signed out.",
+   "2": "You have been signed out."
+  }
+ },
+ {
+  "key": "form.error.required",
+  "lang": "en",
+  "translations": {
+   "1": "Please fill in this field.",
+   "2": "Please fill in this field."
+  }
+ },
+ {
+  "key": "form.error.email",
+  "lang": "en",
+  "translations": {
+   "1": "Please enter a valid e-mail address.",
+   "2": "Please enter a valid e-mail address."
+  }
+ },
+ {
+  "key": "form.error.csrf",
+  "lang": "en",
+  "translations": {
+   "1": "The form has expired, please submit it again.",
+   "2": "The form has expired, please submit it again."
+  }
+ },
+ {
+  "key": "form.error.password-length",
+  "lang": "en",
+  "translations": {
+   "1": "The password must have at least %count% character.",
+   "2": "The password must have at least %count% characters."
+  }
+ },
+ {
+  "key": "form.error.password-mismatch",
+  "lang": "en",
+  "translations": {
+   "1": "The passwords do not match.",
+   "2": "The passwords do not match."
+  }
+ },
+ {
+  "key": "dashboard.title",
+  "lang": "en",
+  "translations": {
+   "1": "Dashboard",
+   "2": "Dashboard"
+  }
+ },
+ {
+  "key": "dashboard.events.title",
+  "lang": "en",
+  "translations": {
+   "1": "Events in the last 24 hours",
+   "2": "Events in the last 24 hours"
+  }
+ },
+ {
+  "key": "dashboard.events.all",
+  "lang": "en",
+  "translations": {
+   "1": "All events",
+   "2": "All events"
+  }
+ },
+ {
+  "key": "dashboard.queue.title",
+  "lang": "en",
+  "translations": {
+   "1": "Job queue",
+   "2": "Job queue"
+  }
+ },
+ {
+  "key": "event.status.received",
+  "lang": "en",
+  "translations": {
+   "1": "Received",
+   "2": "Received"
+  }
+ },
+ {
+  "key": "event.status.ignored",
+  "lang": "en",
+  "translations": {
+   "1": "Ignored",
+   "2": "Ignored"
+  }
+ },
+ {
+  "key": "event.status.review",
+  "lang": "en",
+  "translations": {
+   "1": "To review",
+   "2": "To review"
+  }
+ },
+ {
+  "key": "job.status.pending",
+  "lang": "en",
+  "translations": {
+   "1": "Pending",
+   "2": "Pending"
+  }
+ },
+ {
+  "key": "job.status.reserved",
+  "lang": "en",
+  "translations": {
+   "1": "In progress",
+   "2": "In progress"
+  }
+ },
+ {
+  "key": "job.status.done",
+  "lang": "en",
+  "translations": {
+   "1": "Done",
+   "2": "Done"
+  }
+ },
+ {
+  "key": "job.status.failed",
+  "lang": "en",
+  "translations": {
+   "1": "Failed",
+   "2": "Failed"
+  }
+ },
+ {
+  "key": "platform.facebook",
+  "lang": "en",
+  "translations": {
+   "1": "Facebook",
+   "2": "Facebook"
+  }
+ },
+ {
+  "key": "platform.instagram",
+  "lang": "en",
+  "translations": {
+   "1": "Instagram",
+   "2": "Instagram"
+  }
+ },
+ {
+  "key": "events.title",
+  "lang": "en",
+  "translations": {
+   "1": "Incoming events",
+   "2": "Incoming events"
+  }
+ },
+ {
+  "key": "events.total",
+  "lang": "en",
+  "translations": {
+   "1": "%count% event",
+   "2": "%count% events"
+  }
+ },
+ {
+  "key": "events.filter.all",
+  "lang": "en",
+  "translations": {
+   "1": "All",
+   "2": "All"
+  }
+ },
+ {
+  "key": "events.empty",
+  "lang": "en",
+  "translations": {
+   "1": "No events.",
+   "2": "No events."
+  }
+ },
+ {
+  "key": "events.column.received",
+  "lang": "en",
+  "translations": {
+   "1": "Received",
+   "2": "Received"
+  }
+ },
+ {
+  "key": "events.column.platform",
+  "lang": "en",
+  "translations": {
+   "1": "Platform",
+   "2": "Platform"
+  }
+ },
+ {
+  "key": "events.column.account",
+  "lang": "en",
+  "translations": {
+   "1": "Account",
+   "2": "Account"
+  }
+ },
+ {
+  "key": "events.column.topic",
+  "lang": "en",
+  "translations": {
+   "1": "Topic",
+   "2": "Topic"
+  }
+ },
+ {
+  "key": "events.column.status",
+  "lang": "en",
+  "translations": {
+   "1": "Status",
+   "2": "Status"
+  }
+ },
+ {
+  "key": "events.column.job",
+  "lang": "en",
+  "translations": {
+   "1": "Processing",
+   "2": "Processing"
+  }
+ },
+ {
+  "key": "events.pages",
+  "lang": "en",
+  "translations": {
+   "1": "Pagination",
+   "2": "Pagination"
+  }
+ },
+ {
+  "key": "events.previous",
+  "lang": "en",
+  "translations": {
+   "1": "Previous",
+   "2": "Previous"
+  }
+ },
+ {
+  "key": "events.next",
+  "lang": "en",
+  "translations": {
+   "1": "Next",
+   "2": "Next"
+  }
+ },
+ {
+  "key": "events.page",
+  "lang": "en",
+  "translations": {
+   "1": "Page %page% of %pages%",
+   "2": "Page %page% of %pages%"
+  }
+ },
+ {
+  "key": "operator.title",
+  "lang": "en",
+  "translations": {
+   "1": "Operators",
+   "2": "Operators"
+  }
+ },
+ {
+  "key": "operator.add",
+  "lang": "en",
+  "translations": {
+   "1": "Add operator",
+   "2": "Add operator"
+  }
+ },
+ {
+  "key": "operator.edit",
+  "lang": "en",
+  "translations": {
+   "1": "Edit",
+   "2": "Edit"
+  }
+ },
+ {
+  "key": "operator.column.name",
+  "lang": "en",
+  "translations": {
+   "1": "Name",
+   "2": "Name"
+  }
+ },
+ {
+  "key": "operator.column.email",
+  "lang": "en",
+  "translations": {
+   "1": "E-mail",
+   "2": "E-mail"
+  }
+ },
+ {
+  "key": "operator.column.role",
+  "lang": "en",
+  "translations": {
+   "1": "Role",
+   "2": "Role"
+  }
+ },
+ {
+  "key": "operator.column.status",
+  "lang": "en",
+  "translations": {
+   "1": "Status",
+   "2": "Status"
+  }
+ },
+ {
+  "key": "operator.column.last-login",
+  "lang": "en",
+  "translations": {
+   "1": "Last sign-in",
+   "2": "Last sign-in"
+  }
+ },
+ {
+  "key": "operator.status.active",
+  "lang": "en",
+  "translations": {
+   "1": "Active",
+   "2": "Active"
+  }
+ },
+ {
+  "key": "operator.status.inactive",
+  "lang": "en",
+  "translations": {
+   "1": "Inactive",
+   "2": "Inactive"
+  }
+ },
+ {
+  "key": "operator.never",
+  "lang": "en",
+  "translations": {
+   "1": "never",
+   "2": "never"
+  }
+ },
+ {
+  "key": "operator.role.admin",
+  "lang": "en",
+  "translations": {
+   "1": "Administrator",
+   "2": "Administrator"
+  }
+ },
+ {
+  "key": "operator.role.moderator",
+  "lang": "en",
+  "translations": {
+   "1": "Moderator",
+   "2": "Moderator"
+  }
+ },
+ {
+  "key": "operator.role.viewer",
+  "lang": "en",
+  "translations": {
+   "1": "Viewer",
+   "2": "Viewer"
+  }
+ },
+ {
+  "key": "operator.form.email",
+  "lang": "en",
+  "translations": {
+   "1": "E-mail (sign-in name)",
+   "2": "E-mail (sign-in name)"
+  }
+ },
+ {
+  "key": "operator.form.name",
+  "lang": "en",
+  "translations": {
+   "1": "Name",
+   "2": "Name"
+  }
+ },
+ {
+  "key": "operator.form.role",
+  "lang": "en",
+  "translations": {
+   "1": "Role",
+   "2": "Role"
+  }
+ },
+ {
+  "key": "operator.form.active",
+  "lang": "en",
+  "translations": {
+   "1": "Active (can sign in)",
+   "2": "Active (can sign in)"
+  }
+ },
+ {
+  "key": "operator.form.password",
+  "lang": "en",
+  "translations": {
+   "1": "Password",
+   "2": "Password"
+  }
+ },
+ {
+  "key": "operator.form.password-check",
+  "lang": "en",
+  "translations": {
+   "1": "Repeat the password",
+   "2": "Repeat the password"
+  }
+ },
+ {
+  "key": "operator.form.create",
+  "lang": "en",
+  "translations": {
+   "1": "Create",
+   "2": "Create"
+  }
+ },
+ {
+  "key": "operator.form.save",
+  "lang": "en",
+  "translations": {
+   "1": "Save",
+   "2": "Save"
+  }
+ },
+ {
+  "key": "operator.form.set-password",
+  "lang": "en",
+  "translations": {
+   "1": "Set password",
+   "2": "Set password"
+  }
+ },
+ {
+  "key": "operator.created",
+  "lang": "en",
+  "translations": {
+   "1": "The operator has been created.",
+   "2": "The operator has been created."
+  }
+ },
+ {
+  "key": "operator.updated",
+  "lang": "en",
+  "translations": {
+   "1": "The changes have been saved.",
+   "2": "The changes have been saved."
+  }
+ },
+ {
+  "key": "operator.password-set",
+  "lang": "en",
+  "translations": {
+   "1": "The password has been set and the operator signed out everywhere.",
+   "2": "The password has been set and the operator signed out everywhere."
+  }
+ },
+ {
+  "key": "operator.password.note",
+  "lang": "en",
+  "translations": {
+   "1": "A new password signs the operator out on all devices.",
+   "2": "A new password signs the operator out on all devices."
+  }
+ },
+ {
+  "key": "operator.error.email",
+  "lang": "en",
+  "translations": {
+   "1": "Please enter a valid e-mail address.",
+   "2": "Please enter a valid e-mail address."
+  }
+ },
+ {
+  "key": "operator.error.email-taken",
+  "lang": "en",
+  "translations": {
+   "1": "An operator with this e-mail already exists.",
+   "2": "An operator with this e-mail already exists."
+  }
+ },
+ {
+  "key": "operator.error.last-admin",
+  "lang": "en",
+  "translations": {
+   "1": "At least one active administrator must remain.",
+   "2": "At least one active administrator must remain."
+  }
+ },
+ {
+  "key": "operator.error.not-found",
+  "lang": "en",
+  "translations": {
+   "1": "The operator does not exist.",
+   "2": "The operator does not exist."
+  }
+ },
+ {
+  "key": "operator.error.password-length",
+  "lang": "en",
+  "translations": {
+   "1": "The password must have at least 12 characters.",
+   "2": "The password must have at least 12 characters."
+  }
+ },
+ {
+  "key": "password.title",
+  "lang": "en",
+  "translations": {
+   "1": "Change password",
+   "2": "Change password"
+  }
+ },
+ {
+  "key": "password.note",
+  "lang": "en",
+  "translations": {
+   "1": "After the change you will be signed out on all other devices.",
+   "2": "After the change you will be signed out on all other devices."
+  }
+ },
+ {
+  "key": "password.current",
+  "lang": "en",
+  "translations": {
+   "1": "Current password",
+   "2": "Current password"
+  }
+ },
+ {
+  "key": "password.new",
+  "lang": "en",
+  "translations": {
+   "1": "New password",
+   "2": "New password"
+  }
+ },
+ {
+  "key": "password.check",
+  "lang": "en",
+  "translations": {
+   "1": "Repeat the new password",
+   "2": "Repeat the new password"
+  }
+ },
+ {
+  "key": "password.submit",
+  "lang": "en",
+  "translations": {
+   "1": "Change password",
+   "2": "Change password"
+  }
+ },
+ {
+  "key": "password.changed",
+  "lang": "en",
+  "translations": {
+   "1": "The password has been changed.",
+   "2": "The password has been changed."
+  }
+ },
+ {
+  "key": "password.error.current",
+  "lang": "en",
+  "translations": {
+   "1": "The current password is not correct.",
+   "2": "The current password is not correct."
   }
  }
 ]

@@ -3,13 +3,40 @@ services:
 	- App\Translation\Translator(languages: %languages%)
 	- App\Translation\TranslationImporter(dataDir: %rootDir%/data)
 	- App\Console\TranslationsImportCommand
-	- App\Console\WorkerCommand(%tempDir%/worker.heartbeat)
+	- App\Console\WorkerCommand(heartbeatFile: %tempDir%/worker.heartbeat, idleSeconds: %worker.idleSeconds%)
+	- App\Console\OperatorCreateCommand
+	- App\Console\OperatorPasswordCommand
+	- App\Console\PasswordPrompt
 	- App\Core\Encryptor(%env.APP_ENCRYPTION_KEY%)
+	- App\Core\Correlation
+	- App\Core\Logger(file: %rootDir%/log/app.log)
 	- App\Meta\WebhookVerifier(appSecret: %env.META_APP_SECRET%, verifyToken: %env.META_WEBHOOK_VERIFY_TOKEN%)
 	- App\Ingest\EventStore
+	- App\Ingest\EventProcessor
+	- App\Ingest\EventOverview
+	-
+		create: App\Queue\JobQueue
+		arguments:
+			maxAttempts: %queue.maxAttempts%
+			backoffSeconds: %queue.backoffSeconds%
+			backoffCapSeconds: %queue.backoffCapSeconds%
+			leaseSeconds: %queue.leaseSeconds%
+	- App\Audit\AuditLog
+	- App\Operator\Operators
+	- App\Operator\OperatorAuthenticator
+	- App\Operator\Authorization::create()
+	-
+		create: App\Operator\LoginThrottle
+		arguments:
+			maxPerEmail: %login.maxFailuresPerEmail%
+			maxPerAddress: %login.maxFailuresPerAddress%
+			windowMinutes: %login.windowMinutes%
+	- App\Presentation\FormFactory
 
 
 decorator:
 	App\Presentation\BasePresenter:
 		setup:
 			- $appVersion = %appVersion%
+			- $languages = %languages%
+			- $timezone = %timezone%

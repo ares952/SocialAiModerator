@@ -32,12 +32,7 @@ final class TestDatabase
 		// Integration tests share one database; Tester runs test files in parallel.
 		Environment::lock('database', dirname(__DIR__, 2) . '/temp/tests');
 
-		$name = self::env('DB_NAME') . '_test';
-		$connection = new Connection(
-			'mysql:host=' . self::env('DB_HOST') . ";dbname=$name;charset=utf8mb4",
-			self::env('DB_USER'),
-			self::env('DB_PASSWORD'),
-		);
+		$connection = self::connection();
 
 		$driver = new MySqlDriver(new NetteAdapter($connection));
 		$runner = new Runner($driver, new DevNull);
@@ -52,6 +47,44 @@ final class TestDatabase
 		}
 		$runner->run(Runner::MODE_RESET);
 
+		return self::explorer(self::utc($connection));
+	}
+
+
+	/**
+	 * Second connection to the database prepared by create(), e.g. for a child process of a
+	 * concurrency test. Never resets anything.
+	 */
+	public static function connect(): Explorer
+	{
+		return self::explorer(self::utc(self::connection()));
+	}
+
+
+	private static function connection(): Connection
+	{
+		return new Connection(
+			'mysql:host=' . self::env('DB_HOST') . ';dbname=' . self::env('DB_NAME') . '_test;charset=utf8mb4',
+			self::env('DB_USER'),
+			self::env('DB_PASSWORD'),
+		);
+	}
+
+
+	/**
+	 * The application uses the server default (UTC, deploy/mariadb/my.cnf); the migration runner
+	 * switches the shared connection to SYSTEM.
+	 */
+	private static function utc(Connection $connection): Connection
+	{
+		$connection->query("SET time_zone = '+00:00'");
+
+		return $connection;
+	}
+
+
+	private static function explorer(Connection $connection): Explorer
+	{
 		$structure = new Structure($connection, new DevNullStorage);
 
 		return new Explorer($connection, $structure, new DiscoveredConventions($structure));

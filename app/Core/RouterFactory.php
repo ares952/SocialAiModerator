@@ -23,7 +23,14 @@ final class RouterFactory
 		$router->addRoute('health/live', 'Health:live');
 		$router->addRoute('health/ready', 'Health:ready');
 		$router->addRoute('api/meta/webhook', 'Api:MetaWebhook:default');
-		$router->addRoute($lang, 'Home:default');
+		$router->addRoute($lang . 'sign/in', 'Sign:in');
+		$router->addRoute($lang . 'sign/out', 'Sign:out');
+		// The homepage is the dashboard; the administration always requires signing in.
+		$router->addRoute($lang, 'Admin:Dashboard:default');
+		$router->withModule('Admin')
+			->addRoute($lang . 'admin/<presenter>[/<action>][/<id \d+>]', [
+				'action' => 'default',
+			]);
 
 		return $router;
 	}

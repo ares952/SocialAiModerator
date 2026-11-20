@@ -1,0 +1,30 @@
+{varType Nette\Database\Row $operator}
+
+{block content}
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a n:href="default">{_'operator.title'}</a></li>
+		<li class="breadcrumb-item active" aria-current="page">{$operator->name}</li>
+	</ol>
+</nav>
+
+<h1 class="h3 mb-1" n:block="title">{$operator->name}</h1>
+<p class="text-body-secondary text-break mb-4">{$operator->email}</p>
+
+<div class="row g-4">
+	<div class="col-12 col-lg-6">
+		<div class="card">
+			<div class="card-header">{_'operator.edit'}</div>
+			<div class="card-body">{control editForm}</div>
+		</div>
+	</div>
+	<div class="col-12 col-lg-6">
+		<div class="card">
+			<div class="card-header">{_'operator.form.set-password'}</div>
+			<div class="card-body">
+				<p class="small text-body-secondary">{_'operator.password.note'}</p>
+				{control passwordForm}
+			</div>
+		</div>
+	</div>
+</div>

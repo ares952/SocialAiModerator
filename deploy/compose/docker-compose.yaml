@@ -68,6 +68,11 @@ services:
 
   php:
     <<: *php-app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
       - ./:/var/www:rw
       - ./deploy/php/php.ini:/usr/local/etc/php/php.ini:ro
@@ -95,6 +100,25 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
+
+  redis:
+    # PHP sessions of the administration only (the job queue stays in MariaDB). Persistent (AOF
+    # in data/redis), reachable only on the internal network; never publish its port.
+    image: redis:8.10-alpine
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    volumes:
+      - ./data/redis:/data
+      - ./deploy/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    networks:
+      - app
+    restart: unless-stopped
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   db:
     # Latest MariaDB LTS series (12.3); patch updates via the socialai-update-images skill.

@@ -12,4 +12,7 @@ enum EventStatus: string
 
 	/** Account not connected or not active; kept for audit, never processed. */
 	case Ignored = 'ignored';
+
+	/** Needs a human; no automatic action. */
+	case Review = 'review';
 }

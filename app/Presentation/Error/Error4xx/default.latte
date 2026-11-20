@@ -1,3 +1,7 @@
+{varType int $httpCode}
+{varType string $messageKey}
+
 {block content}
-<h1 n:block="title">{_'system.error.title', 1, [code => $httpCode]}</h1>
-<p>{_'system.error.not-found'}</p>
+<h1 class="h3" n:block="title">{_'system.error.title', 1, [code => $httpCode]}</h1>
+<p>{_$messageKey}</p>
+<p><a n:href=":Admin:Dashboard:">{_'system.error.home'}</a></p>

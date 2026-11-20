@@ -64,7 +64,7 @@ copy deploy/nginx/trusted-proxies.inc.template config/nginx/trusted-proxies.inc
 copy deploy/nginx/maintenance-allowlist.geo.template config/nginx/maintenance-allowlist.geo
 copy config/local.neon.template config/local.neon
 
-mkdir -p data/mariadb log temp
+mkdir -p data/mariadb data/redis log temp
 
 echo
 echo "Next: edit .env, config/local.neon, config/nginx/* and config/secrets/app.env for this server,"

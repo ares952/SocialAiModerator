@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presentation\Api\MetaWebhook;
 
+use App\Core\Logger;
 use App\Ingest\EventStore;
 use App\Ingest\InvalidWebhookPayload;
 use App\Ingest\WebhookBatch;
@@ -14,7 +15,6 @@ use Nette\Application\Response;
 use Nette\Application\Responses\TextResponse;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
-use Tracy\ILogger;
 
 
 /**
@@ -29,7 +29,7 @@ final class MetaWebhookPresenter implements IPresenter
 		private readonly EventStore $events,
 		private readonly IRequest $httpRequest,
 		private readonly IResponse $httpResponse,
-		private readonly ILogger $logger,
+		private readonly Logger $logger,
 	) {
 	}
 
@@ -58,7 +58,7 @@ final class MetaWebhookPresenter implements IPresenter
 				is_string($token) ? $token : null,
 			)
 		) {
-			$this->logger->log('Meta webhook subscription rejected: invalid verify token', ILogger::WARNING);
+			$this->logger->warning('Meta webhook subscription rejected: invalid verify token');
 
 			return $this->text(IResponse::S403_Forbidden, '');
 		}
@@ -71,7 +71,7 @@ final class MetaWebhookPresenter implements IPresenter
 	{
 		$body = $this->httpRequest->getRawBody() ?? '';
 		if (!$this->verifier->isSigned($body, $this->httpRequest->getHeader('X-Hub-Signature-256'))) {
-			$this->logger->log('Meta webhook rejected: invalid signature', ILogger::WARNING);
+			$this->logger->warning('Meta webhook rejected: invalid signature');
 
 			return $this->text(IResponse::S403_Forbidden, '');
 		}
@@ -80,12 +80,15 @@ final class MetaWebhookPresenter implements IPresenter
 			$batch = WebhookBatch::parse($body);
 		} catch (InvalidWebhookPayload $e) {
 			// Only the message: a bluescreen would dump the body with customer content.
-			$this->logger->log('Meta webhook rejected: ' . $e->getMessage(), ILogger::ERROR);
+			$this->logger->error('Meta webhook rejected: ' . $e->getMessage());
 
 			return $this->text(IResponse::S400_BadRequest, '');
 		}
 
 		$this->events->save($batch);
+		$this->logger->info('Meta webhook received', [
+			'events' => count($batch->events),
+		]);
 
 		return $this->text(IResponse::S200_OK, 'EVENT_RECEIVED');
 	}

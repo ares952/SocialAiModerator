@@ -22,7 +22,10 @@
 | --- | --- |
 | Runtime | PHP 8.5 (FPM for web, CLI for worker), Docker Compose |
 | Framework | Nette 3.x (`nette/application`, `nette/database`, `nette/di`, `nette/forms`, `nette/security`), Latte 3, Tracy |
-| Database | MariaDB 12.3 LTS, own database, DB-backed job queue (no Redis in v1) |
+| Database | MariaDB 12.3 LTS, own database, DB-backed job queue (Redis is not used for the queue) |
+| Sessions | Redis 8.10 (`redis` service, phpredis), only for the PHP sessions of the administration |
+| Admin UI | Bootstrap 5.3, local copy in `www/assets/vendor/bootstrap-<version>/` (no CDN), light/dark theme |
+| Time | PHP and MariaDB work in UTC; the administration converts to the `timezone` parameter |
 | CLI | `bin/console` (`contributte/console`) |
 | Migrations | `nextras/migrations`, files in `migrations/` |
 | Tests | Nette Tester; static analysis PHPStan |
@@ -107,11 +110,13 @@ The repository root is also the Docker Compose project directory. It follows the
 │   │   └── db.env.template         -> config/secrets/db.env
 │   ├── nginx/                      nginx.conf, conf.d/ (maintenance, realip), *.template
 │   ├── php/                        php.ini, www.conf, zz-override.*.template
-│   └── mariadb/                    my.cnf, init/ (creates <db>_test), zz-override.cnf.template
+│   ├── mariadb/                    my.cnf, init/ (creates <db>_test), zz-override.cnf.template
+│   └── redis/                      redis.conf (sessions, AOF persistence)
 ├── data/                           LOCAL (gitignored) except the translation sources:
 │   ├── language_cs.json            tracked, Czech UI translations (forms 1, 2, 5)
 │   ├── language_en.json            tracked, English UI translations (forms 1, 2)
 │   ├── mariadb/                    MariaDB datadir
+│   ├── redis/                      Redis data (sessions)
 │   └── backups/                    DB dumps from release updates
 ├── log/                            Nette/Tracy + JSON app logs (contents gitignored)
 ├── temp/                           Nette cache, test temp (contents gitignored)
@@ -126,7 +131,7 @@ The repository root is also the Docker Compose project directory. It follows the
 - `config/` uses a whitelist in `.gitignore`. When you add a new shared neon file, add it to the whitelist.
 - `deploy/compose/docker-compose.yaml` uses paths relative to the repository root (`project_directory: .` in the stub). It mounts `deploy/**` read-only and `config/{php,php-fpm,mariadb}/zz-override.*` read-only after them, so per-server values win. It loads secrets via `env_file: config/secrets/*.env`, and `config/secrets/` is hidden inside the application containers.
 - The base compose file publishes no DB port. `web` binds only to `${WEB_BIND}:${WEB_PORT}`. A reverse proxy in front of it terminates TLS. Nette trusts forwarded headers only from the exact address in `http.proxy` (`config/local.neon`). Compose can only add on top of the base file, so put optional exposure into the override. Extra ports for one instance use `WEB_PORT+1`, `+2`, …
-- Services: `web` (nginx), `php` (php-fpm), `worker` (same image, `bin/console worker:run`, `stop_signal: SIGTERM`, graceful stop), `db` (MariaDB). `php` and `worker` run as `APP_UID:APP_GID` (the checkout owner), so `temp/` and `log/` stay writable on the host. All services have healthchecks and capped json-file logging.
+- Services: `web` (nginx), `php` (php-fpm), `worker` (same image, `bin/console worker:run`, `stop_signal: SIGTERM`, graceful stop), `db` (MariaDB), `redis` (sessions only, no published port). `php` and `worker` run as `APP_UID:APP_GID` (the checkout owner), so `temp/` and `log/` stay writable on the host. All services have healthchecks and capped json-file logging.
 - The application gets secrets only from environment variables (specification §11). Secrets never go into neon files, the repository, fixtures, logs, or exception messages.
 
 ## Shared Development Permissions
@@ -134,7 +139,7 @@ The repository root is also the Docker Compose project directory. It follows the
 - Development files belong to the `socialai` group and stay group-writable. Run `./update-permissions` (`--dry-run` first when unsure) after creating files, after a checkout, or when permissions look wrong. It shares tracked files, sets setgid on their directories, and makes `log/` and `temp/` group-writable.
 - Use `umask 0002` in shell commands that create development files. A shell's umask does not apply to other tool calls or editing tools, so verify group ownership and group write permission of created or atomically replaced files.
 - If the session does not have the group active yet (`id -Gn` lacks `socialai`), run group-changing commands through `sg socialai -c '...'`.
-- Preserve file owners and existing executable bits. Do not recursively change unrelated paths, never touch `config/secrets/`, `data/mariadb/` or `vendor/`, and do not create system groups. If you are blocked, report the path and the missing permission.
+- Preserve file owners and existing executable bits. Do not recursively change unrelated paths, never touch `config/secrets/`, `data/mariadb/`, `data/redis/` or `vendor/`, and do not create system groups. If you are blocked, report the path and the missing permission.
 - The `php` and `worker` containers run as `APP_UID:APP_GID`, where `APP_GID` is the `socialai` group; `deploy/php/umask.php` (auto_prepend_file) sets `umask 0002` for every PHP process, including `docker compose exec`.
 
 ## Translations

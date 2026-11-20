@@ -6,6 +6,7 @@ namespace App\Translation;
 
 use Nette\Database\Explorer;
 use Nette\Database\Row;
+use Nette\Database\SqlLiteral;
 
 
 /**
@@ -97,7 +98,7 @@ final class TranslationImporter
 				->where('id', $languageId)
 				->update([
 					'source_hash' => $file->hash,
-					'imported_at' => new \DateTimeImmutable,
+					'imported_at' => new SqlLiteral('NOW()'),
 				]);
 
 			return new ImportResult($changed, $removed);

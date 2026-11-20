@@ -6,12 +6,16 @@ namespace App\Ingest;
 
 use App\Account\AccountStatus;
 use App\Core\Encryptor;
+use App\Queue\JobQueue;
+use App\Queue\JobType;
 use Nette\Database\Explorer;
+use Nette\Database\SqlLiteral;
 
 
 /**
- * Persists webhook events in one transaction with deduplication by event_key. Events of an
- * account that is not connected or not active are stored as ignored and never processed.
+ * Persists webhook events in one transaction with deduplication by event_key and queues the
+ * new ones for the worker. Events of an account that is not connected or not active are stored
+ * as ignored and never processed.
  */
 final class EventStore
 {
@@ -21,6 +25,7 @@ final class EventStore
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly Encryptor $encryptor,
+		private readonly JobQueue $queue,
 	) {
 	}
 
@@ -36,8 +41,8 @@ final class EventStore
 				)->fetch();
 				$active = $account !== null && $account->status === AccountStatus::Active->value;
 
-				// A duplicate (same platform, account and key) changes nothing.
-				$this->database->query(
+				// A duplicate (same platform, account and key) changes nothing: 0 affected rows.
+				$inserted = $this->database->query(
 					'INSERT INTO social_events ? ON DUPLICATE KEY UPDATE id = id',
 					[
 						'platform' => $event->platform->value,
@@ -47,9 +52,13 @@ final class EventStore
 						'topic' => $event->topic,
 						'payload_encrypted' => $this->encryptor->encrypt($event->payload, self::PayloadContext),
 						'status' => ($active ? EventStatus::Received : EventStatus::Ignored)->value,
-						'received_at' => new \DateTimeImmutable,
+						'received_at' => new SqlLiteral('NOW(3)'),
 					],
-				);
+				)->getRowCount() === 1;
+
+				if ($inserted && $active) {
+					$this->queue->push(JobType::ProcessEvent, (int) $this->database->getInsertId());
+				}
 			}
 		});
 	}

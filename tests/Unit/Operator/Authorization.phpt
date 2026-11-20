@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Operator\Authorization;
+use Tester\Assert;
+
+require __DIR__ . '/../../bootstrap.php';
+
+
+$acl = Authorization::create();
+
+
+test('viewer sees the dashboard and events, nothing else', function () use ($acl): void {
+	Assert::true($acl->isAllowed('viewer', Authorization::Dashboard, Authorization::View));
+	Assert::true($acl->isAllowed('viewer', Authorization::Events, Authorization::View));
+	Assert::false($acl->isAllowed('viewer', Authorization::Events, Authorization::Manage));
+	Assert::false($acl->isAllowed('viewer', Authorization::Operators, Authorization::View));
+	Assert::false($acl->isAllowed('viewer', Authorization::Operators, Authorization::Manage));
+});
+
+
+test('moderator cannot manage operators', function () use ($acl): void {
+	Assert::true($acl->isAllowed('moderator', Authorization::Events, Authorization::View));
+	Assert::false($acl->isAllowed('moderator', Authorization::Operators, Authorization::Manage));
+});
+
+
+test('admin may do everything', function () use ($acl): void {
+	Assert::true($acl->isAllowed('admin', Authorization::Operators, Authorization::Manage));
+	Assert::true($acl->isAllowed('admin', Authorization::Events, Authorization::Manage));
+});

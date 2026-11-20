@@ -4,6 +4,27 @@ parameters:
 		- cs
 		- en
 
+	# DB job queue (App\Queue\JobQueue). leaseSeconds must exceed the longest job, otherwise an
+	# expired reservation lets another worker start the same job.
+	queue:
+		maxAttempts: 5
+		backoffSeconds: 30
+		backoffCapSeconds: 3600
+		leaseSeconds: 600
+
+	worker:
+		# Pause when the queue is empty.
+		idleSeconds: 1
+
+	# Display time zone of the administration; the application and the database work in UTC.
+	timezone: Europe/Prague
+
+	# Failed sign-ins (App\Operator\LoginThrottle) within the window block further attempts.
+	login:
+		maxFailuresPerEmail: 5
+		maxFailuresPerAddress: 20
+		windowMinutes: 15
+
 
 application:
 	errorPresenter:
@@ -33,6 +54,9 @@ tracy:
 	keysToHide:
 		- SensitiveParameterValue::$value
 		- App\Ingest\IncomingEvent::$payload
+		# form fields with passwords besides `password` (hidden by default)
+		- current
+		- passwordCheck
 		- DB_PASSWORD
 		- APP_ENCRYPTION_KEY
 		- META_APP_SECRET
@@ -43,9 +67,21 @@ tracy:
 		- App\Meta\WebhookVerifier::$verifyToken
 
 
+# Sessions live in the `redis` service (phpredis, persistent). The expiration also sets
+# session.gc_maxlifetime, which phpredis uses as the TTL of every session.
 session:
-	expiration: 14 days
+	expiration: 365 days
 	cookieSecure: auto
+	cookieSamesite: Lax
+	saveHandler: redis
+	savePath: 'tcp://redis:6379?prefix=socialai:session:'
+
+
+security:
+	authentication:
+		# Sliding: every request extends the sign-in. OperatorAuthenticator re-validates the
+		# operator on each request, so deactivation or a password change applies immediately.
+		expiration: 365 days
 
 
 extensions:

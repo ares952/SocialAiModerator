@@ -18,15 +18,6 @@
   }
  },
  {
-  "key": "system.home.running",
-  "lang": "cs",
-  "translations": {
-   "1": "Instance běží.",
-   "2": "Instance běží.",
-   "5": "Instance běží."
-  }
- },
- {
   "key": "system.language.cs",
   "lang": "cs",
   "translations": {
@@ -60,6 +51,852 @@
    "1": "Požadovaná stránka není dostupná.",
    "2": "Požadovaná stránka není dostupná.",
    "5": "Požadovaná stránka není dostupná."
+  }
+ },
+ {
+  "key": "system.error.forbidden",
+  "lang": "cs",
+  "translations": {
+   "1": "K této stránce nemáte oprávnění.",
+   "2": "K této stránce nemáte oprávnění.",
+   "5": "K této stránce nemáte oprávnění."
+  }
+ },
+ {
+  "key": "system.error.home",
+  "lang": "cs",
+  "translations": {
+   "1": "Zpět na přehled",
+   "2": "Zpět na přehled",
+   "5": "Zpět na přehled"
+  }
+ },
+ {
+  "key": "admin.menu.toggle",
+  "lang": "cs",
+  "translations": {
+   "1": "Zobrazit nabídku",
+   "2": "Zobrazit nabídku",
+   "5": "Zobrazit nabídku"
+  }
+ },
+ {
+  "key": "admin.menu.dashboard",
+  "lang": "cs",
+  "translations": {
+   "1": "Přehled",
+   "2": "Přehled",
+   "5": "Přehled"
+  }
+ },
+ {
+  "key": "admin.menu.events",
+  "lang": "cs",
+  "translations": {
+   "1": "Události",
+   "2": "Události",
+   "5": "Události"
+  }
+ },
+ {
+  "key": "admin.menu.operators",
+  "lang": "cs",
+  "translations": {
+   "1": "Operátoři",
+   "2": "Operátoři",
+   "5": "Operátoři"
+  }
+ },
+ {
+  "key": "admin.menu.language",
+  "lang": "cs",
+  "translations": {
+   "1": "Jazyk",
+   "2": "Jazyk",
+   "5": "Jazyk"
+  }
+ },
+ {
+  "key": "admin.menu.theme",
+  "lang": "cs",
+  "translations": {
+   "1": "Vzhled",
+   "2": "Vzhled",
+   "5": "Vzhled"
+  }
+ },
+ {
+  "key": "admin.menu.password",
+  "lang": "cs",
+  "translations": {
+   "1": "Změnit heslo",
+   "2": "Změnit heslo",
+   "5": "Změnit heslo"
+  }
+ },
+ {
+  "key": "admin.menu.logout",
+  "lang": "cs",
+  "translations": {
+   "1": "Odhlásit se",
+   "2": "Odhlásit se",
+   "5": "Odhlásit se"
+  }
+ },
+ {
+  "key": "admin.close",
+  "lang": "cs",
+  "translations": {
+   "1": "Zavřít",
+   "2": "Zavřít",
+   "5": "Zavřít"
+  }
+ },
+ {
+  "key": "admin.theme.light",
+  "lang": "cs",
+  "translations": {
+   "1": "Světlý",
+   "2": "Světlý",
+   "5": "Světlý"
+  }
+ },
+ {
+  "key": "admin.theme.dark",
+  "lang": "cs",
+  "translations": {
+   "1": "Tmavý",
+   "2": "Tmavý",
+   "5": "Tmavý"
+  }
+ },
+ {
+  "key": "admin.theme.auto",
+  "lang": "cs",
+  "translations": {
+   "1": "Podle systému",
+   "2": "Podle systému",
+   "5": "Podle systému"
+  }
+ },
+ {
+  "key": "sign.in.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Přihlášení",
+   "2": "Přihlášení",
+   "5": "Přihlášení"
+  }
+ },
+ {
+  "key": "sign.in.email",
+  "lang": "cs",
+  "translations": {
+   "1": "E-mail",
+   "2": "E-mail",
+   "5": "E-mail"
+  }
+ },
+ {
+  "key": "sign.in.password",
+  "lang": "cs",
+  "translations": {
+   "1": "Heslo",
+   "2": "Heslo",
+   "5": "Heslo"
+  }
+ },
+ {
+  "key": "sign.in.submit",
+  "lang": "cs",
+  "translations": {
+   "1": "Přihlásit se",
+   "2": "Přihlásit se",
+   "5": "Přihlásit se"
+  }
+ },
+ {
+  "key": "sign.in.failed",
+  "lang": "cs",
+  "translations": {
+   "1": "Nesprávný e-mail nebo heslo.",
+   "2": "Nesprávný e-mail nebo heslo.",
+   "5": "Nesprávný e-mail nebo heslo."
+  }
+ },
+ {
+  "key": "sign.in.throttled",
+  "lang": "cs",
+  "translations": {
+   "1": "Příliš mnoho neúspěšných pokusů. Zkuste to znovu později.",
+   "2": "Příliš mnoho neúspěšných pokusů. Zkuste to znovu později.",
+   "5": "Příliš mnoho neúspěšných pokusů. Zkuste to znovu později."
+  }
+ },
+ {
+  "key": "sign.in.expired",
+  "lang": "cs",
+  "translations": {
+   "1": "Přihlášení vypršelo, přihlaste se znovu.",
+   "2": "Přihlášení vypršelo, přihlaste se znovu.",
+   "5": "Přihlášení vypršelo, přihlaste se znovu."
+  }
+ },
+ {
+  "key": "sign.out.done",
+  "lang": "cs",
+  "translations": {
+   "1": "Byli jste odhlášeni.",
+   "2": "Byli jste odhlášeni.",
+   "5": "Byli jste odhlášeni."
+  }
+ },
+ {
+  "key": "form.error.required",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyplňte toto pole.",
+   "2": "Vyplňte toto pole.",
+   "5": "Vyplňte toto pole."
+  }
+ },
+ {
+  "key": "form.error.email",
+  "lang": "cs",
+  "translations": {
+   "1": "Zadejte platnou e-mailovou adresu.",
+   "2": "Zadejte platnou e-mailovou adresu.",
+   "5": "Zadejte platnou e-mailovou adresu."
+  }
+ },
+ {
+  "key": "form.error.csrf",
+  "lang": "cs",
+  "translations": {
+   "1": "Platnost formuláře vypršela, odešlete ho prosím znovu.",
+   "2": "Platnost formuláře vypršela, odešlete ho prosím znovu.",
+   "5": "Platnost formuláře vypršela, odešlete ho prosím znovu."
+  }
+ },
+ {
+  "key": "form.error.password-length",
+  "lang": "cs",
+  "translations": {
+   "1": "Heslo musí mít alespoň %count% znak.",
+   "2": "Heslo musí mít alespoň %count% znaky.",
+   "5": "Heslo musí mít alespoň %count% znaků."
+  }
+ },
+ {
+  "key": "form.error.password-mismatch",
+  "lang": "cs",
+  "translations": {
+   "1": "Hesla se neshodují.",
+   "2": "Hesla se neshodují.",
+   "5": "Hesla se neshodují."
+  }
+ },
+ {
+  "key": "dashboard.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Přehled",
+   "2": "Přehled",
+   "5": "Přehled"
+  }
+ },
+ {
+  "key": "dashboard.events.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Události za posledních 24 hodin",
+   "2": "Události za posledních 24 hodin",
+   "5": "Události za posledních 24 hodin"
+  }
+ },
+ {
+  "key": "dashboard.events.all",
+  "lang": "cs",
+  "translations": {
+   "1": "Všechny události",
+   "2": "Všechny události",
+   "5": "Všechny události"
+  }
+ },
+ {
+  "key": "dashboard.queue.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Fronta úloh",
+   "2": "Fronta úloh",
+   "5": "Fronta úloh"
+  }
+ },
+ {
+  "key": "event.status.received",
+  "lang": "cs",
+  "translations": {
+   "1": "Přijato",
+   "2": "Přijato",
+   "5": "Přijato"
+  }
+ },
+ {
+  "key": "event.status.ignored",
+  "lang": "cs",
+  "translations": {
+   "1": "Ignorováno",
+   "2": "Ignorováno",
+   "5": "Ignorováno"
+  }
+ },
+ {
+  "key": "event.status.review",
+  "lang": "cs",
+  "translations": {
+   "1": "Ke kontrole",
+   "2": "Ke kontrole",
+   "5": "Ke kontrole"
+  }
+ },
+ {
+  "key": "job.status.pending",
+  "lang": "cs",
+  "translations": {
+   "1": "Čeká",
+   "2": "Čeká",
+   "5": "Čeká"
+  }
+ },
+ {
+  "key": "job.status.reserved",
+  "lang": "cs",
+  "translations": {
+   "1": "Zpracovává se",
+   "2": "Zpracovává se",
+   "5": "Zpracovává se"
+  }
+ },
+ {
+  "key": "job.status.done",
+  "lang": "cs",
+  "translations": {
+   "1": "Hotovo",
+   "2": "Hotovo",
+   "5": "Hotovo"
+  }
+ },
+ {
+  "key": "job.status.failed",
+  "lang": "cs",
+  "translations": {
+   "1": "Selhalo",
+   "2": "Selhalo",
+   "5": "Selhalo"
+  }
+ },
+ {
+  "key": "platform.facebook",
+  "lang": "cs",
+  "translations": {
+   "1": "Facebook",
+   "2": "Facebook",
+   "5": "Facebook"
+  }
+ },
+ {
+  "key": "platform.instagram",
+  "lang": "cs",
+  "translations": {
+   "1": "Instagram",
+   "2": "Instagram",
+   "5": "Instagram"
+  }
+ },
+ {
+  "key": "events.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Příchozí události",
+   "2": "Příchozí události",
+   "5": "Příchozí události"
+  }
+ },
+ {
+  "key": "events.total",
+  "lang": "cs",
+  "translations": {
+   "1": "%count% událost",
+   "2": "%count% události",
+   "5": "%count% událostí"
+  }
+ },
+ {
+  "key": "events.filter.all",
+  "lang": "cs",
+  "translations": {
+   "1": "Vše",
+   "2": "Vše",
+   "5": "Vše"
+  }
+ },
+ {
+  "key": "events.empty",
+  "lang": "cs",
+  "translations": {
+   "1": "Žádné události.",
+   "2": "Žádné události.",
+   "5": "Žádné události."
+  }
+ },
+ {
+  "key": "events.column.received",
+  "lang": "cs",
+  "translations": {
+   "1": "Přijato",
+   "2": "Přijato",
+   "5": "Přijato"
+  }
+ },
+ {
+  "key": "events.column.platform",
+  "lang": "cs",
+  "translations": {
+   "1": "Platforma",
+   "2": "Platforma",
+   "5": "Platforma"
+  }
+ },
+ {
+  "key": "events.column.account",
+  "lang": "cs",
+  "translations": {
+   "1": "Účet",
+   "2": "Účet",
+   "5": "Účet"
+  }
+ },
+ {
+  "key": "events.column.topic",
+  "lang": "cs",
+  "translations": {
+   "1": "Typ",
+   "2": "Typ",
+   "5": "Typ"
+  }
+ },
+ {
+  "key": "events.column.status",
+  "lang": "cs",
+  "translations": {
+   "1": "Stav",
+   "2": "Stav",
+   "5": "Stav"
+  }
+ },
+ {
+  "key": "events.column.job",
+  "lang": "cs",
+  "translations": {
+   "1": "Zpracování",
+   "2": "Zpracování",
+   "5": "Zpracování"
+  }
+ },
+ {
+  "key": "events.pages",
+  "lang": "cs",
+  "translations": {
+   "1": "Stránkování",
+   "2": "Stránkování",
+   "5": "Stránkování"
+  }
+ },
+ {
+  "key": "events.previous",
+  "lang": "cs",
+  "translations": {
+   "1": "Předchozí",
+   "2": "Předchozí",
+   "5": "Předchozí"
+  }
+ },
+ {
+  "key": "events.next",
+  "lang": "cs",
+  "translations": {
+   "1": "Další",
+   "2": "Další",
+   "5": "Další"
+  }
+ },
+ {
+  "key": "events.page",
+  "lang": "cs",
+  "translations": {
+   "1": "Strana %page% z %pages%",
+   "2": "Strana %page% z %pages%",
+   "5": "Strana %page% z %pages%"
+  }
+ },
+ {
+  "key": "operator.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Operátoři",
+   "2": "Operátoři",
+   "5": "Operátoři"
+  }
+ },
+ {
+  "key": "operator.add",
+  "lang": "cs",
+  "translations": {
+   "1": "Přidat operátora",
+   "2": "Přidat operátora",
+   "5": "Přidat operátora"
+  }
+ },
+ {
+  "key": "operator.edit",
+  "lang": "cs",
+  "translations": {
+   "1": "Upravit",
+   "2": "Upravit",
+   "5": "Upravit"
+  }
+ },
+ {
+  "key": "operator.column.name",
+  "lang": "cs",
+  "translations": {
+   "1": "Jméno",
+   "2": "Jméno",
+   "5": "Jméno"
+  }
+ },
+ {
+  "key": "operator.column.email",
+  "lang": "cs",
+  "translations": {
+   "1": "E-mail",
+   "2": "E-mail",
+   "5": "E-mail"
+  }
+ },
+ {
+  "key": "operator.column.role",
+  "lang": "cs",
+  "translations": {
+   "1": "Role",
+   "2": "Role",
+   "5": "Role"
+  }
+ },
+ {
+  "key": "operator.column.status",
+  "lang": "cs",
+  "translations": {
+   "1": "Stav",
+   "2": "Stav",
+   "5": "Stav"
+  }
+ },
+ {
+  "key": "operator.column.last-login",
+  "lang": "cs",
+  "translations": {
+   "1": "Poslední přihlášení",
+   "2": "Poslední přihlášení",
+   "5": "Poslední přihlášení"
+  }
+ },
+ {
+  "key": "operator.status.active",
+  "lang": "cs",
+  "translations": {
+   "1": "Aktivní",
+   "2": "Aktivní",
+   "5": "Aktivní"
+  }
+ },
+ {
+  "key": "operator.status.inactive",
+  "lang": "cs",
+  "translations": {
+   "1": "Neaktivní",
+   "2": "Neaktivní",
+   "5": "Neaktivní"
+  }
+ },
+ {
+  "key": "operator.never",
+  "lang": "cs",
+  "translations": {
+   "1": "nikdy",
+   "2": "nikdy",
+   "5": "nikdy"
+  }
+ },
+ {
+  "key": "operator.role.admin",
+  "lang": "cs",
+  "translations": {
+   "1": "Administrátor",
+   "2": "Administrátor",
+   "5": "Administrátor"
+  }
+ },
+ {
+  "key": "operator.role.moderator",
+  "lang": "cs",
+  "translations": {
+   "1": "Moderátor",
+   "2": "Moderátor",
+   "5": "Moderátor"
+  }
+ },
+ {
+  "key": "operator.role.viewer",
+  "lang": "cs",
+  "translations": {
+   "1": "Čtenář",
+   "2": "Čtenář",
+   "5": "Čtenář"
+  }
+ },
+ {
+  "key": "operator.form.email",
+  "lang": "cs",
+  "translations": {
+   "1": "E-mail (přihlašovací jméno)",
+   "2": "E-mail (přihlašovací jméno)",
+   "5": "E-mail (přihlašovací jméno)"
+  }
+ },
+ {
+  "key": "operator.form.name",
+  "lang": "cs",
+  "translations": {
+   "1": "Jméno",
+   "2": "Jméno",
+   "5": "Jméno"
+  }
+ },
+ {
+  "key": "operator.form.role",
+  "lang": "cs",
+  "translations": {
+   "1": "Role",
+   "2": "Role",
+   "5": "Role"
+  }
+ },
+ {
+  "key": "operator.form.active",
+  "lang": "cs",
+  "translations": {
+   "1": "Aktivní (může se přihlásit)",
+   "2": "Aktivní (může se přihlásit)",
+   "5": "Aktivní (může se přihlásit)"
+  }
+ },
+ {
+  "key": "operator.form.password",
+  "lang": "cs",
+  "translations": {
+   "1": "Heslo",
+   "2": "Heslo",
+   "5": "Heslo"
+  }
+ },
+ {
+  "key": "operator.form.password-check",
+  "lang": "cs",
+  "translations": {
+   "1": "Heslo znovu",
+   "2": "Heslo znovu",
+   "5": "Heslo znovu"
+  }
+ },
+ {
+  "key": "operator.form.create",
+  "lang": "cs",
+  "translations": {
+   "1": "Vytvořit",
+   "2": "Vytvořit",
+   "5": "Vytvořit"
+  }
+ },
+ {
+  "key": "operator.form.save",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložit",
+   "2": "Uložit",
+   "5": "Uložit"
+  }
+ },
+ {
+  "key": "operator.form.set-password",
+  "lang": "cs",
+  "translations": {
+   "1": "Nastavit heslo",
+   "2": "Nastavit heslo",
+   "5": "Nastavit heslo"
+  }
+ },
+ {
+  "key": "operator.created",
+  "lang": "cs",
+  "translations": {
+   "1": "Operátor byl vytvořen.",
+   "2": "Operátor byl vytvořen.",
+   "5": "Operátor byl vytvořen."
+  }
+ },
+ {
+  "key": "operator.updated",
+  "lang": "cs",
+  "translations": {
+   "1": "Změny byly uloženy.",
+   "2": "Změny byly uloženy.",
+   "5": "Změny byly uloženy."
+  }
+ },
+ {
+  "key": "operator.password-set",
+  "lang": "cs",
+  "translations": {
+   "1": "Heslo bylo nastaveno, operátor byl odhlášen ze všech zařízení.",
+   "2": "Heslo bylo nastaveno, operátor byl odhlášen ze všech zařízení.",
+   "5": "Heslo bylo nastaveno, operátor byl odhlášen ze všech zařízení."
+  }
+ },
+ {
+  "key": "operator.password.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Nové heslo operátora odhlásí ze všech zařízení.",
+   "2": "Nové heslo operátora odhlásí ze všech zařízení.",
+   "5": "Nové heslo operátora odhlásí ze všech zařízení."
+  }
+ },
+ {
+  "key": "operator.error.email",
+  "lang": "cs",
+  "translations": {
+   "1": "Zadejte platnou e-mailovou adresu.",
+   "2": "Zadejte platnou e-mailovou adresu.",
+   "5": "Zadejte platnou e-mailovou adresu."
+  }
+ },
+ {
+  "key": "operator.error.email-taken",
+  "lang": "cs",
+  "translations": {
+   "1": "Operátor s tímto e-mailem už existuje.",
+   "2": "Operátor s tímto e-mailem už existuje.",
+   "5": "Operátor s tímto e-mailem už existuje."
+  }
+ },
+ {
+  "key": "operator.error.last-admin",
+  "lang": "cs",
+  "translations": {
+   "1": "Musí zůstat alespoň jeden aktivní administrátor.",
+   "2": "Musí zůstat alespoň jeden aktivní administrátor.",
+   "5": "Musí zůstat alespoň jeden aktivní administrátor."
+  }
+ },
+ {
+  "key": "operator.error.not-found",
+  "lang": "cs",
+  "translations": {
+   "1": "Operátor neexistuje.",
+   "2": "Operátor neexistuje.",
+   "5": "Operátor neexistuje."
+  }
+ },
+ {
+  "key": "operator.error.password-length",
+  "lang": "cs",
+  "translations": {
+   "1": "Heslo musí mít alespoň 12 znaků.",
+   "2": "Heslo musí mít alespoň 12 znaků.",
+   "5": "Heslo musí mít alespoň 12 znaků."
+  }
+ },
+ {
+  "key": "password.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Změna hesla",
+   "2": "Změna hesla",
+   "5": "Změna hesla"
+  }
+ },
+ {
+  "key": "password.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Po změně hesla budete odhlášeni na všech ostatních zařízeních.",
+   "2": "Po změně hesla budete odhlášeni na všech ostatních zařízeních.",
+   "5": "Po změně hesla budete odhlášeni na všech ostatních zařízeních."
+  }
+ },
+ {
+  "key": "password.current",
+  "lang": "cs",
+  "translations": {
+   "1": "Současné heslo",
+   "2": "Současné heslo",
+   "5": "Současné heslo"
+  }
+ },
+ {
+  "key": "password.new",
+  "lang": "cs",
+  "translations": {
+   "1": "Nové heslo",
+   "2": "Nové heslo",
+   "5": "Nové heslo"
+  }
+ },
+ {
+  "key": "password.check",
+  "lang": "cs",
+  "translations": {
+   "1": "Nové heslo znovu",
+   "2": "Nové heslo znovu",
+   "5": "Nové heslo znovu"
+  }
+ },
+ {
+  "key": "password.submit",
+  "lang": "cs",
+  "translations": {
+   "1": "Změnit heslo",
+   "2": "Změnit heslo",
+   "5": "Změnit heslo"
+  }
+ },
+ {
+  "key": "password.changed",
+  "lang": "cs",
+  "translations": {
+   "1": "Heslo bylo změněno.",
+   "2": "Heslo bylo změněno.",
+   "5": "Heslo bylo změněno."
+  }
+ },
+ {
+  "key": "password.error.current",
+  "lang": "cs",
+  "translations": {
+   "1": "Současné heslo není správné.",
+   "2": "Současné heslo není správné.",
+   "5": "Současné heslo není správné."
   }
  }
 ]

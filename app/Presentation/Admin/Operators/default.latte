@@ -1,0 +1,36 @@
+{varType list<Nette\Database\Row> $operators}
+
+{block content}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<h1 class="h3 mb-0" n:block="title">{_'operator.title'}</h1>
+	<a class="btn btn-primary" n:href="add">{_'operator.add'}</a>
+</div>
+
+<div class="table-responsive">
+	<table class="table table-hover align-middle">
+		<thead>
+			<tr>
+				<th scope="col">{_'operator.column.name'}</th>
+				<th scope="col">{_'operator.column.email'}</th>
+				<th scope="col">{_'operator.column.role'}</th>
+				<th scope="col">{_'operator.column.status'}</th>
+				<th scope="col">{_'operator.column.last-login'}</th>
+				<th scope="col"><span class="visually-hidden">{_'operator.edit'}</span></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr n:foreach="$operators as $operator" n:class="!$operator->active ? 'text-body-secondary'">
+				<td>{$operator->name}</td>
+				<td class="text-break">{$operator->email}</td>
+				<td>{_"operator.role.{$operator->role}"}</td>
+				<td>
+					<span n:class="badge, $operator->active ? 'text-bg-success' : 'text-bg-secondary'">
+						{if $operator->active}{_'operator.status.active'}{else}{_'operator.status.inactive'}{/if}
+					</span>
+				</td>
+				<td>{if $operator->last_login_at}{$operator->last_login_at|localTime}{else}{_'operator.never'}{/if}</td>
+				<td class="text-end"><a class="btn btn-sm btn-outline-secondary" n:href="edit, id: $operator->id">{_'operator.edit'}</a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

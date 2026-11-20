@@ -1,0 +1,22 @@
+/* Additions to Bootstrap 5.3 for the administration. Colors come from Bootstrap variables, so
+   both the light and the dark theme work without extra rules. */
+
+.icon {
+	width: 1em;
+	height: 1em;
+	vertical-align: -0.125em;
+	fill: currentColor;
+}
+
+.sign-card {
+	max-width: 26rem;
+}
+
+.table-events td {
+	white-space: nowrap;
+}
+
+.table-events td.text-wrap-anywhere {
+	white-space: normal;
+	overflow-wrap: anywhere;
+}

@@ -100,6 +100,8 @@ v rámci aktualizace.
 
 - `php`: `php:8.5-fpm-alpine` je pohyblivý tag řady 8.5; patch se získá `docker compose build --pull php`.
 - `web`: `nginx:1.30-alpine` je pohyblivý tag řady 1.30; `docker compose pull web`.
+- `redis`: `redis:8.10-alpine` je pohyblivý tag řady 8.10; `docker compose pull redis`. Restart
+  sessions nemaže (AOF v `data/redis/`). Přechod na jinou řadu jen se souhlasem uživatele.
 - `db`: MariaDB je připnutá na přesný patch nejnovější LTS řady (`mariadb:12.3.x`). Nový patch téže
   řady = změna `deploy/compose/docker-compose.yaml` (PATCH verze aplikace), záloha DB před
   restartem a `mariadb-upgrade`. Přechod na jinou řadu (nová LTS) jen se souhlasem uživatele.

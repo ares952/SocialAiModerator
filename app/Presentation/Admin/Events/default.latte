@@ -1,0 +1,78 @@
+{varType App\Ingest\EventStatus|null $status}
+{varType list<App\Ingest\EventStatus> $statuses}
+{varType Nette\Utils\Paginator $paginator}
+{varType list<Nette\Database\Row> $events}
+
+{block content}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<h1 class="h3 mb-0" n:block="title">{_'events.title'}</h1>
+	<span class="text-body-secondary">{_'events.total', $paginator->getItemCount()}</span>
+</div>
+
+<ul class="nav nav-pills flex-wrap mb-3">
+	<li class="nav-item">
+		<a n:class="nav-link, $status === null ? active" n:href="this, status: null, page: null">{_'events.filter.all'}</a>
+	</li>
+	<li n:foreach="$statuses as $item" class="nav-item">
+		<a n:class="nav-link, $status === $item ? active" n:href="this, status: $item->value, page: null">{_"event.status.{$item->value}"}</a>
+	</li>
+</ul>
+
+{if $events === []}
+	<div class="alert alert-secondary">{_'events.empty'}</div>
+{else}
+	<div class="table-responsive">
+		<table class="table table-sm table-hover align-middle table-events">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">{_'events.column.received'}</th>
+					<th scope="col">{_'events.column.platform'}</th>
+					<th scope="col">{_'events.column.account'}</th>
+					<th scope="col">{_'events.column.topic'}</th>
+					<th scope="col">{_'events.column.status'}</th>
+					<th scope="col">{_'events.column.job'}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$events as $event">
+					<td class="text-body-secondary">{$event->id}</td>
+					<td>{$event->received_at|localTime}</td>
+					<td>{_"platform.{$event->platform}"}</td>
+					<td class="text-wrap-anywhere">
+						{$event->account_name ?? $event->account_external_id}
+						<div n:if="$event->account_name !== null" class="small text-body-secondary">{$event->account_external_id}</div>
+					</td>
+					<td><code>{$event->topic}</code></td>
+					<td>
+						<span n:class="badge, match($event->status) {
+							'review' => 'text-bg-warning',
+							'ignored' => 'text-bg-secondary',
+							default => 'text-bg-info',
+						}">{_"event.status.{$event->status}"}</span>
+					</td>
+					<td>
+						{if $event->job_status !== null}
+							<span n:class="badge, $event->job_status === 'failed' ? 'text-bg-danger' : 'text-bg-light border'"
+								n:attr="title: $event->job_error">{_"job.status.{$event->job_status}"}</span>
+						{/if}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<nav n:if="$paginator->getPageCount() > 1" aria-label="{_'events.pages'}">
+		<ul class="pagination flex-wrap">
+			<li n:class="page-item, $paginator->isFirst() ? disabled">
+				<a class="page-link" n:href="this, page: $paginator->getPage() - 1">{_'events.previous'}</a>
+			</li>
+			<li class="page-item disabled">
+				<span class="page-link">{_'events.page', 1, [page => $paginator->getPage(), pages => $paginator->getPageCount()]}</span>
+			</li>
+			<li n:class="page-item, $paginator->isLast() ? disabled">
+				<a class="page-link" n:href="this, page: $paginator->getPage() + 1">{_'events.next'}</a>
+			</li>
+		</ul>
+	</nav>
+{/if}

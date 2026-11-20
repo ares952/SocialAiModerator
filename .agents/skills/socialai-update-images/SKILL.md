@@ -1,6 +1,6 @@
 ---
 name: socialai-update-images
-description: Rebuild and update the container images of a Social AI Moderator instance (php base image patch, nginx, MariaDB patch within the current LTS series) with inventory, backup, recreate and validation. Use for security/patch image updates or image rebuilds without changing the application release.
+description: Rebuild and update the container images of a Social AI Moderator instance (php base image patch, nginx, redis, MariaDB patch within the current LTS series) with inventory, backup, recreate and validation. Use for security/patch image updates or image rebuilds without changing the application release.
 ---
 
 # Social AI Moderator image update
@@ -18,14 +18,15 @@ project, never other projects on the host. Collect for every service in
 - configured image or build (`deploy/compose/docker-compose.yaml`, `deploy/compose/Dockerfile.php`);
 - running image ID (`docker compose images`) and actual version
   (`docker compose exec php php -v`, `docker compose exec web nginx -v`,
-  `docker compose exec db mariadbd --version`).
+  `docker compose exec redis redis-server --version`, `docker compose exec db mariadbd --version`).
 
 Never print the resolved Compose config with environment values.
 
 ## Candidates
 
-- `php` (`php:8.5-fpm-alpine`) and `web` (`nginx:1.30-alpine`) use moving series tags: the
-  candidate is the newest image of the same tag (`docker pull`), compared by version and digest.
+- `php` (`php:8.5-fpm-alpine`), `web` (`nginx:1.30-alpine`) and `redis` (`redis:8.10-alpine`)
+  use moving series tags: the candidate is the newest image of the same tag (`docker pull`),
+  compared by version and digest. Recreating `redis` keeps the sessions (AOF in `data/redis/`).
 - `db` is pinned to an exact patch of the latest MariaDB LTS series. Check `docker pull mariadb:lts`
   and `mariadb:<series>`; a newer patch of the same series is a candidate and requires editing
   the pin (a PATCH bump of the application, see `socialai-version-bump`). A newer LTS series is

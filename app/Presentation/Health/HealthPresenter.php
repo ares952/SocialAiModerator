@@ -35,7 +35,8 @@ final class HealthPresenter extends Presenter
 	public function actionReady(): void
 	{
 		try {
-			$this->database->query('SELECT 1');
+			// The queue lives in the database; a missing table means pending migrations.
+			$this->database->query('SELECT 1 FROM queue_jobs LIMIT 1');
 		} catch (DriverException $e) {
 			$this->logger->log($e, ILogger::EXCEPTION);
 			$this->getHttpResponse()->setCode(IResponse::S503_ServiceUnavailable);

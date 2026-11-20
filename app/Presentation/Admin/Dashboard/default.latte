@@ -1,0 +1,38 @@
+{varType array<string, int> $eventCounts}
+{varType list<App\Ingest\EventStatus> $eventStatuses}
+{varType array<string, int> $jobCounts}
+{varType list<App\Queue\JobStatus> $jobStatuses}
+
+{block content}
+<h1 class="h3 mb-4" n:block="title">{_'dashboard.title'}</h1>
+
+<div class="row g-4">
+	<div class="col-12 col-lg-6">
+		<div class="card h-100">
+			<div class="card-header d-flex justify-content-between align-items-center">
+				<span>{_'dashboard.events.title'}</span>
+				<a class="small" n:href=":Admin:Events:">{_'dashboard.events.all'}</a>
+			</div>
+			<ul class="list-group list-group-flush">
+				<li n:foreach="$eventStatuses as $status" class="list-group-item d-flex justify-content-between align-items-center">
+					<a n:href=":Admin:Events:, status: $status->value" class="link-body-emphasis text-decoration-none">{_"event.status.{$status->value}"}</a>
+					<span class="badge text-bg-secondary rounded-pill">{$eventCounts[$status->value] ?? 0}</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="col-12 col-lg-6">
+		<div class="card h-100">
+			<div class="card-header">{_'dashboard.queue.title'}</div>
+			<ul class="list-group list-group-flush">
+				<li n:foreach="$jobStatuses as $status" class="list-group-item d-flex justify-content-between align-items-center">
+					<span>{_"job.status.{$status->value}"}</span>
+					<span n:class="badge, rounded-pill, $status->value === 'failed' && ($jobCounts[$status->value] ?? 0) > 0 ? 'text-bg-danger' : 'text-bg-secondary'">
+						{$jobCounts[$status->value] ?? 0}
+					</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

@@ -30,13 +30,28 @@ test('Meta webhook is routed without a language', function () use ($match): void
 });
 
 
-test('homepage defaults to the first language',function () use ($match): void {
+test('homepage is the dashboard and defaults to the first language', function () use ($match): void {
+	Assert::same('Admin:Dashboard', $match('/')['presenter'] ?? null);
 	Assert::same('cs', $match('/')['lang'] ?? null);
 	Assert::same('en', $match('/en/')['lang'] ?? null);
 	Assert::null($match('/de/'));
 });
 
 
+test('sign-in and administration pages', function () use ($match): void {
+	Assert::same('Sign', $match('/sign/in')['presenter'] ?? null);
+	Assert::same('en', $match('/en/sign/in')['lang'] ?? null);
+	Assert::same('out', $match('/sign/out')['action'] ?? null);
+	Assert::null($match('/sign/up'));
+	Assert::same('Admin:Events', $match('/admin/events')['presenter'] ?? null);
+	$edit = $match('/en/admin/operators/edit/5');
+	Assert::same('Admin:Operators', $edit['presenter'] ?? null);
+	Assert::same('edit', $edit['action'] ?? null);
+	Assert::same('5', $edit['id'] ?? null);
+});
+
+
 test('unknown path is not routed', function () use ($match): void {
-	Assert::null($match('/admin/anything'));
+	Assert::null($match('/admin'));
+	Assert::null($match('/anything'));
 });

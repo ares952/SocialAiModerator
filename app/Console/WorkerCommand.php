@@ -4,15 +4,23 @@ declare(strict_types=1);
 
 namespace App\Console;
 
+use App\Core\Correlation;
+use App\Core\Logger;
+use App\Ingest\EventProcessor;
+use App\Queue\Job;
+use App\Queue\JobQueue;
+use App\Queue\JobStatus;
+use App\Queue\JobType;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 
 /**
- * Long-running background worker (the `worker` container). Stops gracefully on SIGTERM/SIGINT
- * after the current iteration. Queue processing is added in Milestone 1.
+ * Long-running background worker (the `worker` container): reserves jobs from the DB queue one
+ * by one. Stops gracefully on SIGTERM/SIGINT after the current job.
  */
 #[AsCommand(name: 'worker:run', description: 'Runs the background worker until SIGTERM or SIGINT')]
 final class WorkerCommand extends Command
@@ -22,8 +30,19 @@ final class WorkerCommand extends Command
 
 	public function __construct(
 		private readonly string $heartbeatFile,
+		private readonly int $idleSeconds,
+		private readonly JobQueue $queue,
+		private readonly EventProcessor $events,
+		private readonly Correlation $correlation,
+		private readonly Logger $logger,
 	) {
 		parent::__construct();
+	}
+
+
+	protected function configure(): void
+	{
+		$this->addOption('until-empty', null, InputOption::VALUE_NONE, 'Stop when no job is available instead of waiting');
 	}
 
 
@@ -33,16 +52,67 @@ final class WorkerCommand extends Command
 		pcntl_signal(SIGTERM, $this->stop(...));
 		pcntl_signal(SIGINT, $this->stop(...));
 
-		$output->writeln('worker started');
+		$worker = gethostname() . ':' . getmypid();
+		$this->logger->info('Worker started', [
+			'worker' => $worker,
+		]);
 
 		while ($this->running) {
 			touch($this->heartbeatFile);
-			sleep(1);
+			$job = $this->queue->reserve($worker);
+			if ($job !== null) {
+				$this->process($job);
+			} elseif ($input->getOption('until-empty') === true) {
+				break;
+			} else {
+				sleep($this->idleSeconds);
+			}
 		}
 
-		$output->writeln('worker stopped');
+		$this->logger->info('Worker stopped', [
+			'worker' => $worker,
+		]);
 
 		return self::SUCCESS;
+	}
+
+
+	private function process(Job $job): void
+	{
+		$this->correlation->renew();
+		$context = [
+			'job_id' => $job->id,
+			'job_type' => $job->type->value,
+			'attempt' => $job->attempts,
+		];
+
+		$context += match ($job->type) {
+			JobType::ProcessEvent => [
+				'event_id' => $job->subjectId,
+			],
+		};
+
+		try {
+			match ($job->type) {
+				JobType::ProcessEvent => $this->events->process($job->subjectId),
+			};
+		} catch (\Throwable $e) {
+			$status = $this->queue->fail($job, $e::class . ': ' . $e->getMessage());
+			$context['status'] = $status->value;
+			if ($status === JobStatus::Failed) {
+				$this->logger->error('Job failed, no attempts left', $context, $e);
+			} else {
+				$this->logger->warning('Job failed, will retry', $context + [
+					'exception' => $e::class,
+				]);
+			}
+
+			return;
+		}
+
+		if (!$this->queue->finish($job)) {
+			$this->logger->warning('Job finished after its reservation expired', $context);
+		}
 	}
 
 
