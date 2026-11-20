@@ -1,0 +1,30 @@
+#!/bin/bash
+# Switches the maintenance page served by the `web` container (deploy/nginx/conf.d/default.conf).
+# Works without PHP, so it is usable while the application is being rebuilt.
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+lock="$root/temp/maintenance.lock"
+
+case "${1:-status}" in
+    on)
+        umask 0002
+        date -u '+%Y-%m-%dT%H:%M:%SZ' > "$lock"
+        echo "maintenance on"
+        ;;
+    off)
+        rm -f -- "$lock"
+        echo "maintenance off"
+        ;;
+    status)
+        if [[ -f "$lock" ]]; then
+            echo "maintenance on since $(cat "$lock")"
+        else
+            echo "maintenance off"
+        fi
+        ;;
+    *)
+        echo "Usage: bin/maintenance on|off|status" >&2
+        exit 2
+        ;;
+esac

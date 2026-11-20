@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="{$lang}">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex, nofollow">
+	<title>{ifset title}{include title|stripHtml} | {/ifset}{_'system.app.name'}</title>
+</head>
+
+<body>
+	<nav>
+		<a n:href="this, lang: cs" n:attr="aria-current: $lang === cs ? page">{_'system.language.cs'}</a>
+		<a n:href="this, lang: en" n:attr="aria-current: $lang === en ? page">{_'system.language.en'}</a>
+	</nav>
+
+	{include content}
+
+	<footer>
+		<small>{_'system.app.version', 1, [version => $appVersion]}</small>
+	</footer>
+</body>
+</html>

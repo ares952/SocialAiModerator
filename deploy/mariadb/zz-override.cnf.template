@@ -1,0 +1,5 @@
+# Copied to config/mariadb/zz-override.cnf by deploy/bootstrap-environment.sh.
+# Per-server MariaDB settings, loaded after deploy/mariadb/my.cnf.
+
+[mariadbd]
+# innodb_buffer_pool_size = 512M

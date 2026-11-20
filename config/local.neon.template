@@ -1,0 +1,8 @@
+# Copied to config/local.neon by deploy/bootstrap-environment.sh. Per-server Nette configuration,
+# never secrets (those come from config/secrets/app.env as %env.*%).
+
+http:
+	# Exact address of the reverse proxy that terminates TLS. Only requests from it may set
+	# X-Forwarded-For/-Proto/-Host. Never a whole LAN range.
+	proxy:
+		- 127.0.0.1

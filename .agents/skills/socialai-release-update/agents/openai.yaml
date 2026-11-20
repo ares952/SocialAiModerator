@@ -1,0 +1,3 @@
+interface:
+  display_name: "Social AI Release Update"
+  short_description: "Deploy a release to an instance with maintenance and rollback"

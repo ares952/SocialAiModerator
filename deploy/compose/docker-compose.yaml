@@ -1,0 +1,128 @@
+# Shared stack definition, identical on every server. Paths are relative to the repository root
+# (project_directory in /docker-compose.yaml). Per-server values come from /.env (interpolation),
+# config/secrets/*.env (container environment) and config/{php,php-fpm,mariadb}/zz-override.*
+# (mounted after the shared files so they win). Run deploy/bootstrap-environment.sh first.
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-php-app: &php-app
+  build:
+    context: ./deploy
+    dockerfile: compose/Dockerfile.php
+  # Runs as the checkout owner and the shared development group (socialai); deploy/php/umask.php
+  # sets umask 0002, so files in temp/ and log/ stay writable for the whole group on the host.
+  user: "${APP_UID:?APP_UID musi byt v .env}:${APP_GID:?APP_GID musi byt v .env}"
+  working_dir: /var/www
+  env_file:
+    - ./config/secrets/app.env
+  environment:
+    TZ: "${TZ:-Europe/Prague}"
+    DB_HOST: db
+  volumes:
+    - ./:/var/www:rw
+    - ./deploy/php/php.ini:/usr/local/etc/php/php.ini:ro
+    - ./deploy/php/umask.php:/usr/local/etc/php/umask.php:ro
+    - ./config/php/zz-override.ini:/usr/local/etc/php/conf.d/zz-override.ini:ro
+  # Hides config/secrets (incl. the MariaDB root password) from the application containers;
+  # they receive only app.env through env_file.
+  tmpfs:
+    - /var/www/config/secrets:size=1k,mode=0500
+  depends_on:
+    db:
+      condition: service_healthy
+  networks:
+    - app
+  restart: unless-stopped
+  logging: *default-logging
+
+services:
+  web:
+    image: nginx:1.30-alpine
+    ports:
+      - "${WEB_BIND:?WEB_BIND musi byt v .env}:${WEB_PORT:?WEB_PORT musi byt v .env}:80"
+    volumes:
+      - ./www:/var/www/www:ro
+      - ./www-maintenance:/var/www/www-maintenance:ro
+      # Only for the maintenance lock (temp/maintenance.lock); nothing in temp/ is served.
+      - ./temp:/var/www/temp:ro
+      - ./deploy/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./deploy/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./config/nginx:/etc/nginx/local:ro
+    depends_on:
+      php:
+        condition: service_healthy
+    networks:
+      - app
+    restart: unless-stopped
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-T", "3", "-O", "/dev/null", "http://127.0.0.1/health/live"]
+      interval: 15s
+      timeout: 5s
+      retries: 4
+      start_period: 15s
+
+  php:
+    <<: *php-app
+    volumes:
+      - ./:/var/www:rw
+      - ./deploy/php/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./deploy/php/umask.php:/usr/local/etc/php/umask.php:ro
+      - ./config/php/zz-override.ini:/usr/local/etc/php/conf.d/zz-override.ini:ro
+      - ./deploy/php/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
+      - ./config/php-fpm/zz-override.conf:/usr/local/etc/php-fpm.d/zz-override.conf:ro
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@fsockopen('127.0.0.1', 9000) ? 0 : 1);"]
+      interval: 15s
+      timeout: 5s
+      retries: 4
+      start_period: 15s
+
+  worker:
+    <<: *php-app
+    command: ["php", "bin/console", "worker:run"]
+    # The php-fpm base image sets STOPSIGNAL SIGQUIT; the worker shuts down gracefully on SIGTERM.
+    stop_signal: SIGTERM
+    stop_grace_period: 30s
+    healthcheck:
+      # bin/console worker:run touches the heartbeat file on every loop iteration.
+      test: ["CMD", "php", "-r", "exit(time() - (int) @filemtime('/var/www/temp/worker.heartbeat') < 60 ? 0 : 1);"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  db:
+    # Latest MariaDB LTS series (12.3); patch updates via the socialai-update-images skill.
+    image: mariadb:12.3.3
+    env_file:
+      - ./config/secrets/db.env
+    environment:
+      TZ: "${TZ:-Europe/Prague}"
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
+      - ./deploy/mariadb/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      - ./config/mariadb/zz-override.cnf:/etc/mysql/conf.d/zz-override.cnf:ro
+      - ./deploy/mariadb/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - app
+    restart: unless-stopped
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+networks:
+  app:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "${APP_SUBNET:?APP_SUBNET musi byt v .env}"
+          gateway: "${APP_GATEWAY:?APP_GATEWAY musi byt v .env}"

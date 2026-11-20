@@ -1,23 +1,31 @@
-# Per-server files (see AGENTS.md "Directory Layout" and deploy/README.md)
+# Per-server files (see deploy/README.md). Everything in config/ is server-local except the
+# explicitly listed shared files, so a new server file can never be committed by accident.
 /.env
 /docker-compose.override.yaml
-/config/local.neon
-/local/
+/config/*
+!/config/common.neon
+!/config/services.neon
+!/config/*.template
 
-# Local working data (specification, notes, labeled samples)
-/data/
+# Local working data (specification, notes, labeled samples, backups) and the MariaDB datadir.
+# Only the translation sources are shared.
+/data/*
+!/data/language_cs.json
+!/data/language_en.json
 
 # Composer
 /vendor/
 
-# Nette runtime
+# Nette runtime (each directory keeps its own .gitignore)
 /log/*
 !/log/.gitignore
 /temp/*
 !/temp/.gitignore
 
-# Tooling
-/.phpunit.cache/
-/tests/**/output/
+# Agent skills live in .agents/skills; .claude/skills is a tracked symlink to it.
+/.claude/*
+!/.claude/skills
+
+# Editors
 /.idea/
 /.vscode/

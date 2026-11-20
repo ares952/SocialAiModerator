@@ -1,0 +1,5 @@
+; Copied to config/php-fpm/zz-override.conf by deploy/bootstrap-environment.sh.
+; Per-server php-fpm pool settings, loaded after deploy/php/www.conf.
+
+[www]
+; pm.max_children = 16

@@ -1,0 +1,11 @@
+parameters:
+	level: 8
+	paths:
+		- app
+		- bin/console
+		- tests
+		- www/index.php
+	fileExtensions:
+		- php
+		- phpt
+	tmpDir: temp/phpstan

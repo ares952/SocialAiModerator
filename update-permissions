@@ -1,0 +1,201 @@
+#!/usr/bin/env bash
+# Shares the development files of this checkout with a group (default: socialai).
+# Adapted from the HTTP Harmony update-permissions script.
+
+set -euo pipefail
+
+usage() {
+    cat <<'USAGE'
+Usage: ./update-permissions [--dry-run] [--group GROUP]
+
+Share development files (tracked or new, not ignored) with GROUP (default: socialai). Preserve owners
+and executable bits, and enable group inheritance (setgid) on their parent
+directories. All tracked files are included (app, www, www-maintenance, tests,
+bin, docs, deploy, migrations, config, data/language_*.json, .agents, root files).
+
+The runtime directories log and temp get GROUP recursively with group
+read/write and setgid directories, so the containers (umask 0002) and all
+developers can write there.
+
+Never touched: ignored server-local files (config/secrets, config/local.neon,
+.env, docker-compose.override.yaml), data/mariadb, vendor and Git metadata.
+Symlinked files are skipped; symlinked parent directories are rejected.
+
+  --dry-run     Print planned commands without changing permissions.
+  --group GROUP Select an existing shared development group.
+  --help        Show this help.
+
+Run as the owner or allow sudo when another owner's files need updating.
+Use umask 0002 in developer/editor processes for new group-writable files.
+Rerun after a checkout or atomic replacement that resets file permissions.
+USAGE
+}
+
+fail() {
+    printf 'Error: %s\n' "$*" >&2
+    exit 1
+}
+
+sharing_group='socialai'
+dry_run=false
+
+while (($# > 0)); do
+    case "$1" in
+        --dry-run)
+            dry_run=true
+            shift
+            ;;
+        --group)
+            if (($# < 2)) || [[ -z "$2" || "$2" == -* ]]; then
+                fail '--group requires a group name or GID.'
+            fi
+            sharing_group="$2"
+            shift 2
+            ;;
+        --help|-h)
+            usage
+            exit 0
+            ;;
+        *)
+            fail "Unknown argument: $1"
+            ;;
+    esac
+done
+
+for dependency in git getent chgrp chmod find mktemp dirname id; do
+    command -v "$dependency" >/dev/null 2>&1 || fail "Required command is missing: $dependency"
+done
+
+group_entry="$(getent group "$sharing_group")" || fail "Group does not exist: $sharing_group"
+IFS=: read -r sharing_group _ sharing_gid _ <<< "$group_entry"
+
+repository_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+cd -- "$repository_root"
+git_command=(
+    git
+    -c "safe.directory=$repository_root"
+    -c core.fsmonitor=false
+)
+git_root="$("${git_command[@]}" rev-parse --show-toplevel)" || fail 'The script must be inside a Git repository.'
+[[ "$git_root" == "$repository_root" ]] || fail 'The script must be in the repository root.'
+
+index_list="$(mktemp)"
+trap 'rm -f -- "$index_list"' EXIT
+# Tracked files plus new files that are not ignored yet (work before the first commit).
+"${git_command[@]}" ls-files --cached --others --exclude-standard -z > "$index_list"
+mapfile -d '' -t tracked_files < "$index_list"
+
+source_files=()
+declare -A source_directories=(
+    [.]=1
+)
+
+check_parent_directories() {
+    local path="$1"
+    local parent
+    parent="$(dirname -- "$path")"
+
+    while [[ "$parent" != '.' ]]; do
+        [[ ! -L "$parent" ]] || fail "Refusing symlinked parent directory: $parent"
+        parent="$(dirname -- "$parent")"
+    done
+}
+
+add_source_file() {
+    local path="$1"
+    local parent
+
+    check_parent_directories "$path"
+    if [[ -L "$path" ]]; then
+        printf 'Skipping symlink: %q\n' "$path"
+        return
+    fi
+    # The Git index may contain files deleted in the working tree.
+    if [[ ! -e "$path" ]]; then
+        return
+    fi
+    [[ -f "$path" ]] || fail "Expected a regular file: $path"
+
+    source_files+=(
+        "$path"
+    )
+    parent="$(dirname -- "$path")"
+    while [[ "$parent" != '.' ]]; do
+        source_directories["$parent"]=1
+        parent="$(dirname -- "$parent")"
+    done
+}
+
+for path in "${tracked_files[@]}"; do
+    case "$path" in
+        config/secrets/*|config/local.neon|.env|.env.*|data/mariadb/*)
+            continue
+            ;;
+        *)
+            add_source_file "$path"
+            ;;
+    esac
+done
+
+runtime_directories=()
+for path in log temp; do
+    [[ ! -L "$path" ]] || fail "Refusing symlinked runtime directory: $path"
+    if [[ -d "$path" ]]; then
+        runtime_directories+=(
+            "$path"
+        )
+    fi
+done
+
+# Complete validation before changing any path.
+privilege_command=()
+if ! "$dry_run" && ((EUID != 0)); then
+    requires_sudo=false
+    if [[ " $(id -G) " != *" $sharing_gid "* ]]; then
+        requires_sudo=true
+    fi
+    for path in "${!source_directories[@]}" "${source_files[@]}" "${runtime_directories[@]}"; do
+        if [[ ! -O "$path" ]]; then
+            requires_sudo=true
+            break
+        fi
+    done
+    if "$requires_sudo"; then
+        command -v sudo >/dev/null 2>&1 || fail 'Run as root: some paths require elevated permissions.'
+        sudo -v
+        privilege_command=(
+            sudo
+        )
+    fi
+fi
+
+run_command() {
+    if "$dry_run"; then
+        printf 'Would run:'
+        printf ' %q' "$@"
+        printf '\n'
+    else
+        "${privilege_command[@]}" "$@"
+    fi
+}
+
+printf 'Repository: %s\nGroup: %s (%s)\n' "$repository_root" "$sharing_group" "$sharing_gid"
+printf 'Development files: %s; directories: %s; runtime directories: %s\n' \
+    "${#source_files[@]}" "${#source_directories[@]}" "${#runtime_directories[@]}"
+
+run_command chgrp -- "$sharing_gid" "${!source_directories[@]}" "${source_files[@]}"
+run_command chmod g+rwx,g+s -- "${!source_directories[@]}"
+if ((${#source_files[@]} > 0)); then
+    run_command chmod g+rwX -- "${source_files[@]}"
+fi
+for path in "${runtime_directories[@]}"; do
+    run_command chgrp -R -- "$sharing_gid" "$path"
+    run_command chmod -R g+rwX -- "$path"
+    run_command find "$path" -type d -exec chmod g+s -- {} +
+done
+
+if "$dry_run"; then
+    printf 'Dry run finished; no permissions were changed.\n'
+else
+    printf 'Permissions updated. Use umask 0002 for newly created development files.\n'
+fi

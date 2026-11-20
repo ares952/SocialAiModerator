@@ -1,0 +1,3 @@
+interface:
+  display_name: "Social AI Create Tag"
+  short_description: "Create the release tag from version.txt on main"

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Social AI Version Bump"
+  short_description: "Bump version.txt by the project rules and add upgrade notes"

@@ -1,0 +1,8 @@
+# Copied to config/nginx/maintenance-allowlist.geo by deploy/bootstrap-environment.sh.
+# Client addresses (after the reverse proxy) that bypass maintenance to verify a release before
+# it is opened to everyone. One `<address or network> 1;` per line.
+
+# Checks from inside the web container (docs/release-lifecycle.md, step 11).
+127.0.0.1 1;
+
+# 198.51.100.7 1;

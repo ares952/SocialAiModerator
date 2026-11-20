@@ -1,0 +1,8 @@
+# Entry point for `docker compose` run from the repository root. The stack itself is defined in
+# deploy/compose/docker-compose.yaml; per-server additions go into docker-compose.override.yaml
+# (gitignored, created from deploy/compose/override.template.yaml), which Compose picks up
+# automatically next to this file.
+include:
+  - path: deploy/compose/docker-compose.yaml
+    project_directory: .
+    env_file: .env

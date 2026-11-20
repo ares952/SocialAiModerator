@@ -1,0 +1,58 @@
+[
+ {
+  "key": "system.app.name",
+  "lang": "en",
+  "translations": {
+   "1": "Social AI Moderator",
+   "2": "Social AI Moderator"
+  }
+ },
+ {
+  "key": "system.app.version",
+  "lang": "en",
+  "translations": {
+   "1": "Version %version%",
+   "2": "Version %version%"
+  }
+ },
+ {
+  "key": "system.home.running",
+  "lang": "en",
+  "translations": {
+   "1": "The instance is running.",
+   "2": "The instance is running."
+  }
+ },
+ {
+  "key": "system.language.cs",
+  "lang": "en",
+  "translations": {
+   "1": "Čeština",
+   "2": "Čeština"
+  }
+ },
+ {
+  "key": "system.language.en",
+  "lang": "en",
+  "translations": {
+   "1": "English",
+   "2": "English"
+  }
+ },
+ {
+  "key": "system.error.title",
+  "lang": "en",
+  "translations": {
+   "1": "Error %code%",
+   "2": "Error %code%"
+  }
+ },
+ {
+  "key": "system.error.not-found",
+  "lang": "en",
+  "translations": {
+   "1": "The requested page is not available.",
+   "2": "The requested page is not available."
+  }
+ }
+]

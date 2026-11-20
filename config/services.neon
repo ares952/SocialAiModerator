@@ -1,0 +1,12 @@
+services:
+	- App\Core\RouterFactory::createRouter(%languages%)
+	- App\Translation\Translator(languages: %languages%)
+	- App\Translation\TranslationImporter(dataDir: %rootDir%/data)
+	- App\Console\TranslationsImportCommand
+	- App\Console\WorkerCommand(%tempDir%/worker.heartbeat)
+
+
+decorator:
+	App\Presentation\BasePresenter:
+		setup:
+			- $appVersion = %appVersion%

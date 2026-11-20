@@ -38,11 +38,15 @@ The repository root is also the Docker Compose project directory. It follows the
 /                                   repository root = Compose project directory
 ├── AGENTS.md
 ├── README.md
+├── version.txt                     application version MAJOR.MINOR.PATCH
+├── update-permissions              shares development files with the socialai group
 ├── composer.json, composer.lock
 ├── phpstan.neon
+├── .agents/skills/                 agent skills (socialai-*); .claude/skills is a symlink to it
 ├── docker-compose.yaml             tracked include stub -> deploy/compose/docker-compose.yaml
 ├── docker-compose.override.yaml    LOCAL (gitignored), per-server additions (ports, extra mounts)
-├── .env                            LOCAL (gitignored), Compose interpolation (ports, subnet, TZ)
+├── .env                            LOCAL (gitignored), Compose interpolation (UID/GID, bind, port,
+│                                   subnet, TZ)
 │
 ├── app/                            application code (namespace App\)
 │   ├── Bootstrap.php
@@ -61,6 +65,7 @@ The repository root is also the Docker Compose project directory. It follows the
 │   ├── Conversation/               conversations, reply window, takeover/release, echo guard
 │   ├── Outbox/                     ActionDispatcher (the ONLY Meta writer), idempotency, states
 │   ├── Audit/                      admin_audit writer
+│   ├── Translation/                UI Translator, PluralRule, JSON import into the DB
 │   ├── Console/                    CLI commands (worker, reconcile, retention, ...)
 │   └── Presentation/
 │       ├── Api/                    Meta webhook, health endpoints
@@ -70,11 +75,19 @@ The repository root is also the Docker Compose project directory. It follows the
 │       └── Error/
 ├── assets/                         admin JS/CSS sources (if a build step is ever needed)
 ├── bin/console                     CLI entry point (worker runs as `bin/console worker:run`)
-├── config/
+├── bin/maintenance                 maintenance page on|off|status (temp/maintenance.lock)
+├── config/                         everything except the tracked files below is LOCAL (gitignored)
 │   ├── common.neon, services.neon  tracked application configuration
 │   ├── local.neon.template         tracked template
-│   └── local.neon                  LOCAL (gitignored), per-server overrides, no secrets
-├── migrations/                     versioned DB migrations (structures/, dummy-data/)
+│   ├── local.neon                  LOCAL, per-server Nette config (trusted proxy, ...), no secrets
+│   ├── php/zz-override.ini         LOCAL, per-server PHP settings
+│   ├── php-fpm/zz-override.conf    LOCAL, per-server FPM pool settings
+│   ├── mariadb/zz-override.cnf     LOCAL, per-server MariaDB settings
+│   ├── nginx/                      LOCAL, trusted-proxies.inc, maintenance-allowlist.geo
+│   └── secrets/                    LOCAL, mode 0700, files 0600; hidden from php/worker (tmpfs)
+│       ├── app.env                 env of php + worker: DB, META_*, OPENAI_*, encryption key
+│       └── db.env                  env of db: root password, application account
+├── migrations/                     nextras/migrations (structures/, basic-data/, dummy-data/)
 ├── tests/
 │   ├── bootstrap.php
 │   ├── Unit/                       PolicyEngine, classification mapping, windows, limits
@@ -84,40 +97,69 @@ The repository root is also the Docker Compose project directory. It follows the
 ├── docs/                           architecture notes, ADRs, Meta permissions checklist (Czech)
 ├── deploy/                         tracked, identical for every server
 │   ├── README.md                   how to bootstrap a server, what goes into local/
-│   ├── bootstrap-environment.sh    creates local/, .env, override and local.neon from templates
+│   ├── bootstrap-environment.sh    creates all LOCAL files from templates, never overwrites
 │   ├── compose/
 │   │   ├── docker-compose.yaml     services: web, php, worker, db
 │   │   ├── Dockerfile.php          shared image for php-fpm and the worker
 │   │   ├── env.template            -> /.env
-│   │   └── override.template.yaml  -> /docker-compose.override.yaml
-│   ├── nginx/                      nginx.conf, conf.d/ (container nginx behind the host nginx)
+│   │   ├── override.template.yaml  -> /docker-compose.override.yaml
+│   │   ├── app.env.template        -> config/secrets/app.env
+│   │   └── db.env.template         -> config/secrets/db.env
+│   ├── nginx/                      nginx.conf, conf.d/ (maintenance, realip), *.template
 │   ├── php/                        php.ini, www.conf, zz-override.*.template
-│   └── mariadb/                    my.cnf, init/, zz-override.cnf.template
-├── local/                          LOCAL (gitignored), everything specific to this server
-│   ├── config/
-│   │   ├── php/zz-override.ini
-│   │   ├── php-fpm/zz-override.conf
-│   │   ├── mariadb/zz-override.cnf
-│   │   └── nginx/                  optional, e.g. trusted proxies
-│   ├── secrets/                    mode 0700; files mode 0600
-│   │   ├── app.env                 META_APP_SECRET, OPENAI_API_KEY, encryption key, DB user
-│   │   └── db.env                  MariaDB root/app credentials
-│   ├── volumes/mariadb/            DB datadir
-│   └── backups/                    DB dumps
-├── data/                           LOCAL (gitignored), specification, notes, labeled samples
+│   └── mariadb/                    my.cnf, init/ (creates <db>_test), zz-override.cnf.template
+├── data/                           LOCAL (gitignored) except the translation sources:
+│   ├── language_cs.json            tracked, Czech UI translations (forms 1, 2, 5)
+│   ├── language_en.json            tracked, English UI translations (forms 1, 2)
+│   ├── mariadb/                    MariaDB datadir
+│   └── backups/                    DB dumps from release updates
 ├── log/                            Nette/Tracy + JSON app logs (contents gitignored)
 ├── temp/                           Nette cache, test temp (contents gitignored)
 ├── vendor/                         Composer (gitignored)
-└── www/                            public document root (index.php, admin static assets)
+├── www/                            public document root (index.php, admin static assets)
+└── www-maintenance/                static maintenance page served by nginx
 ```
 
 ### Infrastructure Rules
 
-- `deploy/` holds only configuration that is identical on every server. Anything that differs per server goes into `local/`, `.env`, `docker-compose.override.yaml`, or `config/local.neon`. This includes secrets, bind addresses and ports, the subnet, PHP/FPM/MariaDB tuning, and trusted proxies. Each local file has a tracked `*.template` in `deploy/` or `config/`. When you change a template, update the matching local file too.
-- `deploy/compose/docker-compose.yaml` uses paths relative to the repository root (`project_directory: .` in the stub). It mounts `deploy/**` read-only and `local/config/**` read-only as `zz-override.*`, so per-server values win. It loads secrets via `env_file: local/secrets/*.env`.
-- The base compose file publishes no DB port. `web` binds only to `127.0.0.1:${WEB_PORT}`. The existing host nginx terminates HTTPS and proxies to it. Compose can only add on top of the base file, so put optional exposure into the override.
-- Services: `web` (nginx), `php` (php-fpm), `worker` (same image, `bin/console worker:run`, `restart: unless-stopped`, graceful stop on SIGTERM), `db` (MariaDB). All services have healthchecks and capped json-file logging.
+- `deploy/` holds only configuration that is identical on every server. Anything that differs per server goes into the LOCAL files: `config/` (except the tracked neon files and templates), `.env`, and `docker-compose.override.yaml`. This includes secrets, domain, bind addresses and ports, the subnet, PHP/FPM/MariaDB tuning, and the trusted proxy. Domains, IP addresses, and other server details never go into tracked files. Each local file has a tracked `*.template` in `deploy/` or `config/`. When you change a template, update the matching local file too.
+- `config/` uses a whitelist in `.gitignore`. When you add a new shared neon file, add it to the whitelist.
+- `deploy/compose/docker-compose.yaml` uses paths relative to the repository root (`project_directory: .` in the stub). It mounts `deploy/**` read-only and `config/{php,php-fpm,mariadb}/zz-override.*` read-only after them, so per-server values win. It loads secrets via `env_file: config/secrets/*.env`, and `config/secrets/` is hidden inside the application containers.
+- The base compose file publishes no DB port. `web` binds only to `${WEB_BIND}:${WEB_PORT}`. A reverse proxy in front of it terminates TLS. Nette trusts forwarded headers only from the exact address in `http.proxy` (`config/local.neon`). Compose can only add on top of the base file, so put optional exposure into the override. Extra ports for one instance use `WEB_PORT+1`, `+2`, …
+- Services: `web` (nginx), `php` (php-fpm), `worker` (same image, `bin/console worker:run`, `stop_signal: SIGTERM`, graceful stop), `db` (MariaDB). `php` and `worker` run as `APP_UID:APP_GID` (the checkout owner), so `temp/` and `log/` stay writable on the host. All services have healthchecks and capped json-file logging.
 - The application gets secrets only from environment variables (specification §11). Secrets never go into neon files, the repository, fixtures, logs, or exception messages.
+
+## Shared Development Permissions
+
+- Development files belong to the `socialai` group and stay group-writable. Run `./update-permissions` (`--dry-run` first when unsure) after creating files, after a checkout, or when permissions look wrong. It shares tracked files, sets setgid on their directories, and makes `log/` and `temp/` group-writable.
+- Use `umask 0002` in shell commands that create development files. A shell's umask does not apply to other tool calls or editing tools, so verify group ownership and group write permission of created or atomically replaced files.
+- If the session does not have the group active yet (`id -Gn` lacks `socialai`), run group-changing commands through `sg socialai -c '...'`.
+- Preserve file owners and existing executable bits. Do not recursively change unrelated paths, never touch `config/secrets/`, `data/mariadb/` or `vendor/`, and do not create system groups. If you are blocked, report the path and the missing permission.
+- The `php` and `worker` containers run as `APP_UID:APP_GID`, where `APP_GID` is the `socialai` group; `deploy/php/umask.php` (auto_prepend_file) sets `umask 0002` for every PHP process, including `docker compose exec`.
+
+## Translations
+
+- Use translation keys for every user-facing text in templates and PHP (`{_'key'}`, `{_'key', $count}`, `{_'key', $count, [name => value]}` with `%count%` / `%name%` placeholders).
+- The translation sources are `data/language_cs.json` and `data/language_en.json`. They are a JSON list of `{"key", "lang", "translations": {form: text}}` entries. When you add or change a text, update both files in the same change so that they contain the same set of keys.
+- Every key defines all plural forms of its language, even when the wording is identical. In `cs`, use `"1"` for singular, `"2"` for 2–4, and `"5"` for other counts. In `en`, use `"1"` for singular and `"2"` for plural. Write each form according to the language's grammar, and pass the relevant count when you use the key.
+- Translation texts are not part of the SQL migrations. Migrations own only the structure (`languages`, `translations`) and the list of languages (`basic-data`). The application imports the JSON files into the DB with `bin/console translations:import`. The import is idempotent and skips unchanged files by hash. Non-manual rows follow the JSON, so keys removed from the file are deleted. Rows edited in the administration (`is_manual = 1`) are never overwritten or removed. The administration reads translations only from the DB.
+- `tests/Unit/Translation/TranslationFiles.phpt` enforces valid files, complete plural forms, and identical key sets. Preserve valid JSON, the existing structure, and the `area.section.item` key naming.
+
+## Application Versioning and Releases
+
+- The version is in `version.txt` (`MAJOR.MINOR.PATCH`). The rules are in `docs/release-lifecycle.md`:
+  - **PATCH:** a change without a DB structure change.
+  - **MINOR:** a new migration.
+  - **MAJOR:** only on request.
+- Bump the version in every change set with the `socialai-version-bump` skill.
+- `docs/upgrade-notes.md` lists one-off deployment actions per version (in Czech, never credentials). With every version bump, decide whether a note is needed and state the result.
+- `docs/release-lifecycle.md` is the source of truth for tagging, instance updates, rollback, maintenance, and image updates. Use the skills:
+  - `socialai-create-tag`: annotated `vX.Y.Z` from a clean `main` synchronized with `origin/main`.
+  - `socialai-release-update`: maintenance, worker stop, DB backup, rebuild, migrations, translation import, validation, rollback.
+  - `socialai-update-images`: php/nginx patch images; MariaDB patch within the latest LTS series (currently 12.3).
+  - `socialai-maintenance`: `bin/maintenance on|off|status` and verification.
+- Published tags are immutable. Steps that change a running instance (maintenance, worker stop, backup, deploy, restore, image recreate) need the user's confirmation of a concrete plan.
+- When clearing the cache, delete only `temp/cache`, never `temp/maintenance.lock`.
 
 ## Safety Invariants (non-negotiable)
 
@@ -157,11 +199,13 @@ Never connect a live production Page or real accounts in tests or during develop
 
 - Run tools inside containers from the repository root:
   - `docker compose exec php composer install`
-  - `docker compose exec php vendor/bin/tester tests/`
-  - `docker compose exec php vendor/bin/phpstan analyse`
+  - `docker compose exec php composer test` (Nette Tester)
+  - `docker compose exec php composer analyse` (PHPStan level 8)
   - `docker compose exec php bin/console migrations:continue`
+  - `docker compose exec php bin/console translations:import` (after changing `data/language_*.json`)
+- Never run `migrations:reset`. It drops the database.
 - Tests use a separate test database and never the development data. Tests use only fake Meta and OpenAI clients. Temporary files go under `temp/tests/` and are cleaned up after the run. Never leave large files in `/tmp`.
 - Before you finish, run PHPStan and the relevant tests, and report the results honestly. If you could not run them, say so.
 - Do not mark a Meta feature as done until the required permissions are actually granted and verified (specification §3.2). Before implementing concrete Graph endpoints, confirm the login flow and scopes with the user.
-- Ask before committing or pushing. Never commit anything from `local/`, `data/`, `.env`, `docker-compose.override.yaml`, `config/local.neon`, real payloads, or tokens.
+- Ask before committing or pushing. Never commit LOCAL files (`config/` outside the whitelist, `data/`, `.env`, `docker-compose.override.yaml`), real payloads, or tokens.
 - Keep changes minimal and related to the task. Do not modify `vendor/`, `temp/`, `log/`, or generated files.

@@ -1,0 +1,10 @@
+# Copied to /docker-compose.override.yaml by deploy/bootstrap-environment.sh. Compose merges it
+# on top of deploy/compose/docker-compose.yaml; it can only add, never remove. Keep it empty
+# unless this server needs something extra.
+services: {}
+
+# Example: host-local DB access for administration tools (next free port after WEB_PORT).
+# services:
+#   db:
+#     ports:
+#       - "127.0.0.1:9078:3306"

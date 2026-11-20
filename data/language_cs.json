@@ -1,0 +1,65 @@
+[
+ {
+  "key": "system.app.name",
+  "lang": "cs",
+  "translations": {
+   "1": "Social AI Moderator",
+   "2": "Social AI Moderator",
+   "5": "Social AI Moderator"
+  }
+ },
+ {
+  "key": "system.app.version",
+  "lang": "cs",
+  "translations": {
+   "1": "Verze %version%",
+   "2": "Verze %version%",
+   "5": "Verze %version%"
+  }
+ },
+ {
+  "key": "system.home.running",
+  "lang": "cs",
+  "translations": {
+   "1": "Instance běží.",
+   "2": "Instance běží.",
+   "5": "Instance běží."
+  }
+ },
+ {
+  "key": "system.language.cs",
+  "lang": "cs",
+  "translations": {
+   "1": "Čeština",
+   "2": "Čeština",
+   "5": "Čeština"
+  }
+ },
+ {
+  "key": "system.language.en",
+  "lang": "cs",
+  "translations": {
+   "1": "English",
+   "2": "English",
+   "5": "English"
+  }
+ },
+ {
+  "key": "system.error.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Chyba %code%",
+   "2": "Chyba %code%",
+   "5": "Chyba %code%"
+  }
+ },
+ {
+  "key": "system.error.not-found",
+  "lang": "cs",
+  "translations": {
+   "1": "Požadovaná stránka není dostupná.",
+   "2": "Požadovaná stránka není dostupná.",
+   "5": "Požadovaná stránka není dostupná."
+  }
+ }
+]

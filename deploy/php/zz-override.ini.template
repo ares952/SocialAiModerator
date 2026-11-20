@@ -1,0 +1,5 @@
+; Copied to config/php/zz-override.ini by deploy/bootstrap-environment.sh.
+; Per-server PHP settings, loaded after deploy/php/php.ini. Empty is a valid configuration.
+
+; memory_limit = 512M
+; opcache.validate_timestamps = 0
