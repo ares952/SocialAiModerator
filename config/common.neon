@@ -16,6 +16,12 @@ parameters:
 		# Pause when the queue is empty.
 		idleSeconds: 1
 
+	# External APIs (App\Queue\CircuitBreaker): consecutive transient failures that open the
+	# breaker, and how long jobs are then postponed without counting their attempts.
+	circuitBreaker:
+		failureThreshold: 5
+		openSeconds: 120
+
 	# Display time zone of the administration; the application and the database work in UTC.
 	timezone: Europe/Prague
 

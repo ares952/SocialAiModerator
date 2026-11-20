@@ -1,0 +1,53 @@
+{varType list<Nette\Database\Row> $accounts}
+{varType bool $canManage}
+
+{block content}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<h1 class="h3 mb-0" n:block="title">{_'account.title'}</h1>
+	<a n:if="$canManage" class="btn btn-primary" n:href="add">{_'account.add'}</a>
+</div>
+<p class="text-body-secondary">{_'account.note'}</p>
+
+{if $accounts === []}
+	<div class="alert alert-secondary">{_'account.empty'}</div>
+{else}
+	<div class="table-responsive">
+		<table class="table table-hover align-middle">
+			<thead>
+				<tr>
+					<th scope="col">{_'account.column.name'}</th>
+					<th scope="col">{_'account.column.platform'}</th>
+					<th scope="col">{_'account.column.status'}</th>
+					<th scope="col">{_'account.column.events'}</th>
+					<th scope="col">{_'account.column.automation'}</th>
+					<th scope="col" n:if="$canManage"><span class="visually-hidden">{_'common.actions'}</span></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$accounts as $account">
+					<td>{$account->name}<div class="small text-body-secondary">{$account->external_id}</div></td>
+					<td>{_"platform.{$account->platform}"}</td>
+					<td>
+						<span n:class="badge, $account->status === 'active' ? 'text-bg-success' : 'text-bg-secondary'">{_"account.status.{$account->status}"}</span>
+					</td>
+					<td>{$account->events_day}</td>
+					<td>
+						{if $account->paused}
+							<span class="badge text-bg-danger">{_'automation.state.paused-short'}</span>
+						{else}
+							<span class="text-body-secondary">—</span>
+						{/if}
+					</td>
+					<td n:if="$canManage" class="text-end text-nowrap">
+						<a class="btn btn-sm btn-outline-secondary" n:href="edit, id: $account->id">{_'common.edit'}</a>
+						{if $account->paused}
+							<a class="btn btn-sm btn-outline-success" n:href="resume!, account: $account->id">{_'automation.form.resume'}</a>
+						{else}
+							<a class="btn btn-sm btn-outline-danger" n:href="pause!, account: $account->id">{_'automation.form.pause'}</a>
+						{/if}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+{/if}

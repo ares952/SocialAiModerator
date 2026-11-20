@@ -21,4 +21,6 @@ enum AuditAction: string
 	case SampleUpdate = 'evaluation.sample.update';
 	case SampleDelete = 'evaluation.sample.delete';
 	case EvaluationRun = 'evaluation.run';
+	case AccountCreate = 'account.create';
+	case AccountUpdate = 'account.update';
 }

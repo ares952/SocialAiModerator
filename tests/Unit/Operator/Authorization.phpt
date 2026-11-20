@@ -43,3 +43,11 @@ test('policy, knowledge and evaluation: viewers read, moderators edit, admins ma
 	Assert::true($acl->isAllowed('moderator', Authorization::Evaluation, Authorization::Edit));
 	Assert::false($acl->isAllowed('moderator', Authorization::Policy, Authorization::Edit));
 });
+
+
+test('accounts are readable by everyone, audit only by admins', function () use ($acl): void {
+	Assert::true($acl->isAllowed('viewer', Authorization::Accounts, Authorization::View));
+	Assert::false($acl->isAllowed('moderator', Authorization::Accounts, Authorization::Manage));
+	Assert::false($acl->isAllowed('moderator', Authorization::Audit, Authorization::View));
+	Assert::true($acl->isAllowed('admin', Authorization::Audit, Authorization::View));
+});

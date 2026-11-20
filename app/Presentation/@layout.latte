@@ -33,7 +33,7 @@
 		</symbol>
 	</svg>
 
-	<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
+	<nav class="navbar navbar-expand-xl bg-body-tertiary border-bottom">
 		<div class="container-xxl">
 			<a class="navbar-brand fw-semibold" n:href=":Admin:Dashboard:">{_'system.app.name'}</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav"
@@ -49,6 +49,9 @@
 					<li class="nav-item" n:if="$user->isAllowed('events', 'view')">
 						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Events:*') ? active" n:href=":Admin:Events:">{_'admin.menu.events'}</a>
 					</li>
+					<li class="nav-item" n:if="$user->isAllowed('accounts', 'view')">
+						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Accounts:*') ? active" n:href=":Admin:Accounts:">{_'admin.menu.accounts'}</a>
+					</li>
 					<li class="nav-item" n:if="$user->isAllowed('policy', 'view')">
 						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Policy:*') ? active" n:href=":Admin:Policy:">{_'admin.menu.policy'}</a>
 					</li>
@@ -61,9 +64,12 @@
 					<li class="nav-item" n:if="$user->isAllowed('operators', 'manage')">
 						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Operators:*') ? active" n:href=":Admin:Operators:">{_'admin.menu.operators'}</a>
 					</li>
+					<li class="nav-item" n:if="$user->isAllowed('audit', 'view')">
+						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Audit:*') ? active" n:href=":Admin:Audit:">{_'admin.menu.audit'}</a>
+					</li>
 				</ul>
 
-				<ul class="navbar-nav ms-auto align-items-lg-center">
+				<ul class="navbar-nav ms-auto align-items-xl-center">
 					<li class="nav-item dropdown" n:if="$languageSwitch">
 						<button class="btn btn-link nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown"
 							aria-expanded="false" aria-label="{_'admin.menu.language'}">
@@ -81,7 +87,7 @@
 						<button class="btn btn-link nav-link dropdown-toggle" type="button" data-bs-toggle="dropdown"
 							aria-expanded="false" aria-label="{_'admin.menu.theme'}" title="{_'admin.menu.theme'}">
 							<svg class="icon"><use href="#icon-theme-auto" data-theme-icon></use></svg>
-							<span class="d-lg-none ms-1">{_'admin.menu.theme'}</span>
+							<span class="d-xl-none ms-1">{_'admin.menu.theme'}</span>
 						</button>
 						<ul class="dropdown-menu dropdown-menu-end">
 							<li n:foreach="['light', 'dark', 'auto'] as $theme">

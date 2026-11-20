@@ -125,6 +125,24 @@ final class JobQueue
 	 * its primary key, so this never locks index ranges that other workers reserve from.
 	 */
 	/**
+	 * Puts the job back without counting this attempt (the handler could not run, see Postponed).
+	 */
+	public function postpone(Job $job, int $seconds): void
+	{
+		$this->database->query(
+			'UPDATE queue_jobs SET status = ?, attempts = attempts - 1, available_at = NOW(3) + INTERVAL ? SECOND,
+				reserved_until = NULL
+			WHERE id = ? AND status = ? AND reserved_by = ?',
+			JobStatus::Pending->value,
+			$seconds,
+			$job->id,
+			JobStatus::Reserved->value,
+			$job->worker,
+		);
+	}
+
+
+	/**
 	 * Whether a failure of this attempt makes the job `failed` (no retry follows).
 	 */
 	public function isLastAttempt(Job $job): bool

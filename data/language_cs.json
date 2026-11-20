@@ -2482,5 +2482,446 @@
    "2": "automatická odpověď nepovolena",
    "5": "automatická odpověď nepovolena"
   }
+ },
+ {
+  "key": "admin.menu.accounts",
+  "lang": "cs",
+  "translations": {
+   "1": "Účty",
+   "2": "Účty",
+   "5": "Účty"
+  }
+ },
+ {
+  "key": "admin.menu.audit",
+  "lang": "cs",
+  "translations": {
+   "1": "Audit",
+   "2": "Audit",
+   "5": "Audit"
+  }
+ },
+ {
+  "key": "account.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Sociální účty",
+   "2": "Sociální účty",
+   "5": "Sociální účty"
+  }
+ },
+ {
+  "key": "account.add",
+  "lang": "cs",
+  "translations": {
+   "1": "Přidat účet",
+   "2": "Přidat účet",
+   "5": "Přidat účet"
+  }
+ },
+ {
+  "key": "account.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Události z webhooků se zpracují jen pro aktivní účty. Dokud není hotové přihlášení přes Metu, účty se zadávají ručně a nemají tokeny.",
+   "2": "Události z webhooků se zpracují jen pro aktivní účty. Dokud není hotové přihlášení přes Metu, účty se zadávají ručně a nemají tokeny.",
+   "5": "Události z webhooků se zpracují jen pro aktivní účty. Dokud není hotové přihlášení přes Metu, účty se zadávají ručně a nemají tokeny."
+  }
+ },
+ {
+  "key": "account.empty",
+  "lang": "cs",
+  "translations": {
+   "1": "Zatím žádné účty.",
+   "2": "Zatím žádné účty.",
+   "5": "Zatím žádné účty."
+  }
+ },
+ {
+  "key": "account.column.name",
+  "lang": "cs",
+  "translations": {
+   "1": "Název",
+   "2": "Název",
+   "5": "Název"
+  }
+ },
+ {
+  "key": "account.column.platform",
+  "lang": "cs",
+  "translations": {
+   "1": "Platforma",
+   "2": "Platforma",
+   "5": "Platforma"
+  }
+ },
+ {
+  "key": "account.column.status",
+  "lang": "cs",
+  "translations": {
+   "1": "Stav",
+   "2": "Stav",
+   "5": "Stav"
+  }
+ },
+ {
+  "key": "account.column.events",
+  "lang": "cs",
+  "translations": {
+   "1": "Události za 24 h",
+   "2": "Události za 24 h",
+   "5": "Události za 24 h"
+  }
+ },
+ {
+  "key": "account.column.automation",
+  "lang": "cs",
+  "translations": {
+   "1": "Automatika",
+   "2": "Automatika",
+   "5": "Automatika"
+  }
+ },
+ {
+  "key": "account.status.active",
+  "lang": "cs",
+  "translations": {
+   "1": "aktivní",
+   "2": "aktivní",
+   "5": "aktivní"
+  }
+ },
+ {
+  "key": "account.status.disabled",
+  "lang": "cs",
+  "translations": {
+   "1": "vypnutý",
+   "2": "vypnutý",
+   "5": "vypnutý"
+  }
+ },
+ {
+  "key": "account.form.platform",
+  "lang": "cs",
+  "translations": {
+   "1": "Platforma",
+   "2": "Platforma",
+   "5": "Platforma"
+  }
+ },
+ {
+  "key": "account.form.external-id",
+  "lang": "cs",
+  "translations": {
+   "1": "ID stránky nebo účtu",
+   "2": "ID stránky nebo účtu",
+   "5": "ID stránky nebo účtu"
+  }
+ },
+ {
+  "key": "account.form.external-id-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Číselné ID, které Meta posílá ve webhooku jako entry.id (Facebook Page ID nebo Instagram professional account ID).",
+   "2": "Číselné ID, které Meta posílá ve webhooku jako entry.id (Facebook Page ID nebo Instagram professional account ID).",
+   "5": "Číselné ID, které Meta posílá ve webhooku jako entry.id (Facebook Page ID nebo Instagram professional account ID)."
+  }
+ },
+ {
+  "key": "account.form.name",
+  "lang": "cs",
+  "translations": {
+   "1": "Název",
+   "2": "Název",
+   "5": "Název"
+  }
+ },
+ {
+  "key": "account.form.status",
+  "lang": "cs",
+  "translations": {
+   "1": "Stav",
+   "2": "Stav",
+   "5": "Stav"
+  }
+ },
+ {
+  "key": "account.form.status-note",
+  "lang": "cs",
+  "translations": {
+   "1": "U vypnutého účtu se události jen uloží jako ignorované.",
+   "2": "U vypnutého účtu se události jen uloží jako ignorované.",
+   "5": "U vypnutého účtu se události jen uloží jako ignorované."
+  }
+ },
+ {
+  "key": "account.form.save",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložit",
+   "2": "Uložit",
+   "5": "Uložit"
+  }
+ },
+ {
+  "key": "account.saved",
+  "lang": "cs",
+  "translations": {
+   "1": "Účet byl uložen.",
+   "2": "Účet byl uložen.",
+   "5": "Účet byl uložen."
+  }
+ },
+ {
+  "key": "account.error.external-id",
+  "lang": "cs",
+  "translations": {
+   "1": "ID musí být číslo.",
+   "2": "ID musí být číslo.",
+   "5": "ID musí být číslo."
+  }
+ },
+ {
+  "key": "account.error.duplicate",
+  "lang": "cs",
+  "translations": {
+   "1": "Tento účet už existuje.",
+   "2": "Tento účet už existuje.",
+   "5": "Tento účet už existuje."
+  }
+ },
+ {
+  "key": "account.error.not-found",
+  "lang": "cs",
+  "translations": {
+   "1": "Účet neexistuje.",
+   "2": "Účet neexistuje.",
+   "5": "Účet neexistuje."
+  }
+ },
+ {
+  "key": "audit.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Audit",
+   "2": "Audit",
+   "5": "Audit"
+  }
+ },
+ {
+  "key": "audit.empty",
+  "lang": "cs",
+  "translations": {
+   "1": "Žádné záznamy.",
+   "2": "Žádné záznamy.",
+   "5": "Žádné záznamy."
+  }
+ },
+ {
+  "key": "audit.filter.all",
+  "lang": "cs",
+  "translations": {
+   "1": "Všechny akce",
+   "2": "Všechny akce",
+   "5": "Všechny akce"
+  }
+ },
+ {
+  "key": "audit.console",
+  "lang": "cs",
+  "translations": {
+   "1": "konzole",
+   "2": "konzole",
+   "5": "konzole"
+  }
+ },
+ {
+  "key": "audit.column.time",
+  "lang": "cs",
+  "translations": {
+   "1": "Čas",
+   "2": "Čas",
+   "5": "Čas"
+  }
+ },
+ {
+  "key": "audit.column.operator",
+  "lang": "cs",
+  "translations": {
+   "1": "Operátor",
+   "2": "Operátor",
+   "5": "Operátor"
+  }
+ },
+ {
+  "key": "audit.column.action",
+  "lang": "cs",
+  "translations": {
+   "1": "Akce",
+   "2": "Akce",
+   "5": "Akce"
+  }
+ },
+ {
+  "key": "audit.column.target",
+  "lang": "cs",
+  "translations": {
+   "1": "Cíl",
+   "2": "Cíl",
+   "5": "Cíl"
+  }
+ },
+ {
+  "key": "audit.column.details",
+  "lang": "cs",
+  "translations": {
+   "1": "Podrobnosti",
+   "2": "Podrobnosti",
+   "5": "Podrobnosti"
+  }
+ },
+ {
+  "key": "audit.action.login",
+  "lang": "cs",
+  "translations": {
+   "1": "Přihlášení",
+   "2": "Přihlášení",
+   "5": "Přihlášení"
+  }
+ },
+ {
+  "key": "audit.action.operator.create",
+  "lang": "cs",
+  "translations": {
+   "1": "Nový operátor",
+   "2": "Nový operátor",
+   "5": "Nový operátor"
+  }
+ },
+ {
+  "key": "audit.action.operator.update",
+  "lang": "cs",
+  "translations": {
+   "1": "Úprava operátora",
+   "2": "Úprava operátora",
+   "5": "Úprava operátora"
+  }
+ },
+ {
+  "key": "audit.action.operator.password",
+  "lang": "cs",
+  "translations": {
+   "1": "Změna hesla",
+   "2": "Změna hesla",
+   "5": "Změna hesla"
+  }
+ },
+ {
+  "key": "audit.action.policy.update",
+  "lang": "cs",
+  "translations": {
+   "1": "Nová verze pravidel",
+   "2": "Nová verze pravidel",
+   "5": "Nová verze pravidel"
+  }
+ },
+ {
+  "key": "audit.action.automation.pause",
+  "lang": "cs",
+  "translations": {
+   "1": "Vypnutí automatiky",
+   "2": "Vypnutí automatiky",
+   "5": "Vypnutí automatiky"
+  }
+ },
+ {
+  "key": "audit.action.automation.resume",
+  "lang": "cs",
+  "translations": {
+   "1": "Zapnutí automatiky",
+   "2": "Zapnutí automatiky",
+   "5": "Zapnutí automatiky"
+  }
+ },
+ {
+  "key": "audit.action.knowledge.create",
+  "lang": "cs",
+  "translations": {
+   "1": "Nový koncept znalosti",
+   "2": "Nový koncept znalosti",
+   "5": "Nový koncept znalosti"
+  }
+ },
+ {
+  "key": "audit.action.knowledge.publish",
+  "lang": "cs",
+  "translations": {
+   "1": "Publikace znalosti",
+   "2": "Publikace znalosti",
+   "5": "Publikace znalosti"
+  }
+ },
+ {
+  "key": "audit.action.knowledge.unpublish",
+  "lang": "cs",
+  "translations": {
+   "1": "Stažení znalosti",
+   "2": "Stažení znalosti",
+   "5": "Stažení znalosti"
+  }
+ },
+ {
+  "key": "audit.action.evaluation.sample.create",
+  "lang": "cs",
+  "translations": {
+   "1": "Nový vzorek",
+   "2": "Nový vzorek",
+   "5": "Nový vzorek"
+  }
+ },
+ {
+  "key": "audit.action.evaluation.sample.update",
+  "lang": "cs",
+  "translations": {
+   "1": "Úprava vzorku",
+   "2": "Úprava vzorku",
+   "5": "Úprava vzorku"
+  }
+ },
+ {
+  "key": "audit.action.evaluation.sample.delete",
+  "lang": "cs",
+  "translations": {
+   "1": "Smazání vzorku",
+   "2": "Smazání vzorku",
+   "5": "Smazání vzorku"
+  }
+ },
+ {
+  "key": "audit.action.evaluation.run",
+  "lang": "cs",
+  "translations": {
+   "1": "Spuštění vyhodnocení",
+   "2": "Spuštění vyhodnocení",
+   "5": "Spuštění vyhodnocení"
+  }
+ },
+ {
+  "key": "audit.action.account.create",
+  "lang": "cs",
+  "translations": {
+   "1": "Nový účet",
+   "2": "Nový účet",
+   "5": "Nový účet"
+  }
+ },
+ {
+  "key": "audit.action.account.update",
+  "lang": "cs",
+  "translations": {
+   "1": "Úprava účtu",
+   "2": "Úprava účtu",
+   "5": "Úprava účtu"
+  }
  }
 ]

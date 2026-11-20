@@ -1,0 +1,16 @@
+{varType Nette\Database\Row $account}
+
+{block content}
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a n:href="default">{_'account.title'}</a></li>
+		<li class="breadcrumb-item active" aria-current="page">{$account->name}</li>
+	</ol>
+</nav>
+
+<div class="row">
+	<div class="col-12 col-md-8 col-lg-6">
+		<h1 class="h3 mb-4" n:block="title">{$account->name}</h1>
+		{control accountForm}
+	</div>
+</div>

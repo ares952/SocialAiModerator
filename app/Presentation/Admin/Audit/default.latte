@@ -1,0 +1,61 @@
+{varType App\Audit\AuditAction|null $filter}
+{varType list<App\Audit\AuditAction> $actions}
+{varType Nette\Utils\Paginator $paginator}
+{varType list<Nette\Database\Row> $entries}
+
+{block content}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<h1 class="h3 mb-0" n:block="title">{_'audit.title'}</h1>
+	<div class="dropdown">
+		<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+			{if $filter}{_"audit.action.{$filter->value}"}{else}{_'audit.filter.all'}{/if}
+		</button>
+		<ul class="dropdown-menu dropdown-menu-end">
+			<li><a n:class="dropdown-item, $filter === null ? 'active'" n:href="this, action: null, page: null">{_'audit.filter.all'}</a></li>
+			<li n:foreach="$actions as $item">
+				<a n:class="dropdown-item, $filter === $item ? 'active'" n:href="this, action: $item->value, page: null">{_"audit.action.{$item->value}"}</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
+{if $entries === []}
+	<div class="alert alert-secondary">{_'audit.empty'}</div>
+{else}
+	<div class="table-responsive">
+		<table class="table table-sm table-hover align-middle">
+			<thead>
+				<tr>
+					<th scope="col">{_'audit.column.time'}</th>
+					<th scope="col">{_'audit.column.operator'}</th>
+					<th scope="col">{_'audit.column.action'}</th>
+					<th scope="col">{_'audit.column.target'}</th>
+					<th scope="col">{_'audit.column.details'}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$entries as $entry">
+					<td class="text-nowrap">{$entry->created_at|localTime}</td>
+					<td>{$entry->operator_name ?? ''}{if $entry->operator_name === null}<span class="text-body-secondary">{_'audit.console'}</span>{/if}</td>
+					<td>{_"audit.action.{$entry->action}"}</td>
+					<td class="text-nowrap"><code>{$entry->target_type}</code>{if $entry->target_id !== null} #{$entry->target_id}{/if}</td>
+					<td class="small text-break">{$entry->details}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<nav n:if="$paginator->getPageCount() > 1" aria-label="{_'events.pages'}">
+		<ul class="pagination flex-wrap">
+			<li n:class="page-item, $paginator->isFirst() ? disabled">
+				<a class="page-link" n:href="this, page: $paginator->getPage() - 1">{_'events.previous'}</a>
+			</li>
+			<li class="page-item disabled">
+				<span class="page-link">{_'events.page', 1, [page => $paginator->getPage(), pages => $paginator->getPageCount()]}</span>
+			</li>
+			<li n:class="page-item, $paginator->isLast() ? disabled">
+				<a class="page-link" n:href="this, page: $paginator->getPage() + 1">{_'events.next'}</a>
+			</li>
+		</ul>
+	</nav>
+{/if}

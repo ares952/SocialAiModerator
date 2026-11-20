@@ -6,8 +6,9 @@ namespace App\Ai;
 
 
 /**
- * Boundary to the OpenAI API (production: HttpOpenAiClient, tests: FakeOpenAiClient). The AI side
- * has no Meta credentials and its output is only data for the PolicyEngine.
+ * Boundary to the OpenAI API (production: HttpOpenAiClient behind GuardedOpenAiClient, tests:
+ * FakeOpenAiClient). The AI side has no Meta credentials and its output is only data for the
+ * PolicyEngine. The guarded client may also throw App\Queue\Postponed.
  */
 interface OpenAiClient
 {

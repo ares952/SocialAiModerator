@@ -12,6 +12,7 @@ use App\Queue\Job;
 use App\Queue\JobQueue;
 use App\Queue\JobStatus;
 use App\Queue\JobType;
+use App\Queue\Postponed;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -102,6 +103,14 @@ final class WorkerCommand extends Command
 				JobType::ProcessEvent => $this->events->process($job->subjectId),
 				JobType::EvaluateSample => $this->evaluation->evaluate($job->subjectId, $this->queue->isLastAttempt($job)),
 			};
+		} catch (Postponed $e) {
+			$this->queue->postpone($job, $e->retryAfterSeconds);
+			$this->logger->warning('Job postponed', $context + [
+				'reason' => $e->getMessage(),
+				'retry_after' => $e->retryAfterSeconds,
+			]);
+
+			return;
 		} catch (\Throwable $e) {
 			$status = $this->queue->fail($job, $e::class . ': ' . $e->getMessage());
 			$context['status'] = $status->value;

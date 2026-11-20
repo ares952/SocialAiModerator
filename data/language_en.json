@@ -2206,5 +2206,397 @@
    "1": "automatic reply not allowed",
    "2": "automatic reply not allowed"
   }
+ },
+ {
+  "key": "admin.menu.accounts",
+  "lang": "en",
+  "translations": {
+   "1": "Accounts",
+   "2": "Accounts"
+  }
+ },
+ {
+  "key": "admin.menu.audit",
+  "lang": "en",
+  "translations": {
+   "1": "Audit",
+   "2": "Audit"
+  }
+ },
+ {
+  "key": "account.title",
+  "lang": "en",
+  "translations": {
+   "1": "Social accounts",
+   "2": "Social accounts"
+  }
+ },
+ {
+  "key": "account.add",
+  "lang": "en",
+  "translations": {
+   "1": "Add account",
+   "2": "Add account"
+  }
+ },
+ {
+  "key": "account.note",
+  "lang": "en",
+  "translations": {
+   "1": "Webhook events are processed only for active accounts. Until the Meta login exists, accounts are entered by hand and have no tokens.",
+   "2": "Webhook events are processed only for active accounts. Until the Meta login exists, accounts are entered by hand and have no tokens."
+  }
+ },
+ {
+  "key": "account.empty",
+  "lang": "en",
+  "translations": {
+   "1": "No accounts yet.",
+   "2": "No accounts yet."
+  }
+ },
+ {
+  "key": "account.column.name",
+  "lang": "en",
+  "translations": {
+   "1": "Name",
+   "2": "Name"
+  }
+ },
+ {
+  "key": "account.column.platform",
+  "lang": "en",
+  "translations": {
+   "1": "Platform",
+   "2": "Platform"
+  }
+ },
+ {
+  "key": "account.column.status",
+  "lang": "en",
+  "translations": {
+   "1": "Status",
+   "2": "Status"
+  }
+ },
+ {
+  "key": "account.column.events",
+  "lang": "en",
+  "translations": {
+   "1": "Events in 24 h",
+   "2": "Events in 24 h"
+  }
+ },
+ {
+  "key": "account.column.automation",
+  "lang": "en",
+  "translations": {
+   "1": "Automation",
+   "2": "Automation"
+  }
+ },
+ {
+  "key": "account.status.active",
+  "lang": "en",
+  "translations": {
+   "1": "active",
+   "2": "active"
+  }
+ },
+ {
+  "key": "account.status.disabled",
+  "lang": "en",
+  "translations": {
+   "1": "disabled",
+   "2": "disabled"
+  }
+ },
+ {
+  "key": "account.form.platform",
+  "lang": "en",
+  "translations": {
+   "1": "Platform",
+   "2": "Platform"
+  }
+ },
+ {
+  "key": "account.form.external-id",
+  "lang": "en",
+  "translations": {
+   "1": "Page or account ID",
+   "2": "Page or account ID"
+  }
+ },
+ {
+  "key": "account.form.external-id-note",
+  "lang": "en",
+  "translations": {
+   "1": "The numeric ID Meta sends in webhooks as entry.id (Facebook Page ID or Instagram professional account ID).",
+   "2": "The numeric ID Meta sends in webhooks as entry.id (Facebook Page ID or Instagram professional account ID)."
+  }
+ },
+ {
+  "key": "account.form.name",
+  "lang": "en",
+  "translations": {
+   "1": "Name",
+   "2": "Name"
+  }
+ },
+ {
+  "key": "account.form.status",
+  "lang": "en",
+  "translations": {
+   "1": "Status",
+   "2": "Status"
+  }
+ },
+ {
+  "key": "account.form.status-note",
+  "lang": "en",
+  "translations": {
+   "1": "Events of a disabled account are only stored as ignored.",
+   "2": "Events of a disabled account are only stored as ignored."
+  }
+ },
+ {
+  "key": "account.form.save",
+  "lang": "en",
+  "translations": {
+   "1": "Save",
+   "2": "Save"
+  }
+ },
+ {
+  "key": "account.saved",
+  "lang": "en",
+  "translations": {
+   "1": "The account has been saved.",
+   "2": "The account has been saved."
+  }
+ },
+ {
+  "key": "account.error.external-id",
+  "lang": "en",
+  "translations": {
+   "1": "The ID must be a number.",
+   "2": "The ID must be a number."
+  }
+ },
+ {
+  "key": "account.error.duplicate",
+  "lang": "en",
+  "translations": {
+   "1": "This account already exists.",
+   "2": "This account already exists."
+  }
+ },
+ {
+  "key": "account.error.not-found",
+  "lang": "en",
+  "translations": {
+   "1": "The account does not exist.",
+   "2": "The account does not exist."
+  }
+ },
+ {
+  "key": "audit.title",
+  "lang": "en",
+  "translations": {
+   "1": "Audit log",
+   "2": "Audit log"
+  }
+ },
+ {
+  "key": "audit.empty",
+  "lang": "en",
+  "translations": {
+   "1": "No entries.",
+   "2": "No entries."
+  }
+ },
+ {
+  "key": "audit.filter.all",
+  "lang": "en",
+  "translations": {
+   "1": "All actions",
+   "2": "All actions"
+  }
+ },
+ {
+  "key": "audit.console",
+  "lang": "en",
+  "translations": {
+   "1": "console",
+   "2": "console"
+  }
+ },
+ {
+  "key": "audit.column.time",
+  "lang": "en",
+  "translations": {
+   "1": "Time",
+   "2": "Time"
+  }
+ },
+ {
+  "key": "audit.column.operator",
+  "lang": "en",
+  "translations": {
+   "1": "Operator",
+   "2": "Operator"
+  }
+ },
+ {
+  "key": "audit.column.action",
+  "lang": "en",
+  "translations": {
+   "1": "Action",
+   "2": "Action"
+  }
+ },
+ {
+  "key": "audit.column.target",
+  "lang": "en",
+  "translations": {
+   "1": "Target",
+   "2": "Target"
+  }
+ },
+ {
+  "key": "audit.column.details",
+  "lang": "en",
+  "translations": {
+   "1": "Details",
+   "2": "Details"
+  }
+ },
+ {
+  "key": "audit.action.login",
+  "lang": "en",
+  "translations": {
+   "1": "Sign-in",
+   "2": "Sign-in"
+  }
+ },
+ {
+  "key": "audit.action.operator.create",
+  "lang": "en",
+  "translations": {
+   "1": "Operator created",
+   "2": "Operator created"
+  }
+ },
+ {
+  "key": "audit.action.operator.update",
+  "lang": "en",
+  "translations": {
+   "1": "Operator updated",
+   "2": "Operator updated"
+  }
+ },
+ {
+  "key": "audit.action.operator.password",
+  "lang": "en",
+  "translations": {
+   "1": "Password changed",
+   "2": "Password changed"
+  }
+ },
+ {
+  "key": "audit.action.policy.update",
+  "lang": "en",
+  "translations": {
+   "1": "Policy version saved",
+   "2": "Policy version saved"
+  }
+ },
+ {
+  "key": "audit.action.automation.pause",
+  "lang": "en",
+  "translations": {
+   "1": "Automation paused",
+   "2": "Automation paused"
+  }
+ },
+ {
+  "key": "audit.action.automation.resume",
+  "lang": "en",
+  "translations": {
+   "1": "Automation resumed",
+   "2": "Automation resumed"
+  }
+ },
+ {
+  "key": "audit.action.knowledge.create",
+  "lang": "en",
+  "translations": {
+   "1": "Knowledge draft created",
+   "2": "Knowledge draft created"
+  }
+ },
+ {
+  "key": "audit.action.knowledge.publish",
+  "lang": "en",
+  "translations": {
+   "1": "Knowledge published",
+   "2": "Knowledge published"
+  }
+ },
+ {
+  "key": "audit.action.knowledge.unpublish",
+  "lang": "en",
+  "translations": {
+   "1": "Knowledge withdrawn",
+   "2": "Knowledge withdrawn"
+  }
+ },
+ {
+  "key": "audit.action.evaluation.sample.create",
+  "lang": "en",
+  "translations": {
+   "1": "Sample created",
+   "2": "Sample created"
+  }
+ },
+ {
+  "key": "audit.action.evaluation.sample.update",
+  "lang": "en",
+  "translations": {
+   "1": "Sample updated",
+   "2": "Sample updated"
+  }
+ },
+ {
+  "key": "audit.action.evaluation.sample.delete",
+  "lang": "en",
+  "translations": {
+   "1": "Sample deleted",
+   "2": "Sample deleted"
+  }
+ },
+ {
+  "key": "audit.action.evaluation.run",
+  "lang": "en",
+  "translations": {
+   "1": "Evaluation started",
+   "2": "Evaluation started"
+  }
+ },
+ {
+  "key": "audit.action.account.create",
+  "lang": "en",
+  "translations": {
+   "1": "Account created",
+   "2": "Account created"
+  }
+ },
+ {
+  "key": "audit.action.account.update",
+  "lang": "en",
+  "translations": {
+   "1": "Account updated",
+   "2": "Account updated"
+  }
  }
 ]
