@@ -13,6 +13,7 @@ use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Response;
 use Nette\Application\Responses\TextResponse;
+use Nette\Database\DriverException;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 
@@ -85,8 +86,28 @@ final class MetaWebhookPresenter implements IPresenter
 			return $this->text(IResponse::S400_BadRequest, '');
 		}
 
-		$this->events->save($batch);
+		if ($batch->platform === null) {
+			// Signed by Meta, so acknowledged: an error would only make Meta retry it.
+			$this->logger->info('Meta webhook ignored: unsupported object', [
+				'object' => $batch->object,
+			]);
+
+			return $this->text(IResponse::S200_OK, 'EVENT_RECEIVED');
+		}
+
+		try {
+			$this->events->save($batch);
+		} catch (DriverException $e) {
+			// Nothing is stored (one transaction); Meta retries deliveries that are not answered 200.
+			$this->logger->error('Meta webhook not stored: database error', [
+				'sqlstate' => $e->getSqlState(),
+			], $e);
+
+			return $this->text(IResponse::S503_ServiceUnavailable, '');
+		}
+
 		$this->logger->info('Meta webhook received', [
+			'object' => $batch->object,
 			'events' => count($batch->events),
 		]);
 

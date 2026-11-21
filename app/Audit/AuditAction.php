@@ -23,4 +23,5 @@ enum AuditAction: string
 	case EvaluationRun = 'evaluation.run';
 	case AccountCreate = 'account.create';
 	case AccountUpdate = 'account.update';
+	case TokenReplace = 'account.token.replace';
 }

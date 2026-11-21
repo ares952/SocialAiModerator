@@ -25,7 +25,9 @@ test('health endpoints are routed', function () use ($match): void {
 
 
 test('Meta webhook is routed without a language', function () use ($match): void {
+	Assert::same('Api:MetaWebhook', $match('/webhooks/meta')['presenter'] ?? null);
 	Assert::same('Api:MetaWebhook', $match('/api/meta/webhook')['presenter'] ?? null);
+	Assert::null($match('/en/webhooks/meta'));
 	Assert::null($match('/en/api/meta/webhook'));
 });
 

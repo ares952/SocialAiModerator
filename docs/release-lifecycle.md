@@ -55,6 +55,9 @@ s potvrzením uživatele.
    gzip -t "$BACKUP" && ls -l "$BACKUP"
    ```
 
+   Záloha obsahuje tokeny a události zašifrované `APP_ENCRYPTION_KEY`; bez klíče ji nejde použít.
+   Klíč se uchovává odděleně od záloh (`docs/meta-webhooks.md`, oddíl 6).
+
 5. **Kód:** `git checkout --detach "$TAG"` (na testovací instanci lze po dohodě i větev).
 6. **Lokální konfigurace:** promítnout změny šablon a poznámky z `docs/upgrade-notes.md`.
 7. **Image a kontejnery bez workeru:**

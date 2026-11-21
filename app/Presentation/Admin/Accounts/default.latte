@@ -7,6 +7,7 @@
 	<a n:if="$canManage" class="btn btn-primary" n:href="add">{_'account.add'}</a>
 </div>
 <p class="text-body-secondary">{_'account.note'}</p>
+<p class="text-body-secondary small">{_'account.token.note'}</p>
 
 {if $accounts === []}
 	<div class="alert alert-secondary">{_'account.empty'}</div>
@@ -18,6 +19,7 @@
 					<th scope="col">{_'account.column.name'}</th>
 					<th scope="col">{_'account.column.platform'}</th>
 					<th scope="col">{_'account.column.status'}</th>
+					<th scope="col">{_'account.column.token'}</th>
 					<th scope="col">{_'account.column.events'}</th>
 					<th scope="col">{_'account.column.automation'}</th>
 					<th scope="col" n:if="$canManage"><span class="visually-hidden">{_'common.actions'}</span></th>
@@ -29,6 +31,19 @@
 					<td>{_"platform.{$account->platform}"}</td>
 					<td>
 						<span n:class="badge, $account->status === 'active' ? 'text-bg-success' : 'text-bg-secondary'">{_"account.status.{$account->status}"}</span>
+					</td>
+					<td>
+						{if $account->token_status === null}
+							<span class="badge text-bg-warning">{_'account.token.none'}</span>
+						{else}
+							<span n:class="badge, $account->token_status === 'valid' ? 'text-bg-success' : ($account->token_status === 'invalid' ? 'text-bg-danger' : 'text-bg-secondary')">{_"account.token.status.{$account->token_status}"}</span>
+							<div class="small text-body-secondary">
+								{_"account.token.type.{$account->token_type}"}<br>
+								{if $account->token_expires_at}{_'account.token.expires', 1, [date => ($account->token_expires_at|localTime)]}{else}{_'account.token.never'}{/if}
+								{if $account->token_data_access_expires_at}<br>{_'account.token.data-access', 1, [date => ($account->token_data_access_expires_at|localTime)]}{/if}
+								<br>{_'account.token.refreshed', 1, [date => ($account->token_refreshed_at|localTime)]}
+							</div>
+						{/if}
 					</td>
 					<td>{$account->events_day}</td>
 					<td>

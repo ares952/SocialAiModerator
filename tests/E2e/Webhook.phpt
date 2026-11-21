@@ -25,10 +25,12 @@ $data->database->query('INSERT INTO social_accounts ?', [
 
 test('subscription challenge needs the verify token', function () use ($browser): void {
 	$token = rawurlencode((string) getenv('META_WEBHOOK_VERIFY_TOKEN'));
-	$ok = $browser->get("/api/meta/webhook?hub.mode=subscribe&hub.verify_token=$token&hub.challenge=4242");
-	Assert::same(200, $ok->status);
-	Assert::same('4242', $ok->body);
-	Assert::same(403, $browser->get('/api/meta/webhook?hub.mode=subscribe&hub.verify_token=wrong&hub.challenge=1')->status);
+	foreach (['/webhooks/meta', '/api/meta/webhook'] as $path) {
+		$ok = $browser->get("$path?hub.mode=subscribe&hub.verify_token=$token&hub.challenge=4242");
+		Assert::same(200, $ok->status);
+		Assert::same('4242', $ok->body);
+		Assert::same(403, $browser->get("$path?hub.mode=subscribe&hub.verify_token=wrong&hub.challenge=1")->status);
+	}
 });
 
 
@@ -55,7 +57,7 @@ test('a signed event is stored and the worker moves it to review', function () u
 	]);
 
 	$post = static function (string $signature) use ($body): int {
-		$curl = curl_init(getenv('E2E_BASE_URL') . '/api/meta/webhook');
+		$curl = curl_init(getenv('E2E_BASE_URL') . '/webhooks/meta');
 		curl_setopt_array($curl, [
 			CURLOPT_POST => true,
 			CURLOPT_POSTFIELDS => $body,

@@ -48,7 +48,15 @@ $database->query('INSERT INTO social_accounts ?', [
 		'name' => 'Disabled Page',
 		'status' => 'disabled',
 	],
+	[
+		'platform' => 'instagram',
+		'external_id' => 'ig:1700000000000001',
+		'name' => 'Test Instagram',
+		'status' => 'active',
+	],
 ]);
+
+$fixture = static fn(string $name): string => (string) file_get_contents(__DIR__ . "/../../fixtures/meta/$name.json");
 
 
 /**
@@ -66,7 +74,7 @@ $call = static function (
 		new WebhookVerifier(AppSecret, VerifyToken),
 		new EventStore($database, $encryptor, $queue),
 		new Request(
-			new UrlScript('https://moderator.test/api/meta/webhook' . $query, '/'),
+			new UrlScript('https://moderator.test/webhooks/meta' . $query, '/'),
 			headers: $signature === null ? [] : ['X-Hub-Signature-256' => $signature],
 			method: $method,
 			rawBodyCallback: static fn(): string => $body,
@@ -124,6 +132,20 @@ test('subscription challenge is echoed only with the verify token', function () 
 	Assert::same(403, $code);
 	Assert::same('', $body);
 	Assert::same(['warning: Meta webhook subscription rejected: invalid verify token'], $log);
+});
+
+
+test('subscription without all parameters or with another mode is 403', function () use ($call): void {
+	foreach ([
+		'',
+		'?hub.mode=subscribe&hub.challenge=1',
+		'?hub.verify_token=' . VerifyToken . '&hub.challenge=1',
+		'?hub.mode=subscribe&hub.verify_token=' . VerifyToken,
+		'?hub.mode=unsubscribe&hub.verify_token=' . VerifyToken . '&hub.challenge=1',
+		'?hub.mode[]=subscribe&hub.verify_token=' . VerifyToken . '&hub.challenge=1',
+	] as $query) {
+		Assert::same(403, $call('GET', $query)[0], $query);
+	}
 });
 
 
@@ -226,6 +248,88 @@ test('signed but malformed body is 400 without customer content in the log', fun
 	Assert::same(400, $code);
 	Assert::same(['error: Meta webhook rejected: Change item must have a `field`.'], $log);
 	Assert::same(0, $database->table('social_events')->count('*'));
+});
+
+
+test('signed body that is not JSON is 400', function () use ($call, $sign, $database): void {
+	$body = '{"object":"page","entry":[';
+
+	Assert::same(400, $call('POST', body: $body, signature: $sign($body))[0]);
+	Assert::same(0, $database->table('social_events')->count('*'));
+});
+
+
+test('empty entry list is acknowledged without events', function () use ($call, $sign, $database): void {
+	$body = '{"object":"page","entry":[]}';
+
+	Assert::same([200, 'EVENT_RECEIVED'], array_slice($call('POST', body: $body, signature: $sign($body)), 0, 2));
+	Assert::same(0, $database->table('social_events')->count('*'));
+});
+
+
+test('signed delivery for an unsupported object is acknowledged and only logged', function () use ($call, $sign, $database): void {
+	$body = '{"object":"permissions","entry":[{"id":"1","time":1,"changes":[{"field":"connected","value":{"verb":"granted"}}]}]}';
+
+	[$code, , $log] = $call('POST', body: $body, signature: $sign($body));
+	Assert::same(200, $code);
+	Assert::same(['info: Meta webhook ignored: unsupported object'], $log);
+	Assert::same(0, $database->table('social_events')->count('*'));
+});
+
+
+test('Instagram comment, message, echo and unsent message are separate events', function () use ($call, $sign, $fixture, $database, $encryptor): void {
+	$database->query('DELETE FROM social_events');
+	$database->query('DELETE FROM queue_jobs');
+	foreach (['instagram-comment', 'instagram-message', 'instagram-message-echo', 'instagram-message-deleted'] as $name) {
+		$body = $fixture($name);
+		Assert::same(200, $call('POST', body: $body, signature: $sign($body))[0], $name);
+	}
+
+	$rows = $database->query('SELECT platform, account_external_id, topic, status, payload_encrypted FROM social_events ORDER BY id')->fetchAll();
+	Assert::same(['comments', 'messaging', 'messaging', 'messaging'], array_map(fn($row) => $row->topic, $rows));
+	Assert::same(['instagram'], array_values(array_unique(array_map(fn($row) => $row->platform, $rows))));
+	Assert::same(['ig:1700000000000001'], array_values(array_unique(array_map(fn($row) => $row->account_external_id, $rows))));
+	Assert::same(['received'], array_values(array_unique(array_map(fn($row) => $row->status, $rows))));
+	Assert::same(4, $database->table('queue_jobs')->count('*'));
+
+	$echo = Json::decode($encryptor->decrypt($rows[2]->payload_encrypted, EventStore::PayloadContext), forceArrays: true);
+	Assert::true($echo['item']['message']['is_echo']);
+});
+
+
+test('Facebook Page comment, Messenger message and echo are stored', function () use ($call, $sign, $fixture, $database): void {
+	$database->query('DELETE FROM social_events');
+	foreach (['page-comment', 'page-message', 'page-message-echo'] as $name) {
+		$body = $fixture($name);
+		Assert::same(200, $call('POST', body: $body, signature: $sign($body))[0], $name);
+		Assert::same(200, $call('POST', body: $body, signature: $sign($body))[0], $name);
+	}
+
+	$rows = $database->query('SELECT platform, account_external_id, topic FROM social_events ORDER BY id')->fetchAll();
+	Assert::same(['feed', 'messaging', 'messaging'], array_map(fn($row) => $row->topic, $rows));
+	Assert::same('fb:1000000000000001', $rows[0]->account_external_id);
+	Assert::same('facebook', $rows[0]->platform);
+});
+
+
+test('database failure is 503, so Meta retries, and stores nothing', function () use ($call, $sign, $fixture, $database): void {
+	$database->query('DELETE FROM social_events');
+	$database->query('DELETE FROM queue_jobs');
+	$body = $fixture('page-comment');
+	$database->query('RENAME TABLE queue_jobs TO queue_jobs_unavailable');
+	try {
+		[$code, $response, $log] = $call('POST', body: $body, signature: $sign($body));
+	} finally {
+		$database->query('RENAME TABLE queue_jobs_unavailable TO queue_jobs');
+	}
+
+	Assert::same(503, $code);
+	Assert::same('', $response);
+	Assert::same(['error: Meta webhook not stored: database error'], $log);
+	Assert::same(0, $database->table('social_events')->count('*'));
+
+	Assert::same(200, $call('POST', body: $body, signature: $sign($body))[0]);
+	Assert::same(1, $database->table('social_events')->count('*'));
 });
 
 

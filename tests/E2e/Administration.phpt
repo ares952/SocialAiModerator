@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Account\Credentials;
+use App\Account\TokenType;
+use App\Audit\AuditLog;
+use App\Core\Encryptor;
 use Tester\Assert;
 use Tests\Support\E2eBrowser;
 use Tests\Support\E2eData;
@@ -84,7 +88,7 @@ test('policy: switches, validation, new version and the panic switch', function 
 });
 
 
-test('accounts: add, reject an invalid ID, pause, edit', function () use ($browser): void {
+test('accounts: add, reject an invalid ID, pause, edit', function () use ($browser, $data): void {
 	$fields = [
 		'platform' => 'facebook',
 		'externalId' => '1000000000000099',
@@ -97,6 +101,16 @@ test('accounts: add, reject an invalid ID, pause, edit', function () use ($brows
 
 	$list = $browser->get('/admin/accounts');
 	Assert::contains('fb:1000000000000099', $list->body);
+	Assert::contains('Bez tokenu', $list->body);
+
+	// The token is stored from the console (account:token); here directly with the stack's key.
+	$accountId = (int) $data->database->query("SELECT id FROM social_accounts WHERE external_id = 'fb:1000000000000099'")->fetchField();
+	(new Credentials($data->database, new Encryptor((string) getenv('APP_ENCRYPTION_KEY')), new AuditLog($data->database)))
+		->replace($accountId, 'E2E-SYNTHETIC-TOKEN', TokenType::Page, ['pages_messaging'], null, null, operatorId: null);
+	$list = $browser->get('/admin/accounts');
+	Assert::contains('Neověřený', $list->body);
+	Assert::contains('Bez expirace', $list->body);
+	Assert::notContains('E2E-SYNTHETIC-TOKEN', $list->body);
 	$pause = $list->link('~do=pause~') ?? throw new LogicException('No pause link.');
 	Assert::same(302, $browser->get($pause)->status);
 	$list = $browser->get('/admin/accounts');

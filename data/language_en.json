@@ -2448,6 +2448,102 @@
   }
  },
  {
+  "key": "account.column.token",
+  "lang": "en",
+  "translations": {
+   "1": "Token",
+   "2": "Tokens"
+  }
+ },
+ {
+  "key": "account.token.none",
+  "lang": "en",
+  "translations": {
+   "1": "No token",
+   "2": "No token"
+  }
+ },
+ {
+  "key": "account.token.note",
+  "lang": "en",
+  "translations": {
+   "1": "The Meta access token is stored encrypted and is replaced without a restart with bin/console account:token (docs/meta-webhooks.md).",
+   "2": "The Meta access token is stored encrypted and is replaced without a restart with bin/console account:token (docs/meta-webhooks.md)."
+  }
+ },
+ {
+  "key": "account.token.status.unchecked",
+  "lang": "en",
+  "translations": {
+   "1": "Unchecked",
+   "2": "Unchecked"
+  }
+ },
+ {
+  "key": "account.token.status.valid",
+  "lang": "en",
+  "translations": {
+   "1": "Valid",
+   "2": "Valid"
+  }
+ },
+ {
+  "key": "account.token.status.invalid",
+  "lang": "en",
+  "translations": {
+   "1": "Invalid",
+   "2": "Invalid"
+  }
+ },
+ {
+  "key": "account.token.type.page",
+  "lang": "en",
+  "translations": {
+   "1": "Page Access Token",
+   "2": "Page Access Token"
+  }
+ },
+ {
+  "key": "account.token.type.system_user",
+  "lang": "en",
+  "translations": {
+   "1": "System user token",
+   "2": "System user token"
+  }
+ },
+ {
+  "key": "account.token.expires",
+  "lang": "en",
+  "translations": {
+   "1": "Expires %date%",
+   "2": "Expires %date%"
+  }
+ },
+ {
+  "key": "account.token.never",
+  "lang": "en",
+  "translations": {
+   "1": "Never expires",
+   "2": "Never expires"
+  }
+ },
+ {
+  "key": "account.token.data-access",
+  "lang": "en",
+  "translations": {
+   "1": "Data access until %date%",
+   "2": "Data access until %date%"
+  }
+ },
+ {
+  "key": "account.token.refreshed",
+  "lang": "en",
+  "translations": {
+   "1": "Replaced %date%",
+   "2": "Replaced %date%"
+  }
+ },
+ {
   "key": "audit.title",
   "lang": "en",
   "translations": {
@@ -2645,6 +2741,14 @@
   "translations": {
    "1": "Account updated",
    "2": "Account updated"
+  }
+ },
+ {
+  "key": "audit.action.account.token.replace",
+  "lang": "en",
+  "translations": {
+   "1": "Account token replacement",
+   "2": "Account token replacement"
   }
  },
  {

@@ -1,0 +1,26 @@
+{
+	"object": "page",
+	"entry": [
+		{
+			"id": "1000000000000001",
+			"time": 1763640061000,
+			"messaging": [
+				{
+					"sender": {
+						"id": "1000000000000001"
+					},
+					"recipient": {
+						"id": "6100000000000001"
+					},
+					"timestamp": 1763640060500,
+					"message": {
+						"is_echo": true,
+						"app_id": 1000000000000099,
+						"mid": "m_synthetic_page_message_2",
+						"text": "Synthetic reply from the Page"
+					}
+				}
+			]
+		}
+	]
+}

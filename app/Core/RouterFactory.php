@@ -22,6 +22,9 @@ final class RouterFactory
 		$router = new RouteList;
 		$router->addRoute('health/live', 'Health:live');
 		$router->addRoute('health/ready', 'Health:ready');
+		// Callback URL configured in the Meta App Dashboard; api/meta/webhook is the path of the
+		// specification (§7.1) and stays as an alias.
+		$router->addRoute('webhooks/meta', 'Api:MetaWebhook:default');
 		$router->addRoute('api/meta/webhook', 'Api:MetaWebhook:default');
 		$router->addRoute($lang . 'sign/in', 'Sign:in');
 		$router->addRoute($lang . 'sign/out', 'Sign:out');

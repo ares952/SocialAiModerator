@@ -74,6 +74,21 @@ ProxyPass        / http://<WEB_BIND>:<WEB_PORT>/
 ProxyPassReverse / http://<WEB_BIND>:<WEB_PORT>/
 ```
 
+nebo pro nginx (uvnitř `server` s TLS pro doménu instance):
+
+```nginx
+location / {
+    proxy_pass http://<WEB_BIND>:<WEB_PORT>;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    client_max_body_size 2m;
+}
+```
+
+Meta webhook (`/webhooks/meta`, docs/meta-webhooks.md) musí projít proxy beze změny těla
+požadavku, jinak neprojde kontrola podpisu.
+
 `/health/live` a `/health/ready` nevracejí citlivá data. Pokud nemají být dostupné z internetu,
 zablokovat je na proxy.
 

@@ -2754,6 +2754,114 @@
   }
  },
  {
+  "key": "account.column.token",
+  "lang": "cs",
+  "translations": {
+   "1": "Token",
+   "2": "Tokeny",
+   "5": "Tokenů"
+  }
+ },
+ {
+  "key": "account.token.none",
+  "lang": "cs",
+  "translations": {
+   "1": "Bez tokenu",
+   "2": "Bez tokenu",
+   "5": "Bez tokenu"
+  }
+ },
+ {
+  "key": "account.token.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Přístupový token Meta se ukládá šifrovaně a mění se bez restartu příkazem bin/console account:token (docs/meta-webhooks.md).",
+   "2": "Přístupový token Meta se ukládá šifrovaně a mění se bez restartu příkazem bin/console account:token (docs/meta-webhooks.md).",
+   "5": "Přístupový token Meta se ukládá šifrovaně a mění se bez restartu příkazem bin/console account:token (docs/meta-webhooks.md)."
+  }
+ },
+ {
+  "key": "account.token.status.unchecked",
+  "lang": "cs",
+  "translations": {
+   "1": "Neověřený",
+   "2": "Neověřený",
+   "5": "Neověřený"
+  }
+ },
+ {
+  "key": "account.token.status.valid",
+  "lang": "cs",
+  "translations": {
+   "1": "Platný",
+   "2": "Platný",
+   "5": "Platný"
+  }
+ },
+ {
+  "key": "account.token.status.invalid",
+  "lang": "cs",
+  "translations": {
+   "1": "Neplatný",
+   "2": "Neplatný",
+   "5": "Neplatný"
+  }
+ },
+ {
+  "key": "account.token.type.page",
+  "lang": "cs",
+  "translations": {
+   "1": "Page Access Token",
+   "2": "Page Access Token",
+   "5": "Page Access Token"
+  }
+ },
+ {
+  "key": "account.token.type.system_user",
+  "lang": "cs",
+  "translations": {
+   "1": "Token systémového uživatele",
+   "2": "Token systémového uživatele",
+   "5": "Token systémového uživatele"
+  }
+ },
+ {
+  "key": "account.token.expires",
+  "lang": "cs",
+  "translations": {
+   "1": "Platnost do %date%",
+   "2": "Platnost do %date%",
+   "5": "Platnost do %date%"
+  }
+ },
+ {
+  "key": "account.token.never",
+  "lang": "cs",
+  "translations": {
+   "1": "Bez expirace",
+   "2": "Bez expirace",
+   "5": "Bez expirace"
+  }
+ },
+ {
+  "key": "account.token.data-access",
+  "lang": "cs",
+  "translations": {
+   "1": "Přístup k datům do %date%",
+   "2": "Přístup k datům do %date%",
+   "5": "Přístup k datům do %date%"
+  }
+ },
+ {
+  "key": "account.token.refreshed",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyměněn %date%",
+   "2": "Vyměněn %date%",
+   "5": "Vyměněn %date%"
+  }
+ },
+ {
   "key": "audit.title",
   "lang": "cs",
   "translations": {
@@ -2976,6 +3084,15 @@
    "1": "Úprava účtu",
    "2": "Úprava účtu",
    "5": "Úprava účtu"
+  }
+ },
+ {
+  "key": "audit.action.account.token.replace",
+  "lang": "cs",
+  "translations": {
+   "1": "Výměna tokenu účtu",
+   "2": "Výměna tokenu účtu",
+   "5": "Výměna tokenu účtu"
   }
  },
  {

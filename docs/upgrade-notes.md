@@ -15,6 +15,23 @@ Formát sekce:
 - **Ověření:** jak potvrdit, že je hotovo
 ```
 
+## 0.6.0
+
+- **Týká se:** všech instancí
+- **Kdy:** po kroku 10 (migrace)
+- **Akce:**
+  - spustit `docker compose exec php bin/console encryption:rotate`: přešifruje dosud uložené
+    události a evaluační vzorky do formátu s ID klíče (klíč se nemění);
+  - v Meta App Dashboardu lze Callback URL změnit na `<APP_URL>/webhooks/meta`; původní
+    `/api/meta/webhook` dál funguje;
+  - pro každý aktivní účet, který bude volat Graph API, uložit token příkazem
+    `bin/console account:token` (`docs/meta-webhooks.md`, oddíl 4); tokeny se do `app.env`
+    nezapisují;
+  - `APP_ENCRYPTION_KEY` nově přijímá seznam klíčů oddělený čárkou (rotace); stávající hodnota
+    platí beze změny. Klíč uložit odděleně od záloh DB (`docs/meta-webhooks.md`, oddíl 6).
+- **Ověření:** `encryption:rotate --dry-run` hlásí u všech tabulek `0 to re-encrypt, 0 failed`;
+  stránka Účty ukazuje stav tokenu; `GET <APP_URL>/webhooks/meta` bez parametrů vrací 403.
+
 ## 0.4.0
 
 - **Týká se:** všech instancí

@@ -1,8 +1,8 @@
 # Meta: přístupy, oprávnění a checklist (Milestone 0)
 
 Podklad pro rozhodnutí a nastavení přístupu k Facebook Page a Instagram Professional účtu
-(specifikace §3, §10 – Milestone 0). Aplikace zatím **nevolá žádné Graph API**; implementace
-konkrétních endpointů začne až po odsouhlasení přihlašovací cesty a oprávnění (AGENTS.md).
+(specifikace §3, §10 – Milestone 0). Aplikace zatím **nevolá žádné Graph API**. Provozní postup
+pro webhooky, tokeny a odběr je v `docs/meta-webhooks.md`.
 
 > Údaje o Meta API se často mění. Každý bod označený **ověřit** zkontrolovat v aktuální
 > dokumentaci (odkazy ve specifikaci §15) a výsledek zapsat sem. Funkce se nesmí označit za hotovou,
@@ -24,7 +24,11 @@ Business/Creator účet propojený s Page (otevřená otázka §13.1). Jinak Ins
 Instagram a Facebook Login pro Page; aplikace drží obě cesty oddělené (`InstagramConnector`,
 oddělené hosty – AGENTS.md).
 
-Rozhodnutí: ☐ Facebook Login for Business ☐ Instagram Login pro IG + Facebook Login pro Page
+Rozhodnutí (21. 11. 2026, testovací účty): ☑ přihlášení přes Facebook (Instagram API with Unified
+Login), host `graph.facebook.com` pro Page i Instagram. Instagram používá Business Integration
+System User Access Token a vždy ID IG účtu místo `/me`; Page používá Page Access Token. Tokeny se
+zadávají ručně (`bin/console account:token`), OAuth tok v administraci v1 nepotřebuje. Pro účty
+Harmony Face Yoga zůstávají otázky §13.1 a §13.2 otevřené.
 
 ## 2. Oprávnění podle funkcí (ověřit)
 
@@ -47,21 +51,23 @@ Rozhodnutí: ☐ Facebook Login for Business ☐ Instagram Login pro IG + Facebo
 
 ## 3. Webhooky (ověřit názvy polí)
 
-Aplikace má hotový endpoint `GET/POST <APP_URL>/api/meta/webhook`: ověří verify token
-a HMAC-SHA256 podpis nad raw body, událost uloží šifrovaně, deduplikuje a zařadí do fronty;
-události neaktivních nebo nezaregistrovaných účtů jen uloží jako ignorované.
+Aplikace má hotový endpoint `GET/POST <APP_URL>/webhooks/meta` (alias `/api/meta/webhook`):
+ověří verify token a HMAC-SHA256 podpis nad raw body, událost uloží šifrovaně, deduplikuje
+a zařadí do fronty; události neaktivních nebo nezaregistrovaných účtů jen uloží jako ignorované,
+podepsané nepodporované objekty potvrdí bez uložení.
 
 | Objekt | Pole k odběru | Účel |
 | --- | --- | --- |
 | `page` | `feed` | nové, upravené a smazané komentáře pod příspěvky Page |
 | `page` | `messages`, `message_echoes` | příchozí zprávy Messengeru; echo vlastních zpráv (nesmí spustit odpověď) |
+| `page` | `messaging_postbacks` | tlačítka a postbacky v Messengeru |
 | `instagram` | `comments` | komentáře pod příspěvky a Reels |
 | `instagram` | `messages` | zprávy IG Direct (včetně echa vlastních zpráv – **ověřit**) |
 
-- V App Dashboardu (produkt Webhooks) zadat Callback URL `<APP_URL>/api/meta/webhook`
+- V App Dashboardu (produkt Webhooks) zadat Callback URL `<APP_URL>/webhooks/meta`
   a Verify Token = `META_WEBHOOK_VERIFY_TOKEN` z `config/secrets/app.env`.
-- Každá Page musí aplikaci přihlásit k odběru (`POST /{page-id}/subscribed_apps` s poli výše
-  a tokenem Page) – **ověřit** postup pro IG účet.
+- Page i IG účet musí aplikaci přihlásit k odběru (`POST /{id}/subscribed_apps`), postup
+  a ověření doručení jsou v `docs/meta-webhooks.md` oddíl 3.
 - Pokud Page souběžně používá schránku Meta Business Suite, **ověřit** směrování konverzací
   (Conversation Routing / dříve handover protocol), aby aplikace a lidé neodpovídali dvakrát.
 
@@ -81,8 +87,9 @@ události neaktivních nebo nezaregistrovaných účtů jen uloží jako ignorov
 | `META_WEBHOOK_VERIFY_TOKEN` | generuje `deploy/bootstrap-environment.sh`; stejná hodnota do App Dashboardu |
 | `META_GRAPH_API_VERSION` | pinovaná verze, **ověřit** aktuální podporovanou (`v27.0` je příklad ze specifikace) |
 
-Účty (Page, IG) se zatím registrují ručně v administraci (Účty) podle číselného ID, které Meta
-posílá ve webhooku jako `entry.id`. Tokeny přibydou s implementací přihlášení.
+Účty (Page, IG) se registrují ručně v administraci (Účty) podle číselného ID, které Meta
+posílá ve webhooku jako `entry.id`. Tokeny se ukládají šifrovaně do databáze příkazem
+`bin/console account:token` (`docs/meta-webhooks.md` oddíl 4); do `app.env` se nezapisují.
 
 ## 6. Checklist Milestone 0
 
@@ -92,11 +99,12 @@ Přístupy a účty:
 - [ ] Instagram je Business/Creator a je propojený s Page (§13.1).
 - [ ] Ověření firmy v Business portfoliu (stav, kdo ho provádí).
 - [ ] Vytvořená Meta aplikace typu Business; role admin/developer/tester pro testovací osoby.
-- [ ] Testovací Page a testovací IG účet (ne produkční Harmony Face Yoga).
+- [x] Testovací Page a testovací IG účet (ne produkční Harmony Face Yoga); propojené, ruční čtení
+  a skrytí komentářů ověřeno, Messenger webhook zatím neověřen.
 
 Rozhodnutí:
 
-- [ ] Způsob přihlášení (oddíl 1).
+- [x] Způsob přihlášení (oddíl 1).
 - [ ] Seznam oprávnění, o která se bude žádat (oddíl 2), podle funkcí v1.
 
 Technické ověření na testovacích účtech:
@@ -116,8 +124,8 @@ App Review:
 
 ## 7. Co následuje po rozhodnutí (implementace)
 
-1. Uložení tokenů (`account_credentials`, šifrovaně, sledování expirace a rozsahů) a přihlašovací
-   tok v administraci.
+1. ✓ Uložení tokenů (`account_credentials`, šifrovaně s ID klíče a rotací, sledování expirace
+   a rozsahů, ruční výměna bez restartu) – 0.6.0.
 2. Rozhraní Graph klienta s produkční a fake implementací, oddělené pro `graph.facebook.com`
    a `graph.instagram.com`, s pinovanou verzí.
 3. `EventNormalizer` pro skutečné payloady (komentáře, zprávy, echo, úpravy, smazání) –

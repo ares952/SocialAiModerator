@@ -8,6 +8,8 @@ services:
 	- App\Console\OperatorPasswordCommand
 	- App\Console\PasswordPrompt
 	- App\Console\EvaluationImportCommand
+	- App\Console\AccountTokenCommand
+	- App\Console\EncryptionRotateCommand
 	- App\Core\Encryptor(%env.APP_ENCRYPTION_KEY%)
 	- App\Core\Correlation
 	- App\Core\Logger(file: %rootDir%/log/app.log)
@@ -51,6 +53,8 @@ services:
 	- App\Evaluation\EvaluationRuns
 	- App\Evaluation\EvaluationRunner
 	- App\Account\Accounts
+	- App\Account\Credentials
+	- App\Account\TokenProvider
 
 
 decorator:

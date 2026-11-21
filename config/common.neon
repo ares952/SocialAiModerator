@@ -75,7 +75,8 @@ tracy:
 		- META_APP_SECRET
 		- META_WEBHOOK_VERIFY_TOKEN
 		- OPENAI_API_KEY
-		- App\Core\Encryptor::$key
+		- App\Core\Encryptor::$keys
+		- App\Account\AccessToken::$value
 		- App\Meta\WebhookVerifier::$appSecret
 		- App\Meta\WebhookVerifier::$verifyToken
 		- App\Ai\HttpOpenAiClient::$apiKey

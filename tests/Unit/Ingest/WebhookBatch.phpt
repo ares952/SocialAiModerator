@@ -120,7 +120,29 @@ test('messages are keyed by mid', function (): void {
 	)->events[0]->eventKey;
 
 	Assert::same($key('{"mid":"m_1","text":"a"}'), $key('{"mid":"m_1","text":"a","is_echo":false}'));
+	Assert::same($key('{"mid":"m_1","text":"a"}'), $key('{"mid":"m_1","text":"edited"}'));
 	Assert::notSame($key('{"mid":"m_1","text":"a"}'), $key('{"mid":"m_2","text":"a"}'));
+});
+
+
+test('an unsent or echoed message is not a duplicate of the message with the same mid', function (): void {
+	$key = static fn(string $message): string => WebhookBatch::parse(
+		'{"object":"instagram","entry":[{"id":"1","messaging":[{"timestamp":1,"message":' . $message . '}]}]}',
+	)->events[0]->eventKey;
+
+	$original = $key('{"mid":"m_1","text":"a"}');
+	Assert::notSame($original, $key('{"mid":"m_1","is_deleted":true}'));
+	Assert::notSame($original, $key('{"mid":"m_1","text":"a","is_echo":true}'));
+	Assert::same($key('{"mid":"m_1","is_deleted":true}'), $key('{"is_deleted":true,"mid":"m_1"}'));
+});
+
+
+test('a signed delivery for an unsupported object has no platform and no events', function (): void {
+	$batch = WebhookBatch::parse('{"object":"permissions","entry":[{"id":"1","changes":[{"field":"x","value":{}}]}]}');
+	Assert::same('permissions', $batch->object);
+	Assert::null($batch->platform);
+	Assert::same([], $batch->events);
+	Assert::same('page', WebhookBatch::parse('{"object":"page","entry":[]}')->object);
 });
 
 
@@ -136,7 +158,9 @@ test('malformed or unsupported bodies are rejected', function (): void {
 		'[]',
 		'{"object":"page"}',
 		'{"object":"page","entry":{"id":"1"}}',
-		'{"object":"user","entry":[]}',
+		'{"object":"","entry":[]}',
+		'{"object":"Page<script>","entry":[]}',
+		'{"object":"user"}',
 		'{"object":"page","entry":["x"]}',
 		'{"object":"page","entry":[{"changes":[]}]}',
 		'{"object":"page","entry":[{"id":"1","changes":{"field":"feed"}}]}',

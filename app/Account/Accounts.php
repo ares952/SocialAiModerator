@@ -14,8 +14,7 @@ use Nette\Database\UniqueConstraintViolationException;
 
 /**
  * Connected Facebook Pages and Instagram professional accounts. Webhook events are processed only
- * for active accounts. Accounts are registered by hand until the Meta login flow exists
- * (Milestone 0); credentials come with it.
+ * for active accounts. Accounts are registered by hand; their access tokens are in Credentials.
  */
 final class Accounts
 {
@@ -27,15 +26,20 @@ final class Accounts
 
 
 	/**
-	 * @return list<Row> with the number of events in the last 24 hours and an open pause
+	 * @return list<Row> with the number of events in the last 24 hours, an open pause and the
+	 *     token metadata (never the token)
 	 */
 	public function all(): array
 	{
 		return $this->database->query(
 			'SELECT a.id, a.platform, a.external_id, a.name, a.status, a.created_at,
 				(SELECT COUNT(*) FROM social_events e WHERE e.account_id = a.id AND e.received_at > NOW() - INTERVAL 1 DAY) AS events_day,
-				EXISTS (SELECT 1 FROM automation_pauses p WHERE p.account_id = a.id AND p.resumed_at IS NULL) AS paused
+				EXISTS (SELECT 1 FROM automation_pauses p WHERE p.account_id = a.id AND p.resumed_at IS NULL) AS paused,
+				c.token_type, c.status AS token_status, c.expires_at AS token_expires_at,
+				c.data_access_expires_at AS token_data_access_expires_at, c.checked_at AS token_checked_at,
+				c.refreshed_at AS token_refreshed_at
 			FROM social_accounts a
+			LEFT JOIN account_credentials c ON c.social_account_id = a.id
 			ORDER BY a.name',
 		)->fetchAll();
 	}
