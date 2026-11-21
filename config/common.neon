@@ -70,6 +70,8 @@ tracy:
 		# form fields with passwords besides `password` (hidden by default)
 		- current
 		- passwordCheck
+		# access token field of the account token form
+		- accessToken
 		- DB_PASSWORD
 		- APP_ENCRYPTION_KEY
 		- META_APP_SECRET

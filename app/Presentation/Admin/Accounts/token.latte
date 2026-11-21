@@ -1,0 +1,31 @@
+{varType Nette\Database\Row $account}
+{varType Nette\Database\Row|null $credential}
+{varType string $timezone}
+
+{block content}
+<nav aria-label="breadcrumb">
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a n:href="default">{_'account.title'}</a></li>
+		<li class="breadcrumb-item active" aria-current="page">{_'account.token.title'}</li>
+	</ol>
+</nav>
+
+<div class="row">
+	<div class="col-12 col-md-8 col-lg-6">
+		<h1 class="h3 mb-1" n:block="title">{_'account.token.title'}</h1>
+		<p class="text-body-secondary">{$account->name} · {$account->external_id}</p>
+
+		{if $credential === null}
+			<div class="alert alert-warning">{_'account.token.none'}</div>
+		{else}
+			<div class="alert alert-secondary">
+				{_"account.token.type.{$credential->token_type}"} · {_"account.token.status.{$credential->status}"}<br>
+				{if $credential->expires_at}{_'account.token.expires', 1, [date => ($credential->expires_at|localTime)]}{else}{_'account.token.never'}{/if}<br>
+				{_'account.token.refreshed', 1, [date => ($credential->refreshed_at|localTime)]}
+			</div>
+		{/if}
+
+		<p class="text-body-secondary small">{_'account.token.form.intro', 1, [timezone => $timezone]}</p>
+		{control tokenForm}
+	</div>
+</div>

@@ -55,6 +55,7 @@
 					</td>
 					<td n:if="$canManage" class="text-end text-nowrap">
 						<a class="btn btn-sm btn-outline-secondary" n:href="edit, id: $account->id">{_'common.edit'}</a>
+						<a class="btn btn-sm btn-outline-secondary" n:href="token, id: $account->id">{_'account.token.action'}</a>
 						{if $account->paused}
 							<a class="btn btn-sm btn-outline-success" n:href="resume!, account: $account->id">{_'automation.form.resume'}</a>
 						{else}

@@ -2775,9 +2775,9 @@
   "key": "account.token.note",
   "lang": "cs",
   "translations": {
-   "1": "Přístupový token Meta se ukládá šifrovaně a mění se bez restartu příkazem bin/console account:token (docs/meta-webhooks.md).",
-   "2": "Přístupový token Meta se ukládá šifrovaně a mění se bez restartu příkazem bin/console account:token (docs/meta-webhooks.md).",
-   "5": "Přístupový token Meta se ukládá šifrovaně a mění se bez restartu příkazem bin/console account:token (docs/meta-webhooks.md)."
+   "1": "Přístupový token Meta se ukládá šifrovaně a mění se bez restartu tlačítkem Token (jen administrátor) nebo příkazem bin/console account:token.",
+   "2": "Přístupový token Meta se ukládá šifrovaně a mění se bez restartu tlačítkem Token (jen administrátor) nebo příkazem bin/console account:token.",
+   "5": "Přístupový token Meta se ukládá šifrovaně a mění se bez restartu tlačítkem Token (jen administrátor) nebo příkazem bin/console account:token."
   }
  },
  {
@@ -2859,6 +2859,150 @@
    "1": "Vyměněn %date%",
    "2": "Vyměněn %date%",
    "5": "Vyměněn %date%"
+  }
+ },
+ {
+  "key": "account.token.action",
+  "lang": "cs",
+  "translations": {
+   "1": "Token",
+   "2": "Token",
+   "5": "Token"
+  }
+ },
+ {
+  "key": "account.token.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Přístupový token",
+   "2": "Přístupový token",
+   "5": "Přístupový token"
+  }
+ },
+ {
+  "key": "account.token.saved",
+  "lang": "cs",
+  "translations": {
+   "1": "Token byl uložen.",
+   "2": "Token byl uložen.",
+   "5": "Token byl uložen."
+  }
+ },
+ {
+  "key": "account.token.form.intro",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložený token se už nikdy nezobrazí; pro výměnu zadejte nový. Výměna platí okamžitě a zapíše se do auditu. Časy jsou v pásmu %timezone%.",
+   "2": "Uložený token se už nikdy nezobrazí; pro výměnu zadejte nový. Výměna platí okamžitě a zapíše se do auditu. Časy jsou v pásmu %timezone%.",
+   "5": "Uložený token se už nikdy nezobrazí; pro výměnu zadejte nový. Výměna platí okamžitě a zapíše se do auditu. Časy jsou v pásmu %timezone%."
+  }
+ },
+ {
+  "key": "account.token.form.token",
+  "lang": "cs",
+  "translations": {
+   "1": "Access Token",
+   "2": "Access Token",
+   "5": "Access Token"
+  }
+ },
+ {
+  "key": "account.token.form.token-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Vložte celý token z Meta (Access Token Debugger nebo Business Settings).",
+   "2": "Vložte celý token z Meta (Access Token Debugger nebo Business Settings).",
+   "5": "Vložte celý token z Meta (Access Token Debugger nebo Business Settings)."
+  }
+ },
+ {
+  "key": "account.token.form.type",
+  "lang": "cs",
+  "translations": {
+   "1": "Typ tokenu",
+   "2": "Typ tokenu",
+   "5": "Typ tokenu"
+  }
+ },
+ {
+  "key": "account.token.form.scopes",
+  "lang": "cs",
+  "translations": {
+   "1": "Oprávnění (scopes)",
+   "2": "Oprávnění (scopes)",
+   "5": "Oprávnění (scopes)"
+  }
+ },
+ {
+  "key": "account.token.form.scopes-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Oddělená čárkou, jak je ukazuje Access Token Debugger.",
+   "2": "Oddělená čárkou, jak je ukazuje Access Token Debugger.",
+   "5": "Oddělená čárkou, jak je ukazuje Access Token Debugger."
+  }
+ },
+ {
+  "key": "account.token.form.expires",
+  "lang": "cs",
+  "translations": {
+   "1": "Platnost do",
+   "2": "Platnost do",
+   "5": "Platnost do"
+  }
+ },
+ {
+  "key": "account.token.form.data-access",
+  "lang": "cs",
+  "translations": {
+   "1": "Přístup k datům do",
+   "2": "Přístup k datům do",
+   "5": "Přístup k datům do"
+  }
+ },
+ {
+  "key": "account.token.form.time-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Nepovinné, pokud ho Meta neuvádí.",
+   "2": "Nepovinné, pokud ho Meta neuvádí.",
+   "5": "Nepovinné, pokud ho Meta neuvádí."
+  }
+ },
+ {
+  "key": "account.token.form.save",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložit token",
+   "2": "Uložit token",
+   "5": "Uložit token"
+  }
+ },
+ {
+  "key": "account.token.error.token",
+  "lang": "cs",
+  "translations": {
+   "1": "Token smí obsahovat jen tisknutelné znaky ASCII bez mezer (nejvýše 2000).",
+   "2": "Token smí obsahovat jen tisknutelné znaky ASCII bez mezer (nejvýše 2000).",
+   "5": "Token smí obsahovat jen tisknutelné znaky ASCII bez mezer (nejvýše 2000)."
+  }
+ },
+ {
+  "key": "account.token.error.scopes",
+  "lang": "cs",
+  "translations": {
+   "1": "Zadejte oprávnění malými písmeny oddělená čárkou, např. pages_messaging, pages_read_engagement.",
+   "2": "Zadejte oprávnění malými písmeny oddělená čárkou, např. pages_messaging, pages_read_engagement.",
+   "5": "Zadejte oprávnění malými písmeny oddělená čárkou, např. pages_messaging, pages_read_engagement."
+  }
+ },
+ {
+  "key": "account.token.error.invalid",
+  "lang": "cs",
+  "translations": {
+   "1": "Token nelze uložit. Zkontrolujte token, oprávnění a účet.",
+   "2": "Token nelze uložit. Zkontrolujte token, oprávnění a účet.",
+   "5": "Token nelze uložit. Zkontrolujte token, oprávnění a účet."
   }
  },
  {

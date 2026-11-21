@@ -2467,8 +2467,8 @@
   "key": "account.token.note",
   "lang": "en",
   "translations": {
-   "1": "The Meta access token is stored encrypted and is replaced without a restart with bin/console account:token (docs/meta-webhooks.md).",
-   "2": "The Meta access token is stored encrypted and is replaced without a restart with bin/console account:token (docs/meta-webhooks.md)."
+   "1": "The Meta access token is stored encrypted and is replaced without a restart with the Token button (admins only) or with bin/console account:token.",
+   "2": "The Meta access token is stored encrypted and is replaced without a restart with the Token button (admins only) or with bin/console account:token."
   }
  },
  {
@@ -2541,6 +2541,134 @@
   "translations": {
    "1": "Replaced %date%",
    "2": "Replaced %date%"
+  }
+ },
+ {
+  "key": "account.token.action",
+  "lang": "en",
+  "translations": {
+   "1": "Token",
+   "2": "Token"
+  }
+ },
+ {
+  "key": "account.token.title",
+  "lang": "en",
+  "translations": {
+   "1": "Access token",
+   "2": "Access token"
+  }
+ },
+ {
+  "key": "account.token.saved",
+  "lang": "en",
+  "translations": {
+   "1": "The token has been saved.",
+   "2": "The token has been saved."
+  }
+ },
+ {
+  "key": "account.token.form.intro",
+  "lang": "en",
+  "translations": {
+   "1": "A stored token is never shown again; enter a new one to replace it. The replacement applies immediately and is audited. Times are in %timezone%.",
+   "2": "A stored token is never shown again; enter a new one to replace it. The replacement applies immediately and is audited. Times are in %timezone%."
+  }
+ },
+ {
+  "key": "account.token.form.token",
+  "lang": "en",
+  "translations": {
+   "1": "Access Token",
+   "2": "Access Token"
+  }
+ },
+ {
+  "key": "account.token.form.token-note",
+  "lang": "en",
+  "translations": {
+   "1": "Paste the whole token from Meta (Access Token Debugger or Business Settings).",
+   "2": "Paste the whole token from Meta (Access Token Debugger or Business Settings)."
+  }
+ },
+ {
+  "key": "account.token.form.type",
+  "lang": "en",
+  "translations": {
+   "1": "Token type",
+   "2": "Token type"
+  }
+ },
+ {
+  "key": "account.token.form.scopes",
+  "lang": "en",
+  "translations": {
+   "1": "Permissions (scopes)",
+   "2": "Permissions (scopes)"
+  }
+ },
+ {
+  "key": "account.token.form.scopes-note",
+  "lang": "en",
+  "translations": {
+   "1": "Comma-separated, as shown by the Access Token Debugger.",
+   "2": "Comma-separated, as shown by the Access Token Debugger."
+  }
+ },
+ {
+  "key": "account.token.form.expires",
+  "lang": "en",
+  "translations": {
+   "1": "Expires",
+   "2": "Expires"
+  }
+ },
+ {
+  "key": "account.token.form.data-access",
+  "lang": "en",
+  "translations": {
+   "1": "Data access until",
+   "2": "Data access until"
+  }
+ },
+ {
+  "key": "account.token.form.time-note",
+  "lang": "en",
+  "translations": {
+   "1": "Optional if Meta does not state it.",
+   "2": "Optional if Meta does not state it."
+  }
+ },
+ {
+  "key": "account.token.form.save",
+  "lang": "en",
+  "translations": {
+   "1": "Save token",
+   "2": "Save token"
+  }
+ },
+ {
+  "key": "account.token.error.token",
+  "lang": "en",
+  "translations": {
+   "1": "The token may contain only printable ASCII characters without spaces (at most 2000).",
+   "2": "The token may contain only printable ASCII characters without spaces (at most 2000)."
+  }
+ },
+ {
+  "key": "account.token.error.scopes",
+  "lang": "en",
+  "translations": {
+   "1": "Enter lowercase permissions separated by commas, e.g. pages_messaging, pages_read_engagement.",
+   "2": "Enter lowercase permissions separated by commas, e.g. pages_messaging, pages_read_engagement."
+  }
+ },
+ {
+  "key": "account.token.error.invalid",
+  "lang": "en",
+  "translations": {
+   "1": "The token cannot be saved. Check the token, the permissions and the account.",
+   "2": "The token cannot be saved. Check the token, the permissions and the account."
   }
  },
  {

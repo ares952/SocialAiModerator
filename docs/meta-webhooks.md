@@ -158,7 +158,14 @@ dvakrát.
 ## 4. Účty a přístupové tokeny
 
 - Účet (Page nebo IG) se zaregistruje v administraci (Účty) s číselným ID.
-- Token se uloží nebo vymění konzolovým příkazem. Token se zadává skrytě, nikdy jako argument:
+- Token uloží nebo vymění administrátor v administraci: Účty → tlačítko **Token** u účtu.
+  - Formulář: Access Token (pole pro heslo), typ tokenu (`Page Access Token` nebo token
+    systémového uživatele pro Instagram), oprávnění oddělená čárkou, jak je ukazuje Access Token
+    Debugger, platnost (nebo „Bez expirace“) a volitelně konec přístupu k datům.
+  - Časy se zadávají v časovém pásmu administrace (parametr `timezone`) a ukládají se v UTC.
+  - Uložený token se už nikdy nezobrazí; formulář předvyplní jen typ, oprávnění a expirace.
+    I token bez expirace může Meta odvolat nebo zneplatnit.
+- Alternativně konzolovým příkazem (token se zadává skrytě, nikdy jako argument):
 
   ```bash
   docker compose exec php bin/console account:token <ID účtu v administraci> \
@@ -171,7 +178,6 @@ dvakrát.
     (Page Access Token).
   - `--scopes`: udělená oprávnění, jak je ukazuje Access Token Debugger.
   - `--expires`: datum expirace v UTC (`YYYY-MM-DD` nebo `"YYYY-MM-DD HH:MM"`) nebo `never`.
-    I token bez expirace může Meta odvolat nebo zneplatnit.
   - `--data-access-expires` (volitelné): konec přístupu k datům v UTC.
 - Výměna platí okamžitě bez restartu: aplikace čte token z databáze při každém použití
   (`App\Account\TokenProvider`). Výměnu zapíše audit (bez tokenu).
