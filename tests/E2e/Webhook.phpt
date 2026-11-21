@@ -34,7 +34,8 @@ test('subscription challenge needs the verify token', function () use ($browser)
 });
 
 
-test('a signed event is stored and the worker moves it to review', function () use ($data, $secret): void {
+test('a signed event is stored and the worker normalizes it and moves it to review', function () use ($data, $secret): void {
+	$commentId = 'e2e_' . bin2hex(random_bytes(4));
 	$body = Json::encode([
 		'object' => 'page',
 		'entry' => [
@@ -47,7 +48,7 @@ test('a signed event is stored and the worker moves it to review', function () u
 						'value' => [
 							'item' => 'comment',
 							'verb' => 'add',
-							'comment_id' => 'e2e_' . bin2hex(random_bytes(4)),
+							'comment_id' => $commentId,
 							'message' => 'Synthetic comment',
 						],
 					],
@@ -86,4 +87,8 @@ test('a signed event is stored and the worker moves it to review', function () u
 	Assert::same('review', $status);
 	Assert::same(1, $data->database->query("SELECT COUNT(*) FROM social_events WHERE account_external_id = 'fb:1000000000000042'")->fetchField());
 	Assert::same('done', $data->database->query("SELECT status FROM queue_jobs WHERE type = 'event.process' ORDER BY id DESC LIMIT 1")->fetchField());
+	$event = $data->database->query(
+		"SELECT event_type, external_id FROM social_events WHERE account_external_id = 'fb:1000000000000042' ORDER BY id DESC LIMIT 1",
+	)->fetch() ?? throw new LogicException;
+	Assert::same(['comment.created', "fb:$commentId"], [$event->event_type, $event->external_id]);
 });

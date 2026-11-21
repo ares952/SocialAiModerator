@@ -15,6 +15,15 @@ Formát sekce:
 - **Ověření:** jak potvrdit, že je hotovo
 ```
 
+## 0.7.0
+
+- **Týká se:** všech instancí
+- **Kdy:** po kroku 10 (migrace)
+- **Akce:** `docker compose exec -T php bin/console events:normalize`: doplní typ, externí ID
+  a čas událostem přijatým před touto verzí (mění jen metadata, ne stav).
+- **Ověření:** výpis končí `N events normalized` a v administraci (Události) mají všechny
+  události vyplněný typ.
+
 ## 0.6.2
 
 - **Týká se:** všech instancí

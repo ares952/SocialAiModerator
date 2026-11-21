@@ -10,7 +10,10 @@ enum EventStatus: string
 	/** Stored, waiting for the worker. */
 	case Received = 'received';
 
-	/** Account not connected or not active; kept for audit, never processed. */
+	/**
+	 * Account not connected or not active (never processed), or an event without anything to
+	 * moderate (App\Meta\EventType::Other); kept for audit.
+	 */
 	case Ignored = 'ignored';
 
 	/** Needs a human; no automatic action. */

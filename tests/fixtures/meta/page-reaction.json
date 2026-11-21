@@ -1,0 +1,26 @@
+{
+	"object": "page",
+	"entry": [
+		{
+			"id": "1000000000000001",
+			"time": 1763640301,
+			"changes": [
+				{
+					"field": "feed",
+					"value": {
+						"item": "reaction",
+						"post_id": "1000000000000001_2200000000000001",
+						"verb": "add",
+						"reaction_type": "like",
+						"created_time": 1763640300,
+						"from": {
+							"id": "2100000000000001",
+							"name": "Synthetic Customer"
+						},
+						"parent_id": "1000000000000001_2200000000000001"
+					}
+				}
+			]
+		}
+	]
+}

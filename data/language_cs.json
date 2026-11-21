@@ -360,6 +360,105 @@
   }
  },
  {
+  "key": "event.type.comment.created",
+  "lang": "cs",
+  "translations": {
+   "1": "Nový komentář",
+   "2": "Nový komentář",
+   "5": "Nový komentář"
+  }
+ },
+ {
+  "key": "event.type.comment.edited",
+  "lang": "cs",
+  "translations": {
+   "1": "Upravený komentář",
+   "2": "Upravený komentář",
+   "5": "Upravený komentář"
+  }
+ },
+ {
+  "key": "event.type.comment.removed",
+  "lang": "cs",
+  "translations": {
+   "1": "Smazaný komentář",
+   "2": "Smazaný komentář",
+   "5": "Smazaný komentář"
+  }
+ },
+ {
+  "key": "event.type.comment.hidden",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrytý komentář",
+   "2": "Skrytý komentář",
+   "5": "Skrytý komentář"
+  }
+ },
+ {
+  "key": "event.type.comment.unhidden",
+  "lang": "cs",
+  "translations": {
+   "1": "Odkrytý komentář",
+   "2": "Odkrytý komentář",
+   "5": "Odkrytý komentář"
+  }
+ },
+ {
+  "key": "event.type.message.received",
+  "lang": "cs",
+  "translations": {
+   "1": "Příchozí zpráva",
+   "2": "Příchozí zpráva",
+   "5": "Příchozí zpráva"
+  }
+ },
+ {
+  "key": "event.type.message.echo",
+  "lang": "cs",
+  "translations": {
+   "1": "Odeslaná zpráva (echo)",
+   "2": "Odeslaná zpráva (echo)",
+   "5": "Odeslaná zpráva (echo)"
+  }
+ },
+ {
+  "key": "event.type.message.deleted",
+  "lang": "cs",
+  "translations": {
+   "1": "Zrušená zpráva",
+   "2": "Zrušená zpráva",
+   "5": "Zrušená zpráva"
+  }
+ },
+ {
+  "key": "event.type.postback",
+  "lang": "cs",
+  "translations": {
+   "1": "Tlačítko (postback)",
+   "2": "Tlačítko (postback)",
+   "5": "Tlačítko (postback)"
+  }
+ },
+ {
+  "key": "event.type.other",
+  "lang": "cs",
+  "translations": {
+   "1": "Bez moderace",
+   "2": "Bez moderace",
+   "5": "Bez moderace"
+  }
+ },
+ {
+  "key": "event.type.unsupported",
+  "lang": "cs",
+  "translations": {
+   "1": "Nepodporovaná",
+   "2": "Nepodporovaná",
+   "5": "Nepodporovaná"
+  }
+ },
+ {
   "key": "job.status.pending",
   "lang": "cs",
   "translations": {
@@ -537,6 +636,24 @@
    "1": "Strana %page% z %pages%",
    "2": "Strana %page% z %pages%",
    "5": "Strana %page% z %pages%"
+  }
+ },
+ {
+  "key": "events.column.occurred",
+  "lang": "cs",
+  "translations": {
+   "1": "Čas události",
+   "2": "Čas události",
+   "5": "Čas události"
+  }
+ },
+ {
+  "key": "events.filter.type.all",
+  "lang": "cs",
+  "translations": {
+   "1": "Všechny typy",
+   "2": "Všechny typy",
+   "5": "Všechny typy"
   }
  },
  {

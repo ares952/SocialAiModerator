@@ -1,5 +1,7 @@
 {varType App\Ingest\EventStatus|null $status}
 {varType list<App\Ingest\EventStatus> $statuses}
+{varType App\Meta\EventType|null $type}
+{varType list<App\Meta\EventType> $types}
 {varType Nette\Utils\Paginator $paginator}
 {varType list<Nette\Database\Row> $events}
 
@@ -9,14 +11,27 @@
 	<span class="text-body-secondary">{_'events.total', $paginator->getItemCount()}</span>
 </div>
 
-<ul class="nav nav-pills flex-wrap mb-3">
-	<li class="nav-item">
-		<a n:class="nav-link, $status === null ? active" n:href="this, status: null, page: null">{_'events.filter.all'}</a>
-	</li>
-	<li n:foreach="$statuses as $item" class="nav-item">
-		<a n:class="nav-link, $status === $item ? active" n:href="this, status: $item->value, page: null">{_"event.status.{$item->value}"}</a>
-	</li>
-</ul>
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+	<ul class="nav nav-pills flex-wrap me-auto">
+		<li class="nav-item">
+			<a n:class="nav-link, $status === null ? active" n:href="this, status: null, page: null">{_'events.filter.all'}</a>
+		</li>
+		<li n:foreach="$statuses as $item" class="nav-item">
+			<a n:class="nav-link, $status === $item ? active" n:href="this, status: $item->value, page: null">{_"event.status.{$item->value}"}</a>
+		</li>
+	</ul>
+	<div class="dropdown">
+		<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+			{if $type === null}{_'events.filter.type.all'}{else}{_"event.type.{$type->value}"}{/if}
+		</button>
+		<ul class="dropdown-menu dropdown-menu-end">
+			<li><a n:class="dropdown-item, $type === null ? active" n:href="this, type: null, page: null">{_'events.filter.type.all'}</a></li>
+			<li n:foreach="$types as $item">
+				<a n:class="dropdown-item, $type === $item ? active" n:href="this, type: $item->value, page: null">{_"event.type.{$item->value}"}</a>
+			</li>
+		</ul>
+	</div>
+</div>
 
 {if $events === []}
 	<div class="alert alert-secondary">{_'events.empty'}</div>
@@ -27,6 +42,7 @@
 				<tr>
 					<th scope="col">#</th>
 					<th scope="col">{_'events.column.received'}</th>
+					<th scope="col">{_'events.column.occurred'}</th>
 					<th scope="col">{_'events.column.platform'}</th>
 					<th scope="col">{_'events.column.account'}</th>
 					<th scope="col">{_'events.column.topic'}</th>
@@ -38,12 +54,18 @@
 				<tr n:foreach="$events as $event">
 					<td class="text-body-secondary">{$event->id}</td>
 					<td>{$event->received_at|localTime}</td>
+					<td>{if $event->occurred_at !== null}{$event->occurred_at|localTime}{/if}</td>
 					<td>{_"platform.{$event->platform}"}</td>
 					<td class="text-wrap-anywhere">
 						{$event->account_name ?? $event->account_external_id}
 						<div n:if="$event->account_name !== null" class="small text-body-secondary">{$event->account_external_id}</div>
 					</td>
-					<td><code>{$event->topic}</code></td>
+					<td class="text-wrap-anywhere">
+						{if $event->event_type !== null}{_"event.type.{$event->event_type}"}{/if}
+						<div class="small text-body-secondary"><code>{$event->topic}</code></div>
+						<div n:if="$event->external_id !== null" class="small text-body-secondary">{$event->external_id}</div>
+						<div n:if="$event->last_error !== null" class="small text-danger">{$event->last_error}</div>
+					</td>
 					<td>
 						<span n:class="badge, match($event->status) {
 							'review' => 'text-bg-warning',

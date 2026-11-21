@@ -43,6 +43,8 @@ test('every page renders in both languages', function () use ($browser): void {
 	}
 	Assert::same(404, $browser->get('/admin/nonexistent')->status);
 	Assert::same(404, $browser->get('/admin/audit?type=nonsense')->status);
+	Assert::same(200, $browser->get('/admin/events?type=comment.created&status=review')->status);
+	Assert::same(404, $browser->get('/admin/events?type=nonsense')->status);
 });
 
 

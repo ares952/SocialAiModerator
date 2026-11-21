@@ -320,6 +320,94 @@
   }
  },
  {
+  "key": "event.type.comment.created",
+  "lang": "en",
+  "translations": {
+   "1": "New comment",
+   "2": "New comment"
+  }
+ },
+ {
+  "key": "event.type.comment.edited",
+  "lang": "en",
+  "translations": {
+   "1": "Edited comment",
+   "2": "Edited comment"
+  }
+ },
+ {
+  "key": "event.type.comment.removed",
+  "lang": "en",
+  "translations": {
+   "1": "Removed comment",
+   "2": "Removed comment"
+  }
+ },
+ {
+  "key": "event.type.comment.hidden",
+  "lang": "en",
+  "translations": {
+   "1": "Hidden comment",
+   "2": "Hidden comment"
+  }
+ },
+ {
+  "key": "event.type.comment.unhidden",
+  "lang": "en",
+  "translations": {
+   "1": "Unhidden comment",
+   "2": "Unhidden comment"
+  }
+ },
+ {
+  "key": "event.type.message.received",
+  "lang": "en",
+  "translations": {
+   "1": "Incoming message",
+   "2": "Incoming message"
+  }
+ },
+ {
+  "key": "event.type.message.echo",
+  "lang": "en",
+  "translations": {
+   "1": "Sent message (echo)",
+   "2": "Sent message (echo)"
+  }
+ },
+ {
+  "key": "event.type.message.deleted",
+  "lang": "en",
+  "translations": {
+   "1": "Unsent message",
+   "2": "Unsent message"
+  }
+ },
+ {
+  "key": "event.type.postback",
+  "lang": "en",
+  "translations": {
+   "1": "Button (postback)",
+   "2": "Button (postback)"
+  }
+ },
+ {
+  "key": "event.type.other",
+  "lang": "en",
+  "translations": {
+   "1": "Nothing to moderate",
+   "2": "Nothing to moderate"
+  }
+ },
+ {
+  "key": "event.type.unsupported",
+  "lang": "en",
+  "translations": {
+   "1": "Unsupported",
+   "2": "Unsupported"
+  }
+ },
+ {
   "key": "job.status.pending",
   "lang": "en",
   "translations": {
@@ -477,6 +565,22 @@
   "translations": {
    "1": "Page %page% of %pages%",
    "2": "Page %page% of %pages%"
+  }
+ },
+ {
+  "key": "events.column.occurred",
+  "lang": "en",
+  "translations": {
+   "1": "Event time",
+   "2": "Event time"
+  }
+ },
+ {
+  "key": "events.filter.type.all",
+  "lang": "en",
+  "translations": {
+   "1": "All types",
+   "2": "All types"
   }
  },
  {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Ingest;
 
+use App\Meta\EventType;
 use App\Queue\JobType;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
@@ -34,11 +35,11 @@ final class EventOverview
 	}
 
 
-	public function count(?EventStatus $status): int
+	public function count(?EventStatus $status, ?EventType $type): int
 	{
 		return (int) $this->database->query(
-			'SELECT COUNT(*) FROM social_events WHERE ?and',
-			$status === null ? [] : ['status' => $status->value],
+			'SELECT COUNT(*) FROM social_events e WHERE ?and',
+			self::filter($status, $type),
 		)->fetchField();
 	}
 
@@ -48,11 +49,12 @@ final class EventOverview
 	 *
 	 * @return list<Row>
 	 */
-	public function page(?EventStatus $status, int $limit, int $offset): array
+	public function page(?EventStatus $status, ?EventType $type, int $limit, int $offset): array
 	{
 		return $this->database->query(
-			'SELECT e.id, e.received_at, e.platform, e.account_external_id, a.name AS account_name,
-				e.topic, e.status, e.attempts, j.status AS job_status, j.last_error AS job_error
+			'SELECT e.id, e.received_at, e.occurred_at, e.platform, e.account_external_id, a.name AS account_name,
+				e.topic, e.event_type, e.external_id, e.status, e.attempts, e.last_error,
+				j.status AS job_status, j.last_error AS job_error
 			FROM social_events e
 			LEFT JOIN social_accounts a ON a.id = e.account_id
 			LEFT JOIN queue_jobs j ON j.type = ? AND j.subject_id = e.id
@@ -60,9 +62,27 @@ final class EventOverview
 			ORDER BY e.id DESC
 			LIMIT ? OFFSET ?',
 			JobType::ProcessEvent->value,
-			$status === null ? [] : ['e.status' => $status->value],
+			self::filter($status, $type),
 			$limit,
 			$offset,
 		)->fetchAll();
+	}
+
+
+	/**
+	 * @return array<string, string>
+	 */
+	private static function filter(?EventStatus $status, ?EventType $type): array
+	{
+		$filter = [];
+		if ($status !== null) {
+			$filter['e.status'] = $status->value;
+		}
+
+		if ($type !== null) {
+			$filter['e.event_type'] = $type->value;
+		}
+
+		return $filter;
 	}
 }

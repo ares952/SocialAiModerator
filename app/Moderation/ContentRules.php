@@ -10,8 +10,8 @@ namespace App\Moderation;
  * step 2): links to blocked domains and too many links. Links are only parsed, never fetched.
  *
  * A link is an address with `http(s)://` or `www.`, or a bare host name such as `spam.example`.
- * Repeated messages and own echo need normalized events (author, conversation) and follow with
- * the EventNormalizer.
+ * Repeated messages and own echo need the author and the conversation of an event and follow with
+ * the conversations (Milestone 4).
  */
 final class ContentRules
 {

@@ -1,0 +1,35 @@
+{
+	"object": "page",
+	"entry": [
+		{
+			"id": "1000000000000001",
+			"time": 1763640121,
+			"changes": [
+				{
+					"field": "feed",
+					"value": {
+						"from": {
+							"id": "2100000000000001",
+							"name": "Synthetic Customer"
+						},
+						"post": {
+							"status_type": "added_photos",
+							"is_published": true,
+							"updated_time": "2026-11-20T12:00:00+0000",
+							"permalink_url": "https://www.facebook.com/example/posts/1",
+							"promotion_status": "inactive",
+							"id": "1000000000000001_2200000000000001"
+						},
+						"message": "Synthetic comment, edited.",
+						"post_id": "1000000000000001_2200000000000001",
+						"comment_id": "2200000000000001_2300000000000001",
+						"created_time": 1763640120,
+						"item": "comment",
+						"parent_id": "1000000000000001_2200000000000001",
+						"verb": "edited"
+					}
+				}
+			]
+		}
+	]
+}

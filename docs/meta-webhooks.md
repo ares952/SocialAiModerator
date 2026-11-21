@@ -47,9 +47,30 @@ worker: event.process ──> zatím každou událost předá do stavu review (�
 - Limit velikosti těla je 2 MB (`client_max_body_size` v `deploy/nginx/nginx.conf`). HTTPS
   zajišťuje reverzní proxy před kontejnerem `web` (`deploy/README.md`, oddíl Reverzní proxy);
   aplikace pro webhook nepotřebuje žádnou zvláštní konfiguraci proxy.
-- V HTTP requestu se nevolá AI ani Meta. Automatické akce jsou vypnuté: `EventNormalizer`
-  (rozlišení komentářů, zpráv, echa, úprav a smazání) navazuje po ověření skutečných payloadů
-  a výchozí režim zůstává `observe`.
+- V HTTP requestu se nevolá AI ani Meta. Automatické akce jsou vypnuté a výchozí režim zůstává
+  `observe`.
+
+### Normalizace ve workeru
+
+Worker (`event.process`) každou uloženou událost dešifruje a `App\Meta\EventNormalizer` z ní
+určí typ, externí ID (komentář nebo `mid` zprávy s prefixem `fb:`/`ig:`) a čas události podle
+Mety. Tato metadata jsou ve sloupcích `social_events`; text zůstává jen v zašifrovaném payloadu.
+
+| Typ | Zdroj | Stav po zpracování |
+| --- | --- | --- |
+| `comment.created`, `comment.edited`, `comment.removed`, `comment.hidden`, `comment.unhidden` | FB `feed` (`item: comment`, `verb` `add`/`edited`/`remove`/`hide`/`unhide`), IG `comments` (jen nové komentáře) | `review` |
+| `message.received`, `message.echo`, `message.deleted` | `messaging` (`message`, `is_echo`, `is_deleted`) | `review` |
+| `postback` | `messaging` (`postback`) | `review` |
+| `other` | reakce, potvrzení přečtení a doručení, vlastní příspěvky Page | `ignored` |
+| `unsupported` | cokoli jiného, např. příspěvek návštěvníka, `standby`, neznámé pole | `review`, důvod v `last_error` |
+
+- Časy: `feed` v sekundách (`created_time`), IG `comments` nemá vlastní čas (použije se čas
+  položky `entry`), `messaging` v milisekundách. Chybějící nebo nečitelný čas zůstane prázdný.
+- Testovací tlačítko v App Dashboardu posílá Messenger pole jako `changes` s časem v sekundách
+  a ukázkovými hodnotami Mety; normalizér je rozpozná, uloží se ale jako `ignored` (neznámý účet).
+- Starší události bez typu (nebo po změně normalizéru všechny s `--all`) doplní
+  `docker compose exec php bin/console events:normalize`. Příkaz mění jen metadata, nikdy stav
+  ani nespouští zpracování.
 
 ## 2. Konfigurace instance
 

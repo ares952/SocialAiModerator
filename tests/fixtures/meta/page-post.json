@@ -1,0 +1,26 @@
+{
+	"object": "page",
+	"entry": [
+		{
+			"id": "1000000000000001",
+			"time": 1763639001,
+			"changes": [
+				{
+					"field": "feed",
+					"value": {
+						"item": "status",
+						"post_id": "1000000000000001_2200000000000001",
+						"verb": "add",
+						"published": 1,
+						"created_time": 1763639000,
+						"message": "Synthetic post of the Page.",
+						"from": {
+							"id": "1000000000000001",
+							"name": "Synthetic Page"
+						}
+					}
+				}
+			]
+		}
+	]
+}

@@ -128,8 +128,9 @@ App Review:
    a rozsahů, ruční výměna bez restartu) – 0.6.0.
 2. Rozhraní Graph klienta s produkční a fake implementací, oddělené pro `graph.facebook.com`
    a `graph.instagram.com`, s pinovanou verzí.
-3. `EventNormalizer` pro skutečné payloady (komentáře, zprávy, echo, úpravy, smazání) –
-   teprve potom se přijaté události posílají klasifikátoru a do rozhodování.
+3. ✓ `EventNormalizer` pro skutečné payloady (komentáře, zprávy, echo, úpravy, smazání) – 0.7.0;
+   teprve teď se přijaté události mohou posílat klasifikátoru a do rozhodování. IG DM zatím
+   ověřené jen na syntetických datech.
 4. Až poté (Milestone 3 a 4) `ActionDispatcher` a outbox pro zápisy na Metu; výchozí režim zůstává
    `observe`.
 

@@ -5,21 +5,23 @@ declare(strict_types=1);
 namespace App\Ingest;
 
 use App\Core\Encryptor;
+use App\Meta\EventNormalizer;
+use App\Meta\EventType;
 use Nette\Database\Explorer;
 
 
 /**
- * Worker step for one stored event (job event.process).
- *
- * The EventNormalizer needs the Meta login flow, which is not decided yet (specification §3.1,
- * Milestone 0). Until then every event goes to `review`: an unclear state never leads to an
- * automatic action. The payload is still decrypted, so a broken key or modified data fails here.
+ * Worker step for one stored event (job event.process): normalizes it and stores its metadata.
+ * Events that are not relevant for moderation (reactions, read receipts, own posts) end as
+ * ignored. Everything else goes to `review`: automatic actions follow with the AI and policy
+ * milestones, and an unsupported structure always needs a human.
  */
 final class EventProcessor
 {
 	public function __construct(
 		private readonly Explorer $database,
 		private readonly Encryptor $encryptor,
+		private readonly EventNormalizer $normalizer,
 	) {
 	}
 
@@ -40,11 +42,16 @@ final class EventProcessor
 		}
 
 		$this->database->query('UPDATE social_events SET attempts = attempts + 1 WHERE id = ?', $eventId);
-		$this->encryptor->decrypt($event->payload_encrypted, EventStore::PayloadContext);
+		$normalized = $this->normalizer->normalize(
+			$this->encryptor->decrypt($event->payload_encrypted, EventStore::PayloadContext),
+		);
+		$status = $normalized->type === EventType::Other ? EventStatus::Ignored : EventStatus::Review;
 
 		$this->database->query(
-			'UPDATE social_events SET status = ? WHERE id = ? AND status = ?',
-			EventStatus::Review->value,
+			'UPDATE social_events SET ? WHERE id = ? AND status = ?',
+			$normalized->columns() + [
+				'status' => $status->value,
+			],
 			$eventId,
 			EventStatus::Received->value,
 		);
