@@ -496,14 +496,6 @@
   }
  },
  {
-  "key": "events.column.platform",
-  "lang": "en",
-  "translations": {
-   "1": "Platform",
-   "2": "Platform"
-  }
- },
- {
   "key": "events.column.account",
   "lang": "en",
   "translations": {
@@ -525,14 +517,6 @@
   "translations": {
    "1": "Status",
    "2": "Status"
-  }
- },
- {
-  "key": "events.column.job",
-  "lang": "en",
-  "translations": {
-   "1": "Processing",
-   "2": "Processing"
   }
  },
  {
@@ -568,19 +552,19 @@
   }
  },
  {
-  "key": "events.column.occurred",
-  "lang": "en",
-  "translations": {
-   "1": "Event time",
-   "2": "Event time"
-  }
- },
- {
   "key": "events.filter.type.all",
   "lang": "en",
   "translations": {
    "1": "All types",
    "2": "All types"
+  }
+ },
+ {
+  "key": "events.occurred",
+  "lang": "en",
+  "translations": {
+   "1": "event %time%",
+   "2": "event %time%"
   }
  },
  {

@@ -28,7 +28,7 @@
 			<tbody>
 				<tr n:foreach="$accounts as $account">
 					<td>{$account->name}<div class="small text-body-secondary">{$account->external_id}</div></td>
-					<td>{_"platform.{$account->platform}"}</td>
+					<td><span class="badge badge-platform badge-{$account->platform}">{_"platform.{$account->platform}"}</span></td>
 					<td>
 						<span n:class="badge, $account->status === 'active' ? 'text-bg-success' : 'text-bg-secondary'">{_"account.status.{$account->status}"}</span>
 					</td>

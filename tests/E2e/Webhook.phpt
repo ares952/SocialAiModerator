@@ -34,7 +34,7 @@ test('subscription challenge needs the verify token', function () use ($browser)
 });
 
 
-test('a signed event is stored and the worker normalizes it and moves it to review', function () use ($data, $secret): void {
+test('a signed event is stored and the worker normalizes it and moves it to review', function () use ($browser, $data, $secret): void {
 	$commentId = 'e2e_' . bin2hex(random_bytes(4));
 	$body = Json::encode([
 		'object' => 'page',
@@ -49,6 +49,7 @@ test('a signed event is stored and the worker normalizes it and moves it to revi
 							'item' => 'comment',
 							'verb' => 'add',
 							'comment_id' => $commentId,
+							'created_time' => 1763640000,
 							'message' => 'Synthetic comment',
 						],
 					],
@@ -91,4 +92,13 @@ test('a signed event is stored and the worker normalizes it and moves it to revi
 		"SELECT event_type, external_id FROM social_events WHERE account_external_id = 'fb:1000000000000042' ORDER BY id DESC LIMIT 1",
 	)->fetch() ?? throw new LogicException;
 	Assert::same(['comment.created', "fb:$commentId"], [$event->event_type, $event->external_id]);
+
+	[$email, $password] = $data->operator('viewer');
+	Assert::same(303, $browser->signIn($email, $password)->status);
+	$page = $browser->get('/admin/events?type=comment.created');
+	Assert::same(200, $page->status);
+	Assert::contains('E2E Webhook Page', $page->body);
+	Assert::contains('Nový komentář', $page->body);
+	Assert::contains("fb:$commentId", $page->body);
+	Assert::contains('událost 20. 11. 2025', $page->body, 'Meta time differs from the receipt time.');
 });

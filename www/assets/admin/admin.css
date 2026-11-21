@@ -16,7 +16,23 @@
 	white-space: nowrap;
 }
 
-.table-events td.text-wrap-anywhere {
+.table-events td.event-type {
 	white-space: normal;
-	overflow-wrap: anywhere;
+	min-width: 12rem;
+	max-width: 28rem;
+}
+
+/* Platform badges in the brand colors of Facebook and Instagram (white text has enough contrast
+   in both themes). */
+.badge-platform {
+	color: #fff;
+}
+
+.badge-facebook {
+	background-color: #0866ff;
+}
+
+.badge-instagram {
+	background-color: #d62976;
+	background-image: linear-gradient(45deg, #f58529 0%, #dd2a7b 45%, #8134af 75%, #515bd4 100%);
 }

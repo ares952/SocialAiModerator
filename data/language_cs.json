@@ -558,15 +558,6 @@
   }
  },
  {
-  "key": "events.column.platform",
-  "lang": "cs",
-  "translations": {
-   "1": "Platforma",
-   "2": "Platforma",
-   "5": "Platforma"
-  }
- },
- {
   "key": "events.column.account",
   "lang": "cs",
   "translations": {
@@ -591,15 +582,6 @@
    "1": "Stav",
    "2": "Stav",
    "5": "Stav"
-  }
- },
- {
-  "key": "events.column.job",
-  "lang": "cs",
-  "translations": {
-   "1": "Zpracování",
-   "2": "Zpracování",
-   "5": "Zpracování"
   }
  },
  {
@@ -639,21 +621,21 @@
   }
  },
  {
-  "key": "events.column.occurred",
-  "lang": "cs",
-  "translations": {
-   "1": "Čas události",
-   "2": "Čas události",
-   "5": "Čas události"
-  }
- },
- {
   "key": "events.filter.type.all",
   "lang": "cs",
   "translations": {
    "1": "Všechny typy",
    "2": "Všechny typy",
    "5": "Všechny typy"
+  }
+ },
+ {
+  "key": "events.occurred",
+  "lang": "cs",
+  "translations": {
+   "1": "událost %time%",
+   "2": "událost %time%",
+   "5": "událost %time%"
   }
  },
  {

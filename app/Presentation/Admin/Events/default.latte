@@ -37,33 +37,32 @@
 	<div class="alert alert-secondary">{_'events.empty'}</div>
 {else}
 	<div class="table-responsive">
-		<table class="table table-sm table-hover align-middle table-events">
+		<table class="table table-hover align-middle table-events">
 			<thead>
 				<tr>
 					<th scope="col">#</th>
 					<th scope="col">{_'events.column.received'}</th>
-					<th scope="col">{_'events.column.occurred'}</th>
-					<th scope="col">{_'events.column.platform'}</th>
 					<th scope="col">{_'events.column.account'}</th>
 					<th scope="col">{_'events.column.topic'}</th>
 					<th scope="col">{_'events.column.status'}</th>
-					<th scope="col">{_'events.column.job'}</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr n:foreach="$events as $event">
 					<td class="text-body-secondary">{$event->id}</td>
-					<td>{$event->received_at|localTime}</td>
-					<td>{if $event->occurred_at !== null}{$event->occurred_at|localTime}{/if}</td>
-					<td>{_"platform.{$event->platform}"}</td>
-					<td class="text-wrap-anywhere">
-						{$event->account_name ?? $event->account_external_id}
-						<div n:if="$event->account_name !== null" class="small text-body-secondary">{$event->account_external_id}</div>
+					<td>
+						{$event->received_at|localTime}
+						{* Shown only when Meta reports a noticeably different time (delay, test data). *}
+						<div n:if="$event->occurred_at !== null && abs($event->received_at->getTimestamp() - $event->occurred_at->getTimestamp()) > 60"
+							class="small text-body-secondary">{_'events.occurred', 1, [time => ($event->occurred_at|localTime)]}</div>
 					</td>
-					<td class="text-wrap-anywhere">
-						{if $event->event_type !== null}{_"event.type.{$event->event_type}"}{/if}
-						<div class="small text-body-secondary"><code>{$event->topic}</code></div>
-						<div n:if="$event->external_id !== null" class="small text-body-secondary">{$event->external_id}</div>
+					<td title="{$event->account_external_id}">
+						<span class="badge badge-platform badge-{$event->platform} me-1">{_"platform.{$event->platform}"}</span>
+						{$event->account_name ?? $event->account_external_id}
+					</td>
+					<td class="event-type" title="{$event->topic}">
+						{if $event->event_type !== null}{_"event.type.{$event->event_type}"}{else}<code>{$event->topic}</code>{/if}
+						<div n:if="$event->external_id !== null" class="small text-body-secondary text-truncate" title="{$event->external_id}">{$event->external_id}</div>
 						<div n:if="$event->last_error !== null" class="small text-danger">{$event->last_error}</div>
 					</td>
 					<td>
@@ -72,12 +71,10 @@
 							'ignored' => 'text-bg-secondary',
 							default => 'text-bg-info',
 						}">{_"event.status.{$event->status}"}</span>
-					</td>
-					<td>
-						{if $event->job_status !== null}
-							<span n:class="badge, $event->job_status === 'failed' ? 'text-bg-danger' : 'text-bg-light border'"
-								n:attr="title: $event->job_error">{_"job.status.{$event->job_status}"}</span>
-						{/if}
+						{* The job matters only while it is not done. *}
+						<span n:if="$event->job_status !== null && $event->job_status !== 'done'"
+							n:class="badge, $event->job_status === 'failed' ? 'text-bg-danger' : 'text-bg-light border'"
+							n:attr="title: $event->job_error">{_"job.status.{$event->job_status}"}</span>
 					</td>
 				</tr>
 			</tbody>
