@@ -15,6 +15,17 @@ Formát sekce:
 - **Ověření:** jak potvrdit, že je hotovo
 ```
 
+## 0.6.2
+
+- **Týká se:** všech instancí
+- **Kdy:** po kroku 12
+- **Akce:** `docker compose up -d --force-recreate --wait web`. Kontejner `web` má `nginx.conf`
+  připojený jako soubor, takže nový formát access logu (bez query stringu u požadavků
+  s `verify_token`) načte až nově vytvořený kontejner. Ten zároveň zahodí starý log kontejneru,
+  ve kterém mohl být Verify token z ověření webhooku v otevřeném tvaru.
+- **Ověření:** `docker compose logs web` po dalším ověření webhooku v Meta App Dashboardu
+  obsahuje `/webhooks/meta?[redacted]`.
+
 ## 0.6.0
 
 - **Týká se:** všech instancí
