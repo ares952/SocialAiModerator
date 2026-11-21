@@ -7,14 +7,17 @@ namespace App\Ingest;
 use App\Core\Encryptor;
 use App\Meta\EventNormalizer;
 use App\Meta\EventType;
+use App\Queue\JobQueue;
+use App\Queue\JobType;
 use Nette\Database\Explorer;
 
 
 /**
  * Worker step for one stored event (job event.process): normalizes it and stores its metadata.
  * Events that are not relevant for moderation (reactions, read receipts, own posts) end as
- * ignored. Everything else goes to `review`: automatic actions follow with the AI and policy
- * milestones, and an unsupported structure always needs a human.
+ * ignored. Everything else goes to `review`; a comment or message with text is queued for the
+ * AI decision (job event.decide), so an AI outage never blocks the ingest. An unsupported
+ * structure always needs a human.
  */
 final class EventProcessor
 {
@@ -22,6 +25,7 @@ final class EventProcessor
 		private readonly Explorer $database,
 		private readonly Encryptor $encryptor,
 		private readonly EventNormalizer $normalizer,
+		private readonly JobQueue $queue,
 	) {
 	}
 
@@ -47,13 +51,19 @@ final class EventProcessor
 		);
 		$status = $normalized->type === EventType::Other ? EventStatus::Ignored : EventStatus::Review;
 
-		$this->database->query(
-			'UPDATE social_events SET ? WHERE id = ? AND status = ?',
-			$normalized->columns() + [
-				'status' => $status->value,
-			],
-			$eventId,
-			EventStatus::Received->value,
-		);
+		$this->database->transaction(function () use ($eventId, $normalized, $status): void {
+			$updated = $this->database->query(
+				'UPDATE social_events SET ? WHERE id = ? AND status = ?',
+				$normalized->columns() + [
+					'status' => $status->value,
+				],
+				$eventId,
+				EventStatus::Received->value,
+			)->getRowCount() === 1;
+
+			if ($updated && $normalized->type->contentKind() !== null && $normalized->text !== null) {
+				$this->queue->push(JobType::DecideEvent, $eventId);
+			}
+		});
 	}
 }

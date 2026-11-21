@@ -6,6 +6,8 @@ namespace App\Ingest;
 
 use App\Account\AccountStatus;
 use App\Core\Encryptor;
+use App\Meta\EventNormalizer;
+use App\Meta\NormalizedEvent;
 use App\Queue\JobQueue;
 use App\Queue\JobType;
 use Nette\Database\Explorer;
@@ -15,7 +17,7 @@ use Nette\Database\SqlLiteral;
 /**
  * Persists webhook events in one transaction with deduplication by event_key and queues the
  * new ones for the worker. Events of an account that is not connected or not active are stored
- * as ignored and never processed.
+ * as ignored and never processed. Reads a stored event back through the EventNormalizer.
  */
 final class EventStore
 {
@@ -26,7 +28,24 @@ final class EventStore
 		private readonly Explorer $database,
 		private readonly Encryptor $encryptor,
 		private readonly JobQueue $queue,
+		private readonly EventNormalizer $normalizer,
 	) {
+	}
+
+
+	/**
+	 * The stored event with its customer content (decrypted); null when it no longer exists.
+	 */
+	public function normalized(int $eventId): ?NormalizedEvent
+	{
+		$payload = $this->database->query(
+			'SELECT payload_encrypted FROM social_events WHERE id = ?',
+			$eventId,
+		)->fetchField();
+
+		return $payload === null
+			? null
+			: $this->normalizer->normalize($this->encryptor->decrypt($payload, self::PayloadContext));
 	}
 
 

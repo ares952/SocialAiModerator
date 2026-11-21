@@ -15,6 +15,18 @@ Formát sekce:
 - **Ověření:** jak potvrdit, že je hotovo
 ```
 
+## 0.8.0
+
+- **Týká se:** všech instancí
+- **Kdy:** po kroku 12
+- **Akce:** v administraci (Retence) nastavit lhůty podle zveřejněných zásad ochrany osobních
+  údajů (`docs/retention.md`); bez nastavení se nic nemaže. Pro klasifikaci AI musí být
+  v `config/secrets/app.env` vyplněné `OPENAI_API_KEY` a `OPENAI_CLASSIFIER_MODEL`, jinak
+  rozhodnutí končí jako `review` s chybou. Události přijaté před touto verzí lze vyhodnotit
+  tlačítkem v detailu události.
+- **Ověření:** stránka Retence ukazuje nastavené lhůty; v logu workeru se po hodině objeví
+  `Retention deleted old data`, pokud bylo co mazat.
+
 ## 0.7.0
 
 - **Týká se:** všech instancí

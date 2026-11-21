@@ -9,6 +9,7 @@ use App\Core\DecryptionFailed;
 use App\Core\Encryptor;
 use App\Evaluation\EvaluationSamples;
 use App\Ingest\EventStore;
+use App\Moderation\Decisions;
 use Nette\Database\Explorer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -30,6 +31,7 @@ final class EncryptionRotateCommand extends Command
 		'account_credentials' => ['encrypted_token', Credentials::TokenContext],
 		'social_events' => ['payload_encrypted', EventStore::PayloadContext],
 		'evaluation_samples' => ['text_encrypted', EvaluationSamples::TextContext],
+		'moderation_decisions' => ['reason_encrypted', Decisions::ReasonContext],
 	];
 
 	private const BatchSize = 500;
@@ -92,10 +94,11 @@ final class EncryptionRotateCommand extends Command
 		$lastId = 0;
 		do {
 			$rows = $this->database->query(
-				'SELECT id, ?name AS value FROM ?name WHERE id > ? ORDER BY id LIMIT ?',
+				'SELECT id, ?name AS value FROM ?name WHERE id > ? AND ?name IS NOT NULL ORDER BY id LIMIT ?',
 				$column,
 				$table,
 				$lastId,
+				$column,
 				self::BatchSize,
 			)->fetchAll();
 

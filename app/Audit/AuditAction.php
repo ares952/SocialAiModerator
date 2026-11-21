@@ -24,4 +24,7 @@ enum AuditAction: string
 	case AccountCreate = 'account.create';
 	case AccountUpdate = 'account.update';
 	case TokenReplace = 'account.token.replace';
+	case EventContentView = 'event.content.view';
+	case EventDecisionRequest = 'event.decision.request';
+	case RetentionUpdate = 'retention.update';
 }

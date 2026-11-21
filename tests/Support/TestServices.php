@@ -10,10 +10,17 @@ use App\Audit\AuditLog;
 use App\Core\Encryptor;
 use App\Evaluation\EvaluationRunner;
 use App\Evaluation\EvaluationSamples;
+use App\Ingest\EventProcessor;
+use App\Ingest\EventStore;
 use App\Knowledge\KnowledgeBase;
+use App\Meta\EventNormalizer;
+use App\Moderation\AutomationSwitch;
+use App\Moderation\Decisions;
+use App\Moderation\EventDecider;
 use App\Moderation\Mode;
 use App\Moderation\Policies;
 use App\Moderation\PolicyEngine;
+use App\Queue\JobQueue;
 use Nette\Database\Explorer;
 use Nette\StaticClass;
 
@@ -51,6 +58,33 @@ final class TestServices
 			self::classifier($database, $client),
 			self::policies($database),
 			new PolicyEngine,
+		);
+	}
+
+
+	public static function eventStore(Explorer $database, Encryptor $encryptor, JobQueue $queue): EventStore
+	{
+		return new EventStore($database, $encryptor, $queue, new EventNormalizer);
+	}
+
+
+	public static function eventProcessor(Explorer $database, Encryptor $encryptor, JobQueue $queue): EventProcessor
+	{
+		return new EventProcessor($database, $encryptor, new EventNormalizer, $queue);
+	}
+
+
+	public static function eventDecider(Explorer $database, Encryptor $encryptor, JobQueue $queue, OpenAiClient $client): EventDecider
+	{
+		return new EventDecider(
+			$database,
+			self::eventStore($database, $encryptor, $queue),
+			self::classifier($database, $client),
+			self::policies($database),
+			new PolicyEngine,
+			new AutomationSwitch($database, new AuditLog($database)),
+			new Decisions($database, $encryptor),
+			$queue,
 		);
 	}
 }

@@ -54,7 +54,8 @@ final class EventOverview
 		return $this->database->query(
 			'SELECT e.id, e.received_at, e.occurred_at, e.platform, e.account_external_id, a.name AS account_name,
 				e.topic, e.event_type, e.external_id, e.status, e.attempts, e.last_error,
-				j.status AS job_status, j.last_error AS job_error
+				j.status AS job_status, j.last_error AS job_error,
+				(SELECT d.action FROM moderation_decisions d WHERE d.event_id = e.id ORDER BY d.id DESC LIMIT 1) AS decision_action
 			FROM social_events e
 			LEFT JOIN social_accounts a ON a.id = e.account_id
 			LEFT JOIN queue_jobs j ON j.type = ? AND j.subject_id = e.id
@@ -65,6 +66,42 @@ final class EventOverview
 			self::filter($status, $type),
 			$limit,
 			$offset,
+		)->fetchAll();
+	}
+
+
+	/**
+	 * Metadata of one event with the account name; no customer content.
+	 */
+	public function find(int $id): ?Row
+	{
+		return $this->database->query(
+			'SELECT e.id, e.received_at, e.occurred_at, e.platform, e.account_id, e.account_external_id,
+				a.name AS account_name, e.topic, e.event_type, e.external_id, e.status, e.attempts, e.last_error
+			FROM social_events e
+			LEFT JOIN social_accounts a ON a.id = e.account_id
+			WHERE e.id = ?',
+			$id,
+		)->fetch();
+	}
+
+
+	/**
+	 * Worker jobs of the event (processing, AI decision), oldest first.
+	 *
+	 * @return list<Row>
+	 */
+	public function jobs(int $eventId): array
+	{
+		return $this->database->query(
+			'SELECT type, status, attempts, last_error, available_at, updated_at FROM queue_jobs
+			WHERE type IN (?) AND subject_id = ?
+			ORDER BY id',
+			[
+				JobType::ProcessEvent->value,
+				JobType::DecideEvent->value,
+			],
+			$eventId,
 		)->fetchAll();
 	}
 

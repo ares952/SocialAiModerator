@@ -17,6 +17,7 @@ use Nette\Utils\Json;
 use Tester\Assert;
 use Tests\Support\TestDatabase;
 use Tests\Support\TestLog;
+use Tests\Support\TestServices;
 
 require __DIR__ . '/../../bootstrap.php';
 
@@ -72,7 +73,7 @@ $call = static function (
 	$httpResponse = new Response;
 	$presenter = new MetaWebhookPresenter(
 		new WebhookVerifier(AppSecret, VerifyToken),
-		new EventStore($database, $encryptor, $queue),
+		TestServices::eventStore($database, $encryptor, $queue),
 		new Request(
 			new UrlScript('https://moderator.test/webhooks/meta' . $query, '/'),
 			headers: $signature === null ? [] : ['X-Hub-Signature-256' => $signature],

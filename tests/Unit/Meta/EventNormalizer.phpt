@@ -227,3 +227,30 @@ test('a postback without mid has no external ID', function () use ($single, $mes
 	Assert::same(EventType::Postback, $event->type);
 	Assert::null($event->externalId);
 });
+
+
+test('customer text, author and post link are read but never part of the columns', function () use ($fixture, $single, $feed): void {
+	$event = $fixture('page-comment');
+	Assert::same('Synthetic comment: is there a discount?', $event->text);
+	Assert::same('Synthetic Customer', $event->author);
+	Assert::same('https://www.facebook.com/example/posts/1', $event->permalink);
+	Assert::same(['event_type', 'external_id', 'occurred_at', 'last_error'], array_keys($event->columns()));
+
+	$event = $fixture('instagram-comment');
+	Assert::same(['Synthetic comment: how much is the course?', 'synthetic.customer', null], [$event->text, $event->author, $event->permalink]);
+
+	$event = $fixture('instagram-message');
+	Assert::same([EventType::MessageReceived, null], [$event->type, $event->author]);
+	Assert::notSame(null, $event->text);
+	Assert::null($fixture('instagram-message-deleted')->text);
+	Assert::null($fixture('page-reaction')->text);
+
+	$event = $single($feed([
+		'item' => 'comment',
+		'verb' => 'add',
+		'comment_id' => '1_2',
+		'message' => '   ',
+		'post' => ['permalink_url' => 'https://evil.example/phish'],
+	]));
+	Assert::same([null, null], [$event->text, $event->permalink], 'Blank text and foreign links are dropped.');
+});

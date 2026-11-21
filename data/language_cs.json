@@ -639,6 +639,204 @@
   }
  },
  {
+  "key": "events.detail.back",
+  "lang": "cs",
+  "translations": {
+   "1": "Zpět na události",
+   "2": "Zpět na události",
+   "5": "Zpět na události"
+  }
+ },
+ {
+  "key": "events.detail.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Událost #%id%",
+   "2": "Událost #%id%",
+   "5": "Událost #%id%"
+  }
+ },
+ {
+  "key": "events.detail.content",
+  "lang": "cs",
+  "translations": {
+   "1": "Obsah",
+   "2": "Obsah",
+   "5": "Obsah"
+  }
+ },
+ {
+  "key": "events.detail.content.hidden",
+  "lang": "cs",
+  "translations": {
+   "1": "Obsah komentářů a zpráv vidí jen moderátor a administrátor.",
+   "2": "Obsah komentářů a zpráv vidí jen moderátor a administrátor.",
+   "5": "Obsah komentářů a zpráv vidí jen moderátor a administrátor."
+  }
+ },
+ {
+  "key": "events.detail.content.none",
+  "lang": "cs",
+  "translations": {
+   "1": "Událost nemá žádný text.",
+   "2": "Událost nemá žádný text.",
+   "5": "Událost nemá žádný text."
+  }
+ },
+ {
+  "key": "events.detail.content.audited",
+  "lang": "cs",
+  "translations": {
+   "1": "Zobrazení obsahu se zaznamenává do auditu.",
+   "2": "Zobrazení obsahu se zaznamenává do auditu.",
+   "5": "Zobrazení obsahu se zaznamenává do auditu."
+  }
+ },
+ {
+  "key": "events.detail.permalink",
+  "lang": "cs",
+  "translations": {
+   "1": "Otevřít příspěvek",
+   "2": "Otevřít příspěvek",
+   "5": "Otevřít příspěvek"
+  }
+ },
+ {
+  "key": "events.detail.decisions",
+  "lang": "cs",
+  "translations": {
+   "1": "Rozhodnutí AI",
+   "2": "Rozhodnutí AI",
+   "5": "Rozhodnutí AI"
+  }
+ },
+ {
+  "key": "events.detail.decisions.none",
+  "lang": "cs",
+  "translations": {
+   "1": "Zatím žádné rozhodnutí.",
+   "2": "Zatím žádné rozhodnutí.",
+   "5": "Zatím žádné rozhodnutí."
+  }
+ },
+ {
+  "key": "events.detail.decide",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyhodnotit AI",
+   "2": "Vyhodnotit AI",
+   "5": "Vyhodnotit AI"
+  }
+ },
+ {
+  "key": "events.detail.decide.queued",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyhodnocení je ve frontě, výsledek se objeví za chvíli.",
+   "2": "Vyhodnocení je ve frontě, výsledek se objeví za chvíli.",
+   "5": "Vyhodnocení je ve frontě, výsledek se objeví za chvíli."
+  }
+ },
+ {
+  "key": "events.detail.decide.nothing",
+  "lang": "cs",
+  "translations": {
+   "1": "Událost nemá co vyhodnotit, nebo už vyhodnocená je.",
+   "2": "Událost nemá co vyhodnotit, nebo už vyhodnocená je.",
+   "5": "Událost nemá co vyhodnotit, nebo už vyhodnocená je."
+  }
+ },
+ {
+  "key": "events.detail.policy",
+  "lang": "cs",
+  "translations": {
+   "1": "pravidla v%version%",
+   "2": "pravidla v%version%",
+   "5": "pravidla v%version%"
+  }
+ },
+ {
+  "key": "events.detail.spam",
+  "lang": "cs",
+  "translations": {
+   "1": "spam %value%",
+   "2": "spam %value%",
+   "5": "spam %value%"
+  }
+ },
+ {
+  "key": "events.detail.metadata",
+  "lang": "cs",
+  "translations": {
+   "1": "Metadata",
+   "2": "Metadata",
+   "5": "Metadata"
+  }
+ },
+ {
+  "key": "events.detail.occurred",
+  "lang": "cs",
+  "translations": {
+   "1": "Čas události",
+   "2": "Čas události",
+   "5": "Čas události"
+  }
+ },
+ {
+  "key": "events.detail.external",
+  "lang": "cs",
+  "translations": {
+   "1": "Externí ID",
+   "2": "Externí ID",
+   "5": "Externí ID"
+  }
+ },
+ {
+  "key": "events.detail.attempts",
+  "lang": "cs",
+  "translations": {
+   "1": "Pokusy",
+   "2": "Pokusy",
+   "5": "Pokusy"
+  }
+ },
+ {
+  "key": "events.detail.problem",
+  "lang": "cs",
+  "translations": {
+   "1": "Problém",
+   "2": "Problém",
+   "5": "Problém"
+  }
+ },
+ {
+  "key": "events.detail.jobs",
+  "lang": "cs",
+  "translations": {
+   "1": "Úlohy workeru",
+   "2": "Úlohy workeru",
+   "5": "Úlohy workeru"
+  }
+ },
+ {
+  "key": "events.decision",
+  "lang": "cs",
+  "translations": {
+   "1": "Rozhodnutí AI",
+   "2": "Rozhodnutí AI",
+   "5": "Rozhodnutí AI"
+  }
+ },
+ {
+  "key": "events.decision.short",
+  "lang": "cs",
+  "translations": {
+   "1": "AI",
+   "2": "AI",
+   "5": "AI"
+  }
+ },
+ {
   "key": "operator.title",
   "lang": "cs",
   "translations": {
@@ -2655,6 +2853,15 @@
   }
  },
  {
+  "key": "admin.menu.retention",
+  "lang": "cs",
+  "translations": {
+   "1": "Retence",
+   "2": "Retence",
+   "5": "Retence"
+  }
+ },
+ {
   "key": "account.title",
   "lang": "cs",
   "translations": {
@@ -3339,6 +3546,33 @@
   }
  },
  {
+  "key": "audit.action.event.content.view",
+  "lang": "cs",
+  "translations": {
+   "1": "Zobrazení obsahu události",
+   "2": "Zobrazení obsahu události",
+   "5": "Zobrazení obsahu události"
+  }
+ },
+ {
+  "key": "audit.action.event.decision.request",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyžádání rozhodnutí AI",
+   "2": "Vyžádání rozhodnutí AI",
+   "5": "Vyžádání rozhodnutí AI"
+  }
+ },
+ {
+  "key": "audit.action.retention.update",
+  "lang": "cs",
+  "translations": {
+   "1": "Změna retence dat",
+   "2": "Změna retence dat",
+   "5": "Změna retence dat"
+  }
+ },
+ {
   "key": "decision.reason.message_not_hideable",
   "lang": "cs",
   "translations": {
@@ -3363,6 +3597,132 @@
    "1": "příliš mnoho odkazů",
    "2": "příliš mnoho odkazů",
    "5": "příliš mnoho odkazů"
+  }
+ },
+ {
+  "key": "retention.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Retence dat",
+   "2": "Retence dat",
+   "5": "Retence dat"
+  }
+ },
+ {
+  "key": "retention.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Počet dní, po které se data uchovávají od přijetí. Prázdné pole znamená uchovávat bez omezení. Výchozí lhůta zatím není stanovena (otevřená otázka GDPR), proto se bez nastavení nic nemaže.",
+   "2": "Počet dní, po které se data uchovávají od přijetí. Prázdné pole znamená uchovávat bez omezení. Výchozí lhůta zatím není stanovena (otevřená otázka GDPR), proto se bez nastavení nic nemaže.",
+   "5": "Počet dní, po které se data uchovávají od přijetí. Prázdné pole znamená uchovávat bez omezení. Výchozí lhůta zatím není stanovena (otevřená otázka GDPR), proto se bez nastavení nic nemaže."
+  }
+ },
+ {
+  "key": "retention.how",
+  "lang": "cs",
+  "translations": {
+   "1": "Worker maže data starší než nastavená lhůta jednou za hodinu, po dávkách. Smazání nelze vrátit, kromě obnovy ze zálohy. Okamžitě lze retenci spustit příkazem bin/console retention:run.",
+   "2": "Worker maže data starší než nastavená lhůta jednou za hodinu, po dávkách. Smazání nelze vrátit, kromě obnovy ze zálohy. Okamžitě lze retenci spustit příkazem bin/console retention:run.",
+   "5": "Worker maže data starší než nastavená lhůta jednou za hodinu, po dávkách. Smazání nelze vrátit, kromě obnovy ze zálohy. Okamžitě lze retenci spustit příkazem bin/console retention:run."
+  }
+ },
+ {
+  "key": "retention.data.comments",
+  "lang": "cs",
+  "translations": {
+   "1": "Komentáře (dny)",
+   "2": "Komentáře (dny)",
+   "5": "Komentáře (dny)"
+  }
+ },
+ {
+  "key": "retention.data.comments-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Události komentářů včetně rozhodnutí AI.",
+   "2": "Události komentářů včetně rozhodnutí AI.",
+   "5": "Události komentářů včetně rozhodnutí AI."
+  }
+ },
+ {
+  "key": "retention.data.messages",
+  "lang": "cs",
+  "translations": {
+   "1": "Soukromé zprávy (dny)",
+   "2": "Soukromé zprávy (dny)",
+   "5": "Soukromé zprávy (dny)"
+  }
+ },
+ {
+  "key": "retention.data.messages-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Příchozí zprávy, echo, zrušené zprávy a tlačítka, včetně rozhodnutí AI.",
+   "2": "Příchozí zprávy, echo, zrušené zprávy a tlačítka, včetně rozhodnutí AI.",
+   "5": "Příchozí zprávy, echo, zrušené zprávy a tlačítka, včetně rozhodnutí AI."
+  }
+ },
+ {
+  "key": "retention.data.other_events",
+  "lang": "cs",
+  "translations": {
+   "1": "Ostatní události (dny)",
+   "2": "Ostatní události (dny)",
+   "5": "Ostatní události (dny)"
+  }
+ },
+ {
+  "key": "retention.data.other_events-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Reakce, potvrzení přečtení, nepodporované a ignorované události.",
+   "2": "Reakce, potvrzení přečtení, nepodporované a ignorované události.",
+   "5": "Reakce, potvrzení přečtení, nepodporované a ignorované události."
+  }
+ },
+ {
+  "key": "retention.data.audit",
+  "lang": "cs",
+  "translations": {
+   "1": "Audit (dny)",
+   "2": "Audit (dny)",
+   "5": "Audit (dny)"
+  }
+ },
+ {
+  "key": "retention.data.audit-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Záznamy o krocích operátorů, včetně zobrazení obsahu událostí.",
+   "2": "Záznamy o krocích operátorů, včetně zobrazení obsahu událostí.",
+   "5": "Záznamy o krocích operátorů, včetně zobrazení obsahu událostí."
+  }
+ },
+ {
+  "key": "retention.error.range",
+  "lang": "cs",
+  "translations": {
+   "1": "Zadejte 1 až 3650 dní, nebo pole nechte prázdné.",
+   "2": "Zadejte 1 až 3650 dní, nebo pole nechte prázdné.",
+   "5": "Zadejte 1 až 3650 dní, nebo pole nechte prázdné."
+  }
+ },
+ {
+  "key": "retention.form.save",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložit lhůty",
+   "2": "Uložit lhůty",
+   "5": "Uložit lhůty"
+  }
+ },
+ {
+  "key": "retention.saved",
+  "lang": "cs",
+  "translations": {
+   "1": "Lhůty retence jsou uložené.",
+   "2": "Lhůty retence jsou uložené.",
+   "5": "Lhůty retence jsou uložené."
   }
  }
 ]

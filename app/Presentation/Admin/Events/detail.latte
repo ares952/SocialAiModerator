@@ -1,0 +1,120 @@
+{varType Nette\Database\Row $event}
+{varType list<Nette\Database\Row> $jobs}
+{varType list<Nette\Database\Row> $decisions}
+{varType array<int, string|null> $explanations}
+{varType App\Meta\NormalizedEvent|null $content}
+{varType bool $canRead}
+{varType bool $canDecide}
+
+{block content}
+<div class="mb-2">
+	<a n:href="default">&larr; {_'events.detail.back'}</a>
+</div>
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+	<h1 class="h3 mb-0 me-auto" n:block="title">{_'events.detail.title', 1, [id => $event->id]}</h1>
+	<span class="badge badge-platform badge-{$event->platform}">{_"platform.{$event->platform}"}</span>
+	<span n:class="badge, match($event->status) {
+		'review' => 'text-bg-warning',
+		'ignored' => 'text-bg-secondary',
+		default => 'text-bg-info',
+	}">{_"event.status.{$event->status}"}</span>
+</div>
+
+<div class="row g-3">
+	<div class="col-lg-7">
+		<div class="card mb-3">
+			<div class="card-header">{_'events.detail.content'}</div>
+			<div class="card-body">
+				{if !$canRead}
+					<p class="text-body-secondary mb-0">{_'events.detail.content.hidden'}</p>
+				{elseif $content === null || ($content->text === null && $content->author === null)}
+					<p class="text-body-secondary mb-0">{_'events.detail.content.none'}</p>
+				{else}
+					<div n:if="$content->author !== null" class="fw-semibold mb-1">{$content->author}</div>
+					<p n:if="$content->text !== null" class="customer-text mb-2">{$content->text}</p>
+					<a n:if="$content->permalink !== null" href="{$content->permalink}" target="_blank" rel="noopener noreferrer">{_'events.detail.permalink'}</a>
+					<p class="small text-body-secondary mt-2 mb-0">{_'events.detail.content.audited'}</p>
+				{/if}
+			</div>
+		</div>
+
+		<div class="card mb-3">
+			<div class="card-header d-flex align-items-center gap-2">
+				<span class="me-auto">{_'events.detail.decisions'}</span>
+				<a n:if="$canDecide" class="btn btn-sm btn-outline-primary" n:href="decide!, id: $event->id">{_'events.detail.decide'}</a>
+			</div>
+			{if $decisions === []}
+				<div class="card-body">
+					<p class="text-body-secondary mb-0">{_'events.detail.decisions.none'}</p>
+				</div>
+			{else}
+				<ul class="list-group list-group-flush">
+					<li n:foreach="$decisions as $decision" class="list-group-item">
+						{var $result = Nette\Utils\Json::decode($decision->result_json, forceArrays: true)}
+						<div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+							<span class="fw-semibold">{_"action.{$decision->action}"}</span>
+							<span n:if="$decision->automatic" class="badge text-bg-warning">{_'evaluation.automatic'}</span>
+							<span n:if="$decision->category !== null" class="text-body-secondary">
+								{_"category.{$decision->category}"} ({$decision->confidence|number:2})
+							</span>
+							<span n:if="$result['moderation']['flagged'] ?? false" class="badge text-bg-danger">{_'evaluation.flagged'}</span>
+							<span class="ms-auto small text-body-secondary">{$decision->created_at|localTime}</span>
+						</div>
+						<p n:if="$canRead && ($explanations[$decision->id] ?? null) !== null" class="small mb-1">{$explanations[$decision->id]}</p>
+						<div n:if="$decision->error !== null" class="small text-danger mb-1">{$decision->error}</div>
+						<div class="mb-1">
+							<span n:foreach="$result['reasons'] ?? [] as $reason" class="badge text-bg-light border me-1">{_"decision.reason.$reason"}</span>
+						</div>
+						<div class="small text-body-secondary">
+							{$decision->model} · {$decision->prompt_version} · {_'events.detail.policy', 1, [version => $decision->policy_version]}
+							{if $result['classification'] !== null}
+								· {$result['classification']['language']} · {_'events.detail.spam', 1, [value => ($result['classification']['spam_probability']|number:2)]}
+							{/if}
+						</div>
+					</li>
+				</ul>
+			{/if}
+		</div>
+	</div>
+
+	<div class="col-lg-5">
+		<div class="card mb-3">
+			<div class="card-header">{_'events.detail.metadata'}</div>
+			<div class="card-body">
+				<dl class="row mb-0 small">
+					<dt class="col-sm-5">{_'events.column.topic'}</dt>
+					<dd class="col-sm-7">
+						{if $event->event_type !== null}{_"event.type.{$event->event_type}"}{/if}
+						<code>{$event->topic}</code>
+					</dd>
+					<dt class="col-sm-5">{_'events.column.account'}</dt>
+					<dd class="col-sm-7 text-break">{$event->account_name ?? '—'}<br><span class="text-body-secondary">{$event->account_external_id}</span></dd>
+					<dt class="col-sm-5">{_'events.column.received'}</dt>
+					<dd class="col-sm-7">{$event->received_at|localTime}</dd>
+					<dt class="col-sm-5">{_'events.detail.occurred'}</dt>
+					<dd class="col-sm-7">{if $event->occurred_at !== null}{$event->occurred_at|localTime}{else}—{/if}</dd>
+					<dt class="col-sm-5">{_'events.detail.external'}</dt>
+					<dd class="col-sm-7 text-break">{$event->external_id ?? '—'}</dd>
+					<dt class="col-sm-5">{_'events.detail.attempts'}</dt>
+					<dd class="col-sm-7">{$event->attempts}</dd>
+					<dt n:if="$event->last_error !== null" class="col-sm-5">{_'events.detail.problem'}</dt>
+					<dd n:if="$event->last_error !== null" class="col-sm-7 text-danger">{$event->last_error}</dd>
+				</dl>
+			</div>
+		</div>
+
+		<div n:if="$jobs !== []" class="card mb-3">
+			<div class="card-header">{_'events.detail.jobs'}</div>
+			<ul class="list-group list-group-flush small">
+				<li n:foreach="$jobs as $job" class="list-group-item">
+					<div class="d-flex gap-2">
+						<code class="me-auto">{$job->type}</code>
+						<span n:class="badge, $job->status === 'failed' ? 'text-bg-danger' : 'text-bg-light border'">{_"job.status.{$job->status}"}</span>
+					</div>
+					<div class="text-body-secondary">{_'events.detail.attempts'}: {$job->attempts} · {$job->updated_at|localTime}</div>
+					<div n:if="$job->last_error !== null" class="text-danger text-break">{$job->last_error}</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

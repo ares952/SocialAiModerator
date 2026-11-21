@@ -568,6 +568,182 @@
   }
  },
  {
+  "key": "events.detail.back",
+  "lang": "en",
+  "translations": {
+   "1": "Back to events",
+   "2": "Back to events"
+  }
+ },
+ {
+  "key": "events.detail.title",
+  "lang": "en",
+  "translations": {
+   "1": "Event #%id%",
+   "2": "Event #%id%"
+  }
+ },
+ {
+  "key": "events.detail.content",
+  "lang": "en",
+  "translations": {
+   "1": "Content",
+   "2": "Content"
+  }
+ },
+ {
+  "key": "events.detail.content.hidden",
+  "lang": "en",
+  "translations": {
+   "1": "Only moderators and administrators can see the content of comments and messages.",
+   "2": "Only moderators and administrators can see the content of comments and messages."
+  }
+ },
+ {
+  "key": "events.detail.content.none",
+  "lang": "en",
+  "translations": {
+   "1": "The event has no text.",
+   "2": "The event has no text."
+  }
+ },
+ {
+  "key": "events.detail.content.audited",
+  "lang": "en",
+  "translations": {
+   "1": "Viewing the content is recorded in the audit log.",
+   "2": "Viewing the content is recorded in the audit log."
+  }
+ },
+ {
+  "key": "events.detail.permalink",
+  "lang": "en",
+  "translations": {
+   "1": "Open the post",
+   "2": "Open the post"
+  }
+ },
+ {
+  "key": "events.detail.decisions",
+  "lang": "en",
+  "translations": {
+   "1": "AI decisions",
+   "2": "AI decisions"
+  }
+ },
+ {
+  "key": "events.detail.decisions.none",
+  "lang": "en",
+  "translations": {
+   "1": "No decision yet.",
+   "2": "No decision yet."
+  }
+ },
+ {
+  "key": "events.detail.decide",
+  "lang": "en",
+  "translations": {
+   "1": "Evaluate with AI",
+   "2": "Evaluate with AI"
+  }
+ },
+ {
+  "key": "events.detail.decide.queued",
+  "lang": "en",
+  "translations": {
+   "1": "The evaluation is queued; the result will appear shortly.",
+   "2": "The evaluation is queued; the result will appear shortly."
+  }
+ },
+ {
+  "key": "events.detail.decide.nothing",
+  "lang": "en",
+  "translations": {
+   "1": "There is nothing to evaluate, or the event already has a decision.",
+   "2": "There is nothing to evaluate, or the event already has a decision."
+  }
+ },
+ {
+  "key": "events.detail.policy",
+  "lang": "en",
+  "translations": {
+   "1": "policy v%version%",
+   "2": "policy v%version%"
+  }
+ },
+ {
+  "key": "events.detail.spam",
+  "lang": "en",
+  "translations": {
+   "1": "spam %value%",
+   "2": "spam %value%"
+  }
+ },
+ {
+  "key": "events.detail.metadata",
+  "lang": "en",
+  "translations": {
+   "1": "Metadata",
+   "2": "Metadata"
+  }
+ },
+ {
+  "key": "events.detail.occurred",
+  "lang": "en",
+  "translations": {
+   "1": "Event time",
+   "2": "Event time"
+  }
+ },
+ {
+  "key": "events.detail.external",
+  "lang": "en",
+  "translations": {
+   "1": "External ID",
+   "2": "External ID"
+  }
+ },
+ {
+  "key": "events.detail.attempts",
+  "lang": "en",
+  "translations": {
+   "1": "Attempts",
+   "2": "Attempts"
+  }
+ },
+ {
+  "key": "events.detail.problem",
+  "lang": "en",
+  "translations": {
+   "1": "Problem",
+   "2": "Problem"
+  }
+ },
+ {
+  "key": "events.detail.jobs",
+  "lang": "en",
+  "translations": {
+   "1": "Worker jobs",
+   "2": "Worker jobs"
+  }
+ },
+ {
+  "key": "events.decision",
+  "lang": "en",
+  "translations": {
+   "1": "AI decision",
+   "2": "AI decision"
+  }
+ },
+ {
+  "key": "events.decision.short",
+  "lang": "en",
+  "translations": {
+   "1": "AI",
+   "2": "AI"
+  }
+ },
+ {
   "key": "operator.title",
   "lang": "en",
   "translations": {
@@ -2360,6 +2536,14 @@
   }
  },
  {
+  "key": "admin.menu.retention",
+  "lang": "en",
+  "translations": {
+   "1": "Retention",
+   "2": "Retention"
+  }
+ },
+ {
   "key": "account.title",
   "lang": "en",
   "translations": {
@@ -2968,6 +3152,30 @@
   }
  },
  {
+  "key": "audit.action.event.content.view",
+  "lang": "en",
+  "translations": {
+   "1": "Event content viewed",
+   "2": "Event content viewed"
+  }
+ },
+ {
+  "key": "audit.action.event.decision.request",
+  "lang": "en",
+  "translations": {
+   "1": "AI decision requested",
+   "2": "AI decision requested"
+  }
+ },
+ {
+  "key": "audit.action.retention.update",
+  "lang": "en",
+  "translations": {
+   "1": "Data retention changed",
+   "2": "Data retention changed"
+  }
+ },
+ {
   "key": "decision.reason.message_not_hideable",
   "lang": "en",
   "translations": {
@@ -2989,6 +3197,118 @@
   "translations": {
    "1": "too many links",
    "2": "too many links"
+  }
+ },
+ {
+  "key": "retention.title",
+  "lang": "en",
+  "translations": {
+   "1": "Data retention",
+   "2": "Data retention"
+  }
+ },
+ {
+  "key": "retention.note",
+  "lang": "en",
+  "translations": {
+   "1": "Number of days data is kept after it was received. An empty field means it is kept without a limit. No default period has been decided yet (an open GDPR question), so nothing is deleted until a period is set.",
+   "2": "Number of days data is kept after it was received. An empty field means it is kept without a limit. No default period has been decided yet (an open GDPR question), so nothing is deleted until a period is set."
+  }
+ },
+ {
+  "key": "retention.how",
+  "lang": "en",
+  "translations": {
+   "1": "The worker deletes data older than its period once an hour, in batches. Deletion cannot be undone except by restoring a backup. bin/console retention:run applies the retention at once.",
+   "2": "The worker deletes data older than its period once an hour, in batches. Deletion cannot be undone except by restoring a backup. bin/console retention:run applies the retention at once."
+  }
+ },
+ {
+  "key": "retention.data.comments",
+  "lang": "en",
+  "translations": {
+   "1": "Comments (days)",
+   "2": "Comments (days)"
+  }
+ },
+ {
+  "key": "retention.data.comments-note",
+  "lang": "en",
+  "translations": {
+   "1": "Comment events including AI decisions.",
+   "2": "Comment events including AI decisions."
+  }
+ },
+ {
+  "key": "retention.data.messages",
+  "lang": "en",
+  "translations": {
+   "1": "Private messages (days)",
+   "2": "Private messages (days)"
+  }
+ },
+ {
+  "key": "retention.data.messages-note",
+  "lang": "en",
+  "translations": {
+   "1": "Incoming messages, echoes, unsent messages and buttons, including AI decisions.",
+   "2": "Incoming messages, echoes, unsent messages and buttons, including AI decisions."
+  }
+ },
+ {
+  "key": "retention.data.other_events",
+  "lang": "en",
+  "translations": {
+   "1": "Other events (days)",
+   "2": "Other events (days)"
+  }
+ },
+ {
+  "key": "retention.data.other_events-note",
+  "lang": "en",
+  "translations": {
+   "1": "Reactions, read receipts, unsupported and ignored events.",
+   "2": "Reactions, read receipts, unsupported and ignored events."
+  }
+ },
+ {
+  "key": "retention.data.audit",
+  "lang": "en",
+  "translations": {
+   "1": "Audit log (days)",
+   "2": "Audit log (days)"
+  }
+ },
+ {
+  "key": "retention.data.audit-note",
+  "lang": "en",
+  "translations": {
+   "1": "Records of operator actions, including views of event content.",
+   "2": "Records of operator actions, including views of event content."
+  }
+ },
+ {
+  "key": "retention.error.range",
+  "lang": "en",
+  "translations": {
+   "1": "Enter 1 to 3650 days, or leave the field empty.",
+   "2": "Enter 1 to 3650 days, or leave the field empty."
+  }
+ },
+ {
+  "key": "retention.form.save",
+  "lang": "en",
+  "translations": {
+   "1": "Save periods",
+   "2": "Save periods"
+  }
+ },
+ {
+  "key": "retention.saved",
+  "lang": "en",
+  "translations": {
+   "1": "Retention periods saved.",
+   "2": "Retention periods saved."
   }
  }
 ]

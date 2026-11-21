@@ -49,7 +49,7 @@
 			</thead>
 			<tbody>
 				<tr n:foreach="$events as $event">
-					<td class="text-body-secondary">{$event->id}</td>
+					<td><a n:href="detail, id: $event->id">{$event->id}</a></td>
 					<td>
 						{$event->received_at|localTime}
 						{* Shown only when Meta reports a noticeably different time (delay, test data). *}
@@ -71,6 +71,7 @@
 							'ignored' => 'text-bg-secondary',
 							default => 'text-bg-info',
 						}">{_"event.status.{$event->status}"}</span>
+						<span n:if="$event->decision_action !== null" class="badge text-bg-light border" title="{_'events.decision'}">{_'events.decision.short'}: {_"action.{$event->decision_action}"}</span>
 						{* The job matters only while it is not done. *}
 						<span n:if="$event->job_status !== null && $event->job_status !== 'done'"
 							n:class="badge, $event->job_status === 'failed' ? 'text-bg-danger' : 'text-bg-light border'"

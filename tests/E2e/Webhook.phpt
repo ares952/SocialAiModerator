@@ -51,6 +51,7 @@ test('a signed event is stored and the worker normalizes it and moves it to revi
 							'comment_id' => $commentId,
 							'created_time' => 1763640000,
 							'message' => 'Synthetic comment',
+							'from' => ['id' => '2100000000000042', 'name' => 'Synthetic Customer'],
 						],
 					],
 				],
@@ -101,4 +102,44 @@ test('a signed event is stored and the worker normalizes it and moves it to revi
 	Assert::contains('Nový komentář', $page->body);
 	Assert::contains("fb:$commentId", $page->body);
 	Assert::contains('událost 20. 11. 2025', $page->body, 'Meta time differs from the receipt time.');
+
+	// Without OPENAI_CLASSIFIER_MODEL the AI decision fails closed before any HTTP call.
+	$eventId = (int) $data->database->query(
+		"SELECT id FROM social_events WHERE external_id = ?",
+		"fb:$commentId",
+	)->fetchField();
+	$decision = null;
+	for ($i = 0; $i < 50 && $decision === null; $i++) {
+		usleep(200_000);
+		$decision = $data->database->query('SELECT action, error FROM moderation_decisions WHERE event_id = ?', $eventId)->fetch();
+	}
+	Assert::same('review', $decision?->action);
+	Assert::same('App\Ai\OpenAiFailure: OPENAI_CLASSIFIER_MODEL is not set.', $decision?->error);
+
+	$detail = $browser->get("/admin/events/detail/$eventId");
+	Assert::same(200, $detail->status);
+	Assert::contains('Obsah komentářů a zpráv vidí jen moderátor a administrátor.', $detail->body);
+	Assert::notContains('Synthetic comment', $detail->body, 'A viewer never sees customer content.');
+	Assert::contains('OPENAI_CLASSIFIER_MODEL is not set.', $detail->body);
+	Assert::contains('klasifikace selhala', $detail->body);
+
+	$moderator = E2eBrowser::create();
+	[$email, $password] = $data->operator('moderator');
+	Assert::same(303, $moderator->signIn($email, $password)->status);
+	$detail = $moderator->get("/admin/events/detail/$eventId");
+	Assert::contains('Synthetic comment', $detail->body);
+	Assert::contains('Synthetic Customer', $detail->body);
+	Assert::same(1, $data->database->query(
+		"SELECT COUNT(*) FROM admin_audit WHERE action = 'event.content.view' AND target_id = ?",
+		(string) $eventId,
+	)->fetchField());
+
+	// A failed decision can be requested again.
+	$link = $detail->link('~do=decide~') ?? throw new LogicException('Missing decide link.');
+	Assert::same(302, $moderator->get(html_entity_decode($link))->status);
+	Assert::same(2, $data->database->query(
+		"SELECT COUNT(*) FROM queue_jobs WHERE type = 'event.decide' AND subject_id = ?",
+		$eventId,
+	)->fetchField());
+	Assert::same(403, $browser->get("/admin/events/detail/$eventId?do=decide")->status, 'A viewer cannot request a decision.');
 });

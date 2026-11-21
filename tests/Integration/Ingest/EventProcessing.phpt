@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Console\EventsNormalizeCommand;
+use App\Audit\AuditLog;
 use App\Console\WorkerCommand;
 use App\Core\Correlation;
 use App\Core\Encryptor;
@@ -11,6 +12,7 @@ use App\Ingest\EventStore;
 use App\Ingest\WebhookBatch;
 use App\Meta\EventNormalizer;
 use App\Queue\JobQueue;
+use App\Retention\Retention;
 use Nette\Utils\Json;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tester\Assert;
@@ -47,9 +49,12 @@ $work = static function (Encryptor $encryptor) use ($database, $queue, $log): vo
 	$tester = new CommandTester(new WorkerCommand(
 		heartbeatFile: TEMP_DIR . '/worker.heartbeat',
 		idleSeconds: 1,
+		retentionSeconds: 3600,
 		queue: $queue,
-		events: new EventProcessor($database, $encryptor, new EventNormalizer),
+		events: TestServices::eventProcessor($database, $encryptor, $queue),
+		decider: TestServices::eventDecider($database, $encryptor, $queue, new FakeOpenAiClient),
 		evaluation: TestServices::evaluationRunner($database, $encryptor, new FakeOpenAiClient),
+		retention: new Retention($database, new AuditLog($database)),
 		correlation: new Correlation,
 		logger: $log->logger,
 	));
@@ -58,7 +63,7 @@ $work = static function (Encryptor $encryptor) use ($database, $queue, $log): vo
 	]));
 };
 
-(new EventStore($database, $encryptor, $queue))->save(WebhookBatch::parse(
+TestServices::eventStore($database, $encryptor, $queue)->save(WebhookBatch::parse(
 	'{"object":"page","entry":[{"id":"1000000000000001","changes":[{"field":"feed","value":{"item":"comment","verb":"add","comment_id":"c1","created_time":1763640000}}]}]}',
 ));
 
@@ -80,7 +85,7 @@ test('worker normalizes a stored event, moves it to review and finishes the job'
 
 
 test('an event without anything to moderate is ignored, an unsupported one goes to review with the reason', function () use ($database, $encryptor, $queue, $work): void {
-	(new EventStore($database, $encryptor, $queue))->save(WebhookBatch::parse(Json::encode([
+	TestServices::eventStore($database, $encryptor, $queue)->save(WebhookBatch::parse(Json::encode([
 		'object' => 'page',
 		'entry' => [
 			[

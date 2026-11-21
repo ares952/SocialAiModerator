@@ -13,9 +13,10 @@ use Nette\StaticClass;
  * ($user->isAllowed(resource, privilege)). Each role inherits the one below.
  *
  * - viewer: reads the dashboard, events, accounts, policy, knowledge and evaluation results;
- * - moderator: also edits knowledge drafts and the evaluation samples (and sees their texts);
+ * - moderator: also edits knowledge drafts and the evaluation samples (and sees their texts), and
+ *   reads the customer content of events with the AI explanation (Events + Edit);
  * - admin: everything, including publishing knowledge, policies, the panic switch, evaluation
- *   runs, accounts, operators and the audit log.
+ *   runs, accounts, operators, the audit log and the retention periods.
  */
 final class Authorization
 {
@@ -29,6 +30,7 @@ final class Authorization
 	public const Evaluation = 'evaluation';
 	public const Accounts = 'accounts';
 	public const Audit = 'audit';
+	public const Retention = 'retention';
 
 	public const View = 'view';
 	public const Edit = 'edit';
@@ -50,7 +52,7 @@ final class Authorization
 			self::Evaluation,
 			self::Accounts,
 		];
-		foreach ([...$readable, self::Operators, self::Audit] as $resource) {
+		foreach ([...$readable, self::Operators, self::Audit, self::Retention] as $resource) {
 			$acl->addResource($resource);
 		}
 
@@ -58,6 +60,7 @@ final class Authorization
 		$acl->allow(Role::Moderator->value, [
 			self::Knowledge,
 			self::Evaluation,
+			self::Events,
 		], self::Edit);
 		$acl->allow(Role::Admin->value);
 

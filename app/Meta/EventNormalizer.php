@@ -10,7 +10,7 @@ use Nette\Utils\Json;
 
 /**
  * Maps one stored webhook event (WebhookBatch payload: object, entry_id, entry_time, list, item)
- * to its type, external ID and time. Facebook `feed` and Instagram `comments` have different
+ * to its type, external ID and time, and reads the customer text and author. Facebook `feed` and Instagram `comments` have different
  * structures and are mapped separately; Messenger and Instagram messaging share the Messenger
  * Platform format. Anything unknown becomes Unsupported with a reason, so a human sees it.
  */
@@ -120,7 +120,16 @@ final class EventNormalizer
 			return NormalizedEvent::unsupported('feed comment has no comment_id');
 		}
 
-		return new NormalizedEvent($type, Platform::Facebook->externalId($commentId), $occurredAt);
+		$post = $value['post'] ?? null;
+
+		return new NormalizedEvent(
+			$type,
+			Platform::Facebook->externalId($commentId),
+			$occurredAt,
+			text: self::text($value['message'] ?? null),
+			author: self::text(is_array($value['from'] ?? null) ? $value['from']['name'] ?? null : null),
+			permalink: self::permalink(is_array($post) ? $post['permalink_url'] ?? null : null),
+		);
 	}
 
 
@@ -141,6 +150,8 @@ final class EventNormalizer
 			EventType::CommentCreated,
 			Platform::Instagram->externalId($commentId),
 			self::fromSeconds($entryTime),
+			text: self::text($value['text'] ?? null),
+			author: self::text(is_array($value['from'] ?? null) ? $value['from']['username'] ?? null : null),
 		);
 	}
 
@@ -168,7 +179,12 @@ final class EventNormalizer
 				default => EventType::MessageReceived,
 			};
 
-			return new NormalizedEvent($type, $platform->externalId($mid), $occurredAt);
+			return new NormalizedEvent(
+				$type,
+				$platform->externalId($mid),
+				$occurredAt,
+				text: $type === EventType::MessageDeleted ? null : self::text($message['text'] ?? null),
+			);
 		}
 
 		$postback = $item['postback'] ?? null;
@@ -187,6 +203,27 @@ final class EventNormalizer
 		$fields = array_diff(array_map(self::token(...), array_keys($item)), ['sender', 'recipient', 'timestamp']);
 
 		return NormalizedEvent::unsupported('messaging item `' . implode(',', $fields) . '` is not supported');
+	}
+
+
+	/**
+	 * Customer text as Meta sends it; empty means none.
+	 */
+	private static function text(mixed $value): ?string
+	{
+		return is_string($value) && trim($value) !== '' ? $value : null;
+	}
+
+
+	/**
+	 * Link to the post on Facebook or Instagram; any other address is dropped, so the
+	 * administration never links to a site chosen by the payload.
+	 */
+	private static function permalink(mixed $value): ?string
+	{
+		return is_string($value) && preg_match('~^https://(?:www\.)?(?:facebook|instagram)\.com/[\x21-\x7E]*$~D', $value)
+			? $value
+			: null;
 	}
 
 

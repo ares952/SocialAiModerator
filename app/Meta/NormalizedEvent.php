@@ -8,7 +8,9 @@ use DateTimeImmutable;
 
 
 /**
- * Metadata of one webhook event. Customer content (texts, names) stays in the encrypted payload.
+ * One webhook event as the application understands it. Only the metadata (columns()) is stored
+ * in plain form; the customer content (text, author) exists only in memory, read from the
+ * encrypted payload when it is needed.
  */
 final readonly class NormalizedEvent
 {
@@ -20,6 +22,13 @@ final readonly class NormalizedEvent
 		public ?DateTimeImmutable $occurredAt = null,
 		/** Why the event is unsupported; never contains customer content. */
 		public ?string $problem = null,
+		/** Comment or message text; untrusted customer content. */
+		#[\SensitiveParameter]
+		public ?string $text = null,
+		/** Name or username of the author as Meta sends it (messages carry none). */
+		public ?string $author = null,
+		/** Facebook or Instagram link of the post the comment belongs to. */
+		public ?string $permalink = null,
 	) {
 	}
 

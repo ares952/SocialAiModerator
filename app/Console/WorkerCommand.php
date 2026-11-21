@@ -8,11 +8,13 @@ use App\Core\Correlation;
 use App\Core\Logger;
 use App\Evaluation\EvaluationRunner;
 use App\Ingest\EventProcessor;
+use App\Moderation\EventDecider;
 use App\Queue\Job;
 use App\Queue\JobQueue;
 use App\Queue\JobStatus;
 use App\Queue\JobType;
 use App\Queue\Postponed;
+use App\Retention\Retention;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,20 +24,25 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Long-running background worker (the `worker` container): reserves jobs from the DB queue one
- * by one. Stops gracefully on SIGTERM/SIGINT after the current job.
+ * by one and applies the retention periods every `retentionSeconds`. Stops gracefully on
+ * SIGTERM/SIGINT after the current job.
  */
 #[AsCommand(name: 'worker:run', description: 'Runs the background worker until SIGTERM or SIGINT')]
 final class WorkerCommand extends Command
 {
 	private bool $running = true;
+	private ?int $lastRetention = null;
 
 
 	public function __construct(
 		private readonly string $heartbeatFile,
 		private readonly int $idleSeconds,
+		private readonly int $retentionSeconds,
 		private readonly JobQueue $queue,
 		private readonly EventProcessor $events,
+		private readonly EventDecider $decider,
 		private readonly EvaluationRunner $evaluation,
+		private readonly Retention $retention,
 		private readonly Correlation $correlation,
 		private readonly Logger $logger,
 	) {
@@ -62,6 +69,7 @@ final class WorkerCommand extends Command
 
 		while ($this->running) {
 			touch($this->heartbeatFile);
+			$this->applyRetention();
 			$job = $this->queue->reserve($worker);
 			if ($job !== null) {
 				$this->process($job);
@@ -90,7 +98,7 @@ final class WorkerCommand extends Command
 		];
 
 		$context += match ($job->type) {
-			JobType::ProcessEvent => [
+			JobType::ProcessEvent, JobType::DecideEvent => [
 				'event_id' => $job->subjectId,
 			],
 			JobType::EvaluateSample => [
@@ -101,6 +109,7 @@ final class WorkerCommand extends Command
 		try {
 			match ($job->type) {
 				JobType::ProcessEvent => $this->events->process($job->subjectId),
+				JobType::DecideEvent => $this->decider->decide($job->subjectId, $this->queue->isLastAttempt($job)),
 				JobType::EvaluateSample => $this->evaluation->evaluate($job->subjectId, $this->queue->isLastAttempt($job)),
 			};
 		} catch (Postponed $e) {
@@ -127,6 +136,31 @@ final class WorkerCommand extends Command
 
 		if (!$this->queue->finish($job)) {
 			$this->logger->warning('Job finished after its reservation expired', $context);
+		}
+	}
+
+
+	/**
+	 * A failure is logged and retried at the next interval; it never stops the worker.
+	 */
+	private function applyRetention(): void
+	{
+		if ($this->lastRetention !== null && time() - $this->lastRetention < $this->retentionSeconds) {
+			return;
+		}
+
+		$this->lastRetention = time();
+		$this->correlation->renew();
+		try {
+			$deleted = array_filter($this->retention->purge());
+		} catch (\Throwable $e) {
+			$this->logger->error('Retention failed', [], $e);
+
+			return;
+		}
+
+		if ($deleted !== []) {
+			$this->logger->info('Retention deleted old data', $deleted);
 		}
 	}
 

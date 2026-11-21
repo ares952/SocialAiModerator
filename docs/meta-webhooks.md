@@ -68,6 +68,14 @@ Mety. Tato metadata jsou ve sloupcích `social_events`; text zůstává jen v za
   položky `entry`), `messaging` v milisekundách. Chybějící nebo nečitelný čas zůstane prázdný.
 - Testovací tlačítko v App Dashboardu posílá Messenger pole jako `changes` s časem v sekundách
   a ukázkovými hodnotami Mety; normalizér je rozpozná, uloží se ale jako `ignored` (neznámý účet).
+- Komentář (`comment.created`, `comment.edited`) nebo příchozí zpráva s textem dostane úlohu
+  `event.decide`: klasifikace přes OpenAI (text s redigovanými e-maily, telefony a odkazy, bez
+  autora) a rozhodnutí `PolicyEngine` s aktivními pravidly, panic switchem a stavem účtu. Výsledek
+  je v tabulce `moderation_decisions` a v detailu události; v režimu `observe` se nic neprovede.
+  Bez `OPENAI_CLASSIFIER_MODEL` nebo při chybě modelu vznikne rozhodnutí `review` s chybou
+  (fail closed, bez HTTP volání); moderátor ho v detailu může vyžádat znovu.
+- Detail události (`/admin/events/detail/<id>`) ukazuje text a autora jen moderátorovi
+  a administrátorovi; každé zobrazení se zapíše do auditu (`event.content.view`).
 - Starší události bez typu (nebo po změně normalizéru všechny s `--all`) doplní
   `docker compose exec php bin/console events:normalize`. Příkaz mění jen metadata, nikdy stav
   ani nespouští zpracování.

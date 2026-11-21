@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Meta;
 
+use App\Moderation\ContentKind;
+
 
 /**
  * What happened, independent of the platform-specific webhook structure (EventNormalizer).
@@ -31,4 +33,17 @@ enum EventType: string
 
 	/** Structure not recognized; a human has to look at it. */
 	case Unsupported = 'unsupported';
+
+
+	/**
+	 * What kind of customer content the AI moderates for this type; null = nothing to moderate.
+	 */
+	public function contentKind(): ?ContentKind
+	{
+		return match ($this) {
+			self::CommentCreated, self::CommentEdited => ContentKind::Comment,
+			self::MessageReceived => ContentKind::Message,
+			default => null,
+		};
+	}
 }

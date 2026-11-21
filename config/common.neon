@@ -15,6 +15,8 @@ parameters:
 	worker:
 		# Pause when the queue is empty.
 		idleSeconds: 1
+		# How often the worker applies the retention periods (App\Retention\Retention).
+		retentionSeconds: 3600
 
 	# External APIs (App\Queue\CircuitBreaker): consecutive transient failures that open the
 	# breaker, and how long jobs are then postponed without counting their attempts.

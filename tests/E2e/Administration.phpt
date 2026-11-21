@@ -31,6 +31,7 @@ test('every page renders in both languages', function () use ($browser): void {
 		'/admin/operators' => 'Operátoři',
 		'/admin/operators/add' => 'Přidat operátora',
 		'/admin/audit' => 'Audit',
+		'/admin/retention' => 'Retence dat',
 		'/admin/password' => 'Změna hesla',
 		'/en/' => 'Dashboard',
 		'/en/admin/policy' => 'Moderation policy',
@@ -45,6 +46,7 @@ test('every page renders in both languages', function () use ($browser): void {
 	Assert::same(404, $browser->get('/admin/audit?type=nonsense')->status);
 	Assert::same(200, $browser->get('/admin/events?type=comment.created&status=review')->status);
 	Assert::same(404, $browser->get('/admin/events?type=nonsense')->status);
+	Assert::same(404, $browser->get('/admin/events/detail/999999999')->status);
 });
 
 
@@ -218,6 +220,33 @@ test('operators: a moderator is added and can sign in', function () use ($browse
 	Assert::same(303, $moderator->signIn('moderator-e2e@example.test', 'moderator-password-1')->status);
 	Assert::same(200, $moderator->get('/admin/evaluation/samples')->status);
 	Assert::same(403, $moderator->get('/admin/operators')->status);
+});
+
+
+test('retention: periods are saved and audited, an invalid one is refused', function () use ($browser, $data): void {
+	$response = $browser->submit('/admin/retention', 'retentionForm', [
+		'comments' => '180',
+		'messages' => '180',
+		'other_events' => '',
+		'audit' => '0',
+	]);
+	Assert::same(200, $response->status);
+	Assert::contains('Zadejte 1 až 3650 dní, nebo pole nechte prázdné.', $response->body);
+
+	$response = $browser->submit('/admin/retention', 'retentionForm', [
+		'comments' => '180',
+		'messages' => '180',
+		'other_events' => '',
+		'audit' => '',
+	]);
+	Assert::same(303, $response->status);
+	Assert::same(['comments' => 180, 'messages' => 180], $data->database->query(
+		"SELECT data, days FROM retention_periods WHERE days IS NOT NULL ORDER BY data",
+	)->fetchPairs('data', 'days'));
+	Assert::same('comments=180, messages=180, other_events=keep, audit=keep', $data->database->query(
+		"SELECT details FROM admin_audit WHERE action = 'retention.update' ORDER BY id DESC LIMIT 1",
+	)->fetchField());
+	$data->database->query('DELETE FROM retention_periods');
 });
 
 
