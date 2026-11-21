@@ -19,7 +19,8 @@ Formát sekce:
 
 - **Týká se:** všech instancí
 - **Kdy:** po kroku 12
-- **Akce:** `docker compose up -d --force-recreate --wait web`. Kontejner `web` má `nginx.conf`
+- **Akce:** `docker compose up -d --force-recreate --no-deps --wait web`
+  (`--no-deps`, jinak se znovu vytvoří i `db` a `worker`). Kontejner `web` má `nginx.conf`
   připojený jako soubor, takže nový formát access logu (bez query stringu u požadavků
   s `verify_token`) načte až nově vytvořený kontejner. Ten zároveň zahodí starý log kontejneru,
   ve kterém mohl být Verify token z ověření webhooku v otevřeném tvaru.
