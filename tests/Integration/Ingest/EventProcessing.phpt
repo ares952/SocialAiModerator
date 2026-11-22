@@ -56,6 +56,7 @@ $work = static function (Encryptor $encryptor) use ($database, $queue, $log): vo
 		decider: TestServices::eventDecider($database, $encryptor, $queue, new FakeOpenAiClient),
 		evaluation: TestServices::evaluationRunner($database, $encryptor, new FakeOpenAiClient),
 		dispatcher: TestServices::dispatcher($database, $encryptor, new FakeMetaClient, $log->logger),
+		drafter: TestServices::drafter($database, $encryptor, $queue, new FakeOpenAiClient, $log->logger),
 		retention: new Retention($database, new AuditLog($database)),
 		correlation: new Correlation,
 		logger: $log->logger,

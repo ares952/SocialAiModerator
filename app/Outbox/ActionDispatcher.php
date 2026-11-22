@@ -10,6 +10,7 @@ use App\Account\TokenProvider;
 use App\Account\TokenUnavailable;
 use App\Comment\Comments;
 use App\Comment\Visibility;
+use App\Core\Encryptor;
 use App\Core\Logger;
 use App\Meta\MetaClient;
 use App\Meta\MetaFailure;
@@ -35,8 +36,9 @@ use Nette\Utils\Strings;
  *    with the current policy, mode, panic switch, account and comment state, gets the token and
  *    marks the record `sending`. A record found in `sending` was interrupted, so its result is
  *    `unknown`. During a pause the record waits (Postponed) and is checked again later.
- * 2. It calls Meta and stores the result: `sent`, `failed`, or `unknown` when Meta may have
- *    applied it. Only a failure that surely changed nothing is retried by the queue.
+ * 2. It calls Meta (hide, unhide or the approved reply text) and stores the result: `sent`,
+ *    `failed`, or `unknown` when Meta may have applied it. Only a failure that surely changed
+ *    nothing is retried by the queue.
  */
 final class ActionDispatcher
 {
@@ -49,6 +51,7 @@ final class ActionDispatcher
 		private readonly PolicyEngine $engine,
 		private readonly AutomationSwitch $switch,
 		private readonly Comments $comments,
+		private readonly Encryptor $encryptor,
 		private readonly Logger $logger,
 	) {
 	}
@@ -73,13 +76,22 @@ final class ActionDispatcher
 			'type' => $action->type,
 		];
 		$type = ActionType::from($action->type);
+		$platform = Platform::from($action->platform);
+		$replyId = null;
 		try {
-			$this->meta->hideComment(
-				Platform::from($action->platform),
-				$token,
-				$action->external_target_id,
-				$type === ActionType::Hide,
-			);
+			if ($type === ActionType::Reply) {
+				$replyId = $this->meta->replyComment(
+					$platform,
+					$token,
+					$action->external_target_id,
+					$this->encryptor->decrypt(
+						$action->text_encrypted ?? throw new \LogicException('An approved reply has no text.'),
+						Actions::TextContext,
+					),
+				);
+			} else {
+				$this->meta->hideComment($platform, $token, $action->external_target_id, $type === ActionType::Hide);
+			}
 		} catch (MetaWriteUnavailable $e) {
 			$this->finish($action, OutboxStatus::Blocked, ActionStatus::Blocked, $e, [
 				'meta_write_unavailable',
@@ -93,9 +105,13 @@ final class ActionDispatcher
 			return;
 		}
 
-		$this->database->transaction(function () use ($action, $type): void {
-			$this->finish($action, OutboxStatus::Sent, ActionStatus::Sent, null, null);
-			$this->comments->setVisibility($action->comment_id, $type === ActionType::Hide ? Visibility::Hidden : Visibility::Visible);
+		$this->database->transaction(function () use ($action, $type, $replyId): void {
+			$this->finish($action, OutboxStatus::Sent, ActionStatus::Sent, null, null, $replyId === null ? null : [
+				'reply_id' => $replyId,
+			]);
+			if ($type !== ActionType::Reply) {
+				$this->comments->setVisibility($action->comment_id, $type === ActionType::Hide ? Visibility::Hidden : Visibility::Visible);
+			}
 		});
 		$this->logger->info('Action sent', $context);
 	}
@@ -109,14 +125,24 @@ final class ActionDispatcher
 	{
 		$action = $this->database->query(
 			'SELECT x.id AS outbox_id, x.status AS outbox_status, a.id AS action_id, a.type, a.automatic,
-				a.external_target_id, a.comment_id, c.account_id, c.visibility, c.own,
-				c.text_changed_at > a.created_at AS changed, s.platform, s.status AS account_status
+				a.external_target_id, a.text_encrypted, a.comment_id, c.account_id, c.visibility, c.own,
+				c.text_changed_at > a.created_at AS changed, s.platform, s.status AS account_status,
+				EXISTS (
+					SELECT 1 FROM moderation_actions r
+					WHERE r.comment_id = a.comment_id AND r.type = ? AND r.id <> a.id AND r.status IN (?)
+				) AS replied
 			FROM outbox x
 			JOIN moderation_actions a ON a.id = x.action_id
 			JOIN social_comments c ON c.id = a.comment_id
 			JOIN social_accounts s ON s.id = c.account_id
 			WHERE x.id = ?
 			FOR UPDATE',
+			ActionType::Reply->value,
+			[
+				ActionStatus::Sending->value,
+				ActionStatus::Sent->value,
+				ActionStatus::Unknown->value,
+			],
 			$outboxId,
 		)->fetch();
 		if ($action === null) {
@@ -145,6 +171,7 @@ final class ActionDispatcher
 				Visibility::from($action->visibility),
 				(bool) $action->own,
 				(bool) $action->changed,
+				(bool) $action->replied,
 			),
 		);
 		if ($blocked === ['automation_paused']) {
@@ -213,9 +240,16 @@ final class ActionDispatcher
 
 	/**
 	 * @param list<string>|null $reasons
+	 * @param array<string, mixed>|null $result what Meta returned (the reply ID)
 	 */
-	private function finish(Row $action, OutboxStatus $outbox, ActionStatus $status, ?\Throwable $error, ?array $reasons): void
-	{
+	private function finish(
+		Row $action,
+		OutboxStatus $outbox,
+		ActionStatus $status,
+		?\Throwable $error,
+		?array $reasons,
+		?array $result = null,
+	): void {
 		$this->database->query('UPDATE outbox SET ? WHERE id = ?', [
 			'status' => $outbox->value,
 			'last_error' => $error === null ? null : Strings::truncate($error::class . ': ' . $error->getMessage(), 1000),
@@ -226,6 +260,9 @@ final class ActionDispatcher
 		];
 		if ($reasons !== null) {
 			$values['reasons_json'] = Json::encode($reasons);
+		}
+		if ($result !== null) {
+			$values['result_json'] = Json::encode($result);
 		}
 		if ($error instanceof MetaFailure) {
 			$values['result_json'] = Json::encode([

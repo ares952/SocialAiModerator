@@ -15,6 +15,16 @@ Formát sekce:
 - **Ověření:** jak potvrdit, že je hotovo
 ```
 
+## 0.11.0
+
+- **Týká se:** všech instancí
+- **Kdy:** před krokem 7 (kontejnery)
+- **Akce:** v `config/secrets/app.env` zkontrolovat, že `OPENAI_REPLY_MODEL` obsahuje model pro
+  návrhy odpovědí. Bez něj se návrhy nevytvoří a dotazy zůstanou člověku (zásah `blocked`,
+  důvod „návrh odpovědi selhal“). Změna `app.env` se projeví až po znovuvytvoření kontejnerů
+  `php` a `worker` (`docker compose up -d`), ne po pouhém restartu.
+- **Ověření:** `docker compose exec -T worker printenv OPENAI_REPLY_MODEL` vypíše název modelu.
+
 ## 0.9.0
 
 - **Týká se:** všech instancí

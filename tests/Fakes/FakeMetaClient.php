@@ -15,7 +15,7 @@ use App\Meta\Platform;
  */
 final class FakeMetaClient implements MetaClient
 {
-	/** @var list<array{platform: Platform, token: string, comment: string, hidden: bool}> */
+	/** @var list<array{platform: Platform, token: string, comment: string, hidden?: bool, reply?: string}> */
 	public array $writes = [];
 
 	/** @var list<MetaFailure> */
@@ -38,6 +38,26 @@ final class FakeMetaClient implements MetaClient
 			'comment' => $commentId,
 			'hidden' => $hidden,
 		];
+		$this->failNext();
+	}
+
+
+	public function replyComment(Platform $platform, AccessToken $token, string $commentId, string $text): string
+	{
+		$this->writes[] = [
+			'platform' => $platform,
+			'token' => $token->value,
+			'comment' => $commentId,
+			'reply' => $text,
+		];
+		$this->failNext();
+
+		return $platform->externalId('reply_' . count($this->writes));
+	}
+
+
+	private function failNext(): void
+	{
 		$failure = array_shift($this->failures);
 		if ($failure !== null) {
 			throw $failure;

@@ -62,7 +62,7 @@ $mode = static fn(Mode $mode, bool $autoHide = false) => $policies->save($mode, 
 $switch = new AutomationSwitch($database, new AuditLog($database));
 $client = new FakeOpenAiClient;
 $decider = TestServices::eventDecider($database, $encryptor, $queue, $client);
-$actions = TestServices::actions($database, $queue);
+$actions = TestServices::actions($database, $encryptor, $queue);
 $meta = new FakeMetaClient;
 $log = new TestLog;
 $dispatcher = TestServices::dispatcher($database, $encryptor, $meta, $log->logger);
@@ -178,7 +178,7 @@ test('an operator unhides the comment; a second open action is refused', functio
 	$outboxId = (int) $database->query('SELECT id FROM outbox WHERE action_id = ?', $actionId)->fetchField();
 	$dispatcher->send($outboxId, lastAttempt: false);
 
-	Assert::same(false, $meta->writes[1]['hidden']);
+	Assert::false($meta->writes[1]['hidden'] ?? null);
 	Assert::same('visible', $database->query('SELECT visibility FROM social_comments WHERE id = ?', $commentId)->fetchField());
 	Assert::same('unhide', $database->query("SELECT details FROM admin_audit WHERE action = 'action.request' AND target_id = ?", $actionId)->fetchField());
 });

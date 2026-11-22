@@ -12,6 +12,7 @@ use App\Core\Encryptor;
 use App\Evaluation\EvaluationSamples;
 use App\Ingest\EventStore;
 use App\Moderation\Decisions;
+use App\Outbox\Actions;
 use Nette\Database\Explorer;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -36,6 +37,7 @@ final class EncryptionRotateCommand extends Command
 		'moderation_decisions' => ['reason_encrypted', Decisions::ReasonContext],
 		'social_comments' => ['text_encrypted', Comments::TextContext],
 		'social_messages' => ['text_encrypted', Conversations::TextContext],
+		'moderation_actions' => ['text_encrypted', Actions::TextContext],
 	];
 
 	private const BatchSize = 500;

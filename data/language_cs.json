@@ -5128,5 +5128,131 @@
    "2": "Vyžádání zásahu",
    "5": "Vyžádání zásahu"
   }
+ },
+ {
+  "key": "action.type.reply",
+  "lang": "cs",
+  "translations": {
+   "1": "Odpovědět na komentář",
+   "2": "Odpovědět na komentář",
+   "5": "Odpovědět na komentář"
+  }
+ },
+ {
+  "key": "events.detail.actions.reply-text",
+  "lang": "cs",
+  "translations": {
+   "1": "Text odpovědi (můžete upravit)",
+   "2": "Text odpovědi (můžete upravit)",
+   "5": "Text odpovědi (můžete upravit)"
+  }
+ },
+ {
+  "key": "events.detail.actions.approve-reply",
+  "lang": "cs",
+  "translations": {
+   "1": "Schválit odpověď",
+   "2": "Schválit odpověď",
+   "5": "Schválit odpověď"
+  }
+ },
+ {
+  "key": "events.detail.actions.drafting",
+  "lang": "cs",
+  "translations": {
+   "1": "Návrh odpovědi se připravuje.",
+   "2": "Návrh odpovědi se připravuje.",
+   "5": "Návrh odpovědi se připravuje."
+  }
+ },
+ {
+  "key": "events.detail.actions.knowledge",
+  "lang": "cs",
+  "translations": {
+   "1": "Zdroje",
+   "2": "Zdroje",
+   "5": "Zdroje"
+  }
+ },
+ {
+  "key": "events.detail.actions.edited",
+  "lang": "cs",
+  "translations": {
+   "1": "upraveno moderátorem",
+   "2": "upraveno moderátorem",
+   "5": "upraveno moderátorem"
+  }
+ },
+ {
+  "key": "decision.reason.reply_needs_human",
+  "lang": "cs",
+  "translations": {
+   "1": "odpověď schvaluje člověk",
+   "2": "odpověď schvaluje člověk",
+   "5": "odpověď schvaluje člověk"
+  }
+ },
+ {
+  "key": "decision.reason.comment_hidden",
+  "lang": "cs",
+  "translations": {
+   "1": "komentář je skrytý",
+   "2": "komentář je skrytý",
+   "5": "komentář je skrytý"
+  }
+ },
+ {
+  "key": "decision.reason.already_replied",
+  "lang": "cs",
+  "translations": {
+   "1": "na komentář už je odpověď",
+   "2": "na komentář už je odpověď",
+   "5": "na komentář už je odpověď"
+  }
+ },
+ {
+  "key": "decision.reason.reply_unavailable",
+  "lang": "cs",
+  "translations": {
+   "1": "návrh odpovědi selhal",
+   "2": "návrh odpovědi selhal",
+   "5": "návrh odpovědi selhal"
+  }
+ },
+ {
+  "key": "decision.reason.reply_invalid",
+  "lang": "cs",
+  "translations": {
+   "1": "návrh odpovědi neprošel kontrolou",
+   "2": "návrh odpovědi neprošel kontrolou",
+   "5": "návrh odpovědi neprošel kontrolou"
+  }
+ },
+ {
+  "key": "decision.reason.reply_not_answerable",
+  "lang": "cs",
+  "translations": {
+   "1": "znalosti na dotaz neodpovídají",
+   "2": "znalosti na dotaz neodpovídají",
+   "5": "znalosti na dotaz neodpovídají"
+  }
+ },
+ {
+  "key": "actions.error.no-draft",
+  "lang": "cs",
+  "translations": {
+   "1": "Odpověď zatím nemá návrh.",
+   "2": "Odpověď zatím nemá návrh.",
+   "5": "Odpověď zatím nemá návrh."
+  }
+ },
+ {
+  "key": "actions.error.text",
+  "lang": "cs",
+  "translations": {
+   "1": "Text odpovědi musí mít 1 až 1000 znaků.",
+   "2": "Text odpovědi musí mít 1 až 1000 znaků.",
+   "5": "Text odpovědi musí mít 1 až 1000 znaků."
+  }
  }
 ]

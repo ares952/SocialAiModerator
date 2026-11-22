@@ -13,6 +13,9 @@ enum JobType: string
 	/** subject_id = social_events.id; AI classification and PolicyEngine decision */
 	case DecideEvent = 'event.decide';
 
+	/** subject_id = moderation_actions.id; the ReplyGenerator writes a reply suggestion */
+	case DraftReply = 'reply.draft';
+
 	/** subject_id = outbox.id; the only job that writes to Meta (App\Outbox\ActionDispatcher) */
 	case SendAction = 'action.send';
 

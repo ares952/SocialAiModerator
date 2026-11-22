@@ -1,0 +1,27 @@
+{
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"can_answer",
+		"reply",
+		"used_knowledge",
+		"reason"
+	],
+	"properties": {
+		"can_answer": {
+			"type": "boolean"
+		},
+		"reply": {
+			"type": "string"
+		},
+		"used_knowledge": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		},
+		"reason": {
+			"type": "string"
+		}
+	}
+}

@@ -22,4 +22,15 @@ interface MetaClient
 	 * @throws MetaWriteUnavailable nothing was sent
 	 */
 	public function hideComment(Platform $platform, AccessToken $token, string $commentId, bool $hidden): void;
+
+
+	/**
+	 * Publishes a public reply to a comment of the account.
+	 *
+	 * @param string $commentId ID with the platform prefix (Platform::externalId())
+	 * @return string ID of the reply with the platform prefix
+	 * @throws MetaFailure
+	 * @throws MetaWriteUnavailable nothing was sent
+	 */
+	public function replyComment(Platform $platform, AccessToken $token, string $commentId, #[\SensitiveParameter] string $text): string;
 }

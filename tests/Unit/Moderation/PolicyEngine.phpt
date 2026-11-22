@@ -485,3 +485,15 @@ test('the comment state at send time wins', function () use ($engine, $automatic
 	Assert::same(['comment_changed'], $engine->blocks(ActionType::Hide, false, $automatic, $open, new ActionTarget(Visibility::Visible, own: false, changed: true)));
 	Assert::same([], $engine->blocks(ActionType::Unhide, true, $automatic, $open, new ActionTarget(Visibility::Hidden, own: false, changed: true)));
 });
+
+
+test('a reply always needs a human and goes at most once to a visible comment', function () use ($engine, $automatic, $open): void {
+	$visible = new ActionTarget(Visibility::Visible, own: false, changed: false);
+
+	Assert::same(['reply_needs_human'], $engine->blocks(ActionType::Reply, false, $automatic, $open, $visible));
+	Assert::same([], $engine->blocks(ActionType::Reply, true, $automatic, $open, $visible));
+	Assert::same(['comment_hidden'], $engine->blocks(ActionType::Reply, true, $automatic, $open, new ActionTarget(Visibility::Hidden, own: false, changed: false)));
+	Assert::same(['own_comment'], $engine->blocks(ActionType::Reply, true, $automatic, $open, new ActionTarget(Visibility::Visible, own: true, changed: false)));
+	Assert::same(['comment_changed'], $engine->blocks(ActionType::Reply, true, $automatic, $open, new ActionTarget(Visibility::Visible, own: false, changed: true)));
+	Assert::same(['already_replied'], $engine->blocks(ActionType::Reply, true, $automatic, $open, new ActionTarget(Visibility::Visible, own: false, changed: false, replied: true)));
+});

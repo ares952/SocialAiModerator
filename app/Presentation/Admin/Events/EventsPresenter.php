@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Presentation\Admin\Events;
 
+use App\Ai\ReplyGenerator;
 use App\Audit\AuditAction;
 use App\Audit\AuditLog;
 use App\Comment\Comments;
@@ -20,6 +21,7 @@ use App\Outbox\ActionType;
 use App\Outbox\InvalidAction;
 use App\Operator\Authorization;
 use App\Presentation\Admin\AdminPresenter;
+use Nette\Application\UI\Form;
 use Nette\Database\Row;
 use Nette\Utils\Paginator;
 
@@ -78,15 +80,35 @@ final class EventsPresenter extends AdminPresenter
 		$canRead = $this->getUser()->isAllowed(Authorization::Events, Authorization::Edit);
 		$decisions = $this->decisions->forEvent($id);
 		$comment = $this->comment($event);
+		$actions = $comment === null ? [] : $this->actions->forComment($comment->id);
 
 		$content = null;
 		$explanations = [];
+		$replies = [];
 		if ($canRead) {
 			$content = $this->store->normalized($id);
 			foreach ($decisions as $decision) {
 				$explanations[$decision->id] = $this->decisions->reason($decision);
 			}
+			foreach ($actions as $action) {
+				$replies[$action->id] = $this->actions->text($action);
+			}
 			$this->audit->write($this->operatorId(), AuditAction::EventContentView, 'event', $id);
+		}
+
+		// The pending reply with a draft is approved through the form, possibly edited.
+		$draft = null;
+		foreach ($actions as $action) {
+			if ($action->type === ActionType::Reply->value && $action->status === 'pending' && ($replies[$action->id] ?? null) !== null) {
+				$draft = $action->id;
+				$form = $this->getComponent('replyForm');
+				assert($form instanceof Form);
+				$form->setDefaults([
+					'action' => $action->id,
+					'text' => $replies[$action->id],
+				]);
+				break;
+			}
 		}
 
 		$this->template->setParameters([
@@ -102,10 +124,37 @@ final class EventsPresenter extends AdminPresenter
 				&& $content->text !== null
 				&& !$this->decisions->classified($id),
 			'comment' => $comment,
-			'actions' => $comment === null ? [] : $this->actions->forComment($comment->id),
+			'actions' => $actions,
+			'replies' => $replies,
+			'draft' => $draft,
 			'canAct' => $canRead && $this->getUser()->isAllowed(Authorization::Actions, Authorization::Edit),
 			'observe' => $this->policies->active()->mode === Mode::Observe,
 		]);
+	}
+
+
+	/**
+	 * Approval of a reply draft, with the text as the moderator left it.
+	 */
+	protected function createComponentReplyForm(): Form
+	{
+		$form = $this->forms->create();
+		$form->addHidden('action');
+		$form->addTextArea('text', 'events.detail.actions.reply-text', rows: 4)
+			->setRequired('form.error.required')
+			->setMaxLength(ReplyGenerator::MaxLength);
+		$form->addSubmit('approve', 'events.detail.actions.approve-reply');
+
+		$form->onSuccess[] = function (Form $form): void {
+			$values = $form->getValues();
+			$this->act(
+				(int) $this->getParameter('id'),
+				fn(int $operatorId) => $this->actions->approve((int) $values['action'], $operatorId, (string) $values['text']),
+				'events.detail.actions.approved',
+			);
+		};
+
+		return $form;
 	}
 
 

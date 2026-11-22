@@ -7,6 +7,7 @@ namespace Tests\Support;
 use App\Account\TokenProvider;
 use App\Ai\Classifier;
 use App\Ai\OpenAiClient;
+use App\Ai\ReplyGenerator;
 use App\Audit\AuditLog;
 use App\Comment\Comments;
 use App\Conversation\Conversations;
@@ -27,6 +28,7 @@ use App\Moderation\Policies;
 use App\Moderation\PolicyEngine;
 use App\Outbox\ActionDispatcher;
 use App\Outbox\Actions;
+use App\Outbox\ReplyDrafter;
 use App\Queue\JobQueue;
 use Nette\Database\Explorer;
 use Nette\StaticClass;
@@ -101,14 +103,14 @@ final class TestServices
 			$queue,
 			new Comments($database, $encryptor),
 			new Conversations($database, $encryptor),
-			self::actions($database, $queue),
+			self::actions($database, $encryptor, $queue),
 		);
 	}
 
 
-	public static function actions(Explorer $database, JobQueue $queue): Actions
+	public static function actions(Explorer $database, Encryptor $encryptor, JobQueue $queue): Actions
 	{
-		return new Actions($database, $queue, self::policies($database), new AuditLog($database));
+		return new Actions($database, $queue, self::policies($database), new AuditLog($database), $encryptor);
 	}
 
 
@@ -123,7 +125,21 @@ final class TestServices
 			engine: new PolicyEngine,
 			switch: new AutomationSwitch($database, new AuditLog($database)),
 			comments: new Comments($database, $encryptor),
+			encryptor: $encryptor,
 			logger: $logger,
+		);
+	}
+
+
+	public static function drafter(Explorer $database, Encryptor $encryptor, JobQueue $queue, OpenAiClient $client, Logger $logger, string $model = 'reply-model'): ReplyDrafter
+	{
+		return new ReplyDrafter(
+			$database,
+			self::actions($database, $encryptor, $queue),
+			new Comments($database, $encryptor),
+			self::knowledge($database),
+			new ReplyGenerator($client, $model),
+			$logger,
 		);
 	}
 }

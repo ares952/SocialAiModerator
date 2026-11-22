@@ -67,6 +67,8 @@ services:
 	- App\Meta\UnavailableMetaClient
 	- App\Outbox\Actions
 	- App\Outbox\ActionDispatcher(pauseRetrySeconds: %outbox.pauseRetrySeconds%)
+	- App\Outbox\ReplyDrafter
+	- App\Ai\ReplyGenerator(model: %env.OPENAI_REPLY_MODEL%)
 
 
 decorator:

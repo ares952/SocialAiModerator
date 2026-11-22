@@ -6,8 +6,8 @@ namespace App\Outbox;
 
 
 /**
- * Interventions on a comment that write to Meta. Replies come with the ReplyGenerator; delete is
- * deliberately missing (only by an explicit rule or a human, FR-C08).
+ * Interventions on a comment that write to Meta. Delete is deliberately missing (only by an
+ * explicit rule or a human, FR-C08).
  */
 enum ActionType: string
 {
@@ -16,4 +16,7 @@ enum ActionType: string
 
 	/** Undoes a hiding (FR-C07); only an operator requests it. */
 	case Unhide = 'unhide';
+
+	/** Public reply drafted by the ReplyGenerator (FR-C05); always approved by a human. */
+	case Reply = 'reply';
 }

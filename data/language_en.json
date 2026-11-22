@@ -4558,5 +4558,117 @@
    "1": "Action request",
    "2": "Action request"
   }
+ },
+ {
+  "key": "action.type.reply",
+  "lang": "en",
+  "translations": {
+   "1": "Reply to comment",
+   "2": "Reply to comment"
+  }
+ },
+ {
+  "key": "events.detail.actions.reply-text",
+  "lang": "en",
+  "translations": {
+   "1": "Reply text (you may edit it)",
+   "2": "Reply text (you may edit it)"
+  }
+ },
+ {
+  "key": "events.detail.actions.approve-reply",
+  "lang": "en",
+  "translations": {
+   "1": "Approve reply",
+   "2": "Approve reply"
+  }
+ },
+ {
+  "key": "events.detail.actions.drafting",
+  "lang": "en",
+  "translations": {
+   "1": "The reply draft is being prepared.",
+   "2": "The reply draft is being prepared."
+  }
+ },
+ {
+  "key": "events.detail.actions.knowledge",
+  "lang": "en",
+  "translations": {
+   "1": "Sources",
+   "2": "Sources"
+  }
+ },
+ {
+  "key": "events.detail.actions.edited",
+  "lang": "en",
+  "translations": {
+   "1": "edited by a moderator",
+   "2": "edited by a moderator"
+  }
+ },
+ {
+  "key": "decision.reason.reply_needs_human",
+  "lang": "en",
+  "translations": {
+   "1": "a reply needs a human",
+   "2": "a reply needs a human"
+  }
+ },
+ {
+  "key": "decision.reason.comment_hidden",
+  "lang": "en",
+  "translations": {
+   "1": "comment hidden",
+   "2": "comment hidden"
+  }
+ },
+ {
+  "key": "decision.reason.already_replied",
+  "lang": "en",
+  "translations": {
+   "1": "comment already answered",
+   "2": "comment already answered"
+  }
+ },
+ {
+  "key": "decision.reason.reply_unavailable",
+  "lang": "en",
+  "translations": {
+   "1": "reply draft failed",
+   "2": "reply draft failed"
+  }
+ },
+ {
+  "key": "decision.reason.reply_invalid",
+  "lang": "en",
+  "translations": {
+   "1": "reply draft failed the checks",
+   "2": "reply draft failed the checks"
+  }
+ },
+ {
+  "key": "decision.reason.reply_not_answerable",
+  "lang": "en",
+  "translations": {
+   "1": "the knowledge does not answer it",
+   "2": "the knowledge does not answer it"
+  }
+ },
+ {
+  "key": "actions.error.no-draft",
+  "lang": "en",
+  "translations": {
+   "1": "The reply has no draft yet.",
+   "2": "The reply has no draft yet."
+  }
+ },
+ {
+  "key": "actions.error.text",
+  "lang": "en",
+  "translations": {
+   "1": "The reply text must have 1 to 1000 characters.",
+   "2": "The reply text must have 1 to 1000 characters."
+  }
  }
 ]

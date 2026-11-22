@@ -10,6 +10,7 @@ use App\Evaluation\EvaluationRunner;
 use App\Ingest\EventProcessor;
 use App\Moderation\EventDecider;
 use App\Outbox\ActionDispatcher;
+use App\Outbox\ReplyDrafter;
 use App\Queue\Job;
 use App\Queue\JobQueue;
 use App\Queue\JobStatus;
@@ -44,6 +45,7 @@ final class WorkerCommand extends Command
 		private readonly EventDecider $decider,
 		private readonly EvaluationRunner $evaluation,
 		private readonly ActionDispatcher $dispatcher,
+		private readonly ReplyDrafter $drafter,
 		private readonly Retention $retention,
 		private readonly Correlation $correlation,
 		private readonly Logger $logger,
@@ -109,6 +111,9 @@ final class WorkerCommand extends Command
 			JobType::SendAction => [
 				'outbox_id' => $job->subjectId,
 			],
+			JobType::DraftReply => [
+				'action_id' => $job->subjectId,
+			],
 		};
 
 		try {
@@ -117,6 +122,7 @@ final class WorkerCommand extends Command
 				JobType::DecideEvent => $this->decider->decide($job->subjectId, $this->queue->isLastAttempt($job)),
 				JobType::EvaluateSample => $this->evaluation->evaluate($job->subjectId, $this->queue->isLastAttempt($job)),
 				JobType::SendAction => $this->dispatcher->send($job->subjectId, $this->queue->isLastAttempt($job)),
+				JobType::DraftReply => $this->drafter->draft($job->subjectId, $this->queue->isLastAttempt($job)),
 			};
 		} catch (Postponed $e) {
 			$this->queue->postpone($job, $e->retryAfterSeconds);

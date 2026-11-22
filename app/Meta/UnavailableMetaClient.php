@@ -18,4 +18,10 @@ final class UnavailableMetaClient implements MetaClient
 	{
 		throw new MetaWriteUnavailable('Meta write API is not connected yet.');
 	}
+
+
+	public function replyComment(Platform $platform, AccessToken $token, string $commentId, #[\SensitiveParameter] string $text): string
+	{
+		throw new MetaWriteUnavailable('Meta write API is not connected yet.');
+	}
 }

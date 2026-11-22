@@ -82,6 +82,17 @@ final class Comments
 
 
 	/**
+	 * Current text of a comment; null when unknown or removed. Customer content.
+	 */
+	public function text(int $commentId): ?string
+	{
+		$text = $this->database->query('SELECT text_encrypted FROM social_comments WHERE id = ?', $commentId)->fetchField();
+
+		return is_string($text) ? $this->encryptor->decrypt($text, self::TextContext) : null;
+	}
+
+
+	/**
 	 * Visibility after Meta confirmed the application's own hide or unhide; a removed comment stays
 	 * removed and a later change from Meta still wins by its time.
 	 */

@@ -64,9 +64,11 @@ final class PolicyEngine
 	/**
 	 * Reasons that forbid sending the action now; empty when it may be sent. Nothing is sent in
 	 * `observe` mode or during a pause (global or of the account), not even after a human approval;
-	 * without a human only `automatic` mode with an allowed automatic hide sends. Unhiding always
-	 * needs a human. A comment that is removed or already in the requested state is not touched;
-	 * the account's own comment and a comment edited since the action was created are not hidden.
+	 * without a human only `automatic` mode with an allowed automatic hide sends. Unhiding and
+	 * replying always need a human. A comment that is removed or already in the requested state is
+	 * not touched; the account's own comment and a comment edited since the action was created are
+	 * neither hidden nor answered, a hidden comment is not answered and a comment gets at most one
+	 * reply.
 	 *
 	 * @return list<string>
 	 */
@@ -84,12 +86,14 @@ final class PolicyEngine
 			if ($policy->mode !== Mode::Automatic) {
 				$blocked[] = 'mode_' . $policy->mode->value;
 			}
-			if ($type === ActionType::Unhide) {
-				$blocked[] = 'unhide_needs_human';
-			}
-			if ($type === ActionType::Hide && !$policy->settings->autoHide) {
-				$blocked[] = 'auto_hide_disabled';
-			}
+			$blocked = [
+				...$blocked,
+				...match ($type) {
+					ActionType::Hide => $policy->settings->autoHide ? [] : ['auto_hide_disabled'],
+					ActionType::Unhide => ['unhide_needs_human'],
+					ActionType::Reply => ['reply_needs_human'],
+				},
+			];
 		}
 		if ($context->paused) {
 			$blocked[] = 'automation_paused';
@@ -98,20 +102,25 @@ final class PolicyEngine
 			$blocked[] = 'account_inactive';
 		}
 
+		$visibility = $target->visibility;
 		$state = match (true) {
-			$target->visibility === Visibility::Removed => 'comment_removed',
-			$type === ActionType::Hide && $target->visibility === Visibility::Hidden => 'already_hidden',
-			$type === ActionType::Unhide && $target->visibility === Visibility::Visible => 'already_visible',
+			$visibility === Visibility::Removed => 'comment_removed',
+			$type === ActionType::Hide && $visibility === Visibility::Hidden => 'already_hidden',
+			$type === ActionType::Unhide && $visibility === Visibility::Visible => 'already_visible',
+			$type === ActionType::Reply && $visibility === Visibility::Hidden => 'comment_hidden',
 			default => null,
 		};
 		if ($state !== null) {
 			$blocked[] = $state;
 		}
-		if ($type === ActionType::Hide && $target->own) {
+		if ($type !== ActionType::Unhide && $target->own) {
 			$blocked[] = 'own_comment';
 		}
-		if ($type === ActionType::Hide && $target->changed) {
+		if ($type !== ActionType::Unhide && $target->changed) {
 			$blocked[] = 'comment_changed';
+		}
+		if ($type === ActionType::Reply && $target->replied) {
+			$blocked[] = 'already_replied';
 		}
 
 		return $blocked;
