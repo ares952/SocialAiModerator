@@ -69,6 +69,35 @@ final class Comments
 
 
 	/**
+	 * Comment of the account by its external ID; null when no event projected it yet.
+	 */
+	public function find(int $accountId, string $externalId): ?Row
+	{
+		return $this->database->query(
+			'SELECT id, external_id, visibility, own FROM social_comments WHERE account_id = ? AND external_id = ?',
+			$accountId,
+			$externalId,
+		)->fetch();
+	}
+
+
+	/**
+	 * Visibility after Meta confirmed the application's own hide or unhide; a removed comment stays
+	 * removed and a later change from Meta still wins by its time.
+	 */
+	public function setVisibility(int $commentId, Visibility $visibility): void
+	{
+		$this->database->query(
+			'UPDATE social_comments SET visibility = ?, visibility_changed_at = NOW(3), updated_at = NOW(3)
+			WHERE id = ? AND visibility <> ? AND (visibility_changed_at IS NULL OR visibility_changed_at <= NOW(3))',
+			$visibility->value,
+			$commentId,
+			Visibility::Removed->value,
+		);
+	}
+
+
+	/**
 	 * Texts of other comments by the same author on the account changed within the last hours.
 	 *
 	 * @return list<string>

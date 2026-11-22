@@ -6,21 +6,29 @@ namespace App\Presentation\Admin\Events;
 
 use App\Audit\AuditAction;
 use App\Audit\AuditLog;
+use App\Comment\Comments;
 use App\Ingest\EventOverview;
 use App\Ingest\EventStatus;
 use App\Ingest\EventStore;
 use App\Meta\EventType;
 use App\Moderation\Decisions;
 use App\Moderation\EventDecider;
+use App\Moderation\Mode;
+use App\Moderation\Policies;
+use App\Outbox\Actions;
+use App\Outbox\ActionType;
+use App\Outbox\InvalidAction;
 use App\Operator\Authorization;
 use App\Presentation\Admin\AdminPresenter;
+use Nette\Database\Row;
 use Nette\Utils\Paginator;
 
 
 /**
  * Incoming Meta events. The list shows metadata only; the detail shows the customer content and
  * the AI explanation only to those who may work with it (moderator, admin), and every such view
- * is audited.
+ * is audited. On a comment's detail moderators approve or reject proposed actions and request
+ * hiding or unhiding, next to the content they decide about.
  */
 final class EventsPresenter extends AdminPresenter
 {
@@ -33,6 +41,9 @@ final class EventsPresenter extends AdminPresenter
 		private readonly Decisions $decisions,
 		private readonly EventDecider $decider,
 		private readonly AuditLog $audit,
+		private readonly Comments $comments,
+		private readonly Actions $actions,
+		private readonly Policies $policies,
 	) {
 		parent::__construct();
 	}
@@ -66,6 +77,7 @@ final class EventsPresenter extends AdminPresenter
 		$event = $this->events->find($id) ?? $this->error();
 		$canRead = $this->getUser()->isAllowed(Authorization::Events, Authorization::Edit);
 		$decisions = $this->decisions->forEvent($id);
+		$comment = $this->comment($event);
 
 		$content = null;
 		$explanations = [];
@@ -89,7 +101,68 @@ final class EventsPresenter extends AdminPresenter
 				&& $content?->type->contentKind() !== null
 				&& $content->text !== null
 				&& !$this->decisions->classified($id),
+			'comment' => $comment,
+			'actions' => $comment === null ? [] : $this->actions->forComment($comment->id),
+			'canAct' => $canRead && $this->getUser()->isAllowed(Authorization::Actions, Authorization::Edit),
+			'observe' => $this->policies->active()->mode === Mode::Observe,
 		]);
+	}
+
+
+	public function handleApprove(int $id, int $action): void
+	{
+		$this->act($id, fn(int $operatorId) => $this->actions->approve($action, $operatorId), 'events.detail.actions.approved');
+	}
+
+
+	public function handleReject(int $id, int $action): void
+	{
+		$this->act($id, fn(int $operatorId) => $this->actions->reject($action, $operatorId), 'events.detail.actions.rejected');
+	}
+
+
+	public function handleRequest(int $id, string $type): void
+	{
+		$actionType = ActionType::tryFrom($type) ?? $this->error();
+		$event = $this->events->find($id) ?? $this->error();
+		$comment = $this->comment($event) ?? $this->error();
+		$this->act(
+			$id,
+			fn(int $operatorId) => $this->actions->request($comment->id, $id, $actionType, $operatorId),
+			"events.detail.actions.requested.$actionType->value",
+		);
+	}
+
+
+	/**
+	 * @param \Closure(int): mixed $change
+	 */
+	private function act(int $id, \Closure $change, string $message): void
+	{
+		$this->requireAllowed(Authorization::Events, Authorization::Edit);
+		$this->requireAllowed(Authorization::Actions, Authorization::Edit);
+		try {
+			$change($this->operatorId());
+			$this->flashMessage($message, 'success');
+		} catch (InvalidAction $e) {
+			$this->flashMessage($e->getMessage(), 'danger');
+		}
+		$this->redirect('detail', [
+			'id' => $id,
+		]);
+	}
+
+
+	/**
+	 * The comment a comment event belongs to; null for other events or before the projection.
+	 */
+	private function comment(Row $event): ?Row
+	{
+		return $event->account_id !== null
+			&& $event->external_id !== null
+			&& str_starts_with((string) $event->event_type, 'comment.')
+			? $this->comments->find($event->account_id, $event->external_id)
+			: null;
 	}
 
 

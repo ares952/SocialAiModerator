@@ -64,6 +64,9 @@ services:
 	- App\Account\Accounts
 	- App\Account\Credentials
 	- App\Account\TokenProvider
+	- App\Meta\UnavailableMetaClient
+	- App\Outbox\Actions
+	- App\Outbox\ActionDispatcher(pauseRetrySeconds: %outbox.pauseRetrySeconds%)
 
 
 decorator:

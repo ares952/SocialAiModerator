@@ -24,6 +24,11 @@ parameters:
 		failureThreshold: 5
 		openSeconds: 120
 
+	# Outbox (App\Outbox\ActionDispatcher): while the panic switch is on, approved actions wait
+	# and are checked again after this many seconds.
+	outbox:
+		pauseRetrySeconds: 60
+
 	# Display time zone of the administration; the application and the database work in UTC.
 	timezone: Europe/Prague
 

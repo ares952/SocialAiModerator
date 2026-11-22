@@ -4624,5 +4624,509 @@
    "2": "opakovaný text od stejného autora",
    "5": "opakovaný text od stejného autora"
   }
+ },
+ {
+  "key": "admin.menu.actions",
+  "lang": "cs",
+  "translations": {
+   "1": "Zásahy",
+   "2": "Zásahy",
+   "5": "Zásahy"
+  }
+ },
+ {
+  "key": "actions.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Zásahy u komentářů",
+   "2": "Zásahy u komentářů",
+   "5": "Zásahy u komentářů"
+  }
+ },
+ {
+  "key": "actions.total",
+  "lang": "cs",
+  "translations": {
+   "1": "%count% zásah",
+   "2": "%count% zásahy",
+   "5": "%count% zásahů"
+  }
+ },
+ {
+  "key": "actions.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrytí a odkrytí komentářů navržená AI nebo vyžádaná moderátorem. Schvalovat a zamítat lze v detailu události vedle obsahu komentáře. Před každým odesláním se znovu ověří pravidla, režim, panic switch, účet a stav komentáře.",
+   "2": "Skrytí a odkrytí komentářů navržená AI nebo vyžádaná moderátorem. Schvalovat a zamítat lze v detailu události vedle obsahu komentáře. Před každým odesláním se znovu ověří pravidla, režim, panic switch, účet a stav komentáře.",
+   "5": "Skrytí a odkrytí komentářů navržená AI nebo vyžádaná moderátorem. Schvalovat a zamítat lze v detailu události vedle obsahu komentáře. Před každým odesláním se znovu ověří pravidla, režim, panic switch, účet a stav komentáře."
+  }
+ },
+ {
+  "key": "actions.filter.all",
+  "lang": "cs",
+  "translations": {
+   "1": "Vše",
+   "2": "Vše",
+   "5": "Vše"
+  }
+ },
+ {
+  "key": "actions.empty",
+  "lang": "cs",
+  "translations": {
+   "1": "Žádné zásahy.",
+   "2": "Žádné zásahy.",
+   "5": "Žádné zásahy."
+  }
+ },
+ {
+  "key": "actions.column.created",
+  "lang": "cs",
+  "translations": {
+   "1": "Vytvořeno",
+   "2": "Vytvořeno",
+   "5": "Vytvořeno"
+  }
+ },
+ {
+  "key": "actions.column.account",
+  "lang": "cs",
+  "translations": {
+   "1": "Účet",
+   "2": "Účet",
+   "5": "Účet"
+  }
+ },
+ {
+  "key": "actions.column.action",
+  "lang": "cs",
+  "translations": {
+   "1": "Zásah",
+   "2": "Zásah",
+   "5": "Zásah"
+  }
+ },
+ {
+  "key": "actions.column.status",
+  "lang": "cs",
+  "translations": {
+   "1": "Stav",
+   "2": "Stav",
+   "5": "Stav"
+  }
+ },
+ {
+  "key": "actions.column.event",
+  "lang": "cs",
+  "translations": {
+   "1": "Událost",
+   "2": "Událost",
+   "5": "Událost"
+  }
+ },
+ {
+  "key": "actions.source.automatic",
+  "lang": "cs",
+  "translations": {
+   "1": "automaticky podle pravidel",
+   "2": "automaticky podle pravidel",
+   "5": "automaticky podle pravidel"
+  }
+ },
+ {
+  "key": "actions.source.proposed",
+  "lang": "cs",
+  "translations": {
+   "1": "návrh AI",
+   "2": "návrh AI",
+   "5": "návrh AI"
+  }
+ },
+ {
+  "key": "actions.open",
+  "lang": "cs",
+  "translations": {
+   "1": "Událost #%id%",
+   "2": "Událost #%id%",
+   "5": "Událost #%id%"
+  }
+ },
+ {
+  "key": "action.type.hide",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrýt komentář",
+   "2": "Skrýt komentář",
+   "5": "Skrýt komentář"
+  }
+ },
+ {
+  "key": "action.type.unhide",
+  "lang": "cs",
+  "translations": {
+   "1": "Odkrýt komentář",
+   "2": "Odkrýt komentář",
+   "5": "Odkrýt komentář"
+  }
+ },
+ {
+  "key": "action.status.pending",
+  "lang": "cs",
+  "translations": {
+   "1": "čeká na schválení",
+   "2": "čeká na schválení",
+   "5": "čeká na schválení"
+  }
+ },
+ {
+  "key": "action.status.approved",
+  "lang": "cs",
+  "translations": {
+   "1": "schváleno",
+   "2": "schváleno",
+   "5": "schváleno"
+  }
+ },
+ {
+  "key": "action.status.blocked",
+  "lang": "cs",
+  "translations": {
+   "1": "zastaveno",
+   "2": "zastaveno",
+   "5": "zastaveno"
+  }
+ },
+ {
+  "key": "action.status.sending",
+  "lang": "cs",
+  "translations": {
+   "1": "odesílá se",
+   "2": "odesílá se",
+   "5": "odesílá se"
+  }
+ },
+ {
+  "key": "action.status.sent",
+  "lang": "cs",
+  "translations": {
+   "1": "provedeno",
+   "2": "provedeno",
+   "5": "provedeno"
+  }
+ },
+ {
+  "key": "action.status.failed",
+  "lang": "cs",
+  "translations": {
+   "1": "selhalo",
+   "2": "selhalo",
+   "5": "selhalo"
+  }
+ },
+ {
+  "key": "action.status.unknown",
+  "lang": "cs",
+  "translations": {
+   "1": "výsledek neznámý",
+   "2": "výsledek neznámý",
+   "5": "výsledek neznámý"
+  }
+ },
+ {
+  "key": "comment.visibility.visible",
+  "lang": "cs",
+  "translations": {
+   "1": "komentář viditelný",
+   "2": "komentář viditelný",
+   "5": "komentář viditelný"
+  }
+ },
+ {
+  "key": "comment.visibility.hidden",
+  "lang": "cs",
+  "translations": {
+   "1": "komentář skrytý",
+   "2": "komentář skrytý",
+   "5": "komentář skrytý"
+  }
+ },
+ {
+  "key": "comment.visibility.removed",
+  "lang": "cs",
+  "translations": {
+   "1": "komentář smazaný",
+   "2": "komentář smazaný",
+   "5": "komentář smazaný"
+  }
+ },
+ {
+  "key": "events.detail.actions",
+  "lang": "cs",
+  "translations": {
+   "1": "Zásahy",
+   "2": "Zásahy",
+   "5": "Zásahy"
+  }
+ },
+ {
+  "key": "events.detail.actions.hide",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrýt komentář",
+   "2": "Skrýt komentář",
+   "5": "Skrýt komentář"
+  }
+ },
+ {
+  "key": "events.detail.actions.unhide",
+  "lang": "cs",
+  "translations": {
+   "1": "Odkrýt komentář",
+   "2": "Odkrýt komentář",
+   "5": "Odkrýt komentář"
+  }
+ },
+ {
+  "key": "events.detail.actions.observe",
+  "lang": "cs",
+  "translations": {
+   "1": "Pravidla jsou v režimu pozorování: zásahy nelze schválit ani vyžádat, jen zamítnout.",
+   "2": "Pravidla jsou v režimu pozorování: zásahy nelze schválit ani vyžádat, jen zamítnout.",
+   "5": "Pravidla jsou v režimu pozorování: zásahy nelze schválit ani vyžádat, jen zamítnout."
+  }
+ },
+ {
+  "key": "events.detail.actions.none",
+  "lang": "cs",
+  "translations": {
+   "1": "Komentář nemá žádné zásahy.",
+   "2": "Komentář nemá žádné zásahy.",
+   "5": "Komentář nemá žádné zásahy."
+  }
+ },
+ {
+  "key": "events.detail.actions.reviewed",
+  "lang": "cs",
+  "translations": {
+   "1": "%name%, %time%",
+   "2": "%name%, %time%",
+   "5": "%name%, %time%"
+  }
+ },
+ {
+  "key": "events.detail.actions.executed",
+  "lang": "cs",
+  "translations": {
+   "1": "provedeno %time%",
+   "2": "provedeno %time%",
+   "5": "provedeno %time%"
+  }
+ },
+ {
+  "key": "events.detail.actions.approve",
+  "lang": "cs",
+  "translations": {
+   "1": "Schválit",
+   "2": "Schválit",
+   "5": "Schválit"
+  }
+ },
+ {
+  "key": "events.detail.actions.reject",
+  "lang": "cs",
+  "translations": {
+   "1": "Zamítnout",
+   "2": "Zamítnout",
+   "5": "Zamítnout"
+  }
+ },
+ {
+  "key": "events.detail.actions.approved",
+  "lang": "cs",
+  "translations": {
+   "1": "Zásah je schválený a čeká na odeslání.",
+   "2": "Zásah je schválený a čeká na odeslání.",
+   "5": "Zásah je schválený a čeká na odeslání."
+  }
+ },
+ {
+  "key": "events.detail.actions.rejected",
+  "lang": "cs",
+  "translations": {
+   "1": "Zásah je zamítnutý.",
+   "2": "Zásah je zamítnutý.",
+   "5": "Zásah je zamítnutý."
+  }
+ },
+ {
+  "key": "events.detail.actions.requested.hide",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrytí komentáře čeká na odeslání.",
+   "2": "Skrytí komentáře čeká na odeslání.",
+   "5": "Skrytí komentáře čeká na odeslání."
+  }
+ },
+ {
+  "key": "events.detail.actions.requested.unhide",
+  "lang": "cs",
+  "translations": {
+   "1": "Odkrytí komentáře čeká na odeslání.",
+   "2": "Odkrytí komentáře čeká na odeslání.",
+   "5": "Odkrytí komentáře čeká na odeslání."
+  }
+ },
+ {
+  "key": "actions.error.not-found",
+  "lang": "cs",
+  "translations": {
+   "1": "Zásah nebo komentář neexistuje.",
+   "2": "Zásah nebo komentář neexistuje.",
+   "5": "Zásah nebo komentář neexistuje."
+  }
+ },
+ {
+  "key": "actions.error.not-pending",
+  "lang": "cs",
+  "translations": {
+   "1": "Zásah už nečeká na schválení.",
+   "2": "Zásah už nečeká na schválení.",
+   "5": "Zásah už nečeká na schválení."
+  }
+ },
+ {
+  "key": "actions.error.observe",
+  "lang": "cs",
+  "translations": {
+   "1": "V režimu pozorování nelze zásahy schvalovat ani vyžadovat.",
+   "2": "V režimu pozorování nelze zásahy schvalovat ani vyžadovat.",
+   "5": "V režimu pozorování nelze zásahy schvalovat ani vyžadovat."
+  }
+ },
+ {
+  "key": "actions.error.state",
+  "lang": "cs",
+  "translations": {
+   "1": "Komentář už je v požadovaném stavu, je smazaný nebo je vlastní.",
+   "2": "Komentář už je v požadovaném stavu, je smazaný nebo je vlastní.",
+   "5": "Komentář už je v požadovaném stavu, je smazaný nebo je vlastní."
+  }
+ },
+ {
+  "key": "actions.error.open",
+  "lang": "cs",
+  "translations": {
+   "1": "Komentář už má rozpracovaný zásah.",
+   "2": "Komentář už má rozpracovaný zásah.",
+   "5": "Komentář už má rozpracovaný zásah."
+  }
+ },
+ {
+  "key": "decision.reason.unhide_needs_human",
+  "lang": "cs",
+  "translations": {
+   "1": "odkrytí jen člověkem",
+   "2": "odkrytí jen člověkem",
+   "5": "odkrytí jen člověkem"
+  }
+ },
+ {
+  "key": "decision.reason.comment_removed",
+  "lang": "cs",
+  "translations": {
+   "1": "komentář je smazaný",
+   "2": "komentář je smazaný",
+   "5": "komentář je smazaný"
+  }
+ },
+ {
+  "key": "decision.reason.already_hidden",
+  "lang": "cs",
+  "translations": {
+   "1": "komentář už je skrytý",
+   "2": "komentář už je skrytý",
+   "5": "komentář už je skrytý"
+  }
+ },
+ {
+  "key": "decision.reason.already_visible",
+  "lang": "cs",
+  "translations": {
+   "1": "komentář už je viditelný",
+   "2": "komentář už je viditelný",
+   "5": "komentář už je viditelný"
+  }
+ },
+ {
+  "key": "decision.reason.own_comment",
+  "lang": "cs",
+  "translations": {
+   "1": "vlastní komentář účtu",
+   "2": "vlastní komentář účtu",
+   "5": "vlastní komentář účtu"
+  }
+ },
+ {
+  "key": "decision.reason.comment_changed",
+  "lang": "cs",
+  "translations": {
+   "1": "komentář se mezitím změnil",
+   "2": "komentář se mezitím změnil",
+   "5": "komentář se mezitím změnil"
+  }
+ },
+ {
+  "key": "decision.reason.rejected",
+  "lang": "cs",
+  "translations": {
+   "1": "zamítnuto moderátorem",
+   "2": "zamítnuto moderátorem",
+   "5": "zamítnuto moderátorem"
+  }
+ },
+ {
+  "key": "decision.reason.token_unavailable",
+  "lang": "cs",
+  "translations": {
+   "1": "chybí platný token",
+   "2": "chybí platný token",
+   "5": "chybí platný token"
+  }
+ },
+ {
+  "key": "decision.reason.meta_write_unavailable",
+  "lang": "cs",
+  "translations": {
+   "1": "zápis do Mety zatím není zapojený",
+   "2": "zápis do Mety zatím není zapojený",
+   "5": "zápis do Mety zatím není zapojený"
+  }
+ },
+ {
+  "key": "audit.action.action.approve",
+  "lang": "cs",
+  "translations": {
+   "1": "Schválení zásahu",
+   "2": "Schválení zásahu",
+   "5": "Schválení zásahu"
+  }
+ },
+ {
+  "key": "audit.action.action.reject",
+  "lang": "cs",
+  "translations": {
+   "1": "Zamítnutí zásahu",
+   "2": "Zamítnutí zásahu",
+   "5": "Zamítnutí zásahu"
+  }
+ },
+ {
+  "key": "audit.action.action.request",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyžádání zásahu",
+   "2": "Vyžádání zásahu",
+   "5": "Vyžádání zásahu"
+  }
  }
 ]

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Moderation;
 
+use App\Comment\Visibility;
+use App\Outbox\ActionTarget;
+use App\Outbox\ActionType;
 
 /**
  * Deterministic decision about a classified comment or message (specification §5.4). The model's
@@ -27,6 +30,9 @@ namespace App\Moderation;
  *   threshold;
  * - the action runs without a human only in `automatic` mode, without a pause, for an active
  *   account and when the policy explicitly allows that action.
+ *
+ * Right before an action is sent, blocks() checks the current state again (send time wins over
+ * the time of the decision).
  */
 final class PolicyEngine
 {
@@ -52,6 +58,63 @@ final class PolicyEngine
 			&& $this->allowsAutomatic($action, $classification, $policy, $context, $reasons);
 
 		return new Decision($action, $automatic, $reasons, $policy->version);
+	}
+
+
+	/**
+	 * Reasons that forbid sending the action now; empty when it may be sent. Nothing is sent in
+	 * `observe` mode or during a pause (global or of the account), not even after a human approval;
+	 * without a human only `automatic` mode with an allowed automatic hide sends. Unhiding always
+	 * needs a human. A comment that is removed or already in the requested state is not touched;
+	 * the account's own comment and a comment edited since the action was created are not hidden.
+	 *
+	 * @return list<string>
+	 */
+	public function blocks(
+		ActionType $type,
+		bool $approvedByHuman,
+		Policy $policy,
+		AutomationContext $context,
+		ActionTarget $target,
+	): array {
+		$blocked = [];
+		if ($policy->mode === Mode::Observe) {
+			$blocked[] = 'mode_observe';
+		} elseif (!$approvedByHuman) {
+			if ($policy->mode !== Mode::Automatic) {
+				$blocked[] = 'mode_' . $policy->mode->value;
+			}
+			if ($type === ActionType::Unhide) {
+				$blocked[] = 'unhide_needs_human';
+			}
+			if ($type === ActionType::Hide && !$policy->settings->autoHide) {
+				$blocked[] = 'auto_hide_disabled';
+			}
+		}
+		if ($context->paused) {
+			$blocked[] = 'automation_paused';
+		}
+		if (!$context->accountActive) {
+			$blocked[] = 'account_inactive';
+		}
+
+		$state = match (true) {
+			$target->visibility === Visibility::Removed => 'comment_removed',
+			$type === ActionType::Hide && $target->visibility === Visibility::Hidden => 'already_hidden',
+			$type === ActionType::Unhide && $target->visibility === Visibility::Visible => 'already_visible',
+			default => null,
+		};
+		if ($state !== null) {
+			$blocked[] = $state;
+		}
+		if ($type === ActionType::Hide && $target->own) {
+			$blocked[] = 'own_comment';
+		}
+		if ($type === ActionType::Hide && $target->changed) {
+			$blocked[] = 'comment_changed';
+		}
+
+		return $blocked;
 	}
 
 

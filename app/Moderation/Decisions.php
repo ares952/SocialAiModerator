@@ -45,6 +45,7 @@ final class Decisions
 	/**
 	 * @param ClassifierResult|null $classified null when the classification failed
 	 * @param string|null $error why it failed; never customer content
+	 * @return int ID of the decision
 	 */
 	public function record(
 		int $eventId,
@@ -53,7 +54,7 @@ final class Decisions
 		string $model,
 		string $promptVersion,
 		?string $error,
-	): void {
+	): int {
 		$classification = $classified?->classification;
 		$this->database->query('INSERT INTO moderation_decisions ?', [
 			'event_id' => $eventId,
@@ -89,6 +90,8 @@ final class Decisions
 			'output_tokens' => $classified?->outputTokens,
 			'error' => $error === null ? null : Strings::truncate($error, 500),
 		]);
+
+		return (int) $this->database->getInsertId();
 	}
 
 

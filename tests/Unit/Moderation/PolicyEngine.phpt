@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Comment\Visibility;
 use App\Moderation\AbuseRule;
 use App\Moderation\AbuseType;
 use App\Moderation\Action;
@@ -18,6 +19,8 @@ use App\Moderation\PolicySettings;
 use App\Moderation\RuleHit;
 use App\Moderation\Sentiment;
 use App\Moderation\Strictness;
+use App\Outbox\ActionTarget;
+use App\Outbox\ActionType;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -439,4 +442,46 @@ test('a content rule alone never hides and does not override other decisions', f
 
 test('there is no delete action', function (): void {
 	Assert::null(Action::tryFrom('delete'));
+});
+
+
+test('nothing is sent in observe mode, not even after a human approval', function () use ($engine, $open): void {
+	$observe = new Policy(1, Mode::Observe, new PolicySettings(autoHide: true));
+	$visible = new ActionTarget(Visibility::Visible, own: false, changed: false);
+
+	Assert::same(['mode_observe'], $engine->blocks(ActionType::Hide, true, $observe, $open, $visible));
+	Assert::same(['mode_observe'], $engine->blocks(ActionType::Hide, false, $observe, $open, $visible));
+});
+
+
+test('a human approval sends in assisted mode, an automatic hide needs automatic mode and auto hide', function () use ($engine, $automatic, $open): void {
+	$assisted = new Policy(2, Mode::Assisted, new PolicySettings(autoHide: true));
+	$manual = new Policy(3, Mode::Automatic, new PolicySettings(autoHide: false));
+	$visible = new ActionTarget(Visibility::Visible, own: false, changed: false);
+	$hidden = new ActionTarget(Visibility::Hidden, own: false, changed: false);
+
+	Assert::same([], $engine->blocks(ActionType::Hide, true, $assisted, $open, $visible));
+	Assert::same([], $engine->blocks(ActionType::Unhide, true, $assisted, $open, $hidden));
+	Assert::same(['mode_assisted'], $engine->blocks(ActionType::Hide, false, $assisted, $open, $visible));
+	Assert::same(['auto_hide_disabled'], $engine->blocks(ActionType::Hide, false, $manual, $open, $visible));
+	Assert::same([], $engine->blocks(ActionType::Hide, false, $automatic, $open, $visible));
+	Assert::same(['unhide_needs_human'], $engine->blocks(ActionType::Unhide, false, $automatic, $open, $hidden));
+});
+
+
+test('the panic switch and an inactive account block even approved actions', function () use ($engine, $automatic): void {
+	$visible = new ActionTarget(Visibility::Visible, own: false, changed: false);
+
+	Assert::same(['automation_paused'], $engine->blocks(ActionType::Hide, true, $automatic, new AutomationContext(paused: true, accountActive: true), $visible));
+	Assert::same(['account_inactive'], $engine->blocks(ActionType::Hide, true, $automatic, new AutomationContext(paused: false, accountActive: false), $visible));
+});
+
+
+test('the comment state at send time wins', function () use ($engine, $automatic, $open): void {
+	Assert::same(['comment_removed'], $engine->blocks(ActionType::Hide, true, $automatic, $open, new ActionTarget(Visibility::Removed, own: false, changed: false)));
+	Assert::same(['already_hidden'], $engine->blocks(ActionType::Hide, true, $automatic, $open, new ActionTarget(Visibility::Hidden, own: false, changed: false)));
+	Assert::same(['already_visible'], $engine->blocks(ActionType::Unhide, true, $automatic, $open, new ActionTarget(Visibility::Visible, own: false, changed: false)));
+	Assert::same(['own_comment'], $engine->blocks(ActionType::Hide, true, $automatic, $open, new ActionTarget(Visibility::Visible, own: true, changed: false)));
+	Assert::same(['comment_changed'], $engine->blocks(ActionType::Hide, false, $automatic, $open, new ActionTarget(Visibility::Visible, own: false, changed: true)));
+	Assert::same([], $engine->blocks(ActionType::Unhide, true, $automatic, $open, new ActionTarget(Visibility::Hidden, own: false, changed: true)));
 });

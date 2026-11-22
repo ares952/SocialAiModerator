@@ -1,0 +1,8 @@
+{* Badge of App\Outbox\ActionStatus; parameter $status (string). *}
+<span n:class="badge, match($status) {
+	'pending' => 'text-bg-warning',
+	'approved', 'sending' => 'text-bg-info',
+	'sent' => 'text-bg-success',
+	'failed', 'unknown' => 'text-bg-danger',
+	default => 'text-bg-secondary',
+}">{_"action.status.$status"}</span>

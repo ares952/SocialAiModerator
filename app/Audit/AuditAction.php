@@ -28,4 +28,7 @@ enum AuditAction: string
 	case EventContentView = 'event.content.view';
 	case EventDecisionRequest = 'event.decision.request';
 	case RetentionUpdate = 'retention.update';
+	case ActionApprove = 'action.approve';
+	case ActionReject = 'action.reject';
+	case ActionRequest = 'action.request';
 }

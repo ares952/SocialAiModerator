@@ -4,24 +4,29 @@ declare(strict_types=1);
 
 namespace Tests\Support;
 
+use App\Account\TokenProvider;
 use App\Ai\Classifier;
 use App\Ai\OpenAiClient;
 use App\Audit\AuditLog;
 use App\Comment\Comments;
 use App\Conversation\Conversations;
 use App\Core\Encryptor;
+use App\Core\Logger;
 use App\Evaluation\EvaluationRunner;
 use App\Evaluation\EvaluationSamples;
 use App\Ingest\EventProcessor;
 use App\Ingest\EventStore;
 use App\Knowledge\KnowledgeBase;
 use App\Meta\EventNormalizer;
+use App\Meta\MetaClient;
 use App\Moderation\AutomationSwitch;
 use App\Moderation\Decisions;
 use App\Moderation\EventDecider;
 use App\Moderation\Mode;
 use App\Moderation\Policies;
 use App\Moderation\PolicyEngine;
+use App\Outbox\ActionDispatcher;
+use App\Outbox\Actions;
 use App\Queue\JobQueue;
 use Nette\Database\Explorer;
 use Nette\StaticClass;
@@ -96,6 +101,29 @@ final class TestServices
 			$queue,
 			new Comments($database, $encryptor),
 			new Conversations($database, $encryptor),
+			self::actions($database, $queue),
+		);
+	}
+
+
+	public static function actions(Explorer $database, JobQueue $queue): Actions
+	{
+		return new Actions($database, $queue, self::policies($database), new AuditLog($database));
+	}
+
+
+	public static function dispatcher(Explorer $database, Encryptor $encryptor, MetaClient $meta, Logger $logger): ActionDispatcher
+	{
+		return new ActionDispatcher(
+			pauseRetrySeconds: 60,
+			database: $database,
+			meta: $meta,
+			tokens: new TokenProvider($database, $encryptor),
+			policies: self::policies($database),
+			engine: new PolicyEngine,
+			switch: new AutomationSwitch($database, new AuditLog($database)),
+			comments: new Comments($database, $encryptor),
+			logger: $logger,
 		);
 	}
 }

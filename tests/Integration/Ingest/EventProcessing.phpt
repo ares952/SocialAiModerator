@@ -16,6 +16,7 @@ use App\Retention\Retention;
 use Nette\Utils\Json;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tester\Assert;
+use Tests\Fakes\FakeMetaClient;
 use Tests\Fakes\FakeOpenAiClient;
 use Tests\Support\TestDatabase;
 use Tests\Support\TestLog;
@@ -54,6 +55,7 @@ $work = static function (Encryptor $encryptor) use ($database, $queue, $log): vo
 		events: TestServices::eventProcessor($database, $encryptor, $queue),
 		decider: TestServices::eventDecider($database, $encryptor, $queue, new FakeOpenAiClient),
 		evaluation: TestServices::evaluationRunner($database, $encryptor, new FakeOpenAiClient),
+		dispatcher: TestServices::dispatcher($database, $encryptor, new FakeMetaClient, $log->logger),
 		retention: new Retention($database, new AuditLog($database)),
 		correlation: new Correlation,
 		logger: $log->logger,

@@ -4110,5 +4110,453 @@
    "1": "repeated text from the same author",
    "2": "repeated text from the same author"
   }
+ },
+ {
+  "key": "admin.menu.actions",
+  "lang": "en",
+  "translations": {
+   "1": "Actions",
+   "2": "Actions"
+  }
+ },
+ {
+  "key": "actions.title",
+  "lang": "en",
+  "translations": {
+   "1": "Comment actions",
+   "2": "Comment actions"
+  }
+ },
+ {
+  "key": "actions.total",
+  "lang": "en",
+  "translations": {
+   "1": "%count% action",
+   "2": "%count% actions"
+  }
+ },
+ {
+  "key": "actions.note",
+  "lang": "en",
+  "translations": {
+   "1": "Comment hides and unhides proposed by the AI or requested by a moderator. Approve or reject them on the event detail next to the comment. Before every send, the policy, mode, panic switch, account and comment state are checked again.",
+   "2": "Comment hides and unhides proposed by the AI or requested by a moderator. Approve or reject them on the event detail next to the comment. Before every send, the policy, mode, panic switch, account and comment state are checked again."
+  }
+ },
+ {
+  "key": "actions.filter.all",
+  "lang": "en",
+  "translations": {
+   "1": "All",
+   "2": "All"
+  }
+ },
+ {
+  "key": "actions.empty",
+  "lang": "en",
+  "translations": {
+   "1": "No actions.",
+   "2": "No actions."
+  }
+ },
+ {
+  "key": "actions.column.created",
+  "lang": "en",
+  "translations": {
+   "1": "Created",
+   "2": "Created"
+  }
+ },
+ {
+  "key": "actions.column.account",
+  "lang": "en",
+  "translations": {
+   "1": "Account",
+   "2": "Account"
+  }
+ },
+ {
+  "key": "actions.column.action",
+  "lang": "en",
+  "translations": {
+   "1": "Action",
+   "2": "Action"
+  }
+ },
+ {
+  "key": "actions.column.status",
+  "lang": "en",
+  "translations": {
+   "1": "Status",
+   "2": "Status"
+  }
+ },
+ {
+  "key": "actions.column.event",
+  "lang": "en",
+  "translations": {
+   "1": "Event",
+   "2": "Event"
+  }
+ },
+ {
+  "key": "actions.source.automatic",
+  "lang": "en",
+  "translations": {
+   "1": "automatically by the policy",
+   "2": "automatically by the policy"
+  }
+ },
+ {
+  "key": "actions.source.proposed",
+  "lang": "en",
+  "translations": {
+   "1": "AI proposal",
+   "2": "AI proposal"
+  }
+ },
+ {
+  "key": "actions.open",
+  "lang": "en",
+  "translations": {
+   "1": "Event #%id%",
+   "2": "Event #%id%"
+  }
+ },
+ {
+  "key": "action.type.hide",
+  "lang": "en",
+  "translations": {
+   "1": "Hide comment",
+   "2": "Hide comment"
+  }
+ },
+ {
+  "key": "action.type.unhide",
+  "lang": "en",
+  "translations": {
+   "1": "Unhide comment",
+   "2": "Unhide comment"
+  }
+ },
+ {
+  "key": "action.status.pending",
+  "lang": "en",
+  "translations": {
+   "1": "awaiting approval",
+   "2": "awaiting approval"
+  }
+ },
+ {
+  "key": "action.status.approved",
+  "lang": "en",
+  "translations": {
+   "1": "approved",
+   "2": "approved"
+  }
+ },
+ {
+  "key": "action.status.blocked",
+  "lang": "en",
+  "translations": {
+   "1": "blocked",
+   "2": "blocked"
+  }
+ },
+ {
+  "key": "action.status.sending",
+  "lang": "en",
+  "translations": {
+   "1": "sending",
+   "2": "sending"
+  }
+ },
+ {
+  "key": "action.status.sent",
+  "lang": "en",
+  "translations": {
+   "1": "done",
+   "2": "done"
+  }
+ },
+ {
+  "key": "action.status.failed",
+  "lang": "en",
+  "translations": {
+   "1": "failed",
+   "2": "failed"
+  }
+ },
+ {
+  "key": "action.status.unknown",
+  "lang": "en",
+  "translations": {
+   "1": "result unknown",
+   "2": "result unknown"
+  }
+ },
+ {
+  "key": "comment.visibility.visible",
+  "lang": "en",
+  "translations": {
+   "1": "comment visible",
+   "2": "comment visible"
+  }
+ },
+ {
+  "key": "comment.visibility.hidden",
+  "lang": "en",
+  "translations": {
+   "1": "comment hidden",
+   "2": "comment hidden"
+  }
+ },
+ {
+  "key": "comment.visibility.removed",
+  "lang": "en",
+  "translations": {
+   "1": "comment removed",
+   "2": "comment removed"
+  }
+ },
+ {
+  "key": "events.detail.actions",
+  "lang": "en",
+  "translations": {
+   "1": "Actions",
+   "2": "Actions"
+  }
+ },
+ {
+  "key": "events.detail.actions.hide",
+  "lang": "en",
+  "translations": {
+   "1": "Hide comment",
+   "2": "Hide comment"
+  }
+ },
+ {
+  "key": "events.detail.actions.unhide",
+  "lang": "en",
+  "translations": {
+   "1": "Unhide comment",
+   "2": "Unhide comment"
+  }
+ },
+ {
+  "key": "events.detail.actions.observe",
+  "lang": "en",
+  "translations": {
+   "1": "The policy is in observe mode: actions cannot be approved or requested, only rejected.",
+   "2": "The policy is in observe mode: actions cannot be approved or requested, only rejected."
+  }
+ },
+ {
+  "key": "events.detail.actions.none",
+  "lang": "en",
+  "translations": {
+   "1": "The comment has no actions.",
+   "2": "The comment has no actions."
+  }
+ },
+ {
+  "key": "events.detail.actions.reviewed",
+  "lang": "en",
+  "translations": {
+   "1": "%name%, %time%",
+   "2": "%name%, %time%"
+  }
+ },
+ {
+  "key": "events.detail.actions.executed",
+  "lang": "en",
+  "translations": {
+   "1": "done %time%",
+   "2": "done %time%"
+  }
+ },
+ {
+  "key": "events.detail.actions.approve",
+  "lang": "en",
+  "translations": {
+   "1": "Approve",
+   "2": "Approve"
+  }
+ },
+ {
+  "key": "events.detail.actions.reject",
+  "lang": "en",
+  "translations": {
+   "1": "Reject",
+   "2": "Reject"
+  }
+ },
+ {
+  "key": "events.detail.actions.approved",
+  "lang": "en",
+  "translations": {
+   "1": "The action is approved and waits to be sent.",
+   "2": "The action is approved and waits to be sent."
+  }
+ },
+ {
+  "key": "events.detail.actions.rejected",
+  "lang": "en",
+  "translations": {
+   "1": "The action is rejected.",
+   "2": "The action is rejected."
+  }
+ },
+ {
+  "key": "events.detail.actions.requested.hide",
+  "lang": "en",
+  "translations": {
+   "1": "Hiding the comment waits to be sent.",
+   "2": "Hiding the comment waits to be sent."
+  }
+ },
+ {
+  "key": "events.detail.actions.requested.unhide",
+  "lang": "en",
+  "translations": {
+   "1": "Unhiding the comment waits to be sent.",
+   "2": "Unhiding the comment waits to be sent."
+  }
+ },
+ {
+  "key": "actions.error.not-found",
+  "lang": "en",
+  "translations": {
+   "1": "The action or comment does not exist.",
+   "2": "The action or comment does not exist."
+  }
+ },
+ {
+  "key": "actions.error.not-pending",
+  "lang": "en",
+  "translations": {
+   "1": "The action no longer awaits approval.",
+   "2": "The action no longer awaits approval."
+  }
+ },
+ {
+  "key": "actions.error.observe",
+  "lang": "en",
+  "translations": {
+   "1": "Actions cannot be approved or requested in observe mode.",
+   "2": "Actions cannot be approved or requested in observe mode."
+  }
+ },
+ {
+  "key": "actions.error.state",
+  "lang": "en",
+  "translations": {
+   "1": "The comment is already in that state, removed, or the account's own.",
+   "2": "The comment is already in that state, removed, or the account's own."
+  }
+ },
+ {
+  "key": "actions.error.open",
+  "lang": "en",
+  "translations": {
+   "1": "The comment already has an open action.",
+   "2": "The comment already has an open action."
+  }
+ },
+ {
+  "key": "decision.reason.unhide_needs_human",
+  "lang": "en",
+  "translations": {
+   "1": "unhide needs a human",
+   "2": "unhide needs a human"
+  }
+ },
+ {
+  "key": "decision.reason.comment_removed",
+  "lang": "en",
+  "translations": {
+   "1": "comment removed",
+   "2": "comment removed"
+  }
+ },
+ {
+  "key": "decision.reason.already_hidden",
+  "lang": "en",
+  "translations": {
+   "1": "comment already hidden",
+   "2": "comment already hidden"
+  }
+ },
+ {
+  "key": "decision.reason.already_visible",
+  "lang": "en",
+  "translations": {
+   "1": "comment already visible",
+   "2": "comment already visible"
+  }
+ },
+ {
+  "key": "decision.reason.own_comment",
+  "lang": "en",
+  "translations": {
+   "1": "the account's own comment",
+   "2": "the account's own comment"
+  }
+ },
+ {
+  "key": "decision.reason.comment_changed",
+  "lang": "en",
+  "translations": {
+   "1": "comment changed since",
+   "2": "comment changed since"
+  }
+ },
+ {
+  "key": "decision.reason.rejected",
+  "lang": "en",
+  "translations": {
+   "1": "rejected by a moderator",
+   "2": "rejected by a moderator"
+  }
+ },
+ {
+  "key": "decision.reason.token_unavailable",
+  "lang": "en",
+  "translations": {
+   "1": "no valid token",
+   "2": "no valid token"
+  }
+ },
+ {
+  "key": "decision.reason.meta_write_unavailable",
+  "lang": "en",
+  "translations": {
+   "1": "Meta write API not connected yet",
+   "2": "Meta write API not connected yet"
+  }
+ },
+ {
+  "key": "audit.action.action.approve",
+  "lang": "en",
+  "translations": {
+   "1": "Action approval",
+   "2": "Action approval"
+  }
+ },
+ {
+  "key": "audit.action.action.reject",
+  "lang": "en",
+  "translations": {
+   "1": "Action rejection",
+   "2": "Action rejection"
+  }
+ },
+ {
+  "key": "audit.action.action.request",
+  "lang": "en",
+  "translations": {
+   "1": "Action request",
+   "2": "Action request"
+  }
  }
 ]

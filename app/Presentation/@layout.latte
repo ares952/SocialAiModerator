@@ -53,6 +53,9 @@
 					<li class="nav-item" n:if="$user->isAllowed('events', 'view')">
 						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Events:*') ? active" n:href=":Admin:Events:">{_'admin.menu.events'}</a>
 					</li>
+					<li class="nav-item" n:if="$user->isAllowed('actions', 'view')">
+						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Actions:*') ? active" n:href=":Admin:Actions:">{_'admin.menu.actions'}</a>
+					</li>
 					<li class="nav-item" n:if="$user->isAllowed('accounts', 'view')">
 						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Accounts:*') ? active" n:href=":Admin:Accounts:">{_'admin.menu.accounts'}</a>
 					</li>

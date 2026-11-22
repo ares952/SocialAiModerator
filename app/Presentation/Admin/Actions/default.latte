@@ -1,0 +1,78 @@
+{varType App\Outbox\ActionStatus|null $status}
+{varType list<App\Outbox\ActionStatus> $statuses}
+{varType Nette\Utils\Paginator $paginator}
+{varType list<Nette\Database\Row> $actions}
+
+{block content}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<h1 class="h3 mb-0" n:block="title">{_'actions.title'}</h1>
+	<span class="text-body-secondary">{_'actions.total', $paginator->getItemCount()}</span>
+</div>
+<p class="text-body-secondary">{_'actions.note'}</p>
+
+<ul class="nav nav-pills flex-wrap mb-3">
+	<li class="nav-item">
+		<a n:class="nav-link, $status === null ? active" n:href="this, status: null, page: null">{_'actions.filter.all'}</a>
+	</li>
+	<li n:foreach="$statuses as $item" class="nav-item">
+		<a n:class="nav-link, $status === $item ? active" n:href="this, status: $item->value, page: null">{_"action.status.{$item->value}"}</a>
+	</li>
+</ul>
+
+{if $actions === []}
+	<div class="alert alert-secondary">{_'actions.empty'}</div>
+{else}
+	<div class="table-responsive">
+		<table class="table table-hover align-middle">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">{_'actions.column.created'}</th>
+					<th scope="col">{_'actions.column.account'}</th>
+					<th scope="col">{_'actions.column.action'}</th>
+					<th scope="col">{_'actions.column.status'}</th>
+					<th scope="col">{_'actions.column.event'}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$actions as $action">
+					<td>{$action->id}</td>
+					<td>{$action->created_at|localTime}</td>
+					<td>
+						<span class="badge badge-platform badge-{$action->platform} me-1">{_"platform.{$action->platform}"}</span>
+						{$action->account_name}
+					</td>
+					<td>
+						{_"action.type.{$action->type}"}
+						<div class="small text-body-secondary">
+							{if $action->automatic}{_'actions.source.automatic'}{elseif $action->reviewed_by_name !== null}{$action->reviewed_by_name}{else}{_'actions.source.proposed'}{/if}
+						</div>
+					</td>
+					<td>
+						{include '../@actionStatus.latte', status: $action->status}
+						<div n:if="$action->reasons_json !== null">
+							<span n:foreach="Nette\Utils\Json::decode($action->reasons_json, forceArrays: true) as $reason" class="badge text-bg-light border me-1">{_"decision.reason.$reason"}</span>
+						</div>
+					</td>
+					<td>
+						{if $action->event_id !== null}<a n:href="Events:detail, id: $action->event_id">{_'actions.open', 1, [id => $action->event_id]}</a>{else}—{/if}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<nav n:if="$paginator->getPageCount() > 1" aria-label="{_'events.pages'}">
+		<ul class="pagination flex-wrap">
+			<li n:class="page-item, $paginator->isFirst() ? disabled">
+				<a class="page-link" n:href="this, page: $paginator->getPage() - 1">{_'events.previous'}</a>
+			</li>
+			<li class="page-item disabled">
+				<span class="page-link">{_'events.page', 1, [page => $paginator->getPage(), pages => $paginator->getPageCount()]}</span>
+			</li>
+			<li n:class="page-item, $paginator->isLast() ? disabled">
+				<a class="page-link" n:href="this, page: $paginator->getPage() + 1">{_'events.next'}</a>
+			</li>
+		</ul>
+	</nav>
+{/if}

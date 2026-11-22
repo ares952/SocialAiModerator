@@ -134,6 +134,14 @@ test('a signed event is stored and the worker normalizes it and moves it to revi
 		(string) $eventId,
 	)->fetchField());
 
+	// Observe mode: the comment shows its state, but no action can be requested.
+	Assert::contains('komentář viditelný', $detail->body);
+	Assert::contains('Pravidla jsou v režimu pozorování', $detail->body);
+	Assert::null($detail->link('~do=request~'));
+	Assert::same(403, $browser->get("/admin/events/detail/$eventId?do=request&type=hide")->status, 'A viewer cannot request an action.');
+	Assert::same(302, $moderator->get("/admin/events/detail/$eventId?do=request&type=hide")->status);
+	Assert::same(0, $data->database->query('SELECT COUNT(*) FROM moderation_actions')->fetchField());
+
 	// A failed decision can be requested again.
 	$link = $detail->link('~do=decide~') ?? throw new LogicException('Missing decide link.');
 	Assert::same(302, $moderator->get(html_entity_decode($link))->status);

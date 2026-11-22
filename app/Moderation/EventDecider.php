@@ -14,6 +14,7 @@ use App\Ingest\EventStatus;
 use App\Ingest\EventStore;
 use App\Meta\NormalizedEvent;
 use App\Meta\Platform;
+use App\Outbox\Actions;
 use App\Queue\JobQueue;
 use App\Queue\JobType;
 use Nette\Database\Explorer;
@@ -22,8 +23,8 @@ use Nette\Database\Explorer;
 /**
  * Worker step for one comment or message (job event.decide, specification §5.1): classify it,
  * let the PolicyEngine decide with the active policy, the panic switch and the account state,
- * and store the decision. Nothing is executed here; in `observe` mode the decision is advice for
- * the moderator. A failed classification is stored as a fail-closed review with the error.
+ * and store the decision. A hide of a comment becomes a moderation action (Actions::propose());
+ * nothing is sent here, the ActionDispatcher checks every action again before sending. A failed classification is stored as a fail-closed review with the error.
  * The repeated-text rule counts earlier identical texts of the same comment author or customer.
  * An event that already has a classified decision is skipped, so a repeated job does not call
  * the model again; after a failure the decision can be requested again (request()).
@@ -41,6 +42,7 @@ final class EventDecider
 		private readonly JobQueue $queue,
 		private readonly Comments $comments,
 		private readonly Conversations $conversations,
+		private readonly Actions $actions,
 	) {
 	}
 
@@ -121,14 +123,22 @@ final class EventDecider
 				accountActive: $event->account_status === AccountStatus::Active->value,
 			),
 		);
-		$this->decisions->record(
-			$eventId,
-			$classified,
-			$decision,
-			$this->classifier->model(),
-			Classifier::PromptVersion,
-			$error,
-		);
+		$this->database->transaction(function () use ($eventId, $event, $normalized, $kind, $classified, $decision, $error): void {
+			$decisionId = $this->decisions->record(
+				$eventId,
+				$classified,
+				$decision,
+				$this->classifier->model(),
+				Classifier::PromptVersion,
+				$error,
+			);
+			$comment = $kind === ContentKind::Comment && $normalized->externalId !== null
+				? $this->comments->find((int) $event->account_id, $normalized->externalId)
+				: null;
+			if ($comment !== null) {
+				$this->actions->propose($eventId, $decisionId, $comment->id, $comment->external_id, $decision);
+			}
+		});
 	}
 
 
