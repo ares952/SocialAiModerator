@@ -69,6 +69,7 @@ The repository root is also the Docker Compose project directory. It follows the
 │   ├── Conversation/               conversations, reply window, takeover/release, echo guard
 │   ├── Outbox/                     ActionDispatcher (the ONLY Meta writer), idempotency, states
 │   ├── Audit/                      admin_audit writer
+│   ├── Privacy/                    customer data lookup, export and deletion (GDPR requests)
 │   ├── Translation/                UI Translator, PluralRule, JSON import into the DB
 │   ├── Console/                    CLI commands (worker, reconcile, retention, ...)
 │   └── Presentation/
@@ -208,7 +209,7 @@ Never connect a live production Page or real accounts in tests or during develop
 
 The conventions are in `docs/admin-ui.md`.
 
-- Always build admin screens with CoreUI 5 free components (cards, callouts, badges, progress groups, sidebar navigation, dropdowns) and `data-coreui-*` attributes. Do not add another UI framework, CoreUI PRO components, or inline scripts. Custom CSS goes only into `www/assets/admin/admin.css` and uses `--cui-*` variables, so the light and dark themes keep working.
+- Always build admin screens with CoreUI 5 free components (cards, callouts, badges, progress groups, sidebar navigation, dropdowns) and `data-coreui-*` attributes. Do not add another UI framework or CoreUI PRO components. Do not add inline scripts or `style` attributes, because the CSP forbids them (`docs/security.md`). Custom CSS goes only into `www/assets/admin/admin.css` and uses `--cui-*` variables, so the light and dark themes keep working.
 - Add a visual overview wherever it makes sense: data over time, distributions, or comparisons that operators read at a glance. Use a Chart.js chart through the `data-chart` convention:
   - the data comes from a domain read model;
   - the chart definition with translated labels is built in PHP;

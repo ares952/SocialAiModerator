@@ -30,6 +30,12 @@ $queue = new JobQueue(
 	backoffCapSeconds: 25,
 	leaseSeconds: 600,
 );
+$database->query('INSERT INTO operators ?', [
+	'email' => 'admin@example.test',
+	'name' => 'Admin',
+	'role' => 'admin',
+	'password_hash' => 'x',
+]);
 $database->query('INSERT INTO social_accounts ?', [
 	'platform' => 'facebook',
 	'external_id' => 'fb:1000000000000001',

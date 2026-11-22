@@ -47,9 +47,11 @@ $accountId = (int) $database->getInsertId();
 
 $heartbeat = TEMP_DIR . '/alarms.heartbeat';
 touch($heartbeat);
+$backupStatus = TEMP_DIR . '/alarms.backup-status';
+touch($backupStatus);
 $thresholds = new AlarmThresholds($database, new AuditLog($database));
 $policies = TestServices::policies($database);
-$alarms = new Alarms($heartbeat, $database, $thresholds, $policies);
+$alarms = new Alarms($heartbeat, $backupStatus, $database, $thresholds, $policies);
 $codes = static fn(): array => array_map(fn(Alarm $alarm) => $alarm->describe(), $alarms->current());
 
 
@@ -61,8 +63,20 @@ test('the seeded thresholds are in place; a quiet installation has only the miss
 		'failures' => 3,
 		'hidden_comments' => 20,
 		'stale_approvals' => 24,
+		'backup_age' => 30,
 	], $thresholds->all());
 	Assert::same(['token_missing (account=Test Page)'], $codes());
+});
+
+
+test('a missing or old scheduled backup', function () use ($backupStatus, $codes): void {
+	touch($backupStatus, time() - 31 * 3600);
+	Assert::contains('backup_stale (hours=31)', $codes());
+	unlink($backupStatus);
+	Assert::contains('backup_missing', $codes());
+	touch($backupStatus);
+	Assert::notContains('backup_missing', $codes());
+	Assert::same([], array_filter($codes(), fn(string $code): bool => str_starts_with($code, 'backup_')));
 });
 
 
@@ -155,7 +169,7 @@ test('failures, open breakers, unknown results, many hides and stale approvals',
 
 	$policies->save(Mode::Assisted, new PolicySettings, 1);
 	Assert::contains('stale_approvals (count=2, hours=24)', $codes());
-	Assert::same('token_expiry=7, webhook_silence=48, queue_lag=15, failures=off, hidden_comments=1, stale_approvals=24', $database->query(
+	Assert::same('token_expiry=7, webhook_silence=48, queue_lag=15, failures=off, hidden_comments=1, stale_approvals=24, backup_age=off', $database->query(
 		"SELECT details FROM admin_audit WHERE action = 'alarms.update'",
 	)->fetchField());
 	Assert::exception(fn() => $thresholds->save(['queue_lag' => 0], 1), InvalidArgumentException::class);

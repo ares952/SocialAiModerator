@@ -12,10 +12,14 @@
 {varType int|null $conversationId}
 {varType array<int, string|null> $replies}
 {varType int|null $draft}
+{varType bool $queued}
+{varType int|null $next}
 
 {block content}
-<div class="mb-2">
+<div class="d-flex flex-wrap gap-3 mb-2">
 	<a n:href="default">&larr; {_'events.detail.back'}</a>
+	<a n:href="Review:default">{_'review.title'}</a>
+	<a n:if="$next !== null" n:href="detail, id: $next" class="ms-auto">{_'review.next'} &rarr;</a>
 </div>
 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
 	<h1 class="h3 mb-0 me-auto" n:block="title">{_'events.detail.title', 1, [id => $event->id]}</h1>
@@ -37,7 +41,10 @@
 				{elseif $content === null || ($content->text === null && $content->author === null)}
 					<p class="text-body-secondary mb-0">{_'events.detail.content.none'}</p>
 				{else}
-					<div n:if="$content->author !== null" class="fw-semibold mb-1">{$content->author}</div>
+					<div n:if="$content->author !== null" class="fw-semibold mb-1">
+						{$content->author}
+						<span n:if="$content->authorId !== null" class="small fw-normal text-body-secondary ms-1" title="{_'events.detail.author-id'}">{$content->authorId}</span>
+					</div>
 					<p n:if="$content->text !== null" class="customer-text mb-2">{$content->text}</p>
 					<a n:if="$content->permalink !== null" href="{$content->permalink}" target="_blank" rel="noopener noreferrer">{_'events.detail.permalink'}</a>
 					<p class="small text-body-secondary mt-2 mb-0">{_'events.detail.content.audited'}</p>
@@ -113,6 +120,36 @@
 	</div>
 
 	<div class="col-lg-5">
+		<div n:class="card, mb-3, $queued ? 'border-warning'">
+			<div class="card-header">{_'review.card'}</div>
+			<div class="card-body">
+				{if $event->resolved_at !== null}
+					<p class="mb-2">{_'review.state.resolved', 1, [name => $event->resolved_by_name ?? '—', time => ($event->resolved_at|localTime)]}</p>
+				{elseif $queued}
+					<p class="mb-2">{_'review.state.open'}</p>
+				{else}
+					<p class="mb-2 text-body-secondary">{_'review.state.none'}</p>
+				{/if}
+				{if $canAct}
+					<div class="d-flex flex-wrap gap-2 mb-3">
+						<a n:if="$event->resolved_at === null && $queued" class="btn btn-sm btn-success" n:href="resolve!, id: $event->id">{_'review.resolve'}</a>
+						<a n:if="$event->resolved_at !== null" class="btn btn-sm btn-outline-secondary" n:href="reopen!, id: $event->id">{_'review.reopen'}</a>
+					</div>
+					<form n:name="assignForm" class="row g-2 align-items-end">
+						<div class="col">
+							<label n:name="assignee" class="form-label small text-body-secondary mb-1" />
+							<select n:name="assignee" class="form-select form-select-sm"></select>
+						</div>
+						<div class="col-auto">
+							<button n:name="send" class="btn btn-sm btn-outline-primary">{_'review.assign'}</button>
+						</div>
+					</form>
+				{elseif $event->assignee_name !== null}
+					<p class="small mb-0">{_'review.assignee'}: {$event->assignee_name}</p>
+				{/if}
+			</div>
+		</div>
+
 		<div class="card mb-3">
 			<div class="card-header">{_'events.detail.metadata'}</div>
 			<div class="card-body">

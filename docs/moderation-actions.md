@@ -89,6 +89,27 @@ Když automatickou odpověď zastaví jen pravidla pro jednání bez člověka (
 limit), nezahodí se: vrátí se do fronty ke schválení s důvodem a moderátor ji může odeslat.
 Ostatní důvody (např. převzetí, vypršelé okno) ji zastaví úplně.
 
+## Fronta ke kontrole
+
+Stránka **Ke kontrole** (specifikace §4.3) ukazuje komentáře a zprávy, které čekají na člověka,
+od nejstarších:
+
+- AI předala událost člověku (`review`, `handoff`) – sem patří i selhaná klasifikace;
+- událost zatím nemá rozhodnutí AI (fail closed);
+- zásah k události čeká na schválení.
+
+Fronta ukazuje jen metadata a souhrn AI (akce, kategorie, jistota, důvody). Obsah, zásahy
+a vyřízení jsou na detailu události, kde se zobrazení obsahu audituje. Na detailu:
+
+- **Vyřízeno, další** – událost opustí frontu a otevře se další (audit `event.resolve`);
+  **Vrátit do fronty** ji vrátí (`event.reopen`);
+- **Předat** – přiřazení aktivnímu moderátorovi nebo administrátorovi (`event.assign`); filtr
+  fronty „Předané mně“;
+- **Další ve frontě** – nejbližší další otevřená událost.
+
+Událost, u které AI navrhla zásah (např. odpověď) a moderátor ho schválí nebo zamítne, opustí
+frontu sama. Vyřizovat a předávat smí moderátor a administrátor, číst frontu i viewer.
+
 ## Co zastaví odeslání
 
 | Důvod | Kdy |

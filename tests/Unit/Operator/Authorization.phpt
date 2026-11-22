@@ -52,6 +52,9 @@ test('accounts are readable by everyone, audit only by admins', function () use 
 	Assert::true($acl->isAllowed('admin', Authorization::Audit, Authorization::View));
 	Assert::false($acl->isAllowed('moderator', Authorization::Alarms, Authorization::Manage));
 	Assert::true($acl->isAllowed('admin', Authorization::Alarms, Authorization::Manage));
+	Assert::false($acl->isAllowed('moderator', Authorization::Privacy, Authorization::Manage), 'Customer data export and deletion are admin only.');
+	Assert::false($acl->isAllowed('viewer', Authorization::Privacy, Authorization::View));
+	Assert::true($acl->isAllowed('admin', Authorization::Privacy, Authorization::Manage));
 });
 
 

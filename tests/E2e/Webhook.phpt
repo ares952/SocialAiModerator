@@ -142,6 +142,16 @@ test('a signed event is stored and the worker normalizes it and moves it to revi
 	Assert::same(302, $moderator->get("/admin/events/detail/$eventId?do=request&type=hide")->status);
 	Assert::same(0, $data->database->query('SELECT COUNT(*) FROM moderation_actions')->fetchField());
 
+	// Review queue: the failed classification waits for a human until a moderator resolves it.
+	Assert::contains("/admin/events/detail/$eventId", $moderator->get('/admin/review')->body);
+	Assert::notNull($detail->link('~do=resolve~'));
+	Assert::same(403, $browser->get("/admin/events/detail/$eventId?do=resolve")->status, 'A viewer cannot resolve.');
+	Assert::same(302, $moderator->get("/admin/events/detail/$eventId?do=resolve")->status);
+	Assert::notNull($data->database->query('SELECT resolved_at FROM social_events WHERE id = ?', $eventId)->fetchField());
+	Assert::notContains("/admin/events/detail/$eventId", $moderator->get('/admin/review')->body);
+	Assert::same(302, $moderator->get("/admin/events/detail/$eventId?do=reopen")->status);
+	Assert::null($data->database->query('SELECT resolved_at FROM social_events WHERE id = ?', $eventId)->fetchField());
+
 	// A reply draft is shown to the moderator only; observe mode offers no approval.
 	$data->database->query('INSERT INTO moderation_actions ?', [
 		'comment_id' => $data->database->query('SELECT id FROM social_comments WHERE external_id = ?', "fb:$commentId")->fetchField(),

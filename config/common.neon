@@ -66,6 +66,35 @@ latte:
 	strictParsing: true
 
 
+# Security headers of every PHP response (docs/security.md). The administration has no inline
+# scripts or styles; 'nonce' only lets the Tracy bar run in debug mode. X-Content-Type-Options
+# comes from nginx for all responses, HSTS from the TLS-terminating reverse proxy.
+http:
+	frames: DENY
+	headers:
+		X-Powered-By: null
+		Referrer-Policy: same-origin
+		Permissions-Policy: 'camera=(), microphone=(), geolocation=(), payment=(), usb=()'
+		Cross-Origin-Opener-Policy: same-origin
+	csp:
+		default-src: none
+		script-src:
+			- self
+			- nonce
+		style-src:
+			- self
+			- nonce
+		# CoreUI draws form and close icons as data: SVGs
+		img-src:
+			- self
+			- 'data:'
+		font-src: self
+		connect-src: self
+		form-action: self
+		frame-ancestors: none
+		base-uri: none
+
+
 tracy:
 	# PHP-FPM keeps the environment (clear_env = no), so secrets from config/secrets/app.env are
 	# in $_SERVER and in the `env` parameter. Bluescreens logged to log/ must never show them, nor

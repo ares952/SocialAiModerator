@@ -39,6 +39,7 @@ final class Authorization
 	public const Audit = 'audit';
 	public const Retention = 'retention';
 	public const Alarms = 'alarms';
+	public const Privacy = 'privacy';
 
 	public const View = 'view';
 	public const Edit = 'edit';
@@ -62,7 +63,7 @@ final class Authorization
 			self::Evaluation,
 			self::Accounts,
 		];
-		foreach ([...$readable, self::Operators, self::Audit, self::Retention, self::Alarms] as $resource) {
+		foreach ([...$readable, self::Operators, self::Audit, self::Retention, self::Alarms, self::Privacy] as $resource) {
 			$acl->addResource($resource);
 		}
 

@@ -46,9 +46,11 @@ services:
 	- App\Moderation\PolicyEngine
 	- App\Moderation\Decisions
 	- App\Moderation\EventDecider
+	- App\Moderation\ReviewQueue
 	- App\Retention\Retention
+	- App\Privacy\CustomerData
 	- App\Monitoring\AlarmThresholds
-	- App\Monitoring\Alarms(heartbeatFile: %tempDir%/worker.heartbeat)
+	- App\Monitoring\Alarms(heartbeatFile: %tempDir%/worker.heartbeat, backupStatusFile: %tempDir%/backup.status)
 	- App\Monitoring\Metrics
 	- App\Monitoring\MetricSeries
 	- App\Presentation\Admin\Charts

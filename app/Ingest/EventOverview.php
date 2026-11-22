@@ -71,15 +71,18 @@ final class EventOverview
 
 
 	/**
-	 * Metadata of one event with the account name; no customer content.
+	 * Metadata of one event with the account name and its review queue state; no customer content.
 	 */
 	public function find(int $id): ?Row
 	{
 		return $this->database->query(
 			'SELECT e.id, e.received_at, e.occurred_at, e.platform, e.account_id, e.account_external_id,
-				a.name AS account_name, e.topic, e.event_type, e.external_id, e.status, e.attempts, e.last_error
+				a.name AS account_name, e.topic, e.event_type, e.external_id, e.status, e.attempts, e.last_error,
+				e.resolved_at, r.name AS resolved_by_name, e.assignee_id, o.name AS assignee_name
 			FROM social_events e
 			LEFT JOIN social_accounts a ON a.id = e.account_id
+			LEFT JOIN operators r ON r.id = e.resolved_by
+			LEFT JOIN operators o ON o.id = e.assignee_id
 			WHERE e.id = ?',
 			$id,
 		)->fetch();

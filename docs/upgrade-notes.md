@@ -15,6 +15,35 @@ Formát sekce:
 - **Ověření:** jak potvrdit, že je hotovo
 ```
 
+## 0.17.0
+
+- **Týká se:** všech instancí
+- **Kdy:** po kroku 12
+- **Akce:** nová stránka **Ke kontrole** zobrazí i dříve přijaté komentáře a zprávy, které AI
+  předala člověku nebo které nemají rozhodnutí (ve stínovém režimu jich může být hodně). Projít
+  je a vyřídit tlačítkem **Vyřízeno, další** na detailu, nebo s tím počítat při zaškolení.
+- **Ověření:** stránka Ke kontrole se otevře a počet odpovídá očekávání.
+
+## 0.16.0
+
+- **Týká se:** všech instancí
+- **Kdy:** před krokem 7 (kontejnery)
+- **Akce:** spustit `deploy/bootstrap-environment.sh` (založí `data/backups/`, pokud chybí; nic
+  nepřepíše). Aplikační kontejnery teď `data/backups` překrývají tmpfs a adresář musí existovat.
+  V kroku 7 pak `docker compose up -d --wait web` znovu vytvoří `php`; nginx načte novou hlavičku
+  `X-Content-Type-Options` až po `docker compose restart web`.
+- **Ověření:** `docker compose exec -T php ls /var/www/data/backups` nic nevypíše;
+  `docker compose exec -T web wget -S -qO /dev/null http://127.0.0.1/sign/in 2>&1 | grep -i 'nosniff\|content-security'`
+  vypíše obě hlavičky.
+
+- **Týká se:** všech instancí
+- **Kdy:** po kroku 12
+- **Akce:** spustit `bin/backup create` a do crontabu vlastníka checkoutu přidat denní
+  `bin/backup create` a týdenní `bin/backup verify` (`docs/release-lifecycle.md`, Zálohy).
+  Jinak bude nové upozornění **Stáří zálohy DB** hlásit chybějící zálohu.
+- **Ověření:** `bin/backup verify` skončí `OK: the backup restores`; přehled neukazuje upozornění
+  na zálohu.
+
 ## 0.14.1
 
 - **Týká se:** všech instancí

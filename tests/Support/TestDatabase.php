@@ -72,12 +72,14 @@ final class TestDatabase
 
 
 	/**
-	 * The application uses the server default (UTC, deploy/mariadb/my.cnf); the migration runner
-	 * switches the shared connection to SYSTEM.
+	 * The session settings of the application: the server default time zone (UTC,
+	 * deploy/mariadb/my.cnf) and foreign key checks. The migration runner switches the shared
+	 * connection to SYSTEM time and turns the foreign key checks off.
 	 */
 	private static function utc(Connection $connection): Connection
 	{
 		$connection->query("SET time_zone = '+00:00'");
+		$connection->query('SET foreign_key_checks = 1');
 
 		return $connection;
 	}

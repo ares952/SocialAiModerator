@@ -36,7 +36,7 @@
 				<p n:if="$source->valid_from || $source->valid_to" class="small text-body-secondary">
 					{_'knowledge.validity'}: {$source->valid_from?->format('j. n. Y') ?? '…'} – {$source->valid_to?->format('j. n. Y') ?? '…'}
 				</p>
-				<div style="white-space: pre-wrap">{$source->content}</div>
+				<div class="text-pre-wrap">{$source->content}</div>
 			</div>
 		</div>
 	</div>

@@ -92,6 +92,33 @@ gunzip -c "$BACKUP" | docker compose exec -T db sh -c 'exec mariadb -uroot -p"$M
 Poté `translations:import --force`, kroky 8–9 a 11–12. Zálohy v `data/backups/` nikdy nemazat
 v rámci aktualizace.
 
+## Zálohy
+
+Kromě záloh při aktualizaci (krok 4) má každá instance plánované zálohy přes `bin/backup`:
+
+| Příkaz | Co dělá |
+| --- | --- |
+| `bin/backup create [--keep-days N]` | dump DB do `data/backups/<UTC>-v<verze>-scheduled.sql.gz`, smaže plánované zálohy starší než N dní (výchozí 14); zálohy z aktualizací nemaže |
+| `bin/backup verify [soubor]` | obnoví zálohu (výchozí nejnovější) do dočasného kontejneru MariaDB bez sítě a s daty v paměti, porovná tabulky s živou DB, vypíše poslední migraci a počet událostí; kontejner pak smaže |
+| `bin/backup list` | seznam záloh od nejnovější |
+
+Plánování je v crontabu vlastníka checkoutu na každém serveru (ne v repozitáři), např.:
+
+```cron
+15 3 * * *  cd /cesta/k/checkoutu && bin/backup create --keep-days 14 >> log/backup.log 2>&1
+45 3 * * 0  cd /cesta/k/checkoutu && bin/backup verify >> log/backup.log 2>&1
+```
+
+- Úspěšné `create` zapíše `temp/backup.status`. Upozornění **Stáří zálohy DB** (výchozí 30 hodin)
+  na přehledu a v `monitor:check` hlásí chybějící nebo starou zálohu. Aplikační kontejnery
+  samotné dumpy nevidí (`data/backups` je v nich překryté tmpfs).
+- Zálohy obsahují tokeny a texty zašifrované `APP_ENCRYPTION_KEY`: klíč se uchovává odděleně
+  a záloha bez něj nejde použít (`docs/meta-webhooks.md`, oddíl 6).
+- Kopie mimo server (jiný disk, offsite úložiště) je nastavení konkrétního serveru; v repozitáři
+  nejsou žádné cíle ani přístupy.
+- Obnova do instance je stejná jako v oddílu *Selhání a návrat* (s maintenance a zastaveným
+  workerem); `bin/backup verify` ji předem ověří bez zásahu do instance.
+
 ## Maintenance
 
 - `bin/maintenance on|off|status` vytváří/maže `temp/maintenance.lock`; nginx pak vrací 503

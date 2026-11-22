@@ -3,10 +3,11 @@
 {varType bool $languageSwitch}
 {varType string $appVersion}
 {varType string $icons}
-{* Sidebar menu: group => [presenter, ACL resource, privilege]; the resource is also the icon and the label key. *}
+{* Sidebar menu: group => [presenter, ACL resource, privilege, name]; the name (default: the resource) is the icon and the label key. *}
 {var $menu = [
 	operations => [
 		['Dashboard', 'dashboard', 'view'],
+		['Review', 'events', 'view', 'review'],
 		['Events', 'events', 'view'],
 		['Conversations', 'conversations', 'view'],
 		['Actions', 'actions', 'view'],
@@ -22,6 +23,7 @@
 		['Evaluation', 'evaluation', 'view'],
 		['Operators', 'operators', 'manage'],
 		['Audit', 'audit', 'view'],
+		['Privacy', 'privacy', 'manage'],
 	],
 ]}
 <!DOCTYPE html>
@@ -55,10 +57,11 @@
 				<li n:if="$visible !== []" class="nav-title">{_"admin.menu.group.$group"}</li>
 				<li n:foreach="$visible as $item" class="nav-item">
 					{var $target = ':Admin:' . $item[0] . ':'}
+					{var $name = $item[3] ?? $item[1]}
 					<a n:class="nav-link, $presenter->isLinkCurrent($target . '*') ? active" n:href="$target"
 						n:attr="aria-current: $presenter->isLinkCurrent($target . '*') ? page">
-						<svg class="nav-icon" aria-hidden="true"><use href="{$icons}#{$item[1]}"></use></svg>
-						{_"admin.menu.{$item[1]}"}
+						<svg class="nav-icon" aria-hidden="true"><use href="{$icons}#{$name}"></use></svg>
+						{_"admin.menu.$name"}
 					</a>
 				</li>
 			{/foreach}

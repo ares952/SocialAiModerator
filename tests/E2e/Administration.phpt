@@ -22,6 +22,8 @@ test('every page renders in both languages', function () use ($browser): void {
 		'/admin/events' => 'Příchozí události',
 		'/admin/actions' => 'Zásahy u komentářů',
 		'/admin/conversations' => 'Zprávy',
+		'/admin/review' => 'Fronta ke kontrole',
+		'/admin/review?filter=mine' => 'Fronta ke kontrole',
 		'/admin/accounts' => 'Sociální účty',
 		'/admin/accounts/add' => 'Přidat účet',
 		'/admin/policy' => 'Pravidla moderace',
@@ -36,6 +38,7 @@ test('every page renders in both languages', function () use ($browser): void {
 		'/admin/audit' => 'Audit',
 		'/admin/retention' => 'Retence dat',
 		'/admin/alarms' => 'Upozornění',
+		'/admin/privacy' => 'Ochrana osobních údajů',
 		'/admin/password' => 'Změna hesla',
 		'/en/' => 'Dashboard',
 		'/en/admin/policy' => 'Moderation policy',
@@ -45,6 +48,8 @@ test('every page renders in both languages', function () use ($browser): void {
 		$response = $browser->get($path);
 		Assert::same(200, $response->status, $path);
 		Assert::same("$title | Social AI Moderator", $response->title(), $path);
+		// The CSP allows no inline scripts, event handlers or style attributes (docs/security.md).
+		Assert::same(0, preg_match('~<script(?![^>]*\ssrc=)[^>]*>|<style|\son[a-z]+=|\sstyle=~i', $response->body), $path);
 	}
 	Assert::same(404, $browser->get('/admin/nonexistent')->status);
 	Assert::same(404, $browser->get('/admin/audit?type=nonsense')->status);
@@ -52,6 +57,7 @@ test('every page renders in both languages', function () use ($browser): void {
 	Assert::same(404, $browser->get('/admin/events?type=nonsense')->status);
 	Assert::same(200, $browser->get('/admin/actions?status=pending')->status);
 	Assert::same(404, $browser->get('/admin/actions?status=nonsense')->status);
+	Assert::same(404, $browser->get('/admin/review?filter=nonsense')->status);
 	Assert::same(200, $browser->get('/admin/conversations?filter=takeover')->status);
 	Assert::same(404, $browser->get('/admin/conversations?filter=nonsense')->status);
 	Assert::same(404, $browser->get('/admin/conversations/detail/999999999')->status);
@@ -383,6 +389,16 @@ test('dashboard: alarms and numbers; alarm thresholds are saved and audited', fu
 	Assert::contains('token_expiry=10, webhook_silence=off', (string) $data->database->query(
 		"SELECT details FROM admin_audit WHERE action = 'alarms.update' ORDER BY id DESC LIMIT 1",
 	)->fetchField());
+});
+
+
+test('privacy: a customer is looked up without the ID in the URL; export and deletion need a valid ID', function () use ($browser): void {
+	Assert::contains('Zadejte ID s prefixem platformy', implode(' ', $browser->submit('/admin/privacy', 'searchForm', ['customer' => '12345', 'send' => '1'])->messages()));
+	$found = $browser->submit('/admin/privacy', 'searchForm', ['customer' => 'fb:999999999', 'send' => '1']);
+	Assert::same(200, $found->status, 'The result is rendered in the response, not behind a redirect with the ID.');
+	Assert::contains('Uložená data pro fb:999999999', $found->body);
+	Assert::contains('frm-exportForm', $found->body);
+	Assert::notContains('frm-deleteForm', $found->body, 'Nothing stored, nothing to delete.');
 });
 
 

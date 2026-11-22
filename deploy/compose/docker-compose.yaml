@@ -28,9 +28,11 @@ x-php-app: &php-app
     - ./deploy/php/umask.php:/usr/local/etc/php/umask.php:ro
     - ./config/php/zz-override.ini:/usr/local/etc/php/conf.d/zz-override.ini:ro
   # Hides config/secrets (incl. the MariaDB root password) from the application containers;
-  # they receive only app.env through env_file.
+  # they receive only app.env through env_file. The DB dumps of bin/backup stay hidden too; the
+  # backup alarm reads temp/backup.status instead.
   tmpfs:
     - /var/www/config/secrets:size=1k,mode=0500
+    - /var/www/data/backups:size=1k,mode=0500
   depends_on:
     db:
       condition: service_healthy

@@ -241,11 +241,8 @@
 						<span class="ms-auto fw-semibold">{$count|number}</span>
 					</div>
 					<div class="progress-group-bars">
-						<div class="progress progress-thin" role="progressbar" aria-label="{_"job.status.{$status->value}"}"
-							aria-valuenow="{$count}" aria-valuemin="0" aria-valuemax="{$jobTotal}">
-							<div class="progress-bar bg-{$jobColors[$status->value]}"
-								style="width: {round($count / $jobTotal * 100, 1)}%"></div>
-						</div>
+						<progress class="progress-native progress-{$jobColors[$status->value]}" value="{$count}" max="{$jobTotal}"
+							aria-label="{_"job.status.{$status->value}"}">{$count}</progress>
 					</div>
 				</div>
 			</div>

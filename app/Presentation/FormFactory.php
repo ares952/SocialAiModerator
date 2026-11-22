@@ -49,7 +49,11 @@ final class FormFactory
 		foreach ($form->getControls() as $control) {
 			match (true) {
 				$control instanceof Controls\Button => $control->getControlPrototype()
-					->appendAttribute('class', $control->getName() === 'send' ? 'btn btn-primary' : 'btn btn-secondary'),
+					->appendAttribute('class', match ($control->getName()) {
+						'send' => 'btn btn-primary',
+						'delete' => 'btn btn-danger',
+						default => 'btn btn-secondary',
+					}),
 				$control instanceof Controls\Checkbox => self::checkbox($control),
 				$control instanceof Controls\CheckboxList => self::checkboxList($control),
 				$control instanceof Controls\SelectBox => self::field($control, 'form-select'),

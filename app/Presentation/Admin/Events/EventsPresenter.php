@@ -16,6 +16,10 @@ use App\Moderation\Decisions;
 use App\Moderation\EventDecider;
 use App\Moderation\Mode;
 use App\Moderation\Policies;
+use App\Moderation\ReviewQueue;
+use App\Operator\Operators;
+use App\Operator\Role;
+use Nette\Application\UI\Form;
 use App\Outbox\Actions;
 use App\Outbox\ActionType;
 use App\Operator\Authorization;
@@ -50,6 +54,8 @@ final class EventsPresenter extends AdminPresenter
 		private readonly Actions $actions,
 		private readonly Policies $policies,
 		private readonly Conversations $conversations,
+		private readonly ReviewQueue $queue,
+		private readonly Operators $operators,
 	) {
 		parent::__construct();
 	}
@@ -100,6 +106,12 @@ final class EventsPresenter extends AdminPresenter
 			$this->audit->write($this->operatorId(), AuditAction::EventContentView, 'event', $id);
 		}
 
+		$assign = $this->getComponent('assignForm');
+		assert($assign instanceof Form);
+		$assign->setDefaults([
+			'assignee' => $event->assignee_id,
+		]);
+
 		$this->template->setParameters([
 			'event' => $event,
 			'jobs' => $this->events->jobs($id),
@@ -118,6 +130,8 @@ final class EventsPresenter extends AdminPresenter
 			'replies' => $replies,
 			'draft' => $draft,
 			'canAct' => $canRead && $this->getUser()->isAllowed(Authorization::Actions, Authorization::Edit),
+			'queued' => $this->queue->isOpen($id),
+			'next' => $this->queue->next($id),
 			'observe' => $this->policies->active()->mode === Mode::Observe,
 		]);
 	}
@@ -165,6 +179,70 @@ final class EventsPresenter extends AdminPresenter
 			&& str_starts_with((string) $event->event_type, 'comment.')
 			? $this->comments->find($event->account_id, $event->external_id)
 			: null;
+	}
+
+
+	/**
+	 * Marks the event as handled and continues with the next one in the review queue.
+	 */
+	public function handleResolve(int $id): void
+	{
+		$this->requireAllowed(Authorization::Events, Authorization::Edit);
+		$this->events->find($id) ?? $this->error();
+		$this->queue->resolve($id, $this->operatorId());
+		$this->flashMessage('review.resolved', 'success');
+		$next = $this->queue->next($id);
+		$next === null
+			? $this->redirect('Review:default')
+			: $this->redirect('detail', [
+				'id' => $next,
+			]);
+	}
+
+
+	public function handleReopen(int $id): void
+	{
+		$this->requireAllowed(Authorization::Events, Authorization::Edit);
+		$this->events->find($id) ?? $this->error();
+		$this->queue->reopen($id, $this->operatorId());
+		$this->flashMessage('review.reopened', 'success');
+		$this->redirect('detail', [
+			'id' => $id,
+		]);
+	}
+
+
+	/**
+	 * Hands the event over to a colleague (or takes it back).
+	 */
+	protected function createComponentAssignForm(): Form
+	{
+		$form = $this->forms->create();
+		$options = [];
+		foreach ($this->operators->all() as $operator) {
+			if ($operator->active && $operator->role !== Role::Viewer->value) {
+				$options[(int) $operator->id] = (string) $operator->name;
+			}
+		}
+		// operator names are data, not translation keys
+		$form->addSelect('assignee', $this->translator->translate('review.assignee'), $options)
+			->setTranslator(null)
+			->setPrompt($this->translator->translate('review.assignee.none'));
+		$form->addSubmit('send', 'review.assign');
+
+		$form->onSuccess[] = function (Form $form): void {
+			$this->requireAllowed(Authorization::Events, Authorization::Edit);
+			$id = (int) $this->getParameter('id');
+			$this->events->find($id) ?? $this->error();
+			$assignee = $form->getValues()['assignee'];
+			$this->queue->assign($id, $assignee === null ? null : (int) $assignee, $this->operatorId());
+			$this->flashMessage('review.assigned', 'success');
+			$this->redirect('detail', [
+				'id' => $id,
+			]);
+		};
+
+		return $form;
 	}
 
 

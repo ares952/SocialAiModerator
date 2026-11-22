@@ -1,0 +1,146 @@
+#!/bin/bash
+# Scheduled database backups and their verification (docs/release-lifecycle.md, Zálohy).
+#
+#   bin/backup create [--keep-days N]  dump the database to data/backups/<UTC>-v<version>-scheduled.sql.gz,
+#                                      then delete scheduled dumps older than N days (default 14);
+#                                      release backups (without -scheduled) are never deleted
+#   bin/backup verify [FILE]           restore FILE (default: the newest dump) into a throwaway MariaDB
+#                                      container without network and compare its tables with the live DB
+#   bin/backup list                    list the dumps, newest first
+#
+# A successful `create` writes temp/backup.status (time, file name, size; no content). The alarm
+# `backup_age` of monitor:check and the dashboard reads it. The dumps contain tokens and events
+# encrypted with APP_ENCRYPTION_KEY: keep that key apart from the backups, and copy the backups
+# off this server (per-server setup, not in the repository).
+set -euo pipefail
+umask 0077
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$root"
+dir="data/backups"
+status="temp/backup.status"
+
+die() {
+    echo "bin/backup: $*" >&2
+    exit 1
+}
+
+db_env() {
+    docker compose exec -T db printenv "$1"
+}
+
+live_tables() {
+    docker compose exec -T db sh -c 'exec mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" -N -e "SHOW TABLES" "$MARIADB_DATABASE"' | sort
+}
+
+create() {
+    local keep=14
+    while (($#)); do
+        case "$1" in
+            --keep-days)
+                keep="${2:-}"
+                shift 2
+                ;;
+            *)
+                die "unknown option $1"
+                ;;
+        esac
+    done
+    [[ "$keep" =~ ^[1-9][0-9]*$ ]] || die "--keep-days must be a positive number"
+
+    mkdir -p "$dir"
+    exec 9> "temp/backup.lock"
+    flock -n 9 || die "another backup is running"
+
+    local version file partial
+    version="$(tr -d '[:space:]' < version.txt)"
+    file="$dir/$(date -u +%Y%m%dT%H%M%SZ)-v$version-scheduled.sql.gz"
+    partial="$file.partial"
+    trap "rm -f -- '$partial'" EXIT
+    docker compose exec -T db sh -c 'exec mariadb-dump -uroot -p"$MARIADB_ROOT_PASSWORD" \
+        --single-transaction --routines --triggers --add-drop-database --databases "$MARIADB_DATABASE"' \
+        | gzip > "$partial"
+    gzip -t "$partial"
+    mv -- "$partial" "$file"
+    trap - EXIT
+
+    find "$dir" -maxdepth 1 -name '*-scheduled.sql.gz' -mtime "+$keep" -print -delete | sed 's/^/deleted /'
+
+    # Status for monitor:check (the application cannot see data/backups).
+    (
+        umask 0002
+        printf '{"time":"%s","file":"%s","bytes":%s}\n' \
+            "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$(basename "$file")" "$(stat -c %s "$file")" > "$status.tmp"
+        mv -- "$status.tmp" "$status"
+    )
+    echo "created $file ($(stat -c %s "$file") bytes)"
+}
+
+verify() {
+    local file="${1:-}"
+    if [[ -z "$file" ]]; then
+        file="$(ls -1t "$dir"/*.sql.gz 2>/dev/null | head -n 1 || true)"
+        [[ -n "$file" ]] || die "no backup in $dir"
+    fi
+    [[ -f "$file" ]] || die "$file does not exist"
+    gzip -t "$file" || die "$file is not a valid gzip file"
+
+    local image database name
+    image="$(docker inspect --format '{{.Config.Image}}' "$(docker compose ps -q db)")" \
+        || die "the db service must be running (its image and the live tables are compared)"
+    database="$(db_env MARIADB_DATABASE)"
+    name="$(basename "$root" | tr 'A-Z' 'a-z' | sed 's/[^a-z0-9_-]/-/g')-backup-verify-$$"
+
+    # Throwaway server: no network, data in memory, removed on exit.
+    trap "docker rm -f '$name' > /dev/null 2>&1 || true" EXIT
+    docker run -d --rm --name "$name" --network none --tmpfs /var/lib/mysql \
+        -e MARIADB_ALLOW_EMPTY_ROOT_PASSWORD=1 "$image" > /dev/null
+    local ready=0
+    for _ in $(seq 1 90); do
+        # The entrypoint first runs a temporary server for the initialisation; wait for the real one.
+        if docker logs "$name" 2>&1 | grep -q 'init process done' \
+            && docker exec "$name" mariadb -uroot -e 'SELECT 1' > /dev/null 2>&1; then
+            ready=1
+            break
+        fi
+        sleep 1
+    done
+    ((ready)) || die "the verification server did not start"
+
+    gunzip -c "$file" | docker exec -i "$name" mariadb -uroot || die "restoring $file failed"
+
+    local restored live missing
+    restored="$(docker exec "$name" mariadb -uroot -N -e "SHOW TABLES" "$database" | sort)"
+    live="$(live_tables)"
+    missing="$(comm -13 <(echo "$restored") <(echo "$live"))"
+
+    echo "backup:     $file"
+    echo "tables:     $(echo "$restored" | grep -c . || true) restored, $(echo "$live" | grep -c . || true) live"
+    echo "migration:  $(docker exec "$name" mariadb -uroot -N -e "SELECT CONCAT(\`group\`, '/', file) FROM migrations ORDER BY id DESC LIMIT 1" "$database")"
+    echo "events:     $(docker exec "$name" mariadb -uroot -N -e "SELECT COUNT(*) FROM social_events" "$database")"
+    if [[ -n "$missing" ]]; then
+        echo "missing in the backup (newer migration?):" $missing
+        exit 1
+    fi
+    echo "OK: the backup restores"
+}
+
+case "${1:-}" in
+    create)
+        shift
+        create "$@"
+        ;;
+    verify)
+        shift
+        verify "$@"
+        ;;
+    list)
+        ls -1t "$dir"/*.sql.gz 2>/dev/null | while read -r file; do
+            echo "$(stat -c '%s' "$file") $file"
+        done
+        ;;
+    *)
+        echo "Usage: bin/backup create [--keep-days N] | verify [FILE] | list" >&2
+        exit 2
+        ;;
+esac

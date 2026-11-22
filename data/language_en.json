@@ -5934,5 +5934,469 @@
    "1": "Wrong",
    "2": "Wrong"
   }
+ },
+ {
+  "key": "alarms.kind.backup_age",
+  "lang": "en",
+  "translations": {
+   "1": "Database backup age (hours)",
+   "2": "Database backup age (hours)"
+  }
+ },
+ {
+  "key": "alarms.kind.backup_age-note",
+  "lang": "en",
+  "translations": {
+   "1": "The last scheduled backup (bin/backup create) is older; a missing backup always alarms.",
+   "2": "The last scheduled backup (bin/backup create) is older; a missing backup always alarms."
+  }
+ },
+ {
+  "key": "alarm.backup_missing",
+  "lang": "en",
+  "translations": {
+   "1": "There is no scheduled database backup (bin/backup create).",
+   "2": "There is no scheduled database backup (bin/backup create)."
+  }
+ },
+ {
+  "key": "alarm.backup_stale",
+  "lang": "en",
+  "translations": {
+   "1": "The last database backup is %count% hour old.",
+   "2": "The last database backup is %count% hours old."
+  }
+ },
+ {
+  "key": "admin.menu.review",
+  "lang": "en",
+  "translations": {
+   "1": "Review",
+   "2": "Review"
+  }
+ },
+ {
+  "key": "review.title",
+  "lang": "en",
+  "translations": {
+   "1": "Review queue",
+   "2": "Review queue"
+  }
+ },
+ {
+  "key": "review.note",
+  "lang": "en",
+  "translations": {
+   "1": "Comments and messages where the AI asks for a human, the classification failed or an intervention waits for approval. Oldest first; the content, the interventions and resolving are on the detail.",
+   "2": "Comments and messages where the AI asks for a human, the classification failed or an intervention waits for approval. Oldest first; the content, the interventions and resolving are on the detail."
+  }
+ },
+ {
+  "key": "review.start",
+  "lang": "en",
+  "translations": {
+   "1": "Start with the oldest",
+   "2": "Start with the oldest"
+  }
+ },
+ {
+  "key": "review.filter.all",
+  "lang": "en",
+  "translations": {
+   "1": "All",
+   "2": "All"
+  }
+ },
+ {
+  "key": "review.filter.mine",
+  "lang": "en",
+  "translations": {
+   "1": "Handed over to me",
+   "2": "Handed over to me"
+  }
+ },
+ {
+  "key": "review.filter.unassigned",
+  "lang": "en",
+  "translations": {
+   "1": "Not handed over",
+   "2": "Not handed over"
+  }
+ },
+ {
+  "key": "review.empty",
+  "lang": "en",
+  "translations": {
+   "1": "The queue is empty.",
+   "2": "The queue is empty."
+  }
+ },
+ {
+  "key": "review.column.received",
+  "lang": "en",
+  "translations": {
+   "1": "Received",
+   "2": "Received"
+  }
+ },
+ {
+  "key": "review.column.account",
+  "lang": "en",
+  "translations": {
+   "1": "Account",
+   "2": "Account"
+  }
+ },
+ {
+  "key": "review.column.ai",
+  "lang": "en",
+  "translations": {
+   "1": "AI proposal",
+   "2": "AI proposal"
+  }
+ },
+ {
+  "key": "review.column.waiting",
+  "lang": "en",
+  "translations": {
+   "1": "Awaiting approval",
+   "2": "Awaiting approval"
+  }
+ },
+ {
+  "key": "review.column.assignee",
+  "lang": "en",
+  "translations": {
+   "1": "Handed over to",
+   "2": "Handed over to"
+  }
+ },
+ {
+  "key": "review.undecided",
+  "lang": "en",
+  "translations": {
+   "1": "no AI decision",
+   "2": "no AI decision"
+  }
+ },
+ {
+  "key": "review.next",
+  "lang": "en",
+  "translations": {
+   "1": "Next in the queue",
+   "2": "Next in the queue"
+  }
+ },
+ {
+  "key": "review.card",
+  "lang": "en",
+  "translations": {
+   "1": "Review queue",
+   "2": "Review queue"
+  }
+ },
+ {
+  "key": "review.state.open",
+  "lang": "en",
+  "translations": {
+   "1": "The event waits in the queue for a human.",
+   "2": "The event waits in the queue for a human."
+  }
+ },
+ {
+  "key": "review.state.none",
+  "lang": "en",
+  "translations": {
+   "1": "The event is not in the queue.",
+   "2": "The event is not in the queue."
+  }
+ },
+ {
+  "key": "review.resolve",
+  "lang": "en",
+  "translations": {
+   "1": "Resolved, next",
+   "2": "Resolved, next"
+  }
+ },
+ {
+  "key": "review.reopen",
+  "lang": "en",
+  "translations": {
+   "1": "Return to the queue",
+   "2": "Return to the queue"
+  }
+ },
+ {
+  "key": "review.assignee",
+  "lang": "en",
+  "translations": {
+   "1": "Hand over to",
+   "2": "Hand over to"
+  }
+ },
+ {
+  "key": "review.assignee.none",
+  "lang": "en",
+  "translations": {
+   "1": "— nobody —",
+   "2": "— nobody —"
+  }
+ },
+ {
+  "key": "review.assign",
+  "lang": "en",
+  "translations": {
+   "1": "Save",
+   "2": "Save"
+  }
+ },
+ {
+  "key": "review.resolved",
+  "lang": "en",
+  "translations": {
+   "1": "The event is resolved.",
+   "2": "The event is resolved."
+  }
+ },
+ {
+  "key": "review.reopened",
+  "lang": "en",
+  "translations": {
+   "1": "The event is back in the queue.",
+   "2": "The event is back in the queue."
+  }
+ },
+ {
+  "key": "review.assigned",
+  "lang": "en",
+  "translations": {
+   "1": "The handover is saved.",
+   "2": "The handover is saved."
+  }
+ },
+ {
+  "key": "audit.action.event.resolve",
+  "lang": "en",
+  "translations": {
+   "1": "Event resolved",
+   "2": "Event resolved"
+  }
+ },
+ {
+  "key": "audit.action.event.reopen",
+  "lang": "en",
+  "translations": {
+   "1": "Event returned to the queue",
+   "2": "Event returned to the queue"
+  }
+ },
+ {
+  "key": "audit.action.event.assign",
+  "lang": "en",
+  "translations": {
+   "1": "Event handed over",
+   "2": "Event handed over"
+  }
+ },
+ {
+  "key": "review.pending",
+  "lang": "en",
+  "translations": {
+   "1": "%count% intervention",
+   "2": "%count% interventions"
+  }
+ },
+ {
+  "key": "review.state.resolved",
+  "lang": "en",
+  "translations": {
+   "1": "Resolved by %name%, %time%.",
+   "2": "Resolved by %name%, %time%."
+  }
+ },
+ {
+  "key": "admin.menu.privacy",
+  "lang": "en",
+  "translations": {
+   "1": "Data protection",
+   "2": "Data protection"
+  }
+ },
+ {
+  "key": "privacy.title",
+  "lang": "en",
+  "translations": {
+   "1": "Personal data protection",
+   "2": "Personal data protection"
+  }
+ },
+ {
+  "key": "privacy.note",
+  "lang": "en",
+  "translations": {
+   "1": "Customer requests under the GDPR: what the application stores about them, export and deletion. Only data in this application, not data at Meta. The customer ID never goes into the page address and the audit keeps only its fingerprint.",
+   "2": "Customer requests under the GDPR: what the application stores about them, export and deletion. Only data in this application, not data at Meta. The customer ID never goes into the page address and the audit keeps only its fingerprint."
+  }
+ },
+ {
+  "key": "privacy.customer",
+  "lang": "en",
+  "translations": {
+   "1": "Customer ID",
+   "2": "Customer ID"
+  }
+ },
+ {
+  "key": "privacy.customer-note",
+  "lang": "en",
+  "translations": {
+   "1": "With the platform prefix as the administration shows it: the author on an event detail (fb:…, ig:…) or the customer on a conversation detail. Facebook uses different IDs for comments and Messenger; look each one up separately.",
+   "2": "With the platform prefix as the administration shows it: the author on an event detail (fb:…, ig:…) or the customer on a conversation detail. Facebook uses different IDs for comments and Messenger; look each one up separately."
+  }
+ },
+ {
+  "key": "privacy.search",
+  "lang": "en",
+  "translations": {
+   "1": "Look up",
+   "2": "Look up"
+  }
+ },
+ {
+  "key": "privacy.kind.comments",
+  "lang": "en",
+  "translations": {
+   "1": "Comments",
+   "2": "Comments"
+  }
+ },
+ {
+  "key": "privacy.kind.conversations",
+  "lang": "en",
+  "translations": {
+   "1": "Conversations",
+   "2": "Conversations"
+  }
+ },
+ {
+  "key": "privacy.kind.messages",
+  "lang": "en",
+  "translations": {
+   "1": "Messages (both sides)",
+   "2": "Messages (both sides)"
+  }
+ },
+ {
+  "key": "privacy.kind.events",
+  "lang": "en",
+  "translations": {
+   "1": "Received events",
+   "2": "Received events"
+  }
+ },
+ {
+  "key": "privacy.export",
+  "lang": "en",
+  "translations": {
+   "1": "Download export (JSON)",
+   "2": "Download export (JSON)"
+  }
+ },
+ {
+  "key": "privacy.delete-title",
+  "lang": "en",
+  "translations": {
+   "1": "Deletion",
+   "2": "Deletion"
+  }
+ },
+ {
+  "key": "privacy.delete-note",
+  "lang": "en",
+  "translations": {
+   "1": "Deletes the comments, conversations with messages, received events, AI decisions and interventions of this customer. Irreversible; database backups keep the data until they rotate out.",
+   "2": "Deletes the comments, conversations with messages, received events, AI decisions and interventions of this customer. Irreversible; database backups keep the data until they rotate out."
+  }
+ },
+ {
+  "key": "privacy.confirm",
+  "lang": "en",
+  "translations": {
+   "1": "Confirm the ID",
+   "2": "Confirm the ID"
+  }
+ },
+ {
+  "key": "privacy.delete-confirm-note",
+  "lang": "en",
+  "translations": {
+   "1": "Type the customer ID again to confirm the deletion.",
+   "2": "Type the customer ID again to confirm the deletion."
+  }
+ },
+ {
+  "key": "privacy.delete",
+  "lang": "en",
+  "translations": {
+   "1": "Delete the customer data",
+   "2": "Delete the customer data"
+  }
+ },
+ {
+  "key": "privacy.error.id",
+  "lang": "en",
+  "translations": {
+   "1": "Enter the ID with the platform prefix, e.g. fb:1234567890.",
+   "2": "Enter the ID with the platform prefix, e.g. fb:1234567890."
+  }
+ },
+ {
+  "key": "privacy.error.confirm",
+  "lang": "en",
+  "translations": {
+   "1": "The confirmation does not match the customer ID.",
+   "2": "The confirmation does not match the customer ID."
+  }
+ },
+ {
+  "key": "events.detail.author-id",
+  "lang": "en",
+  "translations": {
+   "1": "Author ID (for GDPR requests)",
+   "2": "Author ID (for GDPR requests)"
+  }
+ },
+ {
+  "key": "audit.action.privacy.export",
+  "lang": "en",
+  "translations": {
+   "1": "Customer data export",
+   "2": "Customer data export"
+  }
+ },
+ {
+  "key": "audit.action.privacy.delete",
+  "lang": "en",
+  "translations": {
+   "1": "Customer data deletion",
+   "2": "Customer data deletion"
+  }
+ },
+ {
+  "key": "privacy.summary",
+  "lang": "en",
+  "translations": {
+   "1": "Stored data for %customer%",
+   "2": "Stored data for %customer%"
+  }
+ },
+ {
+  "key": "privacy.deleted",
+  "lang": "en",
+  "translations": {
+   "1": "Deleted: comments %comments%, conversations %conversations%, messages %messages%, events %events%.",
+   "2": "Deleted: comments %comments%, conversations %conversations%, messages %messages%, events %events%."
+  }
  }
 ]

@@ -32,6 +32,7 @@ x-php-app: &php-app
     - /var/www/temp:mode=1777
     - /var/www/log:mode=1777
     - /var/www/config/secrets:size=1k,mode=0500
+    - /var/www/data/backups:size=1k,mode=0500
   depends_on:
     db:
       condition: service_healthy

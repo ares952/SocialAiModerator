@@ -6676,5 +6676,527 @@
    "2": "Chybně",
    "5": "Chybně"
   }
+ },
+ {
+  "key": "alarms.kind.backup_age",
+  "lang": "cs",
+  "translations": {
+   "1": "Stáří zálohy DB (hodiny)",
+   "2": "Stáří zálohy DB (hodiny)",
+   "5": "Stáří zálohy DB (hodiny)"
+  }
+ },
+ {
+  "key": "alarms.kind.backup_age-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Poslední plánovaná záloha (bin/backup create) je starší; chybějící záloha se hlásí vždy.",
+   "2": "Poslední plánovaná záloha (bin/backup create) je starší; chybějící záloha se hlásí vždy.",
+   "5": "Poslední plánovaná záloha (bin/backup create) je starší; chybějící záloha se hlásí vždy."
+  }
+ },
+ {
+  "key": "alarm.backup_missing",
+  "lang": "cs",
+  "translations": {
+   "1": "Neexistuje žádná plánovaná záloha databáze (bin/backup create).",
+   "2": "Neexistuje žádná plánovaná záloha databáze (bin/backup create).",
+   "5": "Neexistuje žádná plánovaná záloha databáze (bin/backup create)."
+  }
+ },
+ {
+  "key": "alarm.backup_stale",
+  "lang": "cs",
+  "translations": {
+   "1": "Poslední záloha databáze je stará %count% hodinu.",
+   "2": "Poslední záloha databáze je stará %count% hodiny.",
+   "5": "Poslední záloha databáze je stará %count% hodin."
+  }
+ },
+ {
+  "key": "admin.menu.review",
+  "lang": "cs",
+  "translations": {
+   "1": "Ke kontrole",
+   "2": "Ke kontrole",
+   "5": "Ke kontrole"
+  }
+ },
+ {
+  "key": "review.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Fronta ke kontrole",
+   "2": "Fronta ke kontrole",
+   "5": "Fronta ke kontrole"
+  }
+ },
+ {
+  "key": "review.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Komentáře a zprávy, u kterých AI chce člověka, klasifikace selhala nebo zásah čeká na schválení. Nejstarší první; obsah, zásahy a vyřízení jsou na detailu.",
+   "2": "Komentáře a zprávy, u kterých AI chce člověka, klasifikace selhala nebo zásah čeká na schválení. Nejstarší první; obsah, zásahy a vyřízení jsou na detailu.",
+   "5": "Komentáře a zprávy, u kterých AI chce člověka, klasifikace selhala nebo zásah čeká na schválení. Nejstarší první; obsah, zásahy a vyřízení jsou na detailu."
+  }
+ },
+ {
+  "key": "review.start",
+  "lang": "cs",
+  "translations": {
+   "1": "Začít s nejstarší",
+   "2": "Začít s nejstarší",
+   "5": "Začít s nejstarší"
+  }
+ },
+ {
+  "key": "review.filter.all",
+  "lang": "cs",
+  "translations": {
+   "1": "Vše",
+   "2": "Vše",
+   "5": "Vše"
+  }
+ },
+ {
+  "key": "review.filter.mine",
+  "lang": "cs",
+  "translations": {
+   "1": "Předané mně",
+   "2": "Předané mně",
+   "5": "Předané mně"
+  }
+ },
+ {
+  "key": "review.filter.unassigned",
+  "lang": "cs",
+  "translations": {
+   "1": "Nepředané",
+   "2": "Nepředané",
+   "5": "Nepředané"
+  }
+ },
+ {
+  "key": "review.empty",
+  "lang": "cs",
+  "translations": {
+   "1": "Fronta je prázdná.",
+   "2": "Fronta je prázdná.",
+   "5": "Fronta je prázdná."
+  }
+ },
+ {
+  "key": "review.column.received",
+  "lang": "cs",
+  "translations": {
+   "1": "Přijato",
+   "2": "Přijato",
+   "5": "Přijato"
+  }
+ },
+ {
+  "key": "review.column.account",
+  "lang": "cs",
+  "translations": {
+   "1": "Účet",
+   "2": "Účet",
+   "5": "Účet"
+  }
+ },
+ {
+  "key": "review.column.ai",
+  "lang": "cs",
+  "translations": {
+   "1": "Návrh AI",
+   "2": "Návrh AI",
+   "5": "Návrh AI"
+  }
+ },
+ {
+  "key": "review.column.waiting",
+  "lang": "cs",
+  "translations": {
+   "1": "Ke schválení",
+   "2": "Ke schválení",
+   "5": "Ke schválení"
+  }
+ },
+ {
+  "key": "review.column.assignee",
+  "lang": "cs",
+  "translations": {
+   "1": "Předáno",
+   "2": "Předáno",
+   "5": "Předáno"
+  }
+ },
+ {
+  "key": "review.undecided",
+  "lang": "cs",
+  "translations": {
+   "1": "bez rozhodnutí AI",
+   "2": "bez rozhodnutí AI",
+   "5": "bez rozhodnutí AI"
+  }
+ },
+ {
+  "key": "review.next",
+  "lang": "cs",
+  "translations": {
+   "1": "Další ve frontě",
+   "2": "Další ve frontě",
+   "5": "Další ve frontě"
+  }
+ },
+ {
+  "key": "review.card",
+  "lang": "cs",
+  "translations": {
+   "1": "Fronta ke kontrole",
+   "2": "Fronta ke kontrole",
+   "5": "Fronta ke kontrole"
+  }
+ },
+ {
+  "key": "review.state.open",
+  "lang": "cs",
+  "translations": {
+   "1": "Událost čeká ve frontě na člověka.",
+   "2": "Událost čeká ve frontě na člověka.",
+   "5": "Událost čeká ve frontě na člověka."
+  }
+ },
+ {
+  "key": "review.state.none",
+  "lang": "cs",
+  "translations": {
+   "1": "Událost není ve frontě.",
+   "2": "Událost není ve frontě.",
+   "5": "Událost není ve frontě."
+  }
+ },
+ {
+  "key": "review.resolve",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyřízeno, další",
+   "2": "Vyřízeno, další",
+   "5": "Vyřízeno, další"
+  }
+ },
+ {
+  "key": "review.reopen",
+  "lang": "cs",
+  "translations": {
+   "1": "Vrátit do fronty",
+   "2": "Vrátit do fronty",
+   "5": "Vrátit do fronty"
+  }
+ },
+ {
+  "key": "review.assignee",
+  "lang": "cs",
+  "translations": {
+   "1": "Předat",
+   "2": "Předat",
+   "5": "Předat"
+  }
+ },
+ {
+  "key": "review.assignee.none",
+  "lang": "cs",
+  "translations": {
+   "1": "— nikomu —",
+   "2": "— nikomu —",
+   "5": "— nikomu —"
+  }
+ },
+ {
+  "key": "review.assign",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložit",
+   "2": "Uložit",
+   "5": "Uložit"
+  }
+ },
+ {
+  "key": "review.resolved",
+  "lang": "cs",
+  "translations": {
+   "1": "Událost je vyřízená.",
+   "2": "Událost je vyřízená.",
+   "5": "Událost je vyřízená."
+  }
+ },
+ {
+  "key": "review.reopened",
+  "lang": "cs",
+  "translations": {
+   "1": "Událost je zpět ve frontě.",
+   "2": "Událost je zpět ve frontě.",
+   "5": "Událost je zpět ve frontě."
+  }
+ },
+ {
+  "key": "review.assigned",
+  "lang": "cs",
+  "translations": {
+   "1": "Předání je uložené.",
+   "2": "Předání je uložené.",
+   "5": "Předání je uložené."
+  }
+ },
+ {
+  "key": "audit.action.event.resolve",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyřízení události",
+   "2": "Vyřízení události",
+   "5": "Vyřízení události"
+  }
+ },
+ {
+  "key": "audit.action.event.reopen",
+  "lang": "cs",
+  "translations": {
+   "1": "Vrácení události do fronty",
+   "2": "Vrácení události do fronty",
+   "5": "Vrácení události do fronty"
+  }
+ },
+ {
+  "key": "audit.action.event.assign",
+  "lang": "cs",
+  "translations": {
+   "1": "Předání události",
+   "2": "Předání události",
+   "5": "Předání události"
+  }
+ },
+ {
+  "key": "review.pending",
+  "lang": "cs",
+  "translations": {
+   "1": "%count% zásah",
+   "2": "%count% zásahy",
+   "5": "%count% zásahů"
+  }
+ },
+ {
+  "key": "review.state.resolved",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyřídil(a) %name%, %time%.",
+   "2": "Vyřídil(a) %name%, %time%.",
+   "5": "Vyřídil(a) %name%, %time%."
+  }
+ },
+ {
+  "key": "admin.menu.privacy",
+  "lang": "cs",
+  "translations": {
+   "1": "Ochrana údajů",
+   "2": "Ochrana údajů",
+   "5": "Ochrana údajů"
+  }
+ },
+ {
+  "key": "privacy.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Ochrana osobních údajů",
+   "2": "Ochrana osobních údajů",
+   "5": "Ochrana osobních údajů"
+  }
+ },
+ {
+  "key": "privacy.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Žádosti zákazníků podle GDPR: co o nich aplikace ukládá, export a výmaz. Týká se jen dat v této aplikaci, ne dat u Mety. ID zákazníka se nepíše do adresy stránky a audit uloží jen jeho otisk.",
+   "2": "Žádosti zákazníků podle GDPR: co o nich aplikace ukládá, export a výmaz. Týká se jen dat v této aplikaci, ne dat u Mety. ID zákazníka se nepíše do adresy stránky a audit uloží jen jeho otisk.",
+   "5": "Žádosti zákazníků podle GDPR: co o nich aplikace ukládá, export a výmaz. Týká se jen dat v této aplikaci, ne dat u Mety. ID zákazníka se nepíše do adresy stránky a audit uloží jen jeho otisk."
+  }
+ },
+ {
+  "key": "privacy.customer",
+  "lang": "cs",
+  "translations": {
+   "1": "ID zákazníka",
+   "2": "ID zákazníka",
+   "5": "ID zákazníka"
+  }
+ },
+ {
+  "key": "privacy.customer-note",
+  "lang": "cs",
+  "translations": {
+   "1": "S prefixem platformy, jak ho ukazuje administrace: autor na detailu události (fb:…, ig:…) nebo zákazník na detailu konverzace. Facebook má pro komentáře a Messenger různá ID, vyhledejte každé zvlášť.",
+   "2": "S prefixem platformy, jak ho ukazuje administrace: autor na detailu události (fb:…, ig:…) nebo zákazník na detailu konverzace. Facebook má pro komentáře a Messenger různá ID, vyhledejte každé zvlášť.",
+   "5": "S prefixem platformy, jak ho ukazuje administrace: autor na detailu události (fb:…, ig:…) nebo zákazník na detailu konverzace. Facebook má pro komentáře a Messenger různá ID, vyhledejte každé zvlášť."
+  }
+ },
+ {
+  "key": "privacy.search",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyhledat",
+   "2": "Vyhledat",
+   "5": "Vyhledat"
+  }
+ },
+ {
+  "key": "privacy.kind.comments",
+  "lang": "cs",
+  "translations": {
+   "1": "Komentáře",
+   "2": "Komentáře",
+   "5": "Komentáře"
+  }
+ },
+ {
+  "key": "privacy.kind.conversations",
+  "lang": "cs",
+  "translations": {
+   "1": "Konverzace",
+   "2": "Konverzace",
+   "5": "Konverzace"
+  }
+ },
+ {
+  "key": "privacy.kind.messages",
+  "lang": "cs",
+  "translations": {
+   "1": "Zprávy (obě strany)",
+   "2": "Zprávy (obě strany)",
+   "5": "Zprávy (obě strany)"
+  }
+ },
+ {
+  "key": "privacy.kind.events",
+  "lang": "cs",
+  "translations": {
+   "1": "Přijaté události",
+   "2": "Přijaté události",
+   "5": "Přijaté události"
+  }
+ },
+ {
+  "key": "privacy.export",
+  "lang": "cs",
+  "translations": {
+   "1": "Stáhnout export (JSON)",
+   "2": "Stáhnout export (JSON)",
+   "5": "Stáhnout export (JSON)"
+  }
+ },
+ {
+  "key": "privacy.delete-title",
+  "lang": "cs",
+  "translations": {
+   "1": "Výmaz",
+   "2": "Výmaz",
+   "5": "Výmaz"
+  }
+ },
+ {
+  "key": "privacy.delete-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Smaže komentáře, konverzace se zprávami, přijaté události, rozhodnutí AI a zásahy tohoto zákazníka. Nevratné; záloha DB data obsahuje až do své rotace.",
+   "2": "Smaže komentáře, konverzace se zprávami, přijaté události, rozhodnutí AI a zásahy tohoto zákazníka. Nevratné; záloha DB data obsahuje až do své rotace.",
+   "5": "Smaže komentáře, konverzace se zprávami, přijaté události, rozhodnutí AI a zásahy tohoto zákazníka. Nevratné; záloha DB data obsahuje až do své rotace."
+  }
+ },
+ {
+  "key": "privacy.confirm",
+  "lang": "cs",
+  "translations": {
+   "1": "Potvrzení ID",
+   "2": "Potvrzení ID",
+   "5": "Potvrzení ID"
+  }
+ },
+ {
+  "key": "privacy.delete-confirm-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Pro potvrzení výmazu zadejte ID zákazníka znovu.",
+   "2": "Pro potvrzení výmazu zadejte ID zákazníka znovu.",
+   "5": "Pro potvrzení výmazu zadejte ID zákazníka znovu."
+  }
+ },
+ {
+  "key": "privacy.delete",
+  "lang": "cs",
+  "translations": {
+   "1": "Smazat data zákazníka",
+   "2": "Smazat data zákazníka",
+   "5": "Smazat data zákazníka"
+  }
+ },
+ {
+  "key": "privacy.error.id",
+  "lang": "cs",
+  "translations": {
+   "1": "Zadejte ID s prefixem platformy, např. fb:1234567890.",
+   "2": "Zadejte ID s prefixem platformy, např. fb:1234567890.",
+   "5": "Zadejte ID s prefixem platformy, např. fb:1234567890."
+  }
+ },
+ {
+  "key": "privacy.error.confirm",
+  "lang": "cs",
+  "translations": {
+   "1": "Potvrzení se neshoduje s ID zákazníka.",
+   "2": "Potvrzení se neshoduje s ID zákazníka.",
+   "5": "Potvrzení se neshoduje s ID zákazníka."
+  }
+ },
+ {
+  "key": "events.detail.author-id",
+  "lang": "cs",
+  "translations": {
+   "1": "ID autora (pro žádosti podle GDPR)",
+   "2": "ID autora (pro žádosti podle GDPR)",
+   "5": "ID autora (pro žádosti podle GDPR)"
+  }
+ },
+ {
+  "key": "audit.action.privacy.export",
+  "lang": "cs",
+  "translations": {
+   "1": "Export údajů zákazníka",
+   "2": "Export údajů zákazníka",
+   "5": "Export údajů zákazníka"
+  }
+ },
+ {
+  "key": "audit.action.privacy.delete",
+  "lang": "cs",
+  "translations": {
+   "1": "Výmaz údajů zákazníka",
+   "2": "Výmaz údajů zákazníka",
+   "5": "Výmaz údajů zákazníka"
+  }
+ },
+ {
+  "key": "privacy.summary",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložená data pro %customer%",
+   "2": "Uložená data pro %customer%",
+   "5": "Uložená data pro %customer%"
+  }
+ },
+ {
+  "key": "privacy.deleted",
+  "lang": "cs",
+  "translations": {
+   "1": "Smazáno: komentáře %comments%, konverzace %conversations%, zprávy %messages%, události %events%.",
+   "2": "Smazáno: komentáře %comments%, konverzace %conversations%, zprávy %messages%, události %events%.",
+   "5": "Smazáno: komentáře %comments%, konverzace %conversations%, zprávy %messages%, události %events%."
+  }
  }
 ]

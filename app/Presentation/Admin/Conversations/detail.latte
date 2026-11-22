@@ -30,7 +30,7 @@
 					<p class="text-body-secondary mb-0">{_'conversations.detail.none'}</p>
 				{else}
 					<div n:foreach="$messages as $message" n:class="'mb-2 d-flex', $message['direction'] === 'outgoing' ? 'justify-content-end'">
-						<div n:class="'rounded px-3 py-2 border', $message['direction'] === 'outgoing' ? 'bg-primary-subtle' : 'bg-body-tertiary'" style="max-width: 85%">
+						<div n:class="'rounded px-3 py-2 border', $message['direction'] === 'outgoing' ? 'bg-primary-subtle' : 'bg-body-tertiary', 'message-bubble'">
 							{if $message['deleted']}
 								<em class="text-body-secondary">{_'conversations.detail.unsent'}</em>
 							{elseif $message['text'] === null}

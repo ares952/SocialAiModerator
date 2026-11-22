@@ -1,0 +1,93 @@
+{varType App\Moderation\ReviewFilter|null $filter}
+{varType list<App\Moderation\ReviewFilter> $filters}
+{varType array<string, int> $counts}
+{varType Nette\Utils\Paginator $paginator}
+{varType list<Nette\Database\Row> $items}
+{varType bool $canAct}
+
+{block content}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<h1 class="h3 mb-0" n:block="title">{_'review.title'}</h1>
+	<a n:if="$canAct && $items !== []" class="btn btn-primary" n:href="Events:detail, id: $items[0]->id">{_'review.start'}</a>
+</div>
+<p class="text-body-secondary">{_'review.note'}</p>
+
+<ul class="nav nav-pills flex-wrap mb-3">
+	<li class="nav-item">
+		<a n:class="nav-link, $filter === null ? active" n:href="this, filter: null, page: null">
+			{_'review.filter.all'} <span class="badge text-bg-secondary ms-1">{$counts['']}</span>
+		</a>
+	</li>
+	<li n:foreach="$filters as $item" class="nav-item">
+		<a n:class="nav-link, $filter === $item ? active" n:href="this, filter: $item->value, page: null">
+			{_"review.filter.{$item->value}"} <span class="badge text-bg-secondary ms-1">{$counts[$item->value]}</span>
+		</a>
+	</li>
+</ul>
+
+{if $items === []}
+	<div class="callout callout-success bg-body">{_'review.empty'}</div>
+{else}
+	<div class="card">
+		<div class="table-responsive">
+			<table class="table table-hover align-middle mb-0">
+				<thead>
+					<tr>
+						<th scope="col">#</th>
+						<th scope="col">{_'review.column.received'}</th>
+						<th scope="col">{_'review.column.account'}</th>
+						<th scope="col">{_'review.column.ai'}</th>
+						<th scope="col">{_'review.column.waiting'}</th>
+						<th scope="col">{_'review.column.assignee'}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr n:foreach="$items as $item">
+						<td><a n:href="Events:detail, id: $item->id">{$item->id}</a></td>
+						<td>
+							{$item->received_at|localTime}
+							<div class="small text-body-secondary">{_"event.type.{$item->event_type}"}</div>
+						</td>
+						<td>
+							<span class="badge badge-platform badge-{$item->platform} me-1">{_"platform.{$item->platform}"}</span>
+							{$item->account_name}
+						</td>
+						<td>
+							{if $item->decision_action === null}
+								<span class="badge text-bg-warning">{_'review.undecided'}</span>
+							{else}
+								<span class="badge text-bg-light border">{_"action.{$item->decision_action}"}</span>
+								<span n:if="$item->category !== null" class="small">
+									{_"category.{$item->category}"}
+									<span n:if="$item->confidence !== null" class="text-body-secondary">({$item->confidence|number:2})</span>
+								</span>
+								<span n:if="$item->category === null" class="small text-danger">{_'chart.unclassified'}</span>
+								<div n:if="$item->reasons_json !== null" class="mt-1">
+									<span n:foreach="Nette\Utils\Json::decode($item->reasons_json, forceArrays: true) ?? [] as $reason" class="badge text-bg-light border me-1">{_"decision.reason.$reason"}</span>
+								</div>
+							{/if}
+						</td>
+						<td>
+							<span n:if="$item->pending > 0" class="badge text-bg-warning">{_'review.pending', (int) $item->pending}</span>
+						</td>
+						<td>{$item->assignee_name ?? '—'}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<nav n:if="$paginator->getPageCount() > 1" class="mt-3" aria-label="{_'events.pages'}">
+		<ul class="pagination">
+			<li n:class="page-item, $paginator->isFirst() ? disabled">
+				<a class="page-link" n:href="this, page: $paginator->getPage() - 1">{_'events.previous'}</a>
+			</li>
+			<li class="page-item disabled">
+				<span class="page-link">{_'events.page', 1, [page => $paginator->getPage(), pages => $paginator->getPageCount()]}</span>
+			</li>
+			<li n:class="page-item, $paginator->isLast() ? disabled">
+				<a class="page-link" n:href="this, page: $paginator->getPage() + 1">{_'events.next'}</a>
+			</li>
+		</ul>
+	</nav>
+{/if}

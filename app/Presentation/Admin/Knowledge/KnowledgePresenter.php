@@ -99,7 +99,13 @@ final class KnowledgePresenter extends AdminPresenter
 	public function handlePublish(int $version): void
 	{
 		$this->requireAllowed(Authorization::Knowledge, Authorization::Manage);
-		$this->knowledge->publish($version, $this->operatorId());
+		try {
+			$this->knowledge->publish($version, $this->operatorId());
+		} catch (InvalidKnowledge $e) {
+			$this->flashMessage($e->getMessage(), 'danger');
+			$this->redirect('default');
+		}
+
 		$this->flashMessage('knowledge.published', 'success');
 		$this->redirect('detail', [
 			'id' => $version,

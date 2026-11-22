@@ -28,6 +28,9 @@ enum AlarmKind: string
 	/** Hours an action waits for a human approval. */
 	case StaleApprovals = 'stale_approvals';
 
+	/** Hours since the last scheduled database backup (bin/backup create); no backup at all always alarms. */
+	case BackupAge = 'backup_age';
+
 
 	public function max(): int
 	{
@@ -36,7 +39,7 @@ enum AlarmKind: string
 			self::WebhookSilence => 720,
 			self::QueueLag => 1440,
 			self::Failures, self::HiddenComments => 10000,
-			self::StaleApprovals => 720,
+			self::StaleApprovals, self::BackupAge => 720,
 		};
 	}
 }

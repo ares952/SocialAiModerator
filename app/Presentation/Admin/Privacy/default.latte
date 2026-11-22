@@ -1,0 +1,37 @@
+{varType string|null $customer}
+{varType array{comments: int, conversations: int, messages: int, events: int}|null $summary}
+
+{block content}
+<h1 class="h3 mb-3" n:block="title">{_'privacy.title'}</h1>
+<p class="text-body-secondary">{_'privacy.note'}</p>
+
+<div class="row g-4">
+	<div class="col-12 col-lg-6">
+		<div class="card">
+			<div class="card-body">{control searchForm}</div>
+		</div>
+	</div>
+
+	<div class="col-12 col-lg-6" n:if="$summary !== null">
+		<div class="card mb-4">
+			<div class="card-header">{_'privacy.summary', 1, [customer => $customer]}</div>
+			<ul class="list-group list-group-flush">
+				<li n:foreach="$summary as $kind => $count" class="list-group-item d-flex justify-content-between">
+					<span>{_"privacy.kind.$kind"}</span>
+					<span class="badge text-bg-secondary rounded-pill">{$count}</span>
+				</li>
+			</ul>
+			<div class="card-body">
+				{control exportForm}
+			</div>
+		</div>
+
+		<div n:if="array_sum($summary) > 0" class="card border-danger">
+			<div class="card-header text-danger">{_'privacy.delete-title'}</div>
+			<div class="card-body">
+				<p class="small">{_'privacy.delete-note'}</p>
+				{control deleteForm}
+			</div>
+		</div>
+	</div>
+</div>

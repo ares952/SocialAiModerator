@@ -132,6 +132,7 @@ final class AccountsPresenter extends AdminPresenter
 	public function handlePause(int $account): void
 	{
 		$this->requireAllowed(Authorization::Accounts, Authorization::Manage);
+		$this->accounts->find($account) ?? $this->error();
 		$this->automation->pause($account, null, $this->operatorId());
 		$this->flashMessage('automation.paused', 'warning');
 		$this->redirect('default');
@@ -141,6 +142,7 @@ final class AccountsPresenter extends AdminPresenter
 	public function handleResume(int $account): void
 	{
 		$this->requireAllowed(Authorization::Accounts, Authorization::Manage);
+		$this->accounts->find($account) ?? $this->error();
 		$this->automation->resume($account, $this->operatorId());
 		$this->flashMessage('automation.resumed', 'success');
 		$this->redirect('default');

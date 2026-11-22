@@ -18,13 +18,16 @@ use Nette\Database\Explorer;
  * Current alarms (specification §8.4), computed on demand for the dashboard and for
  * `monitor:check`: token problems, no webhooks from an active account, a stuck queue or worker,
  * repeated failures and open circuit breakers, many hidden comments, actions with an unknown result
- * and approvals waiting too long (not in observe mode, where nothing can be approved). Thresholds come from AlarmThresholds; results never contain
- * customer content.
+ * and approvals waiting too long (not in observe mode, where nothing can be approved), and a
+ * missing or old scheduled database backup (bin/backup writes its status file; the application
+ * cannot see the dumps). Thresholds come from AlarmThresholds; results never contain customer
+ * content.
  */
 final class Alarms
 {
 	public function __construct(
 		private readonly string $heartbeatFile,
+		private readonly string $backupStatusFile,
 		private readonly Explorer $database,
 		private readonly AlarmThresholds $thresholds,
 		private readonly Policies $policies,
@@ -45,7 +48,34 @@ final class Alarms
 			...$this->queue($limits[AlarmKind::QueueLag->value]),
 			...$this->failures($limits[AlarmKind::Failures->value]),
 			...$this->actions($limits[AlarmKind::HiddenComments->value], $limits[AlarmKind::StaleApprovals->value]),
+			...$this->backup($limits[AlarmKind::BackupAge->value]),
 		];
+	}
+
+
+	/**
+	 * @return list<Alarm>
+	 */
+	private function backup(?int $hours): array
+	{
+		if ($hours === null) {
+			return [];
+		}
+
+		$created = is_file($this->backupStatusFile) ? filemtime($this->backupStatusFile) : false;
+		if ($created === false) {
+			return [
+				new Alarm('backup_missing'),
+			];
+		}
+
+		$age = intdiv(time() - $created, 3600);
+
+		return $age >= $hours ? [
+			new Alarm('backup_stale', [
+				'hours' => $age,
+			]),
+		] : [];
 	}
 
 

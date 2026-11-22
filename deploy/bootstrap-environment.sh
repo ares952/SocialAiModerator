@@ -65,6 +65,11 @@ copy deploy/nginx/maintenance-allowlist.geo.template config/nginx/maintenance-al
 copy config/local.neon.template config/local.neon
 
 mkdir -p data/mariadb data/redis log temp
+# DB dumps (bin/backup, release updates): only the owner reads them; the application containers
+# mount a tmpfs over this directory, so it must exist before they start.
+if [[ ! -d data/backups ]]; then
+    (umask 0077 && mkdir -p data/backups)
+fi
 
 echo
 echo "Next: edit .env, config/local.neon, config/nginx/* and config/secrets/app.env for this server,"
