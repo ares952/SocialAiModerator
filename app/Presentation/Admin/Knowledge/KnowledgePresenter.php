@@ -6,11 +6,15 @@ namespace App\Presentation\Admin\Knowledge;
 
 use App\Knowledge\InvalidKnowledge;
 use App\Knowledge\KnowledgeBase;
+use App\Knowledge\KnowledgeImport;
+use App\Knowledge\SourceStatus;
 use App\Knowledge\SourceType;
 use App\Operator\Authorization;
 use App\Presentation\Admin\AdminPresenter;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
+use Nette\Forms\Controls\CheckboxList;
+use Nette\Http\FileUpload;
 
 
 /**
@@ -19,12 +23,15 @@ use Nette\Database\Row;
  */
 final class KnowledgePresenter extends AdminPresenter
 {
+	private const MaxImportBytes = 1024 * 1024;
+
 	/** Version being edited or shown. */
 	private ?Row $source = null;
 
 
 	public function __construct(
 		private readonly KnowledgeBase $knowledge,
+		private readonly KnowledgeImport $import,
 	) {
 		parent::__construct();
 	}
@@ -33,14 +40,23 @@ final class KnowledgePresenter extends AdminPresenter
 	public function actionDefault(): void
 	{
 		$this->requireAllowed(Authorization::Knowledge, Authorization::View);
+		$sources = $this->knowledge->overview();
 		$this->template->setParameters([
-			'sources' => $this->knowledge->overview(),
+			'sources' => $sources,
+			'hasDrafts' => array_filter($sources, fn(Row $source) => $source->latest_status === SourceStatus::Draft->value) !== [],
 			'canEdit' => $this->getUser()->isAllowed(Authorization::Knowledge, Authorization::Edit),
+			'canPublish' => $this->getUser()->isAllowed(Authorization::Knowledge, Authorization::Manage),
 		]);
 	}
 
 
 	public function actionAdd(): void
+	{
+		$this->requireAllowed(Authorization::Knowledge, Authorization::Edit);
+	}
+
+
+	public function actionImport(): void
 	{
 		$this->requireAllowed(Authorization::Knowledge, Authorization::Edit);
 	}
@@ -161,6 +177,90 @@ final class KnowledgePresenter extends AdminPresenter
 			$this->redirect('detail', [
 				'id' => $id,
 			]);
+		};
+
+		return $form;
+	}
+
+
+	/**
+	 * Publishing of the checked drafts from the overview (the latest version of a key and locale).
+	 */
+	protected function createComponentPublishForm(): Form
+	{
+		$drafts = [];
+		foreach ($this->knowledge->overview() as $source) {
+			if ($source->latest_status === SourceStatus::Draft->value) {
+				$drafts[$source->id] = $source->title;
+			}
+		}
+
+		$form = $this->forms->create();
+		$form->addCheckboxList('versions', null, $drafts)
+			->setTranslator(null)
+			->setRequired('knowledge.error.none-selected');
+		$form->addSubmit('publish', 'knowledge.publish-selected');
+
+		$form->onSuccess[] = function (Form $form): void {
+			$this->requireAllowed(Authorization::Knowledge, Authorization::Manage);
+			$versions = $form['versions'];
+			assert($versions instanceof CheckboxList);
+			$ids = array_map(intval(...), $versions->getValue());
+			try {
+				$this->knowledge->publishSelected($ids, $this->operatorId());
+			} catch (InvalidKnowledge $e) {
+				$form->addError($e->getMessage());
+
+				return;
+			}
+
+			$this->flashMessage($this->translator->translate('knowledge.published-selected', count($ids)), 'success');
+			$this->redirect('this');
+		};
+
+		return $form;
+	}
+
+
+	/**
+	 * Upload of a knowledge file; it only creates drafts, an admin publishes them.
+	 */
+	protected function createComponentImportForm(): Form
+	{
+		$form = $this->forms->create();
+		$form->addUpload('file', 'knowledge.import.file')
+			->setRequired('form.error.required')
+			->addRule(Form::MaxFileSize, 'knowledge.import.error.size', self::MaxImportBytes)
+			->setHtmlAttribute('accept', '.json,application/json');
+		$form->addSubmit('send', 'knowledge.import.submit');
+
+		$form->onSuccess[] = function (Form $form): void {
+			$this->requireAllowed(Authorization::Knowledge, Authorization::Edit);
+			$file = $form->getValues()['file'];
+			assert($file instanceof FileUpload);
+			if (!$file->isOk()) {
+				$form->addError('knowledge.import.error.upload');
+
+				return;
+			}
+			try {
+				$result = $this->import->import((string) $file->getContents(), $this->operatorId());
+			} catch (InvalidKnowledge $e) {
+				$reason = $this->translator->translate($e->getMessage());
+				$form->addError($e->field === ''
+					? $reason
+					: $this->translator->translate('knowledge.import.error.at', 1, [
+						'field' => $e->field,
+						'reason' => $reason,
+					]), translate: false);
+
+				return;
+			}
+
+			$this->flashMessage($this->translator->translate('knowledge.import.done', $result['created'], [
+				'skipped' => $result['skipped'],
+			]), 'success');
+			$this->redirect('default');
 		};
 
 		return $form;

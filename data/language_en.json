@@ -1936,6 +1936,46 @@
   }
  },
  {
+  "key": "knowledge.publish-selected",
+  "lang": "en",
+  "translations": {
+   "1": "Publish selected",
+   "2": "Publish selected"
+  }
+ },
+ {
+  "key": "knowledge.publish-selected-note",
+  "lang": "en",
+  "translations": {
+   "1": "Only drafts can be checked. Publishing archives the previously published version of the same key and locale.",
+   "2": "Only drafts can be checked. Publishing archives the previously published version of the same key and locale."
+  }
+ },
+ {
+  "key": "knowledge.select-all",
+  "lang": "en",
+  "translations": {
+   "1": "Select all drafts",
+   "2": "Select all drafts"
+  }
+ },
+ {
+  "key": "knowledge.error.none-selected",
+  "lang": "en",
+  "translations": {
+   "1": "Select at least one draft.",
+   "2": "Select at least one draft."
+  }
+ },
+ {
+  "key": "knowledge.published-selected",
+  "lang": "en",
+  "translations": {
+   "1": "Published %count% version; previously published versions were archived.",
+   "2": "Published %count% versions; previously published versions were archived."
+  }
+ },
+ {
   "key": "knowledge.saved",
   "lang": "en",
   "translations": {
@@ -1997,6 +2037,110 @@
   "translations": {
    "1": "The knowledge does not exist.",
    "2": "The knowledge does not exist."
+  }
+ },
+ {
+  "key": "knowledge.import.title",
+  "lang": "en",
+  "translations": {
+   "1": "Import from file",
+   "2": "Import from file"
+  }
+ },
+ {
+  "key": "knowledge.import.note",
+  "lang": "en",
+  "translations": {
+   "1": "Upload a JSON file in the social-ai-moderator.knowledge format (docs/knowledge-format.md). The import only creates drafts of new or changed versions; it never publishes or deletes anything. On any error nothing is written.",
+   "2": "Upload a JSON file in the social-ai-moderator.knowledge format (docs/knowledge-format.md). The import only creates drafts of new or changed versions; it never publishes or deletes anything. On any error nothing is written."
+  }
+ },
+ {
+  "key": "knowledge.import.file",
+  "lang": "en",
+  "translations": {
+   "1": "JSON file",
+   "2": "JSON file"
+  }
+ },
+ {
+  "key": "knowledge.import.submit",
+  "lang": "en",
+  "translations": {
+   "1": "Import as drafts",
+   "2": "Import as drafts"
+  }
+ },
+ {
+  "key": "knowledge.import.error.json",
+  "lang": "en",
+  "translations": {
+   "1": "The file is not valid JSON.",
+   "2": "The file is not valid JSON."
+  }
+ },
+ {
+  "key": "knowledge.import.error.format",
+  "lang": "en",
+  "translations": {
+   "1": "The file is not in the social-ai-moderator.knowledge format version 1.",
+   "2": "The file is not in the social-ai-moderator.knowledge format version 1."
+  }
+ },
+ {
+  "key": "knowledge.import.error.field",
+  "lang": "en",
+  "translations": {
+   "1": "Missing or invalid value.",
+   "2": "Missing or invalid value."
+  }
+ },
+ {
+  "key": "knowledge.import.error.duplicate",
+  "lang": "en",
+  "translations": {
+   "1": "The key occurs more than once in the file.",
+   "2": "The key occurs more than once in the file."
+  }
+ },
+ {
+  "key": "knowledge.import.error.size",
+  "lang": "en",
+  "translations": {
+   "1": "The file is too large.",
+   "2": "The file is too large."
+  }
+ },
+ {
+  "key": "knowledge.import.error.upload",
+  "lang": "en",
+  "translations": {
+   "1": "The file could not be uploaded.",
+   "2": "The file could not be uploaded."
+  }
+ },
+ {
+  "key": "knowledge.error.title",
+  "lang": "en",
+  "translations": {
+   "1": "The title may have at most 200 characters.",
+   "2": "The title may have at most 200 characters."
+  }
+ },
+ {
+  "key": "knowledge.import.done",
+  "lang": "en",
+  "translations": {
+   "1": "Created %count% draft, unchanged and skipped: %skipped%. Review and publish the drafts.",
+   "2": "Created %count% drafts, unchanged and skipped: %skipped%. Review and publish the drafts."
+  }
+ },
+ {
+  "key": "knowledge.import.error.at",
+  "lang": "en",
+  "translations": {
+   "1": "Error in field %field%: %reason%",
+   "2": "Error in field %field%: %reason%"
   }
  },
  {
@@ -3109,6 +3253,14 @@
   "translations": {
    "1": "Knowledge withdrawn",
    "2": "Knowledge withdrawn"
+  }
+ },
+ {
+  "key": "audit.action.knowledge.import",
+  "lang": "en",
+  "translations": {
+   "1": "knowledge import",
+   "2": "knowledge import"
   }
  },
  {

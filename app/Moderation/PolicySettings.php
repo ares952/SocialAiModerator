@@ -89,9 +89,12 @@ final readonly class PolicySettings
 			throw new InvalidPolicy('policy.error.repeat-window');
 		}
 
-		$abuseRules ??= $strictness === Strictness::Custom
-			? throw new InvalidPolicy('policy.error.abuse-rules')
-			: $strictness->abuseRules();
+		if ($abuseRules === null) {
+			if ($strictness === Strictness::Custom) {
+				throw new InvalidPolicy('policy.error.abuse-rules');
+			}
+			$abuseRules = $strictness->abuseRules();
+		}
 		$kinds = array_map(fn(AbuseType $type) => $type->value, AbuseType::ruled());
 		$keys = array_keys($abuseRules);
 		sort($kinds);
@@ -163,8 +166,11 @@ final readonly class PolicySettings
 		}
 
 		$defaults = new self;
-		$strictness = Strictness::tryFrom(is_string($data['strictness'] ?? null) ? $data['strictness'] : '')
-			?? (isset($data['strictness']) ? throw new InvalidPolicy('policy.error.strictness') : Strictness::Balanced);
+		$strictness = Strictness::Balanced;
+		if (isset($data['strictness'])) {
+			$strictness = Strictness::tryFrom(is_string($data['strictness']) ? $data['strictness'] : '')
+				?? throw new InvalidPolicy('policy.error.strictness');
+		}
 
 		return new self(
 			hideMinConfidence: $float('hide_min_confidence', $defaults->hideMinConfidence),

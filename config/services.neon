@@ -47,6 +47,7 @@ services:
 	- App\Moderation\Policies(defaultMode: App\Moderation\Mode::from(%env.AUTOMATION_DEFAULT_MODE%))
 	- App\Moderation\AutomationSwitch
 	- App\Knowledge\KnowledgeBase(locales: %knowledge.locales%, timezone: %timezone%)
+	- App\Knowledge\KnowledgeImport
 	httpOpenAi:
 		create: App\Ai\HttpOpenAiClient(%env.OPENAI_API_KEY%)
 		autowired: false

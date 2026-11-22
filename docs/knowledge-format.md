@@ -1,6 +1,7 @@
 # Formát souboru znalostní báze (JSON)
 
-Stav: **návrh**, import ani export zatím nejsou implementované.
+Stav: import je implementovaný v administraci (Znalosti → Import ze souboru, role moderátor
+a vyšší), export zatím ne.
 
 Znalostní báze obsahuje schválené firemní informace, ze kterých AI smí odpovídat (specifikace
 §5.3). Dnes se zadává ručně v administraci (Znalosti). Tento formát slouží k hromadnému importu,
@@ -101,10 +102,11 @@ tu, která je dnes platná.
 
 ## Chování importu
 
-Plánovaný příkaz: `bin/console knowledge:import <soubor> --operator=<id>`.
+Administrace → Znalosti → **Import ze souboru** (`App\Knowledge\KnowledgeImport`), soubor
+nejvýše 1 MB.
 
-1. **Vše, nebo nic.** Celý soubor se nejdřív validuje; při jakékoli chybě se nezapíše nic
-   a výpis uvede pole s chybou (bez obsahu textů).
+1. **Vše, nebo nic.** Soubor se zpracuje v jedné transakci; při jakékoli chybě se nezapíše nic
+   a formulář uvede pole s chybou, např. `sources[3].locales.cs` (bez obsahu textů).
 2. **Jen nové verze jako koncepty.** Pro každý klíč a jazyk se obsah (typ, název, text,
    platnost) porovná s poslední verzí. Shoda = nic se nestane, takže opakovaný import stejného
    souboru nic nezmění. Rozdíl = nová verze ve stavu `draft`.
@@ -112,8 +114,9 @@ Plánovaný příkaz: `bin/console knowledge:import <soubor> --operator=<id>`.
    a publikuje v administraci (Znalosti); předchozí publikovaná verze se archivuje.
 4. **Nic nemaže.** Klíče, které v souboru chybí, zůstanou beze změny. Stažení znalosti je
    vědomý krok v administraci (zrušit publikování).
-5. Import se zapisuje do auditu s ID operátora, počtem vytvořených a přeskočených verzí
-   a hodnotami `source` a `exported_at`.
+5. Import se zapisuje do auditu (`knowledge.import`) s ID operátora, počtem vytvořených
+   a přeskočených verzí a hodnotami `source` a `exported_at`. Každý koncept má navíc vlastní
+   záznam `knowledge.create`.
 
 ## Export
 

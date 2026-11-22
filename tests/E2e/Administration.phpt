@@ -25,6 +25,7 @@ test('every page renders in both languages', function () use ($browser): void {
 		'/admin/policy' => 'Pravidla moderace',
 		'/admin/knowledge' => 'Znalostní báze',
 		'/admin/knowledge/add' => 'Přidat znalost',
+		'/admin/knowledge/import' => 'Import ze souboru',
 		'/admin/evaluation' => 'Vyhodnocení AI',
 		'/admin/evaluation/samples' => '0 vzorků',
 		'/admin/evaluation/sample' => 'Přidat vzorek',
@@ -216,6 +217,18 @@ test('knowledge: draft, publish, new version stays a draft', function () use ($b
 	$overview = $browser->get('/admin/knowledge')->body;
 	Assert::match('%A%<td>v2 <span class="badge text-bg-light border">koncept</span></td>%A%', $overview);
 	Assert::contains('text-bg-success">v1', $overview);
+
+	// The checked draft is published from the overview.
+	$draft = preg_match('~name="versions\[\]"[^>]*value="(\d+)"~', $overview, $match) === 1
+		? $match[1]
+		: throw new LogicException('No draft checkbox.');
+	Assert::same(303, $browser->submit('/admin/knowledge', 'publishForm', [
+		'versions' => [$draft],
+		'publish' => '1',
+	])->status);
+	$overview = $browser->get('/admin/knowledge')->body;
+	Assert::contains('text-bg-success">v2', $overview);
+	Assert::notContains('frm-publishForm', $overview);
 });
 
 

@@ -108,6 +108,9 @@ final class KnowledgeBase
 		if (trim($title) === '' || trim($content) === '') {
 			throw new InvalidKnowledge('form.error.required');
 		}
+		if (mb_strlen(trim($title)) > 200) {
+			throw new InvalidKnowledge('knowledge.error.title');
+		}
 		if ($validFrom !== null && $validTo !== null && $validFrom > $validTo) {
 			throw new InvalidKnowledge('knowledge.error.validity');
 		}
@@ -139,6 +142,36 @@ final class KnowledgeBase
 
 
 	/**
+	 * Whether the latest version of the key and locale already has exactly these values.
+	 */
+	public function unchanged(
+		string $key,
+		string $locale,
+		SourceType $type,
+		string $title,
+		string $content,
+		?\DateTimeImmutable $validFrom,
+		?\DateTimeImmutable $validTo,
+	): bool {
+		$latest = $this->database->query(
+			'SELECT source_type, title, content, valid_from, valid_to FROM knowledge_sources
+			WHERE `key` = ? AND locale = ?
+			ORDER BY version DESC
+			LIMIT 1',
+			$key,
+			$locale,
+		)->fetch();
+
+		return $latest !== null
+			&& $latest->source_type === $type->value
+			&& $latest->title === trim($title)
+			&& $latest->content === trim($content)
+			&& $latest->valid_from?->format('Y-m-d') === $validFrom?->format('Y-m-d')
+			&& $latest->valid_to?->format('Y-m-d') === $validTo?->format('Y-m-d');
+	}
+
+
+	/**
 	 * Publishes a version and archives the previously published one of the same key and locale.
 	 *
 	 * @throws InvalidKnowledge
@@ -166,6 +199,26 @@ final class KnowledgeBase
 				$id,
 			);
 			$this->audit->write($operatorId, AuditAction::KnowledgePublish, 'knowledge', $id);
+		});
+	}
+
+
+	/**
+	 * Publishes the selected versions in one transaction, each as publish() does.
+	 *
+	 * @param list<int> $ids
+	 * @throws InvalidKnowledge
+	 */
+	public function publishSelected(array $ids, int $operatorId): void
+	{
+		if ($ids === []) {
+			throw new InvalidKnowledge('knowledge.error.none-selected');
+		}
+
+		$this->database->transaction(function () use ($ids, $operatorId): void {
+			foreach ($ids as $id) {
+				$this->publish($id, $operatorId);
+			}
 		});
 	}
 

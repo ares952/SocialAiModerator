@@ -17,6 +17,7 @@ enum AuditAction: string
 	case KnowledgeCreate = 'knowledge.create';
 	case KnowledgePublish = 'knowledge.publish';
 	case KnowledgeUnpublish = 'knowledge.unpublish';
+	case KnowledgeImport = 'knowledge.import';
 	case SampleCreate = 'evaluation.sample.create';
 	case SampleUpdate = 'evaluation.sample.update';
 	case SampleDelete = 'evaluation.sample.delete';

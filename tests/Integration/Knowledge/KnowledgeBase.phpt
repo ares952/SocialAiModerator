@@ -50,6 +50,32 @@ test('publishing one version archives the previous one', function () use ($knowl
 });
 
 
+test('selected drafts are published together or not at all', function () use ($knowledge, $database): void {
+	$cs = $knowledge->createDraft('contact_support', 'cs', SourceType::Other, 'Kontakt', 'Napište nám.', null, null, 1);
+	$en = $knowledge->createDraft('contact_support', 'en', SourceType::Other, 'Contact', 'Write to us.', null, null, 1);
+	$audits = $database->query('SELECT COUNT(*) FROM admin_audit WHERE action = ?', 'knowledge.publish')->fetchField();
+
+	Assert::exception(
+		fn() => $knowledge->publishSelected([$cs, 999999], 1),
+		InvalidKnowledge::class,
+		'knowledge.error.not-found',
+	);
+	Assert::same('draft', $knowledge->find($cs)?->status);
+	Assert::exception(
+		fn() => $knowledge->publishSelected([], 1),
+		InvalidKnowledge::class,
+		'knowledge.error.none-selected',
+	);
+
+	$knowledge->publishSelected([$cs, $en], 1);
+	Assert::same(['published', 'published'], [$knowledge->find($cs)?->status, $knowledge->find($en)?->status]);
+	Assert::same($audits + 2, $database->query('SELECT COUNT(*) FROM admin_audit WHERE action = ?', 'knowledge.publish')->fetchField());
+
+	$knowledge->unpublish($cs, 1);
+	$knowledge->unpublish($en, 1);
+});
+
+
 test('validity limits the current knowledge', function () use ($knowledge): void {
 	$past = $knowledge->createDraft('summer_offer', 'cs', SourceType::Other, 'Léto', 'Sleva.', new DateTimeImmutable('2020-06-01'), new DateTimeImmutable('2020-08-31'), 1);
 	$future = $knowledge->createDraft('winter_offer', 'cs', SourceType::Other, 'Zima', 'Sleva.', new DateTimeImmutable('+1 year'), null, 1);

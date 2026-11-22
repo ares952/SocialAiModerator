@@ -167,7 +167,7 @@ The repository root is also the Docker Compose project directory. It follows the
   - `socialai-release-update`: maintenance, worker stop, DB backup, rebuild, migrations, translation import, validation, rollback.
   - `socialai-update-images`: php/nginx patch images; MariaDB patch within the latest LTS series (currently 12.3).
   - `socialai-maintenance`: `bin/maintenance on|off|status` and verification.
-- Published tags are immutable. Steps that change a running instance (maintenance, worker stop, backup, deploy, restore, image recreate) need the user's confirmation of a concrete plan. The only exception is applying new migrations to the test instance (see Workflow).
+- Published tags are immutable. Steps that change a running instance (maintenance, worker stop, backup, deploy, restore, image recreate) need the user's confirmation of a concrete plan. The only exceptions are applying new migrations and refreshing the test instance after a change set (see Workflow).
 - When clearing the cache, delete only `temp/cache`, never `temp/maintenance.lock`.
 
 ## Safety Invariants (non-negotiable)
@@ -215,6 +215,7 @@ Never connect a live production Page or real accounts in tests or during develop
   - `docker compose exec php bin/console translations:import` (after changing `data/language_*.json`)
 - Never run `migrations:reset`. It drops the database.
 - After every change that adds a migration, apply it to the test instance right away, without asking. The test instance runs from the development checkout (a branch, not a detached release tag); a checkout on a release tag is updated only through `socialai-release-update`. Steps: `bin/maintenance on`, `docker compose stop worker`, DB backup as in step 4 of `docs/release-lifecycle.md`, `docker compose exec -T php bin/console migrations:continue`, `translations:import`, `rm -rf temp/cache`, the actions of `docs/upgrade-notes.md` for the new version, `docker compose up -d --wait`, `bin/maintenance off`, and a read-only check (health, anonymous page status, no new entries in `log/exception.log`). Report the backup path and the result. If a step fails, keep maintenance on and ask.
+- After every finished change set without a migration, refresh the test instance right away, without asking (same branch-checkout condition): `docker compose exec -T php bin/console translations:import`, `rm -rf temp/cache`, `docker compose restart worker`, and the same read-only check. Report the result; if a step fails, ask.
 - Tests use a separate test database and never the development data. Smoke and end-to-end tests run only in the e2e stack (`bin/e2e`, docs/testing.md): never create test operators, accounts or other test data on an instance, and never send test requests to it. Tests use only fake Meta and OpenAI clients. Temporary files go under `temp/tests/` and are cleaned up after the run. Never leave large files in `/tmp`.
 - Before you finish, run PHPStan and the relevant tests, and report the results honestly. If you could not run them, say so.
 - Do not mark a Meta feature as done until the required permissions are actually granted and verified (specification §3.2). Before implementing concrete Graph endpoints, confirm the login flow and scopes with the user.

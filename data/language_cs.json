@@ -2178,6 +2178,51 @@
   }
  },
  {
+  "key": "knowledge.publish-selected",
+  "lang": "cs",
+  "translations": {
+   "1": "Publikovat vybrané",
+   "2": "Publikovat vybrané",
+   "5": "Publikovat vybrané"
+  }
+ },
+ {
+  "key": "knowledge.publish-selected-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Zaškrtnout lze jen koncepty. Publikování archivuje předchozí publikovanou verzi stejného klíče a jazyka.",
+   "2": "Zaškrtnout lze jen koncepty. Publikování archivuje předchozí publikovanou verzi stejného klíče a jazyka.",
+   "5": "Zaškrtnout lze jen koncepty. Publikování archivuje předchozí publikovanou verzi stejného klíče a jazyka."
+  }
+ },
+ {
+  "key": "knowledge.select-all",
+  "lang": "cs",
+  "translations": {
+   "1": "Vybrat všechny koncepty",
+   "2": "Vybrat všechny koncepty",
+   "5": "Vybrat všechny koncepty"
+  }
+ },
+ {
+  "key": "knowledge.error.none-selected",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyberte alespoň jeden koncept.",
+   "2": "Vyberte alespoň jeden koncept.",
+   "5": "Vyberte alespoň jeden koncept."
+  }
+ },
+ {
+  "key": "knowledge.published-selected",
+  "lang": "cs",
+  "translations": {
+   "1": "Publikována %count% verze, předchozí publikované verze byly archivovány.",
+   "2": "Publikovány %count% verze, předchozí publikované verze byly archivovány.",
+   "5": "Publikováno %count% verzí, předchozí publikované verze byly archivovány."
+  }
+ },
+ {
   "key": "knowledge.saved",
   "lang": "cs",
   "translations": {
@@ -2247,6 +2292,123 @@
    "1": "Znalost neexistuje.",
    "2": "Znalost neexistuje.",
    "5": "Znalost neexistuje."
+  }
+ },
+ {
+  "key": "knowledge.import.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Import ze souboru",
+   "2": "Import ze souboru",
+   "5": "Import ze souboru"
+  }
+ },
+ {
+  "key": "knowledge.import.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Nahrajte soubor JSON ve formátu social-ai-moderator.knowledge (docs/knowledge-format.md). Import vytvoří jen koncepty nových nebo změněných verzí, nic nepublikuje ani nemaže. Při jakékoli chybě se nezapíše nic.",
+   "2": "Nahrajte soubor JSON ve formátu social-ai-moderator.knowledge (docs/knowledge-format.md). Import vytvoří jen koncepty nových nebo změněných verzí, nic nepublikuje ani nemaže. Při jakékoli chybě se nezapíše nic.",
+   "5": "Nahrajte soubor JSON ve formátu social-ai-moderator.knowledge (docs/knowledge-format.md). Import vytvoří jen koncepty nových nebo změněných verzí, nic nepublikuje ani nemaže. Při jakékoli chybě se nezapíše nic."
+  }
+ },
+ {
+  "key": "knowledge.import.file",
+  "lang": "cs",
+  "translations": {
+   "1": "Soubor JSON",
+   "2": "Soubor JSON",
+   "5": "Soubor JSON"
+  }
+ },
+ {
+  "key": "knowledge.import.submit",
+  "lang": "cs",
+  "translations": {
+   "1": "Importovat jako koncepty",
+   "2": "Importovat jako koncepty",
+   "5": "Importovat jako koncepty"
+  }
+ },
+ {
+  "key": "knowledge.import.error.json",
+  "lang": "cs",
+  "translations": {
+   "1": "Soubor není platný JSON.",
+   "2": "Soubor není platný JSON.",
+   "5": "Soubor není platný JSON."
+  }
+ },
+ {
+  "key": "knowledge.import.error.format",
+  "lang": "cs",
+  "translations": {
+   "1": "Soubor nemá formát social-ai-moderator.knowledge verze 1.",
+   "2": "Soubor nemá formát social-ai-moderator.knowledge verze 1.",
+   "5": "Soubor nemá formát social-ai-moderator.knowledge verze 1."
+  }
+ },
+ {
+  "key": "knowledge.import.error.field",
+  "lang": "cs",
+  "translations": {
+   "1": "Chybějící nebo neplatná hodnota.",
+   "2": "Chybějící nebo neplatná hodnota.",
+   "5": "Chybějící nebo neplatná hodnota."
+  }
+ },
+ {
+  "key": "knowledge.import.error.duplicate",
+  "lang": "cs",
+  "translations": {
+   "1": "Klíč je v souboru vícekrát.",
+   "2": "Klíč je v souboru vícekrát.",
+   "5": "Klíč je v souboru vícekrát."
+  }
+ },
+ {
+  "key": "knowledge.import.error.size",
+  "lang": "cs",
+  "translations": {
+   "1": "Soubor je příliš velký.",
+   "2": "Soubor je příliš velký.",
+   "5": "Soubor je příliš velký."
+  }
+ },
+ {
+  "key": "knowledge.import.error.upload",
+  "lang": "cs",
+  "translations": {
+   "1": "Soubor se nepodařilo nahrát.",
+   "2": "Soubor se nepodařilo nahrát.",
+   "5": "Soubor se nepodařilo nahrát."
+  }
+ },
+ {
+  "key": "knowledge.error.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Název smí mít nejvýše 200 znaků.",
+   "2": "Název smí mít nejvýše 200 znaků.",
+   "5": "Název smí mít nejvýše 200 znaků."
+  }
+ },
+ {
+  "key": "knowledge.import.done",
+  "lang": "cs",
+  "translations": {
+   "1": "Vytvořen %count% koncept, beze změny přeskočeno: %skipped%. Koncepty zkontrolujte a publikujte.",
+   "2": "Vytvořeny %count% koncepty, beze změny přeskočeno: %skipped%. Koncepty zkontrolujte a publikujte.",
+   "5": "Vytvořeno %count% konceptů, beze změny přeskočeno: %skipped%. Koncepty zkontrolujte a publikujte."
+  }
+ },
+ {
+  "key": "knowledge.import.error.at",
+  "lang": "cs",
+  "translations": {
+   "1": "Chyba v poli %field%: %reason%",
+   "2": "Chyba v poli %field%: %reason%",
+   "5": "Chyba v poli %field%: %reason%"
   }
  },
  {
@@ -3498,6 +3660,15 @@
    "1": "Stažení znalosti",
    "2": "Stažení znalosti",
    "5": "Stažení znalosti"
+  }
+ },
+ {
+  "key": "audit.action.knowledge.import",
+  "lang": "cs",
+  "translations": {
+   "1": "import znalostí",
+   "2": "import znalostí",
+   "5": "import znalostí"
   }
  },
  {
