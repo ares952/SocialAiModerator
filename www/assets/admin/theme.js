@@ -1,4 +1,4 @@
-// Light/dark theme of the administration (Bootstrap 5.3 color modes). Loaded in <head> so the
+// Light/dark theme of the administration (CoreUI color modes). Loaded in <head> so the
 // page renders in the right theme without flashing. The choice is a per-browser preference;
 // "auto" follows the operating system.
 (() => {
@@ -28,7 +28,7 @@
 
 	const apply = (theme) => {
 		const resolved = theme === 'auto' ? (darkQuery.matches ? 'dark' : 'light') : theme;
-		document.documentElement.setAttribute('data-bs-theme', resolved);
+		document.documentElement.setAttribute('data-coreui-theme', resolved);
 
 		document.querySelectorAll('[data-theme-value]').forEach((button) => {
 			const active = button.dataset.themeValue === theme;
@@ -36,8 +36,10 @@
 			button.setAttribute('aria-pressed', String(active));
 		});
 		document.querySelectorAll('[data-theme-icon]').forEach((icon) => {
-			icon.setAttribute('href', `#icon-theme-${theme}`);
+			icon.setAttribute('href', icon.getAttribute('href').replace(/#.*$/, `#theme-${theme}`));
 		});
+		// Charts read their colors from CSS variables and redraw on this event.
+		document.dispatchEvent(new CustomEvent('socialai:theme', { detail: resolved }));
 	};
 
 	apply(preferred());

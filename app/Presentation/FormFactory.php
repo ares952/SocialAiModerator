@@ -11,7 +11,7 @@ use Nette\Forms\Rendering\DefaultFormRenderer;
 
 
 /**
- * Forms of the administration: translated, CSRF-protected and rendered with Bootstrap 5 classes.
+ * Forms of the administration: translated, CSRF-protected and rendered with CoreUI (Bootstrap 5 compatible) classes.
  */
 final class FormFactory
 {

@@ -24,7 +24,7 @@
 | Framework | Nette 3.x (`nette/application`, `nette/database`, `nette/di`, `nette/forms`, `nette/security`), Latte 3, Tracy |
 | Database | MariaDB 12.3 LTS, own database, DB-backed job queue (Redis is not used for the queue) |
 | Sessions | Redis 8.10 (`redis` service, phpredis), only for the PHP sessions of the administration |
-| Admin UI | Bootstrap 5.3, local copy in `www/assets/vendor/bootstrap-<version>/` (no CDN), light/dark theme |
+| Admin UI | CoreUI 5 (free, Bootstrap 5 compatible) + Chart.js 4 for dashboard charts, local copies in `www/assets/vendor/<package>-<version>/` (no CDN, no build step), light/dark theme; details in `docs/admin-ui.md` |
 | Time | PHP and MariaDB work in UTC; the administration converts to the `timezone` parameter |
 | CLI | `bin/console` (`contributte/console`) |
 | Migrations | `nextras/migrations`, files in `migrations/` |

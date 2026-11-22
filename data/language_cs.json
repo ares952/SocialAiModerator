@@ -6039,177 +6039,6 @@
   }
  },
  {
-  "key": "dashboard.metrics.title",
-  "lang": "cs",
-  "translations": {
-   "1": "Provoz",
-   "2": "Provoz",
-   "5": "Provoz"
-  }
- },
- {
-  "key": "dashboard.metrics.day",
-  "lang": "cs",
-  "translations": {
-   "1": "24 hodin",
-   "2": "24 hodin",
-   "5": "24 hodin"
-  }
- },
- {
-  "key": "dashboard.metrics.week",
-  "lang": "cs",
-  "translations": {
-   "1": "7 dní",
-   "2": "7 dní",
-   "5": "7 dní"
-  }
- },
- {
-  "key": "dashboard.metric.events",
-  "lang": "cs",
-  "translations": {
-   "1": "Přijaté události",
-   "2": "Přijaté události",
-   "5": "Přijaté události"
-  }
- },
- {
-  "key": "dashboard.metric.comments",
-  "lang": "cs",
-  "translations": {
-   "1": "z toho komentáře",
-   "2": "z toho komentáře",
-   "5": "z toho komentáře"
-  }
- },
- {
-  "key": "dashboard.metric.messages",
-  "lang": "cs",
-  "translations": {
-   "1": "z toho zprávy zákazníků",
-   "2": "z toho zprávy zákazníků",
-   "5": "z toho zprávy zákazníků"
-  }
- },
- {
-  "key": "dashboard.metric.decisions",
-  "lang": "cs",
-  "translations": {
-   "1": "Rozhodnutí AI",
-   "2": "Rozhodnutí AI",
-   "5": "Rozhodnutí AI"
-  }
- },
- {
-  "key": "dashboard.metric.escalations",
-  "lang": "cs",
-  "translations": {
-   "1": "Předáno člověku nebo ke kontrole",
-   "2": "Předáno člověku nebo ke kontrole",
-   "5": "Předáno člověku nebo ke kontrole"
-  }
- },
- {
-  "key": "dashboard.metric.unclassified",
-  "lang": "cs",
-  "translations": {
-   "1": "Klasifikace selhala",
-   "2": "Klasifikace selhala",
-   "5": "Klasifikace selhala"
-  }
- },
- {
-  "key": "dashboard.metric.classification_seconds",
-  "lang": "cs",
-  "translations": {
-   "1": "Průměrný čas do rozhodnutí (s)",
-   "2": "Průměrný čas do rozhodnutí (s)",
-   "5": "Průměrný čas do rozhodnutí (s)"
-  }
- },
- {
-  "key": "dashboard.metric.hides_proposed",
-  "lang": "cs",
-  "translations": {
-   "1": "Navržená skrytí",
-   "2": "Navržená skrytí",
-   "5": "Navržená skrytí"
-  }
- },
- {
-  "key": "dashboard.metric.hides_sent",
-  "lang": "cs",
-  "translations": {
-   "1": "Provedená skrytí",
-   "2": "Provedená skrytí",
-   "5": "Provedená skrytí"
-  }
- },
- {
-  "key": "dashboard.metric.replies_drafted",
-  "lang": "cs",
-  "translations": {
-   "1": "Návrhy odpovědí",
-   "2": "Návrhy odpovědí",
-   "5": "Návrhy odpovědí"
-  }
- },
- {
-  "key": "dashboard.metric.replies_sent",
-  "lang": "cs",
-  "translations": {
-   "1": "Odeslané odpovědi",
-   "2": "Odeslané odpovědi",
-   "5": "Odeslané odpovědi"
-  }
- },
- {
-  "key": "dashboard.metric.rejected",
-  "lang": "cs",
-  "translations": {
-   "1": "Zamítnuto moderátorem",
-   "2": "Zamítnuto moderátorem",
-   "5": "Zamítnuto moderátorem"
-  }
- },
- {
-  "key": "dashboard.metric.blocked",
-  "lang": "cs",
-  "translations": {
-   "1": "Zastaveno pravidly",
-   "2": "Zastaveno pravidly",
-   "5": "Zastaveno pravidly"
-  }
- },
- {
-  "key": "dashboard.metric.failed_actions",
-  "lang": "cs",
-  "translations": {
-   "1": "Zásahy selhané nebo s neznámým výsledkem",
-   "2": "Zásahy selhané nebo s neznámým výsledkem",
-   "5": "Zásahy selhané nebo s neznámým výsledkem"
-  }
- },
- {
-  "key": "dashboard.metric.failed_jobs",
-  "lang": "cs",
-  "translations": {
-   "1": "Selhané úlohy",
-   "2": "Selhané úlohy",
-   "5": "Selhané úlohy"
-  }
- },
- {
-  "key": "dashboard.tokens.title",
-  "lang": "cs",
-  "translations": {
-   "1": "Spotřeba tokenů za 7 dní",
-   "2": "Spotřeba tokenů za 7 dní",
-   "5": "Spotřeba tokenů za 7 dní"
-  }
- },
- {
   "key": "dashboard.tokens.none",
   "lang": "cs",
   "translations": {
@@ -6306,6 +6135,393 @@
    "1": "denní limit automatických odpovědí",
    "2": "denní limit automatických odpovědí",
    "5": "denní limit automatických odpovědí"
+  }
+ },
+ {
+  "key": "admin.menu.group.operations",
+  "lang": "cs",
+  "translations": {
+   "1": "Provoz",
+   "2": "Provoz",
+   "5": "Provoz"
+  }
+ },
+ {
+  "key": "admin.menu.group.settings",
+  "lang": "cs",
+  "translations": {
+   "1": "Nastavení",
+   "2": "Nastavení",
+   "5": "Nastavení"
+  }
+ },
+ {
+  "key": "admin.menu.group.management",
+  "lang": "cs",
+  "translations": {
+   "1": "Správa",
+   "2": "Správa",
+   "5": "Správa"
+  }
+ },
+ {
+  "key": "dashboard.range.label",
+  "lang": "cs",
+  "translations": {
+   "1": "Období",
+   "2": "Období",
+   "5": "Období"
+  }
+ },
+ {
+  "key": "dashboard.range.24h",
+  "lang": "cs",
+  "translations": {
+   "1": "24 hodin",
+   "2": "24 hodin",
+   "5": "24 hodin"
+  }
+ },
+ {
+  "key": "dashboard.range.7d",
+  "lang": "cs",
+  "translations": {
+   "1": "7 dní",
+   "2": "7 dní",
+   "5": "7 dní"
+  }
+ },
+ {
+  "key": "dashboard.range.30d",
+  "lang": "cs",
+  "translations": {
+   "1": "30 dní",
+   "2": "30 dní",
+   "5": "30 dní"
+  }
+ },
+ {
+  "key": "dashboard.tile.events",
+  "lang": "cs",
+  "translations": {
+   "1": "Přijaté události",
+   "2": "Přijaté události",
+   "5": "Přijaté události"
+  }
+ },
+ {
+  "key": "dashboard.tile.approvals",
+  "lang": "cs",
+  "translations": {
+   "1": "Čeká na schválení",
+   "2": "Čeká na schválení",
+   "5": "Čeká na schválení"
+  }
+ },
+ {
+  "key": "dashboard.tile.escalations",
+  "lang": "cs",
+  "translations": {
+   "1": "Předáno člověku",
+   "2": "Předáno člověku",
+   "5": "Předáno člověku"
+  }
+ },
+ {
+  "key": "dashboard.tile.hides",
+  "lang": "cs",
+  "translations": {
+   "1": "Navržená skrytí",
+   "2": "Navržená skrytí",
+   "5": "Navržená skrytí"
+  }
+ },
+ {
+  "key": "dashboard.tile.replies",
+  "lang": "cs",
+  "translations": {
+   "1": "Návrhy odpovědí",
+   "2": "Návrhy odpovědí",
+   "5": "Návrhy odpovědí"
+  }
+ },
+ {
+  "key": "dashboard.tile.failures",
+  "lang": "cs",
+  "translations": {
+   "1": "Selhání",
+   "2": "Selhání",
+   "5": "Selhání"
+  }
+ },
+ {
+  "key": "dashboard.tile.change",
+  "lang": "cs",
+  "translations": {
+   "1": "Změna oproti předchozímu stejně dlouhému období",
+   "2": "Změna oproti předchozímu stejně dlouhému období",
+   "5": "Změna oproti předchozímu stejně dlouhému období"
+  }
+ },
+ {
+  "key": "dashboard.tile.oldest",
+  "lang": "cs",
+  "translations": {
+   "1": "nejstarší od %time%",
+   "2": "nejstarší od %time%",
+   "5": "nejstarší od %time%"
+  }
+ },
+ {
+  "key": "dashboard.tile.none",
+  "lang": "cs",
+  "translations": {
+   "1": "Nic nečeká.",
+   "2": "Nic nečeká.",
+   "5": "Nic nečeká."
+  }
+ },
+ {
+  "key": "dashboard.chart.traffic",
+  "lang": "cs",
+  "translations": {
+   "1": "Provoz v čase",
+   "2": "Provoz v čase",
+   "5": "Provoz v čase"
+  }
+ },
+ {
+  "key": "dashboard.chart.decisions",
+  "lang": "cs",
+  "translations": {
+   "1": "Rozhodnutí AI podle akce",
+   "2": "Rozhodnutí AI podle akce",
+   "5": "Rozhodnutí AI podle akce"
+  }
+ },
+ {
+  "key": "dashboard.chart.categories",
+  "lang": "cs",
+  "translations": {
+   "1": "Rozhodnutí AI podle kategorie",
+   "2": "Rozhodnutí AI podle kategorie",
+   "5": "Rozhodnutí AI podle kategorie"
+  }
+ },
+ {
+  "key": "dashboard.chart.unclassified",
+  "lang": "cs",
+  "translations": {
+   "1": "Klasifikace selhala",
+   "2": "Klasifikace selhala",
+   "5": "Klasifikace selhala"
+  }
+ },
+ {
+  "key": "dashboard.chart.outcomes",
+  "lang": "cs",
+  "translations": {
+   "1": "Výsledky zásahů",
+   "2": "Výsledky zásahů",
+   "5": "Výsledky zásahů"
+  }
+ },
+ {
+  "key": "dashboard.chart.classification",
+  "lang": "cs",
+  "translations": {
+   "1": "Čas do rozhodnutí AI (s)",
+   "2": "Čas do rozhodnutí AI (s)",
+   "5": "Čas do rozhodnutí AI (s)"
+  }
+ },
+ {
+  "key": "dashboard.chart.tokens",
+  "lang": "cs",
+  "translations": {
+   "1": "Spotřeba tokenů",
+   "2": "Spotřeba tokenů",
+   "5": "Spotřeba tokenů"
+  }
+ },
+ {
+  "key": "dashboard.chart.platforms",
+  "lang": "cs",
+  "translations": {
+   "1": "Události podle platformy",
+   "2": "Události podle platformy",
+   "5": "Události podle platformy"
+  }
+ },
+ {
+  "key": "dashboard.chart.data",
+  "lang": "cs",
+  "translations": {
+   "1": "Zobrazit data",
+   "2": "Zobrazit data",
+   "5": "Zobrazit data"
+  }
+ },
+ {
+  "key": "dashboard.chart.empty",
+  "lang": "cs",
+  "translations": {
+   "1": "Za zvolené období nejsou žádná data.",
+   "2": "Za zvolené období nejsou žádná data.",
+   "5": "Za zvolené období nejsou žádná data."
+  }
+ },
+ {
+  "key": "dashboard.series.comments",
+  "lang": "cs",
+  "translations": {
+   "1": "Komentáře",
+   "2": "Komentáře",
+   "5": "Komentáře"
+  }
+ },
+ {
+  "key": "dashboard.series.messages",
+  "lang": "cs",
+  "translations": {
+   "1": "Zprávy zákazníků",
+   "2": "Zprávy zákazníků",
+   "5": "Zprávy zákazníků"
+  }
+ },
+ {
+  "key": "dashboard.series.other",
+  "lang": "cs",
+  "translations": {
+   "1": "Ostatní události",
+   "2": "Ostatní události",
+   "5": "Ostatní události"
+  }
+ },
+ {
+  "key": "dashboard.series.decisions",
+  "lang": "cs",
+  "translations": {
+   "1": "Rozhodnutí AI",
+   "2": "Rozhodnutí AI",
+   "5": "Rozhodnutí AI"
+  }
+ },
+ {
+  "key": "dashboard.series.average",
+  "lang": "cs",
+  "translations": {
+   "1": "Průměr",
+   "2": "Průměr",
+   "5": "Průměr"
+  }
+ },
+ {
+  "key": "dashboard.series.longest",
+  "lang": "cs",
+  "translations": {
+   "1": "Nejdéle",
+   "2": "Nejdéle",
+   "5": "Nejdéle"
+  }
+ },
+ {
+  "key": "dashboard.series.count",
+  "lang": "cs",
+  "translations": {
+   "1": "Počet",
+   "2": "Počet",
+   "5": "Počet"
+  }
+ },
+ {
+  "key": "dashboard.total.events",
+  "lang": "cs",
+  "translations": {
+   "1": "Přijaté události",
+   "2": "Přijaté události",
+   "5": "Přijaté události"
+  }
+ },
+ {
+  "key": "dashboard.total.share",
+  "lang": "cs",
+  "translations": {
+   "1": "Podíl předaných člověku",
+   "2": "Podíl předaných člověku",
+   "5": "Podíl předaných člověku"
+  }
+ },
+ {
+  "key": "dashboard.total.average",
+  "lang": "cs",
+  "translations": {
+   "1": "Průměrný čas do rozhodnutí",
+   "2": "Průměrný čas do rozhodnutí",
+   "5": "Průměrný čas do rozhodnutí"
+  }
+ },
+ {
+  "key": "dashboard.outcome.pending",
+  "lang": "cs",
+  "translations": {
+   "1": "Čeká na schválení",
+   "2": "Čeká na schválení",
+   "5": "Čeká na schválení"
+  }
+ },
+ {
+  "key": "dashboard.outcome.approved",
+  "lang": "cs",
+  "translations": {
+   "1": "Schváleno, odesílá se",
+   "2": "Schváleno, odesílá se",
+   "5": "Schváleno, odesílá se"
+  }
+ },
+ {
+  "key": "dashboard.outcome.sent",
+  "lang": "cs",
+  "translations": {
+   "1": "Provedeno",
+   "2": "Provedeno",
+   "5": "Provedeno"
+  }
+ },
+ {
+  "key": "dashboard.outcome.rejected",
+  "lang": "cs",
+  "translations": {
+   "1": "Zamítnuto moderátorem",
+   "2": "Zamítnuto moderátorem",
+   "5": "Zamítnuto moderátorem"
+  }
+ },
+ {
+  "key": "dashboard.outcome.blocked",
+  "lang": "cs",
+  "translations": {
+   "1": "Zastaveno pravidly",
+   "2": "Zastaveno pravidly",
+   "5": "Zastaveno pravidly"
+  }
+ },
+ {
+  "key": "dashboard.outcome.failed",
+  "lang": "cs",
+  "translations": {
+   "1": "Selhalo nebo neznámý výsledek",
+   "2": "Selhalo nebo neznámý výsledek",
+   "5": "Selhalo nebo neznámý výsledek"
+  }
+ },
+ {
+  "key": "dashboard.accounts-link",
+  "lang": "cs",
+  "translations": {
+   "1": "Sociální účty",
+   "2": "Sociální účty",
+   "5": "Sociální účty"
   }
  }
 ]

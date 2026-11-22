@@ -10,7 +10,10 @@ use App\Core\Encryptor;
 use App\Monitoring\Alarm;
 use App\Monitoring\Alarms;
 use App\Monitoring\AlarmThresholds;
+use App\Monitoring\MetricRange;
 use App\Monitoring\Metrics;
+use App\Monitoring\MetricSeries;
+use App\Monitoring\Timeline;
 use App\Moderation\Mode;
 use App\Moderation\PolicySettings;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -168,7 +171,7 @@ test('monitor:check exits with 1 while there is an alarm', function () use ($ala
 });
 
 
-test('dashboard numbers and token usage per model', function () use ($database, $accountId): void {
+test('dashboard series and breakdowns, token usage per model', function () use ($database, $accountId): void {
 	$eventId = (int) $database->query('SELECT id FROM social_events LIMIT 1')->fetchField();
 	$database->query("UPDATE social_events SET event_type = 'comment.created' WHERE id = ?", $eventId);
 	$database->query('INSERT INTO moderation_decisions ?', [
@@ -187,12 +190,41 @@ test('dashboard numbers and token usage per model', function () use ($database, 
 		VALUES (1, 'reply', 'blocked', 0, 'fb:c1', '[\"rejected\"]', 'model-b', 300, 40), (1, 'hide', 'blocked', 0, 'fb:c1', '[\"mode_observe\"]', NULL, NULL, NULL)");
 
 	$metrics = new Metrics($database);
-	$day = $metrics->summary(24);
-	Assert::same([1, 1, 0, 1, 1, 0], [$day['events'], $day['comments'], $day['messages'], $day['decisions'], $day['escalations'], $day['unclassified']]);
-	Assert::same([1, 0, 1, 1], [$day['hides_proposed'], $day['hides_sent'], $day['rejected'], $day['blocked']]);
+	$series = new MetricSeries($database);
+	$timeline = Timeline::create(MetricRange::Day, new DateTimeImmutable, new DateTimeZone('Europe/Prague'), 2);
+	$current = $timeline->current();
+	$events = $series->events($timeline);
+	Assert::same([1, 0], [array_sum($timeline->last($events['comments'])), array_sum($timeline->last($events['messages']))]);
+	$decisions = $series->decisions($timeline);
+	Assert::same([1, 1], [array_sum($timeline->last($decisions['decisions'])), array_sum($timeline->last($decisions['escalations']))]);
+	Assert::same(['handoff' => 1], $metrics->decisionActions($current));
+	Assert::same(['faq' => 1], $metrics->categories($current));
+	$actions = $series->actions($timeline);
+	Assert::same([1, 0], [array_sum($timeline->last($actions['hides'])), array_sum($timeline->last($actions['replies']))], 'The blocked reply has no draft text.');
+	Assert::same([
+		'hide' => [
+			'pending' => 0,
+			'approved' => 0,
+			'sent' => 0,
+			'rejected' => 0,
+			'blocked' => 1,
+			'failed' => 0,
+		],
+		'reply' => [
+			'pending' => 0,
+			'approved' => 0,
+			'sent' => 0,
+			'rejected' => 1,
+			'blocked' => 0,
+			'failed' => 0,
+		],
+	], $metrics->outcomes($current));
 	Assert::same([
 		['model' => 'model-a', 'calls' => 1, 'input' => 100, 'output' => 20],
 		['model' => 'model-b', 'calls' => 1, 'input' => 300, 'output' => 40],
-	], $metrics->tokens(24));
+	], $metrics->tokens($current));
+	Assert::same([120, 340], array_map(fn(array $values): int => array_sum($values), array_values($series->tokens($current))));
+	Assert::same(['model-a', 'model-b'], array_keys($series->tokens($current)));
+	Assert::same(0, $metrics->approvals()['count']);
 	Assert::same($accountId, (int) $database->query('SELECT account_id FROM social_events WHERE id = ?', $eventId)->fetchField());
 });

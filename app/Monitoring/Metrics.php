@@ -4,21 +4,28 @@ declare(strict_types=1);
 
 namespace App\Monitoring;
 
-use App\Meta\EventType;
-use App\Moderation\Action;
 use App\Outbox\ActionStatus;
-use App\Outbox\ActionType;
-use App\Queue\JobStatus;
 use Nette\Database\Explorer;
 
 
 /**
- * Numbers of the dashboard over the last hours (specification §4.3, §8.4): received events, AI
- * decisions with the time to classification, escalations to a human, hides and replies proposed
- * and sent, rejected and blocked actions, failures, and token usage per model.
+ * Breakdowns of the dashboard over the period of a Timeline (specification §4.3, §8.4): AI
+ * decisions by action and category, outcomes of interventions, events by platform and token usage
+ * per model; plus the approvals waiting right now. Results never contain customer content.
  */
 final class Metrics
 {
+	/** Outcome of an intervention on the dashboard => action statuses. */
+	public const Outcomes = [
+		'pending' => [ActionStatus::Pending],
+		'approved' => [ActionStatus::Approved, ActionStatus::Sending],
+		'sent' => [ActionStatus::Sent],
+		'rejected' => [],
+		'blocked' => [],
+		'failed' => [ActionStatus::Failed, ActionStatus::Unknown],
+	];
+
+
 	public function __construct(
 		private readonly Explorer $database,
 	) {
@@ -26,77 +33,78 @@ final class Metrics
 
 
 	/**
-	 * @return array<string, int|float|null> metric => value
+	 * @return array<string, int> App\Moderation\Action value => decisions, most frequent first
 	 */
-	public function summary(int $hours): array
+	public function decisionActions(Timeline $timeline): array
 	{
-		$events = $this->database->query(
-			'SELECT COUNT(*) AS received, SUM(event_type LIKE ?) AS comments, SUM(event_type = ?) AS messages
-			FROM social_events WHERE received_at >= NOW() - INTERVAL ? HOUR',
-			'comment.%',
-			EventType::MessageReceived->value,
-			$hours,
-		)->fetch();
-		$decisions = $this->database->query(
-			'SELECT COUNT(*) AS decided, SUM(d.action IN (?)) AS escalated, SUM(d.category IS NULL) AS unclassified,
-				AVG(TIMESTAMPDIFF(SECOND, e.received_at, d.created_at)) AS seconds
-			FROM moderation_decisions d
-			JOIN social_events e ON e.id = d.event_id
-			WHERE d.created_at >= NOW(3) - INTERVAL ? HOUR',
-			[
-				Action::Handoff->value,
-				Action::Review->value,
-			],
-			$hours,
-		)->fetch();
-		$actions = $this->database->query(
-			'SELECT SUM(type = ?) AS hides_proposed, SUM(type = ? AND status = ?) AS hides_sent,
-				SUM(type = ? AND text_encrypted IS NOT NULL) AS replies_drafted, SUM(type = ? AND status = ?) AS replies_sent,
-				SUM(status = ? AND JSON_CONTAINS(COALESCE(reasons_json, JSON_ARRAY()), ?)) AS rejected,
-				SUM(status = ? AND NOT JSON_CONTAINS(COALESCE(reasons_json, JSON_ARRAY()), ?)) AS blocked,
-				SUM(status IN (?)) AS failed
-			FROM moderation_actions WHERE created_at >= NOW(3) - INTERVAL ? HOUR',
-			ActionType::Hide->value,
-			ActionType::Hide->value,
-			ActionStatus::Sent->value,
-			ActionType::Reply->value,
-			ActionType::Reply->value,
-			ActionStatus::Sent->value,
-			ActionStatus::Blocked->value,
-			'"rejected"',
-			ActionStatus::Blocked->value,
-			'"rejected"',
-			[
-				ActionStatus::Failed->value,
-				ActionStatus::Unknown->value,
-			],
-			$hours,
-		)->fetch();
-		$jobs = $this->database->query(
-			'SELECT COUNT(*) FROM queue_jobs WHERE status = ? AND updated_at >= NOW(3) - INTERVAL ? HOUR',
-			JobStatus::Failed->value,
-			$hours,
-		)->fetchField();
+		return $this->database->query(
+			'SELECT action, COUNT(*) AS cnt FROM moderation_decisions WHERE created_at >= ? AND created_at < ?
+			GROUP BY action ORDER BY cnt DESC, action',
+			$timeline->since,
+			$timeline->until,
+		)->fetchPairs('action', 'cnt');
+	}
 
-		$int = static fn(mixed $value): int => (int) $value;
 
-		return [
-			'events' => $int($events?->received),
-			'comments' => $int($events?->comments),
-			'messages' => $int($events?->messages),
-			'decisions' => $int($decisions?->decided),
-			'escalations' => $int($decisions?->escalated),
-			'unclassified' => $int($decisions?->unclassified),
-			'classification_seconds' => $decisions?->seconds === null ? null : round((float) $decisions->seconds, 1),
-			'hides_proposed' => $int($actions?->hides_proposed),
-			'hides_sent' => $int($actions?->hides_sent),
-			'replies_drafted' => $int($actions?->replies_drafted),
-			'replies_sent' => $int($actions?->replies_sent),
-			'rejected' => $int($actions?->rejected),
-			'blocked' => $int($actions?->blocked),
-			'failed_actions' => $int($actions?->failed),
-			'failed_jobs' => $int($jobs),
-		];
+	/**
+	 * @return array<string, int> App\Moderation\Category value, '' when the classification failed,
+	 *     => decisions, most frequent first
+	 */
+	public function categories(Timeline $timeline): array
+	{
+		return $this->database->query(
+			"SELECT COALESCE(category, '') AS category, COUNT(*) AS cnt FROM moderation_decisions
+			WHERE created_at >= ? AND created_at < ?
+			GROUP BY category ORDER BY cnt DESC, category",
+			$timeline->since,
+			$timeline->until,
+		)->fetchPairs('category', 'cnt');
+	}
+
+
+	/**
+	 * Interventions by type and outcome (keys of Outcomes). A blocked action counts as rejected
+	 * when a moderator rejected it, otherwise as blocked by the rules.
+	 *
+	 * @return array<string, array<string, int>> App\Outbox\ActionType value => outcome => actions
+	 */
+	public function outcomes(Timeline $timeline): array
+	{
+		$rows = $this->database->query(
+			'SELECT type, status, JSON_CONTAINS(COALESCE(reasons_json, JSON_ARRAY()), ?) AS rejected, COUNT(*) AS cnt
+			FROM moderation_actions WHERE created_at >= ? AND created_at < ?
+			GROUP BY type, status, rejected
+			ORDER BY type',
+			'"rejected"',
+			$timeline->since,
+			$timeline->until,
+		)->fetchAll();
+
+		$outcomes = [];
+		foreach ($rows as $row) {
+			$status = ActionStatus::from((string) $row->status);
+			$outcome = $status === ActionStatus::Blocked
+				? ((bool) $row->rejected ? 'rejected' : 'blocked')
+				: self::outcome($status);
+			$outcomes[(string) $row->type] ??= array_fill_keys(array_keys(self::Outcomes), 0);
+			$outcomes[(string) $row->type][$outcome] += (int) $row->cnt;
+		}
+
+		return $outcomes;
+	}
+
+
+	/**
+	 * @return array<string, int> App\Meta\Platform value => received events
+	 */
+	public function platforms(Timeline $timeline): array
+	{
+		return $this->database->query(
+			'SELECT platform, COUNT(*) AS cnt FROM social_events WHERE received_at >= ? AND received_at < ?
+			GROUP BY platform ORDER BY platform',
+			$timeline->since,
+			$timeline->until,
+		)->fetchPairs('platform', 'cnt');
 	}
 
 
@@ -105,20 +113,22 @@ final class Metrics
 	 *
 	 * @return list<array{model: string, calls: int, input: int, output: int}>
 	 */
-	public function tokens(int $hours): array
+	public function tokens(Timeline $timeline): array
 	{
 		$rows = $this->database->query(
 			'SELECT model, COUNT(*) AS calls, SUM(input_tokens) AS input, SUM(output_tokens) AS output FROM (
 				SELECT model, input_tokens, output_tokens FROM moderation_decisions
-				WHERE created_at >= NOW(3) - INTERVAL ? HOUR AND input_tokens IS NOT NULL
+				WHERE created_at >= ? AND created_at < ? AND input_tokens IS NOT NULL
 				UNION ALL
 				SELECT model, input_tokens, output_tokens FROM moderation_actions
-				WHERE created_at >= NOW(3) - INTERVAL ? HOUR AND input_tokens IS NOT NULL
+				WHERE created_at >= ? AND created_at < ? AND input_tokens IS NOT NULL
 			) usage_rows
 			GROUP BY model
 			ORDER BY model',
-			$hours,
-			$hours,
+			$timeline->since,
+			$timeline->until,
+			$timeline->since,
+			$timeline->until,
 		)->fetchAll();
 
 		return array_map(fn($row) => [
@@ -127,5 +137,36 @@ final class Metrics
 			'input' => (int) $row->input,
 			'output' => (int) $row->output,
 		], $rows);
+	}
+
+
+	/**
+	 * Interventions waiting for a human decision now, and when the oldest of them was created (UTC).
+	 *
+	 * @return array{count: int, oldest: ?\DateTimeImmutable}
+	 */
+	public function approvals(): array
+	{
+		$row = $this->database->query(
+			'SELECT COUNT(*) AS cnt, MIN(created_at) AS oldest FROM moderation_actions WHERE status = ?',
+			ActionStatus::Pending->value,
+		)->fetch();
+
+		return [
+			'count' => (int) $row?->cnt,
+			'oldest' => $row?->oldest instanceof \DateTimeInterface ? \DateTimeImmutable::createFromInterface($row->oldest) : null,
+		];
+	}
+
+
+	private static function outcome(ActionStatus $status): string
+	{
+		foreach (self::Outcomes as $outcome => $statuses) {
+			if (in_array($status, $statuses, true)) {
+				return $outcome;
+			}
+		}
+
+		throw new \LogicException("Action status {$status->value} has no dashboard outcome.");
 	}
 }

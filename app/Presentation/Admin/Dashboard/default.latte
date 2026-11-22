@@ -1,3 +1,5 @@
+{varType App\Monitoring\MetricRange $range}
+{varType list<App\Monitoring\MetricRange> $ranges}
 {varType array<string, int> $eventCounts}
 {varType list<App\Ingest\EventStatus> $eventStatuses}
 {varType array<string, int> $jobCounts}
@@ -5,90 +7,230 @@
 {varType App\Moderation\Policy $policy}
 {varType bool $paused}
 {varType list<App\Monitoring\Alarm> $alarms}
-{varType array<string, int|float|null> $day}
-{varType array<string, int|float|null> $week}
+{varType list<array{key: string, icon: string, color: string, value: int, change: ?int, oldest: ?DateTimeImmutable, chart: ?array<string, mixed>, link: array{string, array<string, string>}}> $tiles}
+{varType array<string, mixed> $traffic}
+{varType array{events: int, decisions: int, share: ?int, average: ?float} $totals}
+{varType array<string, mixed> $decisionChart}
+{varType array<string, mixed> $categoryChart}
+{varType array<string, mixed> $outcomeChart}
+{varType array<string, mixed> $classificationChart}
+{varType array<string, mixed> $tokenChart}
 {varType list<array{model: string, calls: int, input: int, output: int}> $tokens}
+{varType array<string, mixed> $platformChart}
+{varType string $icons}
+{import '@chart.latte'}
 
 {block content}
-<h1 class="h3 mb-4" n:block="title">{_'dashboard.title'}</h1>
-
-<div n:class="alert, d-flex, flex-wrap, justify-content-between, align-items-center, gap-2, $paused ? 'alert-danger' : 'alert-secondary'">
-	<span>
-		{_'dashboard.mode'}: <strong>{_"mode.{$policy->mode->value}"}</strong>
-		({_'policy.current', 1, [version => $policy->version]})
-		· {if $paused}<strong>{_'automation.state.paused-short'}</strong>{else}{_'automation.state.running'}{/if}
-	</span>
-	<a n:href=":Admin:Policy:" class="alert-link">{_'dashboard.policy-link'}</a>
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+	<h1 class="h3 mb-0" n:block="title">{_'dashboard.title'}</h1>
+	<div class="btn-group" role="group" aria-label="{_'dashboard.range.label'}">
+		<a n:foreach="$ranges as $item" n:href="this, range: $item->value" n:class="btn, $item === $range ? 'btn-primary' : 'btn-outline-primary'"
+			n:attr="aria-current: $item === $range ? page">{_"dashboard.range.{$item->value}"}</a>
+	</div>
 </div>
 
-<div n:if="$alarms !== []" class="alert alert-warning">
-	<div class="fw-semibold mb-1">{_'dashboard.alarms.title', count($alarms)}</div>
+<div n:class="callout, $paused ? 'callout-danger' : 'callout-primary', 'bg-body', 'd-flex', 'flex-wrap', 'justify-content-between', 'align-items-center', 'gap-2', 'mt-0'">
+	<span>
+		{_'dashboard.mode'}: <strong>{_"mode.{$policy->mode->value}"}</strong>
+		<span class="text-body-secondary">({_'policy.current', 1, [version => $policy->version]})</span>
+		· {if $paused}<strong class="text-danger">{_'automation.state.paused-short'}</strong>{else}{_'automation.state.running'}{/if}
+	</span>
+	<a n:href=":Admin:Policy:">{_'dashboard.policy-link'}</a>
+</div>
+
+<div n:if="$alarms !== []" class="callout callout-warning bg-body">
+	<div class="fw-semibold mb-1">
+		<svg class="icon me-1 text-warning" aria-hidden="true"><use href="{$icons}#failure"></use></svg>
+		{_'dashboard.alarms.title', count($alarms)}
+	</div>
 	<ul class="mb-0">
 		<li n:foreach="$alarms as $alarm">{_"alarm.{$alarm->code}", (int) ($alarm->params['count'] ?? $alarm->params['days'] ?? $alarm->params['hours'] ?? $alarm->params['minutes'] ?? 1), $alarm->params}</li>
 	</ul>
 </div>
 <p n:if="$alarms === []" class="text-body-secondary small">{_'dashboard.alarms.none'}</p>
 
-<div class="card mb-4">
-	<div class="card-header">{_'dashboard.metrics.title'}</div>
-	<div class="table-responsive">
-		<table class="table table-sm mb-0 align-middle">
-			<thead>
-				<tr>
-					<th scope="col"></th>
-					<th scope="col" class="text-end">{_'dashboard.metrics.day'}</th>
-					<th scope="col" class="text-end">{_'dashboard.metrics.week'}</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr n:foreach="array_keys($day) as $metric">
-					<td>{_"dashboard.metric.$metric"}</td>
-					<td class="text-end">{$day[$metric] ?? '—'}</td>
-					<td class="text-end">{$week[$metric] ?? '—'}</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	<div class="card-body border-top small">
-		<div class="fw-semibold mb-1">{_'dashboard.tokens.title'}</div>
-		{if $tokens === []}
-			<span class="text-body-secondary">{_'dashboard.tokens.none'}</span>
-		{else}
-			<div n:foreach="$tokens as $usage">
-				<code>{$usage['model']}</code>: {_'dashboard.tokens.usage', $usage['calls'], [input => ($usage['input']|number), output => ($usage['output']|number)]}
+<div class="row g-3 mb-4">
+	<div n:foreach="$tiles as $tile" class="col-12 col-sm-6 col-xl-4 col-xxl-2">
+		<a href="{$presenter->link($tile['link'][0], $tile['link'][1])}" class="card h-100 text-decoration-none text-bg-{$tile['color']} tile">
+			<div class="card-body pb-2 d-flex justify-content-between align-items-start gap-2">
+				<div>
+					<div class="fs-4 fw-semibold">
+						{$tile['value']|number}
+						<span n:if="$tile['change'] !== null" class="fs-6 fw-normal text-nowrap" title="{_'dashboard.tile.change'}">
+							({if $tile['change'] > 0}+{/if}{$tile['change']}&nbsp;%<svg class="icon" aria-hidden="true"><use href="{$icons}#{$tile['change'] < 0 ? down : up}"></use></svg>)
+						</span>
+					</div>
+					<div>{_"dashboard.tile.{$tile['key']}"}</div>
+				</div>
+				<svg class="icon icon-xl opacity-50 flex-shrink-0" aria-hidden="true"><use href="{$icons}#{$tile['icon']}"></use></svg>
 			</div>
-		{/if}
-		<div class="text-body-secondary mt-1">{_'dashboard.tokens.note'}</div>
+			{if $tile['chart'] !== null}
+				<div class="px-3 pb-2">{include chart, $tile['chart'], size: 'spark'}</div>
+			{else}
+				<div class="card-body pt-0 small">
+					{if $tile['oldest'] !== null}
+						{_'dashboard.tile.oldest', 1, [time => ($tile['oldest']|localTime)]}
+					{else}
+						{_'dashboard.tile.none'}
+					{/if}
+				</div>
+			{/if}
+		</a>
+	</div>
+</div>
+
+<div class="card mb-4">
+	<div class="card-body">
+		<h2 class="h5 card-title mb-3">{_'dashboard.chart.traffic'}</h2>
+		{include chart, $traffic, size: 'lg'}
+	</div>
+	<div class="card-footer bg-body">
+		<div class="row row-cols-2 row-cols-md-4 g-3 text-center">
+			<div>
+				<div class="text-body-secondary small">{_'dashboard.total.events'}</div>
+				<div class="fw-semibold">{$totals['events']|number}</div>
+			</div>
+			<div>
+				<div class="text-body-secondary small">{_'dashboard.series.decisions'}</div>
+				<div class="fw-semibold">{$totals['decisions']|number}</div>
+			</div>
+			<div>
+				<div class="text-body-secondary small">{_'dashboard.total.share'}</div>
+				<div class="fw-semibold">{if $totals['share'] === null}—{else}{$totals['share']}&nbsp;%{/if}</div>
+			</div>
+			<div>
+				<div class="text-body-secondary small">{_'dashboard.total.average'}</div>
+				<div class="fw-semibold">{if $totals['average'] === null}—{else}{$totals['average']|number:1}&nbsp;s{/if}</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row g-4 mb-4">
+	<div class="col-12 col-lg-6">
+		<div class="card h-100">
+			<div class="card-body">
+				<h2 class="h5 card-title mb-3">{_'dashboard.chart.decisions'}</h2>
+				{if $decisionChart['labels'] === []}
+					<p class="text-body-secondary mb-0">{_'dashboard.chart.empty'}</p>
+				{else}
+					{include chart, $decisionChart}
+				{/if}
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-lg-6">
+		<div class="card h-100">
+			<div class="card-body">
+				<h2 class="h5 card-title mb-3">{_'dashboard.chart.categories'}</h2>
+				{if $categoryChart['labels'] === []}
+					<p class="text-body-secondary mb-0">{_'dashboard.chart.empty'}</p>
+				{else}
+					{include chart, $categoryChart}
+				{/if}
+			</div>
+		</div>
+	</div>
+
+	<div class="col-12 col-lg-6">
+		<div class="card h-100">
+			<div class="card-body">
+				<h2 class="h5 card-title mb-3">{_'dashboard.chart.outcomes'}</h2>
+				{if $outcomeChart['labels'] === []}
+					<p class="text-body-secondary mb-0">{_'dashboard.chart.empty'}</p>
+				{else}
+					{include chart, $outcomeChart}
+				{/if}
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-lg-6">
+		<div class="card h-100">
+			<div class="card-body">
+				<h2 class="h5 card-title mb-3">{_'dashboard.chart.classification'}</h2>
+				{include chart, $classificationChart}
+			</div>
+		</div>
+	</div>
+
+	<div class="col-12 col-lg-6">
+		<div class="card h-100">
+			<div class="card-body">
+				<h2 class="h5 card-title mb-3">{_'dashboard.chart.tokens'}</h2>
+				{if $tokens === []}
+					<p class="text-body-secondary mb-0">{_'dashboard.tokens.none'}</p>
+				{else}
+					{include chart, $tokenChart}
+					<ul class="list-unstyled small mt-3 mb-0">
+						<li n:foreach="$tokens as $usage">
+							<code>{$usage['model']}</code>: {_'dashboard.tokens.usage', $usage['calls'], [input => ($usage['input']|number), output => ($usage['output']|number)]}
+						</li>
+					</ul>
+				{/if}
+				<div class="text-body-secondary small mt-2">{_'dashboard.tokens.note'}</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-lg-6">
+		<div class="card h-100">
+			<div class="card-body">
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<h2 class="h5 card-title mb-0">{_'dashboard.chart.platforms'}</h2>
+					<a class="small" n:href=":Admin:Accounts:" n:if="$user->isAllowed('accounts', 'view')">{_'dashboard.accounts-link'}</a>
+				</div>
+				{if $platformChart['labels'] === []}
+					<p class="text-body-secondary mb-0">{_'dashboard.chart.empty'}</p>
+				{else}
+					{include chart, $platformChart}
+				{/if}
+			</div>
+		</div>
 	</div>
 </div>
 
 <div class="row g-4">
 	<div class="col-12 col-lg-6">
 		<div class="card h-100">
-			<div class="card-header d-flex justify-content-between align-items-center">
-				<span>{_'dashboard.events.title'}</span>
+			<div class="card-header bg-body d-flex justify-content-between align-items-center">
+				<span class="fw-semibold">{_'dashboard.events.title'}</span>
 				<a class="small" n:href=":Admin:Events:">{_'dashboard.events.all'}</a>
 			</div>
 			<ul class="list-group list-group-flush">
 				<li n:foreach="$eventStatuses as $status" class="list-group-item d-flex justify-content-between align-items-center">
 					<a n:href=":Admin:Events:, status: $status->value" class="link-body-emphasis text-decoration-none">{_"event.status.{$status->value}"}</a>
-					<span class="badge text-bg-secondary rounded-pill">{$eventCounts[$status->value] ?? 0}</span>
+					<span n:class="badge, rounded-pill, $status->value === 'review' && ($eventCounts[$status->value] ?? 0) > 0 ? 'text-bg-warning' : 'text-bg-secondary'">{$eventCounts[$status->value] ?? 0}</span>
 				</li>
 			</ul>
 		</div>
 	</div>
 
 	<div class="col-12 col-lg-6">
+		{var $jobTotal = max(1, array_sum($jobCounts))}
+		{var $jobColors = [pending => warning, reserved => info, done => success, failed => danger]}
 		<div class="card h-100">
-			<div class="card-header">{_'dashboard.queue.title'}</div>
-			<ul class="list-group list-group-flush">
-				<li n:foreach="$jobStatuses as $status" class="list-group-item d-flex justify-content-between align-items-center">
-					<span>{_"job.status.{$status->value}"}</span>
-					<span n:class="badge, rounded-pill, $status->value === 'failed' && ($jobCounts[$status->value] ?? 0) > 0 ? 'text-bg-danger' : 'text-bg-secondary'">
-						{$jobCounts[$status->value] ?? 0}
-					</span>
-				</li>
-			</ul>
+			<div class="card-header bg-body fw-semibold">{_'dashboard.queue.title'}</div>
+			<div class="card-body">
+				<div n:foreach="$jobStatuses as $status" class="progress-group mb-3">
+					{var $count = $jobCounts[$status->value] ?? 0}
+					<div class="progress-group-header">
+						<span>{_"job.status.{$status->value}"}</span>
+						<span class="ms-auto fw-semibold">{$count|number}</span>
+					</div>
+					<div class="progress-group-bars">
+						<div class="progress progress-thin" role="progressbar" aria-label="{_"job.status.{$status->value}"}"
+							aria-valuenow="{$count}" aria-valuemin="0" aria-valuemax="{$jobTotal}">
+							<div class="progress-bar bg-{$jobColors[$status->value]}"
+								style="width: {round($count / $jobTotal * 100, 1)}%"></div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
+{/block}
+
+{block scripts}
+	<script src="{$basePath}/assets/vendor/chartjs-4.6.1/chart.umd.min.js"></script>
+	<script src="{$basePath}/assets/admin/charts.js?v={$appVersion}"></script>
+{/block}

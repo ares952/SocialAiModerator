@@ -1,11 +1,19 @@
-/* Additions to Bootstrap 5.3 for the administration. Colors come from Bootstrap variables, so
+/* Additions to CoreUI 5 for the administration. Colors come from CoreUI variables (--cui-*), so
    both the light and the dark theme work without extra rules. */
 
-.icon {
-	width: 1em;
-	height: 1em;
-	vertical-align: -0.125em;
-	fill: currentColor;
+/* Page next to the fixed sidebar: CoreUI sets --cui-sidebar-occupy-* on the siblings of a visible
+   sidebar; without a sidebar (sign-in) the page takes the full width. */
+.wrapper {
+	width: 100%;
+	padding-inline: var(--cui-sidebar-occupy-start, 0) var(--cui-sidebar-occupy-end, 0);
+	background-color: var(--cui-tertiary-bg);
+	transition: padding 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.wrapper {
+		transition: none;
+	}
 }
 
 .sign-card {
@@ -55,5 +63,56 @@
 	.strictness-form:has(input[value="strict"]:checked) .strictness-panel-strict,
 	.strictness-form:has(input[value="custom"]:checked) .strictness-panel-custom {
 		display: block;
+	}
+}
+
+/* Chart palette of the dashboard (www/assets/admin/charts.js reads --sa-chart-<key> when drawing).
+   Semantic keys follow the CoreUI theme colors, so the charts change with the light/dark theme. */
+:root {
+	--sa-chart-primary: var(--cui-primary);
+	--sa-chart-info: var(--cui-info);
+	--sa-chart-success: var(--cui-success);
+	--sa-chart-warning: var(--cui-warning);
+	--sa-chart-danger: var(--cui-danger);
+	--sa-chart-secondary: var(--cui-secondary);
+	--sa-chart-muted: var(--cui-gray-500);
+	--sa-chart-teal: var(--cui-teal);
+	--sa-chart-indigo: var(--cui-indigo);
+	--sa-chart-facebook: #0866ff;
+	--sa-chart-instagram: #d62976;
+}
+
+.chart-box {
+	position: relative;
+	height: 16rem;
+}
+
+.chart-box-lg {
+	height: 20rem;
+}
+
+.chart-box-spark {
+	height: 3.5rem;
+}
+
+/* Number tiles of the dashboard are links to the filtered lists. */
+.tile {
+	transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+}
+
+.tile:hover,
+.tile:focus-visible {
+	transform: translateY(-2px);
+	box-shadow: var(--cui-box-shadow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tile {
+		transition: none;
+	}
+
+	.tile:hover,
+	.tile:focus-visible {
+		transform: none;
 	}
 }

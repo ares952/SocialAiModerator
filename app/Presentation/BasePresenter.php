@@ -58,12 +58,15 @@ abstract class BasePresenter extends Presenter
 	{
 		parent::beforeRender();
 		$this->template->setTranslator($this->translator);
+		// |number groups digits by the UI language, like the dashboard charts (Intl in the browser).
+		$this->template->getLatte()->setLocale($this->translator->getLanguage());
 		$this->template->addFilter('localTime', $this->localTime(...));
 		$this->template->setParameters([
 			'lang' => $this->translator->getLanguage(),
 			'languages' => $this->languages,
 			'languageSwitch' => $this->languageSwitch,
 			'appVersion' => $this->appVersion,
+			'icons' => $this->template->basePath . '/assets/admin/icons.svg?v=' . $this->appVersion,
 		]);
 	}
 

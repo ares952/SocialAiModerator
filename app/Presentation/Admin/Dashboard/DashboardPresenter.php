@@ -9,7 +9,7 @@ use App\Ingest\EventStatus;
 use App\Moderation\AutomationSwitch;
 use App\Moderation\Policies;
 use App\Monitoring\Alarms;
-use App\Monitoring\Metrics;
+use App\Monitoring\MetricRange;
 use App\Operator\Authorization;
 use App\Presentation\Admin\AdminPresenter;
 use App\Queue\JobQueue;
@@ -17,8 +17,8 @@ use App\Queue\JobStatus;
 
 
 /**
- * Overview: mode and panic switch, current alarms, numbers of the last 24 hours and 7 days, token
- * usage per model, events and the queue.
+ * Overview: mode and panic switch, current alarms, number tiles and charts of the chosen period
+ * (24 hours, 7 or 30 days), events and the queue.
  */
 final class DashboardPresenter extends AdminPresenter
 {
@@ -28,7 +28,7 @@ final class DashboardPresenter extends AdminPresenter
 		private readonly Policies $policies,
 		private readonly AutomationSwitch $automation,
 		private readonly Alarms $alarms,
-		private readonly Metrics $metrics,
+		private readonly DashboardData $data,
 	) {
 		parent::__construct();
 	}
@@ -40,9 +40,12 @@ final class DashboardPresenter extends AdminPresenter
 	}
 
 
-	public function renderDefault(): void
+	public function renderDefault(string $range = '24h'): void
 	{
-		$this->template->setParameters([
+		$period = MetricRange::tryFrom($range) ?? $this->error();
+		$this->template->setParameters($this->data->build($period, new \DateTimeImmutable, new \DateTimeZone($this->timezone)) + [
+			'range' => $period,
+			'ranges' => MetricRange::cases(),
 			'eventCounts' => $this->events->recentCounts(),
 			'eventStatuses' => EventStatus::cases(),
 			'jobCounts' => $this->queue->counts(),
@@ -50,9 +53,6 @@ final class DashboardPresenter extends AdminPresenter
 			'policy' => $this->policies->active(),
 			'paused' => $this->automation->isPaused(null),
 			'alarms' => $this->alarms->current(),
-			'day' => $this->metrics->summary(24),
-			'week' => $this->metrics->summary(24 * 7),
-			'tokens' => $this->metrics->tokens(24 * 7),
 		]);
 	}
 }

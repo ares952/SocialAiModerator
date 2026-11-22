@@ -323,8 +323,18 @@ test('retention: periods are saved and audited, an invalid one is refused', func
 
 test('dashboard: alarms and numbers; alarm thresholds are saved and audited', function () use ($browser, $data): void {
 	$dashboard = $browser->get('/')->body;
-	Assert::contains('Provoz', $dashboard);
-	Assert::contains('Spotřeba tokenů za 7 dní', $dashboard);
+	Assert::contains('Provoz v čase', $dashboard);
+	Assert::contains('Spotřeba tokenů', $dashboard);
+	Assert::contains('class="sidebar sidebar-dark sidebar-fixed border-end"', $dashboard);
+	Assert::contains('/assets/vendor/chartjs-4.6.1/chart.umd.min.js', $dashboard);
+	Assert::contains("<canvas data-chart='{\"type\":\"bar\"", $dashboard);
+	foreach (['7d', '30d'] as $range) {
+		Assert::same(200, $browser->get("/?range=$range")->status, $range);
+	}
+	Assert::same(404, $browser->get('/?range=nonsense')->status);
+	foreach (['/assets/admin/icons.svg', '/assets/admin/charts.js', '/assets/vendor/coreui-5.9.1/js/coreui.bundle.min.js'] as $asset) {
+		Assert::same(200, $browser->get($asset)->status, $asset);
+	}
 
 	$fields = [
 		'token_expiry' => '10',

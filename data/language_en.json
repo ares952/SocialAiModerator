@@ -5368,158 +5368,6 @@
   }
  },
  {
-  "key": "dashboard.metrics.title",
-  "lang": "en",
-  "translations": {
-   "1": "Activity",
-   "2": "Activity"
-  }
- },
- {
-  "key": "dashboard.metrics.day",
-  "lang": "en",
-  "translations": {
-   "1": "24 hours",
-   "2": "24 hours"
-  }
- },
- {
-  "key": "dashboard.metrics.week",
-  "lang": "en",
-  "translations": {
-   "1": "7 days",
-   "2": "7 days"
-  }
- },
- {
-  "key": "dashboard.metric.events",
-  "lang": "en",
-  "translations": {
-   "1": "Received events",
-   "2": "Received events"
-  }
- },
- {
-  "key": "dashboard.metric.comments",
-  "lang": "en",
-  "translations": {
-   "1": "of which comments",
-   "2": "of which comments"
-  }
- },
- {
-  "key": "dashboard.metric.messages",
-  "lang": "en",
-  "translations": {
-   "1": "of which customer messages",
-   "2": "of which customer messages"
-  }
- },
- {
-  "key": "dashboard.metric.decisions",
-  "lang": "en",
-  "translations": {
-   "1": "AI decisions",
-   "2": "AI decisions"
-  }
- },
- {
-  "key": "dashboard.metric.escalations",
-  "lang": "en",
-  "translations": {
-   "1": "Handed to a human or to review",
-   "2": "Handed to a human or to review"
-  }
- },
- {
-  "key": "dashboard.metric.unclassified",
-  "lang": "en",
-  "translations": {
-   "1": "Classification failed",
-   "2": "Classification failed"
-  }
- },
- {
-  "key": "dashboard.metric.classification_seconds",
-  "lang": "en",
-  "translations": {
-   "1": "Average time to decision (s)",
-   "2": "Average time to decision (s)"
-  }
- },
- {
-  "key": "dashboard.metric.hides_proposed",
-  "lang": "en",
-  "translations": {
-   "1": "Proposed hides",
-   "2": "Proposed hides"
-  }
- },
- {
-  "key": "dashboard.metric.hides_sent",
-  "lang": "en",
-  "translations": {
-   "1": "Performed hides",
-   "2": "Performed hides"
-  }
- },
- {
-  "key": "dashboard.metric.replies_drafted",
-  "lang": "en",
-  "translations": {
-   "1": "Reply drafts",
-   "2": "Reply drafts"
-  }
- },
- {
-  "key": "dashboard.metric.replies_sent",
-  "lang": "en",
-  "translations": {
-   "1": "Sent replies",
-   "2": "Sent replies"
-  }
- },
- {
-  "key": "dashboard.metric.rejected",
-  "lang": "en",
-  "translations": {
-   "1": "Rejected by a moderator",
-   "2": "Rejected by a moderator"
-  }
- },
- {
-  "key": "dashboard.metric.blocked",
-  "lang": "en",
-  "translations": {
-   "1": "Blocked by the rules",
-   "2": "Blocked by the rules"
-  }
- },
- {
-  "key": "dashboard.metric.failed_actions",
-  "lang": "en",
-  "translations": {
-   "1": "Actions failed or unknown",
-   "2": "Actions failed or unknown"
-  }
- },
- {
-  "key": "dashboard.metric.failed_jobs",
-  "lang": "en",
-  "translations": {
-   "1": "Failed jobs",
-   "2": "Failed jobs"
-  }
- },
- {
-  "key": "dashboard.tokens.title",
-  "lang": "en",
-  "translations": {
-   "1": "Token usage in 7 days",
-   "2": "Token usage in 7 days"
-  }
- },
- {
   "key": "dashboard.tokens.none",
   "lang": "en",
   "translations": {
@@ -5605,6 +5453,350 @@
   "translations": {
    "1": "daily automatic reply limit",
    "2": "daily automatic reply limit"
+  }
+ },
+ {
+  "key": "admin.menu.group.operations",
+  "lang": "en",
+  "translations": {
+   "1": "Operations",
+   "2": "Operations"
+  }
+ },
+ {
+  "key": "admin.menu.group.settings",
+  "lang": "en",
+  "translations": {
+   "1": "Settings",
+   "2": "Settings"
+  }
+ },
+ {
+  "key": "admin.menu.group.management",
+  "lang": "en",
+  "translations": {
+   "1": "Administration",
+   "2": "Administration"
+  }
+ },
+ {
+  "key": "dashboard.range.label",
+  "lang": "en",
+  "translations": {
+   "1": "Period",
+   "2": "Period"
+  }
+ },
+ {
+  "key": "dashboard.range.24h",
+  "lang": "en",
+  "translations": {
+   "1": "24 hours",
+   "2": "24 hours"
+  }
+ },
+ {
+  "key": "dashboard.range.7d",
+  "lang": "en",
+  "translations": {
+   "1": "7 days",
+   "2": "7 days"
+  }
+ },
+ {
+  "key": "dashboard.range.30d",
+  "lang": "en",
+  "translations": {
+   "1": "30 days",
+   "2": "30 days"
+  }
+ },
+ {
+  "key": "dashboard.tile.events",
+  "lang": "en",
+  "translations": {
+   "1": "Received events",
+   "2": "Received events"
+  }
+ },
+ {
+  "key": "dashboard.tile.approvals",
+  "lang": "en",
+  "translations": {
+   "1": "Awaiting approval",
+   "2": "Awaiting approval"
+  }
+ },
+ {
+  "key": "dashboard.tile.escalations",
+  "lang": "en",
+  "translations": {
+   "1": "Escalated to a human",
+   "2": "Escalated to a human"
+  }
+ },
+ {
+  "key": "dashboard.tile.hides",
+  "lang": "en",
+  "translations": {
+   "1": "Proposed hides",
+   "2": "Proposed hides"
+  }
+ },
+ {
+  "key": "dashboard.tile.replies",
+  "lang": "en",
+  "translations": {
+   "1": "Reply drafts",
+   "2": "Reply drafts"
+  }
+ },
+ {
+  "key": "dashboard.tile.failures",
+  "lang": "en",
+  "translations": {
+   "1": "Failures",
+   "2": "Failures"
+  }
+ },
+ {
+  "key": "dashboard.tile.change",
+  "lang": "en",
+  "translations": {
+   "1": "Change against the previous period of the same length",
+   "2": "Change against the previous period of the same length"
+  }
+ },
+ {
+  "key": "dashboard.tile.oldest",
+  "lang": "en",
+  "translations": {
+   "1": "oldest since %time%",
+   "2": "oldest since %time%"
+  }
+ },
+ {
+  "key": "dashboard.tile.none",
+  "lang": "en",
+  "translations": {
+   "1": "Nothing is waiting.",
+   "2": "Nothing is waiting."
+  }
+ },
+ {
+  "key": "dashboard.chart.traffic",
+  "lang": "en",
+  "translations": {
+   "1": "Traffic over time",
+   "2": "Traffic over time"
+  }
+ },
+ {
+  "key": "dashboard.chart.decisions",
+  "lang": "en",
+  "translations": {
+   "1": "AI decisions by action",
+   "2": "AI decisions by action"
+  }
+ },
+ {
+  "key": "dashboard.chart.categories",
+  "lang": "en",
+  "translations": {
+   "1": "AI decisions by category",
+   "2": "AI decisions by category"
+  }
+ },
+ {
+  "key": "dashboard.chart.unclassified",
+  "lang": "en",
+  "translations": {
+   "1": "Classification failed",
+   "2": "Classification failed"
+  }
+ },
+ {
+  "key": "dashboard.chart.outcomes",
+  "lang": "en",
+  "translations": {
+   "1": "Outcomes of interventions",
+   "2": "Outcomes of interventions"
+  }
+ },
+ {
+  "key": "dashboard.chart.classification",
+  "lang": "en",
+  "translations": {
+   "1": "Time to the AI decision (s)",
+   "2": "Time to the AI decision (s)"
+  }
+ },
+ {
+  "key": "dashboard.chart.tokens",
+  "lang": "en",
+  "translations": {
+   "1": "Token usage",
+   "2": "Token usage"
+  }
+ },
+ {
+  "key": "dashboard.chart.platforms",
+  "lang": "en",
+  "translations": {
+   "1": "Events by platform",
+   "2": "Events by platform"
+  }
+ },
+ {
+  "key": "dashboard.chart.data",
+  "lang": "en",
+  "translations": {
+   "1": "Show data",
+   "2": "Show data"
+  }
+ },
+ {
+  "key": "dashboard.chart.empty",
+  "lang": "en",
+  "translations": {
+   "1": "There is no data for the chosen period.",
+   "2": "There is no data for the chosen period."
+  }
+ },
+ {
+  "key": "dashboard.series.comments",
+  "lang": "en",
+  "translations": {
+   "1": "Comments",
+   "2": "Comments"
+  }
+ },
+ {
+  "key": "dashboard.series.messages",
+  "lang": "en",
+  "translations": {
+   "1": "Customer messages",
+   "2": "Customer messages"
+  }
+ },
+ {
+  "key": "dashboard.series.other",
+  "lang": "en",
+  "translations": {
+   "1": "Other events",
+   "2": "Other events"
+  }
+ },
+ {
+  "key": "dashboard.series.decisions",
+  "lang": "en",
+  "translations": {
+   "1": "AI decisions",
+   "2": "AI decisions"
+  }
+ },
+ {
+  "key": "dashboard.series.average",
+  "lang": "en",
+  "translations": {
+   "1": "Average",
+   "2": "Average"
+  }
+ },
+ {
+  "key": "dashboard.series.longest",
+  "lang": "en",
+  "translations": {
+   "1": "Longest",
+   "2": "Longest"
+  }
+ },
+ {
+  "key": "dashboard.series.count",
+  "lang": "en",
+  "translations": {
+   "1": "Count",
+   "2": "Count"
+  }
+ },
+ {
+  "key": "dashboard.total.events",
+  "lang": "en",
+  "translations": {
+   "1": "Received events",
+   "2": "Received events"
+  }
+ },
+ {
+  "key": "dashboard.total.share",
+  "lang": "en",
+  "translations": {
+   "1": "Share escalated to a human",
+   "2": "Share escalated to a human"
+  }
+ },
+ {
+  "key": "dashboard.total.average",
+  "lang": "en",
+  "translations": {
+   "1": "Average time to decision",
+   "2": "Average time to decision"
+  }
+ },
+ {
+  "key": "dashboard.outcome.pending",
+  "lang": "en",
+  "translations": {
+   "1": "Awaiting approval",
+   "2": "Awaiting approval"
+  }
+ },
+ {
+  "key": "dashboard.outcome.approved",
+  "lang": "en",
+  "translations": {
+   "1": "Approved, being sent",
+   "2": "Approved, being sent"
+  }
+ },
+ {
+  "key": "dashboard.outcome.sent",
+  "lang": "en",
+  "translations": {
+   "1": "Done",
+   "2": "Done"
+  }
+ },
+ {
+  "key": "dashboard.outcome.rejected",
+  "lang": "en",
+  "translations": {
+   "1": "Rejected by a moderator",
+   "2": "Rejected by a moderator"
+  }
+ },
+ {
+  "key": "dashboard.outcome.blocked",
+  "lang": "en",
+  "translations": {
+   "1": "Stopped by the rules",
+   "2": "Stopped by the rules"
+  }
+ },
+ {
+  "key": "dashboard.outcome.failed",
+  "lang": "en",
+  "translations": {
+   "1": "Failed or unknown result",
+   "2": "Failed or unknown result"
+  }
+ },
+ {
+  "key": "dashboard.accounts-link",
+  "lang": "en",
+  "translations": {
+   "1": "Social accounts",
+   "2": "Social accounts"
   }
  }
 ]

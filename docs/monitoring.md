@@ -35,8 +35,21 @@ a skončí s kódem 1.
 
 ## Přehled provozu
 
-Přehled ukazuje za 24 hodin a 7 dní přijaté události, rozhodnutí AI s průměrným časem od příjmu
-do rozhodnutí, předání člověku, navržená a provedená skrytí, návrhy a odeslané odpovědi,
-zamítnuté a pravidly zastavené zásahy a selhání. Spotřeba tokenů je po modelech za 7 dní
-(klasifikace a návrhy odpovědí, bez moderation endpointu a bez návrhů, které neskončily
-použitelnou odpovědí); cenu je třeba spočítat podle aktuálního ceníku OpenAI.
+Přehled ukazuje čísla a grafy za zvolené období: posledních 24 hodin po hodinách, nebo 7 či 30
+kalendářních dnů (včetně dneška) po dnech v časovém pásmu `timezone`.
+
+- **Dlaždice:** přijaté události, zásahy čekající na schválení (nejstarší), předání člověku,
+  navržená skrytí, návrhy odpovědí a selhání (zásahy selhané nebo s neznámým výsledkem a selhané
+  úlohy). U každé je průběh za období a změna proti předchozímu stejně dlouhému období; dlaždice
+  vede na filtrovaný seznam.
+- **Provoz v čase:** komentáře, zprávy zákazníků a ostatní události jako sloupce, rozhodnutí AI
+  jako čára; pod grafem podíl předaných člověku a průměrný čas od příjmu do rozhodnutí.
+- **Rozhodnutí AI** podle akce a podle kategorie (včetně selhané klasifikace), **výsledky zásahů**
+  podle typu (čeká, schváleno, provedeno, zamítnuto moderátorem, zastaveno pravidly, selhalo),
+  **čas do rozhodnutí** (průměr a nejdelší), **události podle platformy**.
+- **Spotřeba tokenů** po modelech (klasifikace a návrhy odpovědí, bez moderation endpointu a bez
+  návrhů, které neskončily použitelnou odpovědí); cenu je třeba spočítat podle aktuálního ceníku
+  OpenAI.
+
+Přehled obsahuje jen souhrnná čísla, nikdy texty zákazníků. Technické podrobnosti grafů jsou
+v `docs/admin-ui.md`.

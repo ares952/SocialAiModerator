@@ -7,7 +7,7 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
 	<h1 class="h3 mb-0" n:block="title">{_'audit.title'}</h1>
 	<div class="dropdown">
-		<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+		<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-coreui-toggle="dropdown" aria-expanded="false">
 			{if $filter}{_"audit.action.{$filter->value}"}{else}{_'audit.filter.all'}{/if}
 		</button>
 		<ul class="dropdown-menu dropdown-menu-end">

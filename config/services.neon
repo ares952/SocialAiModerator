@@ -50,6 +50,8 @@ services:
 	- App\Monitoring\AlarmThresholds
 	- App\Monitoring\Alarms(heartbeatFile: %tempDir%/worker.heartbeat)
 	- App\Monitoring\Metrics
+	- App\Monitoring\MetricSeries
+	- App\Presentation\Admin\Dashboard\DashboardData
 	- App\Moderation\Policies(defaultMode: App\Moderation\Mode::from(%env.AUTOMATION_DEFAULT_MODE%))
 	- App\Moderation\AutomationSwitch
 	- App\Knowledge\KnowledgeBase(locales: %knowledge.locales%, timezone: %timezone%)
