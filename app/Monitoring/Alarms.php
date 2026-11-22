@@ -6,6 +6,7 @@ namespace App\Monitoring;
 
 use App\Account\AccountStatus;
 use App\Account\TokenStatus;
+use App\Meta\Platform;
 use App\Moderation\Mode;
 use App\Moderation\Policies;
 use App\Outbox\ActionStatus;
@@ -85,7 +86,7 @@ final class Alarms
 	private function tokens(?int $days): array
 	{
 		$rows = $this->database->query(
-			'SELECT a.name, c.id AS credential, c.status,
+			'SELECT a.name, a.platform, c.id AS credential, c.status, c.scopes,
 				c.expires_at <= NOW() AS expired, c.data_access_expires_at <= NOW() AS data_access_expired,
 				DATEDIFF(c.expires_at, NOW()) AS days_left, DATEDIFF(c.data_access_expires_at, NOW()) AS data_access_days_left
 			FROM social_accounts a
@@ -114,6 +115,17 @@ final class Alarms
 			};
 			if ($alarm !== null) {
 				$alarms[] = $alarm;
+			}
+
+			// Permissions Meta did not grant, known only after a check (TokenCheck).
+			$missing = $row->status === TokenStatus::Valid->value
+				? array_diff(Platform::from((string) $row->platform)->requiredScopes(), explode(',', (string) $row->scopes))
+				: [];
+			if ($missing !== []) {
+				$alarms[] = new Alarm('token_scopes', [
+					'account' => $account,
+					'scopes' => implode(', ', $missing),
+				]);
 			}
 		}
 

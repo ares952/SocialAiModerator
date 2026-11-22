@@ -6398,5 +6398,69 @@
    "1": "Deleted: comments %comments%, conversations %conversations%, messages %messages%, events %events%.",
    "2": "Deleted: comments %comments%, conversations %conversations%, messages %messages%, events %events%."
   }
+ },
+ {
+  "key": "account.token.check",
+  "lang": "en",
+  "translations": {
+   "1": "Check token",
+   "2": "Check token"
+  }
+ },
+ {
+  "key": "account.token.checked",
+  "lang": "en",
+  "translations": {
+   "1": "checked with Meta %date%",
+   "2": "checked with Meta %date%"
+  }
+ },
+ {
+  "key": "account.token.missing-scopes",
+  "lang": "en",
+  "translations": {
+   "1": "Missing permission: %scopes%",
+   "2": "Missing permissions: %scopes%"
+  }
+ },
+ {
+  "key": "account.token.check-ok",
+  "lang": "en",
+  "translations": {
+   "1": "The token is valid and has all required permissions.",
+   "2": "The token is valid and has all required permissions."
+  }
+ },
+ {
+  "key": "account.token.check-failed",
+  "lang": "en",
+  "translations": {
+   "1": "The check with Meta failed (network, rate limit or app credentials); the token state is unchanged. See the log for details.",
+   "2": "The check with Meta failed (network, rate limit or app credentials); the token state is unchanged. See the log for details."
+  }
+ },
+ {
+  "key": "account.token.check-invalid",
+  "lang": "en",
+  "translations": {
+   "1": "Meta rejected the token or it belongs to another app; it is marked invalid and will not be used.",
+   "2": "Meta rejected the token or it belongs to another app; it is marked invalid and will not be used."
+  }
+ },
+ {
+  "key": "account.token.check-scopes",
+  "lang": "en",
+  "translations": {
+   "1": "The token is valid but lacks some permissions.",
+   "2": "The token is valid but lacks some permissions."
+  }
+ },
+ {
+  "key": "alarm.token_scopes",
+  "lang": "en",
+  "translations": {
+   "1": "The token of account %account% lacks permissions: %scopes%.",
+   "2": "The token of account %account% lacks permissions: %scopes%."
+  }
  }
 ]

@@ -108,6 +108,7 @@ test('every role reaches exactly the pages and signals its permissions allow', f
 		'/admin/accounts/add' => [Authorization::Accounts, Authorization::Manage],
 		// unknown records: allowed roles get 404 or a message, nothing changes (other tests run in parallel)
 		'/admin/accounts?account=999999&do=pause' => [Authorization::Accounts, Authorization::Manage],
+		'/admin/accounts?account=999999&do=check' => [Authorization::Accounts, Authorization::Manage],
 		'/admin/policy' => [Authorization::Policy, Authorization::View],
 		'/admin/knowledge' => [Authorization::Knowledge, Authorization::View],
 		'/admin/knowledge/add' => [Authorization::Knowledge, Authorization::Edit],

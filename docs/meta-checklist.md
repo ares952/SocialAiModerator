@@ -1,7 +1,8 @@
 # Meta: přístupy, oprávnění a checklist (Milestone 0)
 
 Podklad pro rozhodnutí a nastavení přístupu k Facebook Page a Instagram Professional účtu
-(specifikace §3, §10 – Milestone 0). Aplikace zatím **nevolá žádné Graph API**. Provozní postup
+(specifikace §3, §10 – Milestone 0). Aplikace z Graph API zatím jen **čte** (kontrola tokenů,
+oddíl 8); zápisy čekají na živé ověření. Provozní postup
 pro webhooky, tokeny a odběr je v `docs/meta-webhooks.md`.
 
 > Údaje o Meta API se často mění. Každý bod označený **ověřit** zkontrolovat v aktuální
@@ -85,7 +86,7 @@ podepsané nepodporované objekty potvrdí bez uložení.
 | `META_APP_ID` | ID aplikace z App Dashboardu |
 | `META_APP_SECRET` | App Secret (podpis webhooků); bez něj endpoint odpovídá 500 |
 | `META_WEBHOOK_VERIFY_TOKEN` | generuje `deploy/bootstrap-environment.sh`; stejná hodnota do App Dashboardu |
-| `META_GRAPH_API_VERSION` | pinovaná verze, **ověřit** aktuální podporovanou (`v27.0` je příklad ze specifikace) |
+| `META_GRAPH_API_VERSION` | pinovaná verze `v27.0` (vydána 4. 11. 2026, potvrzeno 22. 11. 2026); starší než `v21.0` nepoužívat |
 
 Účty (Page, IG) se registrují ručně v administraci (Účty) podle číselného ID, které Meta
 posílá ve webhooku jako `entry.id`. Tokeny se ukládají šifrovaně do databáze příkazem
@@ -126,8 +127,8 @@ App Review:
 
 1. ✓ Uložení tokenů (`account_credentials`, šifrovaně s ID klíče a rotací, sledování expirace
    a rozsahů, ruční výměna bez restartu) – 0.6.0.
-2. Rozhraní Graph klienta s produkční a fake implementací, oddělené pro `graph.facebook.com`
-   a `graph.instagram.com`, s pinovanou verzí.
+2. ✓ Čtecí klient Graph API (`GraphReader`, `HttpGraphReader` přes `GraphApi`, fake v testech)
+   s pinovanou verzí, kontrola tokenů – 0.17.1 (oddíl 8). Zápisový klient po živém ověření.
 3. ✓ `EventNormalizer` pro skutečné payloady (komentáře, zprávy, echo, úpravy, smazání) – 0.7.0;
    teprve teď se přijaté události mohou posílat klasifikátoru a do rozhodování. IG DM zatím
    ověřené jen na syntetických datech.
@@ -135,3 +136,32 @@ App Review:
    `observe`.
 
 Produkční Page ani skutečné účty se během vývoje nepřipojují bez výslovného pokynu.
+
+## 8. Graph API (potvrzeno 22. 11. 2026)
+
+Host `graph.facebook.com` pro Page i Instagram (rozhodnutí v oddílu 1), verze `v27.0`. Zdroje:
+developers.facebook.com, ověřeno 22. 11. 2026.
+
+| Operace | Endpoint | Oprávnění | Stav |
+| --- | --- | --- | --- |
+| Kontrola tokenu | `GET /debug_token?input_token=…` s app tokenem `APP_ID\|APP_SECRET` | – | ✓ 0.17.1 |
+| FB komentář: čtení | `GET /{comment-id}?fields=id,message,from,created_time,is_hidden,can_hide,parent` | `pages_read_engagement`, `pages_read_user_content` | pole **ověřit živě** |
+| FB komentář: skrytí | `POST /{comment-id}` `is_hidden=true\|false` | `pages_manage_engagement` | |
+| FB komentář: odpověď | `POST /{comment-id}/comments` `message` | `pages_manage_engagement` | **ověřit živě** (reference tvorbu neuvádí) |
+| IG komentář: čtení | `GET /{ig-comment-id}?fields=id,text,timestamp,username,hidden,from,parent_id,media{id}` | `instagram_basic`, `instagram_manage_comments`, `pages_read_engagement` | |
+| IG komentář: skrytí | `POST /{ig-comment-id}?hide=true\|false` | jako čtení | typ tokenu **ověřit živě** |
+| IG komentář: odpověď | `POST /{ig-comment-id}/replies?message=…` | jako čtení | jen top-level, ne skryté |
+| Zpráva Messenger | `POST /{page-id}/messages`, `recipient.id`=PSID, `messaging_type=RESPONSE`, `message={text, metadata}` | `pages_messaging` | |
+| Zpráva IG Direct | `POST /{page-id}/messages`, `recipient.id`=IGSID | `instagram_basic`, `instagram_manage_messages`, `pages_manage_metadata` | echo s `metadata` **ověřit živě** |
+
+- Kontrola tokenu (`App\Account\TokenCheck`): platnost, token této aplikace, expirace a skutečně
+  udělená oprávnění se uloží k účtu; chybějící oprávnění (`Platform::requiredScopes()`) hlásí
+  upozornění `token_scopes`. Spouští ji worker každých 6 hodin (`worker.tokenCheckSeconds`),
+  příkaz `bin/console meta:check [--account ID]` a tlačítko **Ověřit token** v Účtech.
+- Chyby: limity (`4`, `17`, `32`, `613`, `80001`, `80002`, `80006`) jsou přechodné; `190`/`102` =
+  neplatný token; zápis bez odpovědi (timeout, 5xx) je `unknown` a nikdy se slepě neopakuje
+  (`MetaFailure::fromGraph`).
+- Zprávy: okno 24 hodin; `HUMAN_AGENT` (7 dní) jen pro ruční odpovědi člověka.
+- Reconciliace v1 jen pro komentáře; mazání komentářů (FR-C08) mimo rozsah v1.
+- Další krok: živé ověření na testovacích účtech (čtení komentáře FB i IG, odpověď na FB komentář,
+  typ tokenu pro IG komentáře, IG echo s `metadata`), pak zápisový klient za `ActionDispatcher`.

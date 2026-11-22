@@ -82,7 +82,7 @@ test('a missing or old scheduled backup', function () use ($backupStatus, $codes
 
 test('token problems of active accounts', function () use ($database, $encryptor, $accountId, $codes): void {
 	(new Credentials($database, $encryptor, new AuditLog($database)))
-		->replace($accountId, 'synthetic-token', TokenType::Page, ['pages_messaging'], new DateTimeImmutable('+3 days +1 hour'), null, null);
+		->replace($accountId, 'synthetic-token', TokenType::Page, Platform::Facebook->requiredScopes(), new DateTimeImmutable('+3 days +1 hour'), null, null);
 	Assert::same(['token_expiring (account=Test Page, days=3)'], $codes());
 
 	$database->query("UPDATE account_credentials SET status = 'invalid'");
@@ -93,6 +93,13 @@ test('token problems of active accounts', function () use ($database, $encryptor
 	Assert::same(['data_access_expiring (account=Test Page, days=2)'], $codes());
 	$database->query('UPDATE account_credentials SET data_access_expires_at = NULL');
 	Assert::same([], $codes());
+
+	// A checked token without some required permissions.
+	$database->query("UPDATE account_credentials SET scopes = 'pages_messaging,pages_read_engagement'");
+	Assert::same(['token_scopes (account=Test Page, scopes=pages_manage_engagement, pages_manage_metadata, pages_read_user_content)'], $codes());
+	$database->query("UPDATE account_credentials SET status = 'unchecked'");
+	Assert::same([], $codes(), 'Typed scopes are not trusted until a check.');
+	$database->query("UPDATE account_credentials SET status = 'valid', scopes = ?", implode(',', Platform::Facebook->requiredScopes()));
 });
 
 

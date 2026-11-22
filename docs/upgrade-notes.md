@@ -15,6 +15,15 @@ Formát sekce:
 - **Ověření:** jak potvrdit, že je hotovo
 ```
 
+## 0.17.1
+
+- **Týká se:** všech instancí s uloženými tokeny
+- **Kdy:** po kroku 12
+- **Akce:** spustit `docker compose exec -T php bin/console meta:check` (jen čte z Mety). Worker
+  pak tokeny kontroluje každých 6 hodin; neplatný token se přestane používat a chybějící
+  oprávnění hlásí upozornění. Nalezené problémy vyřešit výměnou tokenu (`account:token`).
+- **Ověření:** `meta:check` skončí s kódem 0, nebo jsou jeho hlášení vyřešená či vědomě odložená.
+
 ## 0.17.0
 
 - **Týká se:** všech instancí

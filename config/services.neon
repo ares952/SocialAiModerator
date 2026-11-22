@@ -3,7 +3,7 @@ services:
 	- App\Translation\Translator(languages: %languages%)
 	- App\Translation\TranslationImporter(dataDir: %rootDir%/data)
 	- App\Console\TranslationsImportCommand
-	- App\Console\WorkerCommand(heartbeatFile: %tempDir%/worker.heartbeat, idleSeconds: %worker.idleSeconds%, retentionSeconds: %worker.retentionSeconds%)
+	- App\Console\WorkerCommand(heartbeatFile: %tempDir%/worker.heartbeat, idleSeconds: %worker.idleSeconds%, retentionSeconds: %worker.retentionSeconds%, tokenCheckSeconds: %worker.tokenCheckSeconds%)
 	- App\Console\OperatorCreateCommand
 	- App\Console\OperatorPasswordCommand
 	- App\Console\PasswordPrompt
@@ -13,6 +13,7 @@ services:
 	- App\Console\EventsNormalizeCommand
 	- App\Console\RetentionRunCommand
 	- App\Console\MonitorCheckCommand
+	- App\Console\MetaCheckCommand
 	- App\Core\Encryptor(%env.APP_ENCRYPTION_KEY%)
 	- App\Core\Correlation
 	- App\Core\Logger(file: %rootDir%/log/app.log)
@@ -75,6 +76,9 @@ services:
 	- App\Account\Accounts
 	- App\Account\Credentials
 	- App\Account\TokenProvider
+	- App\Account\TokenCheck(appId: %env.META_APP_ID%)
+	- App\Meta\GraphApi(version: %env.META_GRAPH_API_VERSION%)
+	- App\Meta\HttpGraphReader(appId: %env.META_APP_ID%, appSecret: %env.META_APP_SECRET%)
 	- App\Meta\UnavailableMetaClient
 	- App\Outbox\Actions
 	- App\Outbox\ActionDispatcher(pauseRetrySeconds: %outbox.pauseRetrySeconds%)

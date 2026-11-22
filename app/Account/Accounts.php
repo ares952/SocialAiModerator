@@ -26,22 +26,30 @@ final class Accounts
 
 
 	/**
-	 * @return list<Row> with the number of events in the last 24 hours, an open pause and the
-	 *     token metadata (never the token)
+	 * @return list<Row> with the number of events in the last 24 hours, an open pause, the token
+	 *     metadata (never the token) and `missing_scopes`: required permissions a checked token
+	 *     lacks (Platform::requiredScopes())
 	 */
 	public function all(): array
 	{
-		return $this->database->query(
+		$rows = $this->database->query(
 			'SELECT a.id, a.platform, a.external_id, a.name, a.status, a.created_at,
 				(SELECT COUNT(*) FROM social_events e WHERE e.account_id = a.id AND e.received_at > NOW() - INTERVAL 1 DAY) AS events_day,
 				EXISTS (SELECT 1 FROM automation_pauses p WHERE p.account_id = a.id AND p.resumed_at IS NULL) AS paused,
 				c.token_type, c.status AS token_status, c.expires_at AS token_expires_at,
 				c.data_access_expires_at AS token_data_access_expires_at, c.checked_at AS token_checked_at,
-				c.refreshed_at AS token_refreshed_at
+				c.refreshed_at AS token_refreshed_at, c.scopes AS token_scopes
 			FROM social_accounts a
 			LEFT JOIN account_credentials c ON c.social_account_id = a.id
 			ORDER BY a.name',
 		)->fetchAll();
+		foreach ($rows as $row) {
+			$row->missing_scopes = $row->token_status === TokenStatus::Valid->value
+				? array_values(array_diff(Platform::from((string) $row->platform)->requiredScopes(), explode(',', (string) $row->token_scopes)))
+				: [];
+		}
+
+		return $rows;
 	}
 
 

@@ -7198,5 +7198,77 @@
    "2": "Smazáno: komentáře %comments%, konverzace %conversations%, zprávy %messages%, události %events%.",
    "5": "Smazáno: komentáře %comments%, konverzace %conversations%, zprávy %messages%, události %events%."
   }
+ },
+ {
+  "key": "account.token.check",
+  "lang": "cs",
+  "translations": {
+   "1": "Ověřit token",
+   "2": "Ověřit token",
+   "5": "Ověřit token"
+  }
+ },
+ {
+  "key": "account.token.checked",
+  "lang": "cs",
+  "translations": {
+   "1": "ověřeno u Mety %date%",
+   "2": "ověřeno u Mety %date%",
+   "5": "ověřeno u Mety %date%"
+  }
+ },
+ {
+  "key": "account.token.missing-scopes",
+  "lang": "cs",
+  "translations": {
+   "1": "Chybí oprávnění: %scopes%",
+   "2": "Chybí oprávnění: %scopes%",
+   "5": "Chybí oprávnění: %scopes%"
+  }
+ },
+ {
+  "key": "account.token.check-ok",
+  "lang": "cs",
+  "translations": {
+   "1": "Token je platný a má všechna potřebná oprávnění.",
+   "2": "Token je platný a má všechna potřebná oprávnění.",
+   "5": "Token je platný a má všechna potřebná oprávnění."
+  }
+ },
+ {
+  "key": "account.token.check-failed",
+  "lang": "cs",
+  "translations": {
+   "1": "Ověření u Mety se nepodařilo (síť, limit nebo údaje aplikace); stav tokenu zůstal beze změny. Podrobnosti jsou v logu.",
+   "2": "Ověření u Mety se nepodařilo (síť, limit nebo údaje aplikace); stav tokenu zůstal beze změny. Podrobnosti jsou v logu.",
+   "5": "Ověření u Mety se nepodařilo (síť, limit nebo údaje aplikace); stav tokenu zůstal beze změny. Podrobnosti jsou v logu."
+  }
+ },
+ {
+  "key": "account.token.check-invalid",
+  "lang": "cs",
+  "translations": {
+   "1": "Meta token odmítla nebo patří jiné aplikaci; je označený jako neplatný a nepoužije se.",
+   "2": "Meta token odmítla nebo patří jiné aplikaci; je označený jako neplatný a nepoužije se.",
+   "5": "Meta token odmítla nebo patří jiné aplikaci; je označený jako neplatný a nepoužije se."
+  }
+ },
+ {
+  "key": "account.token.check-scopes",
+  "lang": "cs",
+  "translations": {
+   "1": "Token je platný, ale chybí mu některá oprávnění.",
+   "2": "Token je platný, ale chybí mu některá oprávnění.",
+   "5": "Token je platný, ale chybí mu některá oprávnění."
+  }
+ },
+ {
+  "key": "alarm.token_scopes",
+  "lang": "cs",
+  "translations": {
+   "1": "Token účtu %account% nemá oprávnění: %scopes%.",
+   "2": "Token účtu %account% nemá oprávnění: %scopes%.",
+   "5": "Token účtu %account% nemá oprávnění: %scopes%."
+  }
  }
 ]

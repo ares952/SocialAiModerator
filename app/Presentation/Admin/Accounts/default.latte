@@ -55,6 +55,10 @@
 								{if $account->token_expires_at}{_'account.token.expires', 1, [date => ($account->token_expires_at|localTime)]}{else}{_'account.token.never'}{/if}
 								{if $account->token_data_access_expires_at}<br>{_'account.token.data-access', 1, [date => ($account->token_data_access_expires_at|localTime)]}{/if}
 								<br>{_'account.token.refreshed', 1, [date => ($account->token_refreshed_at|localTime)]}
+								{if $account->token_checked_at}<br>{_'account.token.checked', 1, [date => ($account->token_checked_at|localTime)]}{/if}
+							</div>
+							<div n:if="$account->missing_scopes !== []" class="small text-danger mt-1">
+								{_'account.token.missing-scopes', count($account->missing_scopes), [scopes => implode(', ', $account->missing_scopes)]}
 							</div>
 						{/if}
 					</td>
@@ -69,6 +73,7 @@
 					<td n:if="$canManage" class="text-end text-nowrap">
 						<a class="btn btn-sm btn-outline-secondary" n:href="edit, id: $account->id">{_'common.edit'}</a>
 						<a class="btn btn-sm btn-outline-secondary" n:href="token, id: $account->id">{_'account.token.action'}</a>
+						<a n:if="$account->token_status !== null" class="btn btn-sm btn-outline-secondary" n:href="check!, account: $account->id">{_'account.token.check'}</a>
 						{if $account->paused}
 							<a class="btn btn-sm btn-outline-success" n:href="resume!, account: $account->id">{_'automation.form.resume'}</a>
 						{else}

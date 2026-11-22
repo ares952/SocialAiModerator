@@ -7,6 +7,7 @@ namespace App\Account;
 use App\Audit\AuditAction;
 use App\Audit\AuditLog;
 use App\Core\Encryptor;
+use App\Meta\TokenInfo;
 use Nette\Database\Explorer;
 use Nette\Database\Row;
 use Nette\Database\SqlLiteral;
@@ -99,15 +100,25 @@ final class Credentials
 
 
 	/**
-	 * Result of a validity check against Meta.
+	 * Result of a validity check against Meta. For a valid token Meta's expiry times and granted
+	 * permissions replace the ones entered by hand.
 	 */
-	public function recordCheck(int $accountId, TokenStatus $status): void
+	public function recordCheck(int $accountId, TokenStatus $status, ?TokenInfo $info = null): void
 	{
-		$this->database->query(
-			'UPDATE account_credentials SET status = ?, checked_at = NOW() WHERE social_account_id = ?',
-			$status->value,
-			$accountId,
-		);
+		$utc = new \DateTimeZone('UTC');
+		$values = [
+			'status' => $status->value,
+			'checked_at' => new SqlLiteral('NOW()'),
+		];
+		if ($status === TokenStatus::Valid && $info !== null) {
+			$values += [
+				'expires_at' => $info->expiresAt?->setTimezone($utc)->format('Y-m-d H:i:s'),
+				'data_access_expires_at' => $info->dataAccessExpiresAt?->setTimezone($utc)->format('Y-m-d H:i:s'),
+				'scopes' => implode(',', $info->scopes),
+			];
+		}
+
+		$this->database->query('UPDATE account_credentials SET ? WHERE social_account_id = ?', $values, $accountId);
 	}
 
 

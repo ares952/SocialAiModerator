@@ -36,4 +36,31 @@ enum Platform: string
 
 		return $prefix . $id;
 	}
+
+
+	/**
+	 * Permissions the account's token needs for the features of v1 (docs/meta-checklist.md, Graph API; Facebook
+	 * Login with a Page token for the Page, a system user token for Instagram).
+	 *
+	 * @return list<string>
+	 */
+	public function requiredScopes(): array
+	{
+		return match ($this) {
+			self::Facebook => [
+				'pages_manage_engagement',
+				'pages_manage_metadata',
+				'pages_messaging',
+				'pages_read_engagement',
+				'pages_read_user_content',
+			],
+			self::Instagram => [
+				'instagram_basic',
+				'instagram_manage_comments',
+				'instagram_manage_messages',
+				'pages_manage_metadata',
+				'pages_read_engagement',
+			],
+		};
+	}
 }

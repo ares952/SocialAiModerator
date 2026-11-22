@@ -17,6 +17,8 @@ parameters:
 		idleSeconds: 1
 		# How often the worker applies the retention periods (App\Retention\Retention).
 		retentionSeconds: 3600
+		# How often the worker checks the Meta access tokens (App\Account\TokenCheck); 0 = off.
+		tokenCheckSeconds: 21600
 
 	# External APIs (App\Queue\CircuitBreaker): consecutive transient failures that open the
 	# breaker, and how long jobs are then postponed without counting their attempts.
@@ -117,6 +119,7 @@ tracy:
 		- App\Account\AccessToken::$value
 		- App\Meta\WebhookVerifier::$appSecret
 		- App\Meta\WebhookVerifier::$verifyToken
+		- App\Meta\HttpGraphReader::$appSecret
 		- App\Ai\HttpOpenAiClient::$apiKey
 		- App\Moderation\CustomerContent::$text
 		- App\Evaluation\Sample::$text

@@ -9,7 +9,10 @@ use App\Account\AccountStatus;
 use App\Account\Credentials;
 use App\Account\InvalidAccount;
 use App\Account\InvalidCredential;
+use App\Account\TokenCheck;
+use App\Account\TokenStatus;
 use App\Account\TokenType;
+use App\Account\TokenUnavailable;
 use App\Meta\Platform;
 use App\Monitoring\MetricRange;
 use App\Monitoring\MetricSeries;
@@ -42,6 +45,7 @@ final class AccountsPresenter extends AdminPresenter
 		private readonly AutomationSwitch $automation,
 		private readonly Credentials $credentials,
 		private readonly MetricSeries $series,
+		private readonly TokenCheck $tokenCheck,
 	) {
 		parent::__construct();
 	}
@@ -135,6 +139,29 @@ final class AccountsPresenter extends AdminPresenter
 		$this->accounts->find($account) ?? $this->error();
 		$this->automation->pause($account, null, $this->operatorId());
 		$this->flashMessage('automation.paused', 'warning');
+		$this->redirect('default');
+	}
+
+
+	/**
+	 * Checks the account's token against Meta now (only reads).
+	 */
+	public function handleCheck(int $account): void
+	{
+		$this->requireAllowed(Authorization::Accounts, Authorization::Manage);
+		$this->accounts->find($account) ?? $this->error();
+		try {
+			$result = $this->tokenCheck->account($account);
+		} catch (TokenUnavailable) {
+			$this->error();
+		}
+
+		match (true) {
+			$result->ok() => $this->flashMessage('account.token.check-ok', 'success'),
+			$result->status === null => $this->flashMessage('account.token.check-failed', 'warning'),
+			$result->status === TokenStatus::Invalid => $this->flashMessage('account.token.check-invalid', 'danger'),
+			default => $this->flashMessage('account.token.check-scopes', 'warning'),
+		};
 		$this->redirect('default');
 	}
 

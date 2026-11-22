@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Support;
 
+use App\Account\Credentials;
+use App\Account\TokenCheck;
 use App\Account\TokenProvider;
 use App\Ai\Classifier;
 use App\Ai\OpenAiClient;
@@ -20,6 +22,7 @@ use App\Ingest\EventProcessor;
 use App\Ingest\EventStore;
 use App\Knowledge\KnowledgeBase;
 use App\Meta\EventNormalizer;
+use App\Meta\GraphReader;
 use App\Meta\MetaClient;
 use App\Moderation\AutomationSwitch;
 use App\Moderation\Decisions;
@@ -150,5 +153,18 @@ final class TestServices
 	public static function conversations(Explorer $database, Encryptor $encryptor): Conversations
 	{
 		return new Conversations($database, $encryptor, new AuditLog($database), new EchoGuard($database, '1000000000000099'));
+	}
+
+
+	public static function tokenCheck(Explorer $database, Encryptor $encryptor, GraphReader $graph, Logger $logger, string $appId = '1234567890'): TokenCheck
+	{
+		return new TokenCheck(
+			$database,
+			new TokenProvider($database, $encryptor),
+			new Credentials($database, $encryptor, new AuditLog($database)),
+			$graph,
+			$logger,
+			$appId,
+		);
 	}
 }

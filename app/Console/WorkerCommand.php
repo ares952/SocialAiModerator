@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console;
 
+use App\Account\TokenCheck;
 use App\Core\Correlation;
 use App\Core\Logger;
 use App\Evaluation\EvaluationRunner;
@@ -26,7 +27,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Long-running background worker (the `worker` container): reserves jobs from the DB queue one
- * by one and applies the retention periods every `retentionSeconds`. Stops gracefully on
+ * by one, applies the retention periods every `retentionSeconds` and checks the Meta access tokens
+ * every `tokenCheckSeconds`. Stops gracefully on
  * SIGTERM/SIGINT after the current job.
  */
 #[AsCommand(name: 'worker:run', description: 'Runs the background worker until SIGTERM or SIGINT')]
@@ -34,12 +36,14 @@ final class WorkerCommand extends Command
 {
 	private bool $running = true;
 	private ?int $lastRetention = null;
+	private ?int $lastTokenCheck = null;
 
 
 	public function __construct(
 		private readonly string $heartbeatFile,
 		private readonly int $idleSeconds,
 		private readonly int $retentionSeconds,
+		private readonly int $tokenCheckSeconds,
 		private readonly JobQueue $queue,
 		private readonly EventProcessor $events,
 		private readonly EventDecider $decider,
@@ -47,6 +51,7 @@ final class WorkerCommand extends Command
 		private readonly ActionDispatcher $dispatcher,
 		private readonly ReplyDrafter $drafter,
 		private readonly Retention $retention,
+		private readonly TokenCheck $tokenCheck,
 		private readonly Correlation $correlation,
 		private readonly Logger $logger,
 	) {
@@ -74,6 +79,7 @@ final class WorkerCommand extends Command
 		while ($this->running) {
 			touch($this->heartbeatFile);
 			$this->applyRetention();
+			$this->checkTokens();
 			$job = $this->queue->reserve($worker);
 			if ($job !== null) {
 				$this->process($job);
@@ -173,6 +179,26 @@ final class WorkerCommand extends Command
 
 		if ($deleted !== []) {
 			$this->logger->info('Retention deleted old data', $deleted);
+		}
+	}
+
+
+	/**
+	 * Checks the access tokens against Meta every `tokenCheckSeconds` (0 = off); problems are
+	 * logged by TokenCheck and shown as alarms.
+	 */
+	private function checkTokens(): void
+	{
+		if ($this->tokenCheckSeconds === 0 || ($this->lastTokenCheck !== null && time() - $this->lastTokenCheck < $this->tokenCheckSeconds)) {
+			return;
+		}
+
+		$this->lastTokenCheck = time();
+		$this->correlation->renew();
+		try {
+			$this->tokenCheck->all();
+		} catch (\Throwable $e) {
+			$this->logger->error('Token check failed', [], $e);
 		}
 	}
 

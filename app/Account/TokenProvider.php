@@ -55,4 +55,24 @@ final class TokenProvider
 			TokenType::from($row->token_type),
 		);
 	}
+
+
+	/**
+	 * The stored token regardless of its status, only for checking it against Meta (TokenCheck):
+	 * an invalid token may have been fixed on Meta's side. Never use it to call the API.
+	 *
+	 * @throws TokenUnavailable
+	 */
+	public function stored(int $accountId): AccessToken
+	{
+		$row = $this->database->query(
+			'SELECT token_type, encrypted_token FROM account_credentials WHERE social_account_id = ?',
+			$accountId,
+		)->fetch() ?? throw new TokenUnavailable("Account $accountId has no access token.");
+
+		return new AccessToken(
+			$this->encryptor->decrypt($row->encrypted_token, Credentials::TokenContext),
+			TokenType::from($row->token_type),
+		);
+	}
 }
