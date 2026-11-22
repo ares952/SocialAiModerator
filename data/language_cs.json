@@ -5713,5 +5713,536 @@
    "2": "převzato – odpověď mimo aplikaci",
    "5": "převzato – odpověď mimo aplikaci"
   }
+ },
+ {
+  "key": "admin.menu.alarms",
+  "lang": "cs",
+  "translations": {
+   "1": "Upozornění",
+   "2": "Upozornění",
+   "5": "Upozornění"
+  }
+ },
+ {
+  "key": "alarms.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Upozornění",
+   "2": "Upozornění",
+   "5": "Upozornění"
+  }
+ },
+ {
+  "key": "alarms.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Prahy, od kterých se na přehledu a v příkazu monitor:check ukáže upozornění. Prázdná hodnota upozornění vypíná.",
+   "2": "Prahy, od kterých se na přehledu a v příkazu monitor:check ukáže upozornění. Prázdná hodnota upozornění vypíná.",
+   "5": "Prahy, od kterých se na přehledu a v příkazu monitor:check ukáže upozornění. Prázdná hodnota upozornění vypíná."
+  }
+ },
+ {
+  "key": "alarms.how",
+  "lang": "cs",
+  "translations": {
+   "1": "Neplatný, propadlý nebo chybějící token, otevřený circuit breaker a zásahy s neznámým výsledkem se hlásí vždy. Externí monitoring může spouštět docker compose exec -T php bin/console monitor:check; při upozornění skončí s kódem 1.",
+   "2": "Neplatný, propadlý nebo chybějící token, otevřený circuit breaker a zásahy s neznámým výsledkem se hlásí vždy. Externí monitoring může spouštět docker compose exec -T php bin/console monitor:check; při upozornění skončí s kódem 1.",
+   "5": "Neplatný, propadlý nebo chybějící token, otevřený circuit breaker a zásahy s neznámým výsledkem se hlásí vždy. Externí monitoring může spouštět docker compose exec -T php bin/console monitor:check; při upozornění skončí s kódem 1."
+  }
+ },
+ {
+  "key": "alarms.kind.token_expiry",
+  "lang": "cs",
+  "translations": {
+   "1": "Platnost tokenu (dny předem)",
+   "2": "Platnost tokenu (dny předem)",
+   "5": "Platnost tokenu (dny předem)"
+  }
+ },
+ {
+  "key": "alarms.kind.token_expiry-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Upozornit, když token nebo jeho přístup k datům vyprší do tolika dní.",
+   "2": "Upozornit, když token nebo jeho přístup k datům vyprší do tolika dní.",
+   "5": "Upozornit, když token nebo jeho přístup k datům vyprší do tolika dní."
+  }
+ },
+ {
+  "key": "alarms.kind.webhook_silence",
+  "lang": "cs",
+  "translations": {
+   "1": "Bez webhooků (hodiny)",
+   "2": "Bez webhooků (hodiny)",
+   "5": "Bez webhooků (hodiny)"
+  }
+ },
+ {
+  "key": "alarms.kind.webhook_silence-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Aktivní účet, ze kterého už události chodily, tolik hodin nic neposlal.",
+   "2": "Aktivní účet, ze kterého už události chodily, tolik hodin nic neposlal.",
+   "5": "Aktivní účet, ze kterého už události chodily, tolik hodin nic neposlal."
+  }
+ },
+ {
+  "key": "alarms.kind.queue_lag",
+  "lang": "cs",
+  "translations": {
+   "1": "Stojící fronta (minuty)",
+   "2": "Stojící fronta (minuty)",
+   "5": "Stojící fronta (minuty)"
+  }
+ },
+ {
+  "key": "alarms.kind.queue_lag-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Úloha čeká tolik minut, nebo se worker tolik minut neozval.",
+   "2": "Úloha čeká tolik minut, nebo se worker tolik minut neozval.",
+   "5": "Úloha čeká tolik minut, nebo se worker tolik minut neozval."
+  }
+ },
+ {
+  "key": "alarms.kind.failures",
+  "lang": "cs",
+  "translations": {
+   "1": "Selhání za 24 hodin",
+   "2": "Selhání za 24 hodin",
+   "5": "Selhání za 24 hodin"
+  }
+ },
+ {
+  "key": "alarms.kind.failures-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Počet selhaných úloh nebo zásahů (např. opakované 429/5xx), od kterého upozornit.",
+   "2": "Počet selhaných úloh nebo zásahů (např. opakované 429/5xx), od kterého upozornit.",
+   "5": "Počet selhaných úloh nebo zásahů (např. opakované 429/5xx), od kterého upozornit."
+  }
+ },
+ {
+  "key": "alarms.kind.hidden_comments",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrytí za 24 hodin",
+   "2": "Skrytí za 24 hodin",
+   "5": "Skrytí za 24 hodin"
+  }
+ },
+ {
+  "key": "alarms.kind.hidden_comments-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Počet navržených nebo provedených skrytí komentářů, od kterého upozornit.",
+   "2": "Počet navržených nebo provedených skrytí komentářů, od kterého upozornit.",
+   "5": "Počet navržených nebo provedených skrytí komentářů, od kterého upozornit."
+  }
+ },
+ {
+  "key": "alarms.kind.stale_approvals",
+  "lang": "cs",
+  "translations": {
+   "1": "Čekání na schválení (hodiny)",
+   "2": "Čekání na schválení (hodiny)",
+   "5": "Čekání na schválení (hodiny)"
+  }
+ },
+ {
+  "key": "alarms.kind.stale_approvals-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Zásah čeká na člověka déle; v režimu pozorování se nehlásí.",
+   "2": "Zásah čeká na člověka déle; v režimu pozorování se nehlásí.",
+   "5": "Zásah čeká na člověka déle; v režimu pozorování se nehlásí."
+  }
+ },
+ {
+  "key": "alarms.error.range",
+  "lang": "cs",
+  "translations": {
+   "1": "Zadejte hodnotu v povoleném rozsahu, nebo pole nechte prázdné.",
+   "2": "Zadejte hodnotu v povoleném rozsahu, nebo pole nechte prázdné.",
+   "5": "Zadejte hodnotu v povoleném rozsahu, nebo pole nechte prázdné."
+  }
+ },
+ {
+  "key": "alarms.form.save",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložit",
+   "2": "Uložit",
+   "5": "Uložit"
+  }
+ },
+ {
+  "key": "alarms.saved",
+  "lang": "cs",
+  "translations": {
+   "1": "Prahy upozornění jsou uložené.",
+   "2": "Prahy upozornění jsou uložené.",
+   "5": "Prahy upozornění jsou uložené."
+  }
+ },
+ {
+  "key": "audit.action.alarms.update",
+  "lang": "cs",
+  "translations": {
+   "1": "Změna prahů upozornění",
+   "2": "Změna prahů upozornění",
+   "5": "Změna prahů upozornění"
+  }
+ },
+ {
+  "key": "alarm.token_missing",
+  "lang": "cs",
+  "translations": {
+   "1": "Účet %account% nemá token.",
+   "2": "Účet %account% nemá token.",
+   "5": "Účet %account% nemá token."
+  }
+ },
+ {
+  "key": "alarm.token_invalid",
+  "lang": "cs",
+  "translations": {
+   "1": "Token účtu %account% je neplatný.",
+   "2": "Token účtu %account% je neplatný.",
+   "5": "Token účtu %account% je neplatný."
+  }
+ },
+ {
+  "key": "alarm.token_expired",
+  "lang": "cs",
+  "translations": {
+   "1": "Token účtu %account% propadl nebo ztratil přístup k datům.",
+   "2": "Token účtu %account% propadl nebo ztratil přístup k datům.",
+   "5": "Token účtu %account% propadl nebo ztratil přístup k datům."
+  }
+ },
+ {
+  "key": "alarm.token_expiring",
+  "lang": "cs",
+  "translations": {
+   "1": "Token účtu %account% vyprší za %count% den.",
+   "2": "Token účtu %account% vyprší za %count% dny.",
+   "5": "Token účtu %account% vyprší za %count% dní."
+  }
+ },
+ {
+  "key": "alarm.data_access_expiring",
+  "lang": "cs",
+  "translations": {
+   "1": "Přístup tokenu účtu %account% k datům vyprší za %count% den.",
+   "2": "Přístup tokenu účtu %account% k datům vyprší za %count% dny.",
+   "5": "Přístup tokenu účtu %account% k datům vyprší za %count% dní."
+  }
+ },
+ {
+  "key": "alarm.webhook_silence",
+  "lang": "cs",
+  "translations": {
+   "1": "Z účtu %account% nepřišel %count% hodinu žádný webhook.",
+   "2": "Z účtu %account% nepřišel %count% hodiny žádný webhook.",
+   "5": "Z účtu %account% nepřišel %count% hodin žádný webhook."
+  }
+ },
+ {
+  "key": "alarm.queue_lag",
+  "lang": "cs",
+  "translations": {
+   "1": "Úloha čeká ve frontě %count% minutu.",
+   "2": "Úloha čeká ve frontě %count% minuty.",
+   "5": "Úloha čeká ve frontě %count% minut."
+  }
+ },
+ {
+  "key": "alarm.worker_missing",
+  "lang": "cs",
+  "translations": {
+   "1": "Worker se zatím neozval (chybí heartbeat).",
+   "2": "Worker se zatím neozval (chybí heartbeat).",
+   "5": "Worker se zatím neozval (chybí heartbeat)."
+  }
+ },
+ {
+  "key": "alarm.worker_silent",
+  "lang": "cs",
+  "translations": {
+   "1": "Worker se neozval %count% minutu.",
+   "2": "Worker se neozval %count% minuty.",
+   "5": "Worker se neozval %count% minut."
+  }
+ },
+ {
+  "key": "alarm.circuit_open",
+  "lang": "cs",
+  "translations": {
+   "1": "Volání API %api% je kvůli opakovaným chybám pozastavené.",
+   "2": "Volání API %api% je kvůli opakovaným chybám pozastavené.",
+   "5": "Volání API %api% je kvůli opakovaným chybám pozastavené."
+  }
+ },
+ {
+  "key": "alarm.failed_jobs",
+  "lang": "cs",
+  "translations": {
+   "1": "Za 24 hodin selhala %count% úloha.",
+   "2": "Za 24 hodin selhaly %count% úlohy.",
+   "5": "Za 24 hodin selhalo %count% úloh."
+  }
+ },
+ {
+  "key": "alarm.failed_actions",
+  "lang": "cs",
+  "translations": {
+   "1": "Za 24 hodin selhal %count% zásah.",
+   "2": "Za 24 hodin selhaly %count% zásahy.",
+   "5": "Za 24 hodin selhalo %count% zásahů."
+  }
+ },
+ {
+  "key": "alarm.unknown_actions",
+  "lang": "cs",
+  "translations": {
+   "1": "%count% zásah má neznámý výsledek; ověřte ho na Facebooku nebo Instagramu.",
+   "2": "%count% zásahy mají neznámý výsledek; ověřte je na Facebooku nebo Instagramu.",
+   "5": "%count% zásahů má neznámý výsledek; ověřte je na Facebooku nebo Instagramu."
+  }
+ },
+ {
+  "key": "alarm.hidden_comments",
+  "lang": "cs",
+  "translations": {
+   "1": "Za 24 hodin %count% skrytí komentáře – zkontrolujte pravidla.",
+   "2": "Za 24 hodin %count% skrytí komentářů – zkontrolujte pravidla.",
+   "5": "Za 24 hodin %count% skrytí komentářů – zkontrolujte pravidla."
+  }
+ },
+ {
+  "key": "alarm.stale_approvals",
+  "lang": "cs",
+  "translations": {
+   "1": "%count% zásah čeká na schválení déle než %hours% h.",
+   "2": "%count% zásahy čekají na schválení déle než %hours% h.",
+   "5": "%count% zásahů čeká na schválení déle než %hours% h."
+  }
+ },
+ {
+  "key": "dashboard.alarms.title",
+  "lang": "cs",
+  "translations": {
+   "1": "%count% upozornění",
+   "2": "%count% upozornění",
+   "5": "%count% upozornění"
+  }
+ },
+ {
+  "key": "dashboard.alarms.none",
+  "lang": "cs",
+  "translations": {
+   "1": "Žádná upozornění.",
+   "2": "Žádná upozornění.",
+   "5": "Žádná upozornění."
+  }
+ },
+ {
+  "key": "dashboard.metrics.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Provoz",
+   "2": "Provoz",
+   "5": "Provoz"
+  }
+ },
+ {
+  "key": "dashboard.metrics.day",
+  "lang": "cs",
+  "translations": {
+   "1": "24 hodin",
+   "2": "24 hodin",
+   "5": "24 hodin"
+  }
+ },
+ {
+  "key": "dashboard.metrics.week",
+  "lang": "cs",
+  "translations": {
+   "1": "7 dní",
+   "2": "7 dní",
+   "5": "7 dní"
+  }
+ },
+ {
+  "key": "dashboard.metric.events",
+  "lang": "cs",
+  "translations": {
+   "1": "Přijaté události",
+   "2": "Přijaté události",
+   "5": "Přijaté události"
+  }
+ },
+ {
+  "key": "dashboard.metric.comments",
+  "lang": "cs",
+  "translations": {
+   "1": "z toho komentáře",
+   "2": "z toho komentáře",
+   "5": "z toho komentáře"
+  }
+ },
+ {
+  "key": "dashboard.metric.messages",
+  "lang": "cs",
+  "translations": {
+   "1": "z toho zprávy zákazníků",
+   "2": "z toho zprávy zákazníků",
+   "5": "z toho zprávy zákazníků"
+  }
+ },
+ {
+  "key": "dashboard.metric.decisions",
+  "lang": "cs",
+  "translations": {
+   "1": "Rozhodnutí AI",
+   "2": "Rozhodnutí AI",
+   "5": "Rozhodnutí AI"
+  }
+ },
+ {
+  "key": "dashboard.metric.escalations",
+  "lang": "cs",
+  "translations": {
+   "1": "Předáno člověku nebo ke kontrole",
+   "2": "Předáno člověku nebo ke kontrole",
+   "5": "Předáno člověku nebo ke kontrole"
+  }
+ },
+ {
+  "key": "dashboard.metric.unclassified",
+  "lang": "cs",
+  "translations": {
+   "1": "Klasifikace selhala",
+   "2": "Klasifikace selhala",
+   "5": "Klasifikace selhala"
+  }
+ },
+ {
+  "key": "dashboard.metric.classification_seconds",
+  "lang": "cs",
+  "translations": {
+   "1": "Průměrný čas do rozhodnutí (s)",
+   "2": "Průměrný čas do rozhodnutí (s)",
+   "5": "Průměrný čas do rozhodnutí (s)"
+  }
+ },
+ {
+  "key": "dashboard.metric.hides_proposed",
+  "lang": "cs",
+  "translations": {
+   "1": "Navržená skrytí",
+   "2": "Navržená skrytí",
+   "5": "Navržená skrytí"
+  }
+ },
+ {
+  "key": "dashboard.metric.hides_sent",
+  "lang": "cs",
+  "translations": {
+   "1": "Provedená skrytí",
+   "2": "Provedená skrytí",
+   "5": "Provedená skrytí"
+  }
+ },
+ {
+  "key": "dashboard.metric.replies_drafted",
+  "lang": "cs",
+  "translations": {
+   "1": "Návrhy odpovědí",
+   "2": "Návrhy odpovědí",
+   "5": "Návrhy odpovědí"
+  }
+ },
+ {
+  "key": "dashboard.metric.replies_sent",
+  "lang": "cs",
+  "translations": {
+   "1": "Odeslané odpovědi",
+   "2": "Odeslané odpovědi",
+   "5": "Odeslané odpovědi"
+  }
+ },
+ {
+  "key": "dashboard.metric.rejected",
+  "lang": "cs",
+  "translations": {
+   "1": "Zamítnuto moderátorem",
+   "2": "Zamítnuto moderátorem",
+   "5": "Zamítnuto moderátorem"
+  }
+ },
+ {
+  "key": "dashboard.metric.blocked",
+  "lang": "cs",
+  "translations": {
+   "1": "Zastaveno pravidly",
+   "2": "Zastaveno pravidly",
+   "5": "Zastaveno pravidly"
+  }
+ },
+ {
+  "key": "dashboard.metric.failed_actions",
+  "lang": "cs",
+  "translations": {
+   "1": "Zásahy selhané nebo s neznámým výsledkem",
+   "2": "Zásahy selhané nebo s neznámým výsledkem",
+   "5": "Zásahy selhané nebo s neznámým výsledkem"
+  }
+ },
+ {
+  "key": "dashboard.metric.failed_jobs",
+  "lang": "cs",
+  "translations": {
+   "1": "Selhané úlohy",
+   "2": "Selhané úlohy",
+   "5": "Selhané úlohy"
+  }
+ },
+ {
+  "key": "dashboard.tokens.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Spotřeba tokenů za 7 dní",
+   "2": "Spotřeba tokenů za 7 dní",
+   "5": "Spotřeba tokenů za 7 dní"
+  }
+ },
+ {
+  "key": "dashboard.tokens.none",
+  "lang": "cs",
+  "translations": {
+   "1": "Žádná volání AI.",
+   "2": "Žádná volání AI.",
+   "5": "Žádná volání AI."
+  }
+ },
+ {
+  "key": "dashboard.tokens.usage",
+  "lang": "cs",
+  "translations": {
+   "1": "%count% volání, vstup %input%, výstup %output%",
+   "2": "%count% volání, vstup %input%, výstup %output%",
+   "5": "%count% volání, vstup %input%, výstup %output%"
+  }
+ },
+ {
+  "key": "dashboard.tokens.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Klasifikace a návrhy odpovědí; bez moderation endpointu a bez návrhů, které skončily bez použitelné odpovědi. Cenu spočítejte podle ceníku OpenAI.",
+   "2": "Klasifikace a návrhy odpovědí; bez moderation endpointu a bez návrhů, které skončily bez použitelné odpovědi. Cenu spočítejte podle ceníku OpenAI.",
+   "5": "Klasifikace a návrhy odpovědí; bez moderation endpointu a bez návrhů, které skončily bez použitelné odpovědi. Cenu spočítejte podle ceníku OpenAI."
+  }
  }
 ]

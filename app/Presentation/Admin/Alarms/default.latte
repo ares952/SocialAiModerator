@@ -1,0 +1,16 @@
+{block content}
+<h1 class="h3 mb-3" n:block="title">{_'alarms.title'}</h1>
+
+<div class="row g-4">
+	<div class="col-12 col-lg-7">
+		<div class="card">
+			<div class="card-body">
+				<p class="text-body-secondary">{_'alarms.note'}</p>
+				{control alarmsForm}
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-lg-5">
+		<div class="alert alert-secondary">{_'alarms.how'}</div>
+	</div>
+</div>

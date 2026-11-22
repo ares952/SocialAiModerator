@@ -98,6 +98,8 @@ final class ReplyGenerator
 			], $used),
 			model: $response->model !== '' ? $response->model : $this->model,
 			promptVersion: self::PromptVersion,
+			inputTokens: $response->inputTokens,
+			outputTokens: $response->outputTokens,
 		);
 	}
 

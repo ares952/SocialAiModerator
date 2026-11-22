@@ -5078,5 +5078,477 @@
    "1": "taken over – reply outside the app",
    "2": "taken over – reply outside the app"
   }
+ },
+ {
+  "key": "admin.menu.alarms",
+  "lang": "en",
+  "translations": {
+   "1": "Alarms",
+   "2": "Alarms"
+  }
+ },
+ {
+  "key": "alarms.title",
+  "lang": "en",
+  "translations": {
+   "1": "Alarms",
+   "2": "Alarms"
+  }
+ },
+ {
+  "key": "alarms.note",
+  "lang": "en",
+  "translations": {
+   "1": "Thresholds from which the dashboard and the monitor:check command show an alarm. An empty value turns the alarm off.",
+   "2": "Thresholds from which the dashboard and the monitor:check command show an alarm. An empty value turns the alarm off."
+  }
+ },
+ {
+  "key": "alarms.how",
+  "lang": "en",
+  "translations": {
+   "1": "An invalid, expired or missing token, an open circuit breaker and actions with an unknown result always alarm. An external monitor can run docker compose exec -T php bin/console monitor:check; it exits with code 1 on an alarm.",
+   "2": "An invalid, expired or missing token, an open circuit breaker and actions with an unknown result always alarm. An external monitor can run docker compose exec -T php bin/console monitor:check; it exits with code 1 on an alarm."
+  }
+ },
+ {
+  "key": "alarms.kind.token_expiry",
+  "lang": "en",
+  "translations": {
+   "1": "Token validity (days ahead)",
+   "2": "Token validity (days ahead)"
+  }
+ },
+ {
+  "key": "alarms.kind.token_expiry-note",
+  "lang": "en",
+  "translations": {
+   "1": "Alarm when a token or its data access expires within this many days.",
+   "2": "Alarm when a token or its data access expires within this many days."
+  }
+ },
+ {
+  "key": "alarms.kind.webhook_silence",
+  "lang": "en",
+  "translations": {
+   "1": "No webhooks (hours)",
+   "2": "No webhooks (hours)"
+  }
+ },
+ {
+  "key": "alarms.kind.webhook_silence-note",
+  "lang": "en",
+  "translations": {
+   "1": "An active account that has sent events before sent nothing for this many hours.",
+   "2": "An active account that has sent events before sent nothing for this many hours."
+  }
+ },
+ {
+  "key": "alarms.kind.queue_lag",
+  "lang": "en",
+  "translations": {
+   "1": "Stuck queue (minutes)",
+   "2": "Stuck queue (minutes)"
+  }
+ },
+ {
+  "key": "alarms.kind.queue_lag-note",
+  "lang": "en",
+  "translations": {
+   "1": "A job waits this many minutes, or the worker has not reported for this many minutes.",
+   "2": "A job waits this many minutes, or the worker has not reported for this many minutes."
+  }
+ },
+ {
+  "key": "alarms.kind.failures",
+  "lang": "en",
+  "translations": {
+   "1": "Failures in 24 hours",
+   "2": "Failures in 24 hours"
+  }
+ },
+ {
+  "key": "alarms.kind.failures-note",
+  "lang": "en",
+  "translations": {
+   "1": "Number of failed jobs or actions (e.g. repeated 429/5xx) from which to alarm.",
+   "2": "Number of failed jobs or actions (e.g. repeated 429/5xx) from which to alarm."
+  }
+ },
+ {
+  "key": "alarms.kind.hidden_comments",
+  "lang": "en",
+  "translations": {
+   "1": "Hides in 24 hours",
+   "2": "Hides in 24 hours"
+  }
+ },
+ {
+  "key": "alarms.kind.hidden_comments-note",
+  "lang": "en",
+  "translations": {
+   "1": "Number of proposed or performed comment hides from which to alarm.",
+   "2": "Number of proposed or performed comment hides from which to alarm."
+  }
+ },
+ {
+  "key": "alarms.kind.stale_approvals",
+  "lang": "en",
+  "translations": {
+   "1": "Awaiting approval (hours)",
+   "2": "Awaiting approval (hours)"
+  }
+ },
+ {
+  "key": "alarms.kind.stale_approvals-note",
+  "lang": "en",
+  "translations": {
+   "1": "An action waits for a human longer; not reported in observe mode.",
+   "2": "An action waits for a human longer; not reported in observe mode."
+  }
+ },
+ {
+  "key": "alarms.error.range",
+  "lang": "en",
+  "translations": {
+   "1": "Enter a value in the allowed range, or leave the field empty.",
+   "2": "Enter a value in the allowed range, or leave the field empty."
+  }
+ },
+ {
+  "key": "alarms.form.save",
+  "lang": "en",
+  "translations": {
+   "1": "Save",
+   "2": "Save"
+  }
+ },
+ {
+  "key": "alarms.saved",
+  "lang": "en",
+  "translations": {
+   "1": "The alarm thresholds are saved.",
+   "2": "The alarm thresholds are saved."
+  }
+ },
+ {
+  "key": "audit.action.alarms.update",
+  "lang": "en",
+  "translations": {
+   "1": "Alarm thresholds change",
+   "2": "Alarm thresholds change"
+  }
+ },
+ {
+  "key": "alarm.token_missing",
+  "lang": "en",
+  "translations": {
+   "1": "Account %account% has no token.",
+   "2": "Account %account% has no token."
+  }
+ },
+ {
+  "key": "alarm.token_invalid",
+  "lang": "en",
+  "translations": {
+   "1": "The token of account %account% is invalid.",
+   "2": "The token of account %account% is invalid."
+  }
+ },
+ {
+  "key": "alarm.token_expired",
+  "lang": "en",
+  "translations": {
+   "1": "The token of account %account% has expired or lost data access.",
+   "2": "The token of account %account% has expired or lost data access."
+  }
+ },
+ {
+  "key": "alarm.token_expiring",
+  "lang": "en",
+  "translations": {
+   "1": "The token of account %account% expires in %count% day.",
+   "2": "The token of account %account% expires in %count% days."
+  }
+ },
+ {
+  "key": "alarm.data_access_expiring",
+  "lang": "en",
+  "translations": {
+   "1": "Data access of account %account% expires in %count% day.",
+   "2": "Data access of account %account% expires in %count% days."
+  }
+ },
+ {
+  "key": "alarm.webhook_silence",
+  "lang": "en",
+  "translations": {
+   "1": "No webhook from account %account% for %count% hour.",
+   "2": "No webhook from account %account% for %count% hours."
+  }
+ },
+ {
+  "key": "alarm.queue_lag",
+  "lang": "en",
+  "translations": {
+   "1": "A job has waited in the queue for %count% minute.",
+   "2": "A job has waited in the queue for %count% minutes."
+  }
+ },
+ {
+  "key": "alarm.worker_missing",
+  "lang": "en",
+  "translations": {
+   "1": "The worker has not reported yet (no heartbeat).",
+   "2": "The worker has not reported yet (no heartbeat)."
+  }
+ },
+ {
+  "key": "alarm.worker_silent",
+  "lang": "en",
+  "translations": {
+   "1": "The worker has not reported for %count% minute.",
+   "2": "The worker has not reported for %count% minutes."
+  }
+ },
+ {
+  "key": "alarm.circuit_open",
+  "lang": "en",
+  "translations": {
+   "1": "Calls to the %api% API are paused after repeated errors.",
+   "2": "Calls to the %api% API are paused after repeated errors."
+  }
+ },
+ {
+  "key": "alarm.failed_jobs",
+  "lang": "en",
+  "translations": {
+   "1": "%count% job failed in 24 hours.",
+   "2": "%count% jobs failed in 24 hours."
+  }
+ },
+ {
+  "key": "alarm.failed_actions",
+  "lang": "en",
+  "translations": {
+   "1": "%count% action failed in 24 hours.",
+   "2": "%count% actions failed in 24 hours."
+  }
+ },
+ {
+  "key": "alarm.unknown_actions",
+  "lang": "en",
+  "translations": {
+   "1": "%count% action has an unknown result; check it on Facebook or Instagram.",
+   "2": "%count% actions have an unknown result; check them on Facebook or Instagram."
+  }
+ },
+ {
+  "key": "alarm.hidden_comments",
+  "lang": "en",
+  "translations": {
+   "1": "%count% comment hide in 24 hours – check the policy.",
+   "2": "%count% comment hides in 24 hours – check the policy."
+  }
+ },
+ {
+  "key": "alarm.stale_approvals",
+  "lang": "en",
+  "translations": {
+   "1": "%count% action has waited for approval over %hours% h.",
+   "2": "%count% actions have waited for approval over %hours% h."
+  }
+ },
+ {
+  "key": "dashboard.alarms.title",
+  "lang": "en",
+  "translations": {
+   "1": "%count% alarm",
+   "2": "%count% alarms"
+  }
+ },
+ {
+  "key": "dashboard.alarms.none",
+  "lang": "en",
+  "translations": {
+   "1": "No alarms.",
+   "2": "No alarms."
+  }
+ },
+ {
+  "key": "dashboard.metrics.title",
+  "lang": "en",
+  "translations": {
+   "1": "Activity",
+   "2": "Activity"
+  }
+ },
+ {
+  "key": "dashboard.metrics.day",
+  "lang": "en",
+  "translations": {
+   "1": "24 hours",
+   "2": "24 hours"
+  }
+ },
+ {
+  "key": "dashboard.metrics.week",
+  "lang": "en",
+  "translations": {
+   "1": "7 days",
+   "2": "7 days"
+  }
+ },
+ {
+  "key": "dashboard.metric.events",
+  "lang": "en",
+  "translations": {
+   "1": "Received events",
+   "2": "Received events"
+  }
+ },
+ {
+  "key": "dashboard.metric.comments",
+  "lang": "en",
+  "translations": {
+   "1": "of which comments",
+   "2": "of which comments"
+  }
+ },
+ {
+  "key": "dashboard.metric.messages",
+  "lang": "en",
+  "translations": {
+   "1": "of which customer messages",
+   "2": "of which customer messages"
+  }
+ },
+ {
+  "key": "dashboard.metric.decisions",
+  "lang": "en",
+  "translations": {
+   "1": "AI decisions",
+   "2": "AI decisions"
+  }
+ },
+ {
+  "key": "dashboard.metric.escalations",
+  "lang": "en",
+  "translations": {
+   "1": "Handed to a human or to review",
+   "2": "Handed to a human or to review"
+  }
+ },
+ {
+  "key": "dashboard.metric.unclassified",
+  "lang": "en",
+  "translations": {
+   "1": "Classification failed",
+   "2": "Classification failed"
+  }
+ },
+ {
+  "key": "dashboard.metric.classification_seconds",
+  "lang": "en",
+  "translations": {
+   "1": "Average time to decision (s)",
+   "2": "Average time to decision (s)"
+  }
+ },
+ {
+  "key": "dashboard.metric.hides_proposed",
+  "lang": "en",
+  "translations": {
+   "1": "Proposed hides",
+   "2": "Proposed hides"
+  }
+ },
+ {
+  "key": "dashboard.metric.hides_sent",
+  "lang": "en",
+  "translations": {
+   "1": "Performed hides",
+   "2": "Performed hides"
+  }
+ },
+ {
+  "key": "dashboard.metric.replies_drafted",
+  "lang": "en",
+  "translations": {
+   "1": "Reply drafts",
+   "2": "Reply drafts"
+  }
+ },
+ {
+  "key": "dashboard.metric.replies_sent",
+  "lang": "en",
+  "translations": {
+   "1": "Sent replies",
+   "2": "Sent replies"
+  }
+ },
+ {
+  "key": "dashboard.metric.rejected",
+  "lang": "en",
+  "translations": {
+   "1": "Rejected by a moderator",
+   "2": "Rejected by a moderator"
+  }
+ },
+ {
+  "key": "dashboard.metric.blocked",
+  "lang": "en",
+  "translations": {
+   "1": "Blocked by the rules",
+   "2": "Blocked by the rules"
+  }
+ },
+ {
+  "key": "dashboard.metric.failed_actions",
+  "lang": "en",
+  "translations": {
+   "1": "Actions failed or unknown",
+   "2": "Actions failed or unknown"
+  }
+ },
+ {
+  "key": "dashboard.metric.failed_jobs",
+  "lang": "en",
+  "translations": {
+   "1": "Failed jobs",
+   "2": "Failed jobs"
+  }
+ },
+ {
+  "key": "dashboard.tokens.title",
+  "lang": "en",
+  "translations": {
+   "1": "Token usage in 7 days",
+   "2": "Token usage in 7 days"
+  }
+ },
+ {
+  "key": "dashboard.tokens.none",
+  "lang": "en",
+  "translations": {
+   "1": "No AI calls.",
+   "2": "No AI calls."
+  }
+ },
+ {
+  "key": "dashboard.tokens.usage",
+  "lang": "en",
+  "translations": {
+   "1": "%count% call, input %input%, output %output%",
+   "2": "%count% calls, input %input%, output %output%"
+  }
+ },
+ {
+  "key": "dashboard.tokens.note",
+  "lang": "en",
+  "translations": {
+   "1": "Classification and reply drafts; without the moderation endpoint and without drafts that ended without a usable reply. Compute the price from the OpenAI price list.",
+   "2": "Classification and reply drafts; without the moderation endpoint and without drafts that ended without a usable reply. Compute the price from the OpenAI price list."
+  }
  }
 ]

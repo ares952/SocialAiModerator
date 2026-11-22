@@ -50,6 +50,8 @@ test('accounts are readable by everyone, audit only by admins', function () use 
 	Assert::false($acl->isAllowed('moderator', Authorization::Accounts, Authorization::Manage));
 	Assert::false($acl->isAllowed('moderator', Authorization::Audit, Authorization::View));
 	Assert::true($acl->isAllowed('admin', Authorization::Audit, Authorization::View));
+	Assert::false($acl->isAllowed('moderator', Authorization::Alarms, Authorization::Manage));
+	Assert::true($acl->isAllowed('admin', Authorization::Alarms, Authorization::Manage));
 });
 
 

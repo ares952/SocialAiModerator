@@ -107,6 +107,8 @@ final class Actions
 				'knowledge_json' => Json::encode($draft->knowledge),
 				'model' => $draft->model,
 				'prompt_version' => $draft->promptVersion,
+				'input_tokens' => $draft->inputTokens,
+				'output_tokens' => $draft->outputTokens,
 			],
 			$actionId,
 			ActionType::Reply->value,

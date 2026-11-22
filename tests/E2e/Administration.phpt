@@ -35,6 +35,7 @@ test('every page renders in both languages', function () use ($browser): void {
 		'/admin/operators/add' => 'Přidat operátora',
 		'/admin/audit' => 'Audit',
 		'/admin/retention' => 'Retence dat',
+		'/admin/alarms' => 'Upozornění',
 		'/admin/password' => 'Změna hesla',
 		'/en/' => 'Dashboard',
 		'/en/admin/policy' => 'Moderation policy',
@@ -312,6 +313,31 @@ test('retention: periods are saved and audited, an invalid one is refused', func
 		"SELECT details FROM admin_audit WHERE action = 'retention.update' ORDER BY id DESC LIMIT 1",
 	)->fetchField());
 	$data->database->query('DELETE FROM retention_periods');
+});
+
+
+test('dashboard: alarms and numbers; alarm thresholds are saved and audited', function () use ($browser, $data): void {
+	$dashboard = $browser->get('/')->body;
+	Assert::contains('Provoz', $dashboard);
+	Assert::contains('Spotřeba tokenů za 7 dní', $dashboard);
+
+	$fields = [
+		'token_expiry' => '10',
+		'webhook_silence' => '',
+		'queue_lag' => '15',
+		'failures' => '3',
+		'hidden_comments' => '20',
+		'stale_approvals' => '24',
+		'send' => '1',
+	];
+	Assert::contains('Zadejte hodnotu v povoleném rozsahu', implode(' ', $browser->submit('/admin/alarms', 'alarmsForm', ['queue_lag' => '0'] + $fields)->messages()));
+	Assert::same(303, $browser->submit('/admin/alarms', 'alarmsForm', $fields)->status);
+	$saved = $data->database->query('SELECT kind, value FROM alarm_thresholds')->fetchPairs('kind', 'value');
+	Assert::same(10, $saved['token_expiry'] ?? null);
+	Assert::true(array_key_exists('webhook_silence', $saved) && $saved['webhook_silence'] === null, 'An empty value turns the alarm off.');
+	Assert::contains('token_expiry=10, webhook_silence=off', (string) $data->database->query(
+		"SELECT details FROM admin_audit WHERE action = 'alarms.update' ORDER BY id DESC LIMIT 1",
+	)->fetchField());
 });
 
 

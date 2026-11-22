@@ -12,6 +12,7 @@ services:
 	- App\Console\EncryptionRotateCommand
 	- App\Console\EventsNormalizeCommand
 	- App\Console\RetentionRunCommand
+	- App\Console\MonitorCheckCommand
 	- App\Core\Encryptor(%env.APP_ENCRYPTION_KEY%)
 	- App\Core\Correlation
 	- App\Core\Logger(file: %rootDir%/log/app.log)
@@ -46,6 +47,9 @@ services:
 	- App\Moderation\Decisions
 	- App\Moderation\EventDecider
 	- App\Retention\Retention
+	- App\Monitoring\AlarmThresholds
+	- App\Monitoring\Alarms(heartbeatFile: %tempDir%/worker.heartbeat)
+	- App\Monitoring\Metrics
 	- App\Moderation\Policies(defaultMode: App\Moderation\Mode::from(%env.AUTOMATION_DEFAULT_MODE%))
 	- App\Moderation\AutomationSwitch
 	- App\Knowledge\KnowledgeBase(locales: %knowledge.locales%, timezone: %timezone%)

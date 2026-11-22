@@ -80,6 +80,9 @@
 					<li class="nav-item" n:if="$user->isAllowed('retention', 'manage')">
 						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Retention:*') ? active" n:href=":Admin:Retention:">{_'admin.menu.retention'}</a>
 					</li>
+					<li class="nav-item" n:if="$user->isAllowed('alarms', 'manage')">
+						<a n:class="nav-link, $presenter->isLinkCurrent(':Admin:Alarms:*') ? active" n:href=":Admin:Alarms:">{_'admin.menu.alarms'}</a>
+					</li>
 				</ul>
 
 				<ul class="navbar-nav ms-auto align-items-xl-center">

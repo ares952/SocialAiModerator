@@ -72,7 +72,7 @@ test('a viewer reads but cannot change anything', function () use ($viewerEmail,
 	foreach (['/', '/admin/events', '/admin/actions', '/admin/conversations', '/admin/accounts', '/admin/policy', '/admin/knowledge', '/admin/evaluation'] as $path) {
 		Assert::same(200, $browser->get($path)->status, $path);
 	}
-	foreach (['/admin/operators', '/admin/audit', '/admin/retention', '/admin/accounts/add', '/admin/accounts/token/1', '/admin/knowledge/add', '/admin/knowledge/import', '/admin/evaluation/samples'] as $path) {
+	foreach (['/admin/operators', '/admin/audit', '/admin/retention', '/admin/alarms', '/admin/accounts/add', '/admin/accounts/token/1', '/admin/knowledge/add', '/admin/knowledge/import', '/admin/evaluation/samples'] as $path) {
 		Assert::same(403, $browser->get($path)->status, $path);
 	}
 

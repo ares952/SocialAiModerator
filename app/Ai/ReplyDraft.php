@@ -18,6 +18,8 @@ final readonly class ReplyDraft
 		public array $knowledge,
 		public string $model,
 		public string $promptVersion,
+		public int $inputTokens,
+		public int $outputTokens,
 	) {
 	}
 }

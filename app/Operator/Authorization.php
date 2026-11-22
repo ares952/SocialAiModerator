@@ -19,7 +19,9 @@ use Nette\StaticClass;
  *   rejects or requests hiding and unhiding of comments (Actions + Edit), reads conversations,
  *   takes them over and releases them (Conversations + Edit);
  * - admin: everything, including publishing knowledge, policies, the panic switch, evaluation
- *   runs, accounts, operators, the audit log and the retention periods.
+ *   runs, accounts, operators, the audit log, the retention periods and the alarm thresholds.
+ *
+ * Everyone sees the current alarms on the dashboard.
  */
 final class Authorization
 {
@@ -36,6 +38,7 @@ final class Authorization
 	public const Accounts = 'accounts';
 	public const Audit = 'audit';
 	public const Retention = 'retention';
+	public const Alarms = 'alarms';
 
 	public const View = 'view';
 	public const Edit = 'edit';
@@ -59,7 +62,7 @@ final class Authorization
 			self::Evaluation,
 			self::Accounts,
 		];
-		foreach ([...$readable, self::Operators, self::Audit, self::Retention] as $resource) {
+		foreach ([...$readable, self::Operators, self::Audit, self::Retention, self::Alarms] as $resource) {
 			$acl->addResource($resource);
 		}
 

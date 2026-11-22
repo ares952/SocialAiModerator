@@ -4,6 +4,10 @@
 {varType list<App\Queue\JobStatus> $jobStatuses}
 {varType App\Moderation\Policy $policy}
 {varType bool $paused}
+{varType list<App\Monitoring\Alarm> $alarms}
+{varType array<string, int|float|null> $day}
+{varType array<string, int|float|null> $week}
+{varType list<array{model: string, calls: int, input: int, output: int}> $tokens}
 
 {block content}
 <h1 class="h3 mb-4" n:block="title">{_'dashboard.title'}</h1>
@@ -15,6 +19,47 @@
 		· {if $paused}<strong>{_'automation.state.paused-short'}</strong>{else}{_'automation.state.running'}{/if}
 	</span>
 	<a n:href=":Admin:Policy:" class="alert-link">{_'dashboard.policy-link'}</a>
+</div>
+
+<div n:if="$alarms !== []" class="alert alert-warning">
+	<div class="fw-semibold mb-1">{_'dashboard.alarms.title', count($alarms)}</div>
+	<ul class="mb-0">
+		<li n:foreach="$alarms as $alarm">{_"alarm.{$alarm->code}", (int) ($alarm->params['count'] ?? $alarm->params['days'] ?? $alarm->params['hours'] ?? $alarm->params['minutes'] ?? 1), $alarm->params}</li>
+	</ul>
+</div>
+<p n:if="$alarms === []" class="text-body-secondary small">{_'dashboard.alarms.none'}</p>
+
+<div class="card mb-4">
+	<div class="card-header">{_'dashboard.metrics.title'}</div>
+	<div class="table-responsive">
+		<table class="table table-sm mb-0 align-middle">
+			<thead>
+				<tr>
+					<th scope="col"></th>
+					<th scope="col" class="text-end">{_'dashboard.metrics.day'}</th>
+					<th scope="col" class="text-end">{_'dashboard.metrics.week'}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="array_keys($day) as $metric">
+					<td>{_"dashboard.metric.$metric"}</td>
+					<td class="text-end">{$day[$metric] ?? '—'}</td>
+					<td class="text-end">{$week[$metric] ?? '—'}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="card-body border-top small">
+		<div class="fw-semibold mb-1">{_'dashboard.tokens.title'}</div>
+		{if $tokens === []}
+			<span class="text-body-secondary">{_'dashboard.tokens.none'}</span>
+		{else}
+			<div n:foreach="$tokens as $usage">
+				<code>{$usage['model']}</code>: {_'dashboard.tokens.usage', $usage['calls'], [input => ($usage['input']|number), output => ($usage['output']|number)]}
+			</div>
+		{/if}
+		<div class="text-body-secondary mt-1">{_'dashboard.tokens.note'}</div>
+	</div>
 </div>
 
 <div class="row g-4">

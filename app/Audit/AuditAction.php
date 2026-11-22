@@ -34,4 +34,5 @@ enum AuditAction: string
 	case ConversationTakeover = 'conversation.takeover';
 	case ConversationRelease = 'conversation.release';
 	case ConversationContentView = 'conversation.content.view';
+	case AlarmsUpdate = 'alarms.update';
 }
