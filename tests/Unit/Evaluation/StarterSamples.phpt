@@ -109,3 +109,39 @@ test('the strictness samples are importable and labelled for the balanced level'
 		);
 	}
 });
+
+
+test('the extended samples are importable and labelled for the balanced level', function (): void {
+	$items = Json::decode(FileSystem::read(__DIR__ . '/../../../docs/evaluation/extended-samples.json'), forceArrays: true);
+	Assert::true(is_array($items) && array_is_list($items) && count($items) >= 60);
+	foreach ($items as $index => $item) {
+		$sample = new Sample(
+			platform: Platform::from($item['platform']),
+			kind: ContentKind::from($item['kind']),
+			language: $item['language'],
+			text: $item['text'],
+			expectedCategory: Category::from($item['expected_category']),
+			expectedAction: Action::from($item['expected_action']),
+			note: $item['note'] ?? null,
+		);
+		Assert::notContains('@', $sample->text, "#$index: no e-mail addresses or handles");
+		preg_match_all('~(?:https?://|www\.)([^\s/]+)~', $sample->text, $matches);
+		foreach ($matches[1] as $host) {
+			Assert::match('%a%.example.test', $host);
+		}
+
+		// Inappropriate tone may change abuse, criticism and praise (strictness level Balanced).
+		$category = $sample->expectedCategory;
+		$expected = match (true) {
+			$category->requiresHandoff() => [Action::Handoff],
+			in_array($category, [Category::Spam, Category::Scam], true) => [$sample->kind === ContentKind::Message ? Action::Review : Action::Hide],
+			$category === Category::Unknown => [Action::Review],
+			$category === Category::Faq => [in_array($sample->language, ['cs', 'en', 'es'], true) ? Action::Reply : Action::Handoff],
+			$category === Category::Abuse => $sample->kind === ContentKind::Message
+				? [Action::Review]
+				: [Action::Hide, Action::Review, Action::Keep],
+			default => [Action::Keep, Action::Review],
+		};
+		Assert::contains($sample->expectedAction, $expected, "#$index {$category->value}");
+	}
+});
