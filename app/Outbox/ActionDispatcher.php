@@ -87,7 +87,7 @@ final class ActionDispatcher
 			} elseif ($action->message_id === null) {
 				$replyId = $this->meta->replyComment($platform, $token, $target, $text);
 			} else {
-				$replyId = $this->meta->sendMessage($platform, $token, $target, $text);
+				$replyId = $this->meta->sendMessage($platform, $token, $target, $text, (string) $action->idempotency_key);
 			}
 		} catch (MetaWriteUnavailable $e) {
 			$this->finish($action, OutboxStatus::Blocked, ActionStatus::Blocked, $e, [
@@ -132,7 +132,7 @@ final class ActionDispatcher
 	private function prepare(int $outboxId): ?array
 	{
 		$action = $this->database->query(
-			'SELECT x.id AS outbox_id, x.status AS outbox_status, a.id AS action_id, a.type, a.automatic,
+			'SELECT x.id AS outbox_id, x.status AS outbox_status, x.idempotency_key, a.id AS action_id, a.type, a.automatic,
 				a.decision_id, a.external_target_id, a.text_encrypted, a.comment_id, a.message_id,
 				COALESCE(c.account_id, v.account_id) AS account_id, s.platform, s.status AS account_status,
 				c.visibility, c.own, c.text_changed_at > a.created_at AS changed,

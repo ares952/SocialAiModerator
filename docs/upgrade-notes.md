@@ -15,6 +15,16 @@ Formát sekce:
 - **Ověření:** jak potvrdit, že je hotovo
 ```
 
+## 0.13.0
+
+- **Týká se:** všech instancí
+- **Kdy:** před krokem 7 (kontejnery)
+- **Akce:** v `config/secrets/app.env` zkontrolovat, že `META_APP_ID` obsahuje ID aplikace
+  z Meta App Dashboardu. Aplikace podle něj pozná echo vlastních zpráv v Messengeru; bez něj by
+  vlastní odpovědi aplikace (až bude zapojené odesílání) převzaly konverzaci, jako by odpověděl
+  člověk. Změna `app.env` se projeví až po znovuvytvoření kontejnerů (`docker compose up -d`).
+- **Ověření:** `docker compose exec -T worker sh -c '[ -n "$META_APP_ID" ] && echo ok'` vypíše `ok`.
+
 ## 0.11.0
 
 - **Týká se:** všech instancí

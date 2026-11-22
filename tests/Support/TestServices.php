@@ -11,6 +11,7 @@ use App\Ai\ReplyGenerator;
 use App\Audit\AuditLog;
 use App\Comment\Comments;
 use App\Conversation\Conversations;
+use App\Conversation\EchoGuard;
 use App\Core\Encryptor;
 use App\Core\Logger;
 use App\Evaluation\EvaluationRunner;
@@ -85,7 +86,7 @@ final class TestServices
 			new EventNormalizer,
 			$queue,
 			new Comments($database, $encryptor),
-			new Conversations($database, $encryptor, new AuditLog($database)),
+			self::conversations($database, $encryptor),
 		);
 	}
 
@@ -102,7 +103,7 @@ final class TestServices
 			new Decisions($database, $encryptor),
 			$queue,
 			new Comments($database, $encryptor),
-			new Conversations($database, $encryptor, new AuditLog($database)),
+			self::conversations($database, $encryptor),
 			self::actions($database, $encryptor, $queue),
 		);
 	}
@@ -137,10 +138,16 @@ final class TestServices
 			$database,
 			self::actions($database, $encryptor, $queue),
 			new Comments($database, $encryptor),
-			new Conversations($database, $encryptor, new AuditLog($database)),
+			self::conversations($database, $encryptor),
 			self::knowledge($database),
 			new ReplyGenerator($client, $model),
 			$logger,
 		);
+	}
+
+
+	public static function conversations(Explorer $database, Encryptor $encryptor): Conversations
+	{
+		return new Conversations($database, $encryptor, new AuditLog($database), new EchoGuard($database, '1000000000000099'));
 	}
 }

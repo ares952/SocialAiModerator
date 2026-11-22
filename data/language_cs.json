@@ -5704,5 +5704,14 @@
    "2": "Zobrazení konverzace",
    "5": "Zobrazení konverzace"
   }
+ },
+ {
+  "key": "conversations.state.takeover-outside",
+  "lang": "cs",
+  "translations": {
+   "1": "převzato – odpověď mimo aplikaci",
+   "2": "převzato – odpověď mimo aplikaci",
+   "5": "převzato – odpověď mimo aplikaci"
+  }
  }
 ]

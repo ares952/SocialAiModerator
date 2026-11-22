@@ -5070,5 +5070,13 @@
    "1": "Conversation view",
    "2": "Conversation view"
   }
+ },
+ {
+  "key": "conversations.state.takeover-outside",
+  "lang": "en",
+  "translations": {
+   "1": "taken over – reply outside the app",
+   "2": "taken over – reply outside the app"
+  }
  }
 ]

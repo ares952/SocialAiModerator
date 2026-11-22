@@ -300,3 +300,15 @@ test('a message belongs to its customer: the sender, or the recipient of an echo
 	Assert::same('fb:12334', $fixture('page-message-dashboard-test')->customerId);
 	Assert::null($fixture('page-comment')->customerId);
 });
+
+
+test('an echo carries the sending app and its metadata, other messages do not', function () use ($fixture, $single, $messaging): void {
+	Assert::same(['1000000000000099', null], [$fixture('page-message-echo')->appId, $fixture('page-message-echo')->metadata]);
+	Assert::same([null, null], [$fixture('instagram-message-echo')->appId, $fixture('instagram-message-echo')->metadata]);
+	Assert::null($fixture('page-message')->appId);
+
+	$echo = $single($messaging([
+		'message' => ['mid' => 'm_2', 'is_echo' => true, 'app_id' => 42, 'metadata' => 'reply:17'],
+	]));
+	Assert::same(['42', 'reply:17'], [$echo->appId, $echo->metadata]);
+});

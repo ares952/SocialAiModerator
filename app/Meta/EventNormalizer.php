@@ -203,6 +203,8 @@ final class EventNormalizer
 				$occurredAt,
 				text: $type === EventType::MessageDeleted ? null : self::text($message['text'] ?? null),
 				customerId: self::prefixed($platform, self::id(is_array($customer) ? $customer['id'] ?? null : null)),
+				appId: $type === EventType::MessageEcho ? self::id($message['app_id'] ?? null) : null,
+				metadata: $type === EventType::MessageEcho ? self::id($message['metadata'] ?? null) : null,
 			);
 		}
 

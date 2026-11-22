@@ -40,9 +40,11 @@ interface MetaClient
 	 * Direct). Never with the HUMAN_AGENT tag.
 	 *
 	 * @param string $recipientId PSID or IGSID with the platform prefix
+	 * @param string $metadata the outbox idempotency key, sent as the message metadata so that its
+	 *        echo is recognized as the application's own (App\Conversation\EchoGuard)
 	 * @return string ID of the message with the platform prefix
 	 * @throws MetaFailure
 	 * @throws MetaWriteUnavailable nothing was sent
 	 */
-	public function sendMessage(Platform $platform, AccessToken $token, string $recipientId, #[\SensitiveParameter] string $text): string;
+	public function sendMessage(Platform $platform, AccessToken $token, string $recipientId, #[\SensitiveParameter] string $text, string $metadata): string;
 }

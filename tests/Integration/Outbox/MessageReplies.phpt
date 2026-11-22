@@ -65,7 +65,7 @@ $log = new TestLog;
 $decider = TestServices::eventDecider($database, $encryptor, $queue, $client);
 $drafter = TestServices::drafter($database, $encryptor, $queue, $client, $log->logger);
 $actions = TestServices::actions($database, $encryptor, $queue);
-$conversations = new Conversations($database, $encryptor, new AuditLog($database));
+$conversations = TestServices::conversations($database, $encryptor);
 $inbox = new Inbox($database, $encryptor);
 $meta = new FakeMetaClient;
 $dispatcher = TestServices::dispatcher($database, $encryptor, $meta, $log->logger);
@@ -94,11 +94,12 @@ $customer = static fn(string $psid, string $mid, string $text, int $ago = 0): ar
 	'timestamp' => (int) (microtime(true) * 1000) - $ago,
 	'message' => ['mid' => $mid, 'text' => $text],
 ];
-$echo = static fn(string $psid, string $mid, string $text, int $ago = -1000): array => [
+// $message: extra fields of the echoed message (app_id, metadata)
+$echo = static fn(string $psid, string $mid, string $text, int $ago = -1000, array $message = []): array => [
 	'sender' => ['id' => '1000000000000001'],
 	'recipient' => ['id' => $psid],
 	'timestamp' => (int) (microtime(true) * 1000) - $ago,
-	'message' => ['mid' => $mid, 'text' => $text, 'is_echo' => true],
+	'message' => $message + ['mid' => $mid, 'text' => $text, 'is_echo' => true],
 ];
 // A customer question decided as a reply with a draft; returns the action ID.
 $question = static function (string $psid, string $mid) use ($receive, $customer, $client, $decider, $drafter, $database): int {
@@ -132,7 +133,7 @@ $conversationOf = static fn(string $psid): int => (int) $database->query(
 
 test('a message gets a draft with the conversation as context, approved and sent in the window', function () use ($receive, $customer, $echo, $question, $action, $actions, $dispatcher, $meta, $client, $inbox, $conversationOf): void {
 	$receive($customer('2400000000000001', 'm_hello', 'Dobrý den, mám dotaz.', ago: 3000));
-	$receive($echo('2400000000000001', 'm_hello_reply', 'Dobrý den, jak vám můžeme pomoci?', ago: 2000));
+	$receive($echo('2400000000000001', 'm_hello_reply', 'Dobrý den, jak vám můžeme pomoci?', ago: 2000, message: ['app_id' => 1000000000000099]));
 	$id = $question('2400000000000001', 'm_q1');
 
 	$row = $action($id);
@@ -154,6 +155,7 @@ test('a message gets a draft with the conversation as context, approved and sent
 		'token' => 'synthetic-page-token',
 		'recipient' => 'fb:2400000000000001',
 		'message' => 'Online předplatné stojí 289 Kč měsíčně.',
+		'metadata' => "reply:$id",
 	], $meta->writes[0]);
 	Assert::same(['sent', ['reply_id' => 'fb:m_sent_1']], [$action($id)->status, Json::decode((string) $action($id)->result_json, forceArrays: true)]);
 
@@ -185,7 +187,7 @@ test('an echo after the message means it was answered; an unsent message is not 
 	$actions->approve($id, 1);
 	$receive($echo('2400000000000003', 'm_human', 'Odpověděl člověk v Business Suite.'));
 	$dispatcher->send($action($id)->outbox_id, lastAttempt: false);
-	Assert::same(['already_replied'], $reasons($id));
+	Assert::same(['human_takeover', 'already_replied'], $reasons($id), 'A person answered outside the application.');
 
 	$id = $question('2400000000000004', 'm_q4');
 	$actions->approve($id, 1);
@@ -207,7 +209,7 @@ test('takeover stops AI drafts and AI replies, the operator still writes; releas
 	$actions->approve($id, 1);
 	$conversations->takeover($conversation, 1);
 	Assert::true($conversations->isTakenOver($conversation));
-	Assert::same(1, $inbox->count(InboxFilter::Takeover));
+	Assert::same(2, $inbox->count(InboxFilter::Takeover), 'Also the conversation answered in Business Suite.');
 	Assert::same('Moderator', $inbox->find($conversation)?->assignee_name);
 
 	$dispatcher->send($action($id)->outbox_id, lastAttempt: false);
@@ -229,6 +231,7 @@ test('takeover stops AI drafts and AI replies, the operator still writes; releas
 	$dispatcher->send($action($own)->outbox_id, lastAttempt: false);
 	Assert::same('sent', $action($own)->status);
 	Assert::same('Roční předplatné zatím nenabízíme.', $meta->writes[1]['message'] ?? null);
+	Assert::same("reply:$own", $meta->writes[1]['metadata'] ?? null, 'The idempotency key goes with the message.');
 
 	$conversations->release($conversation, 1);
 	Assert::false($conversations->isTakenOver($conversation));
@@ -244,4 +247,34 @@ test('observe mode: nothing can be approved or written', function () use ($quest
 	$policies->save(Mode::Observe, new PolicySettings(maxRepeats: null), 1);
 	Assert::exception(fn() => $actions->approve($id, 1), InvalidAction::class, 'actions.error.observe');
 	Assert::exception(fn() => $actions->message($conversationOf('2400000000000006'), 'Text', 1), InvalidAction::class, 'actions.error.observe');
+});
+
+
+test('a reply written outside the application takes the conversation over; own echoes do not', function () use ($receive, $customer, $echo, $conversations, $inbox, $conversationOf, $database, $meta): void {
+	$psid = '2400000000000007';
+	$receive($customer($psid, 'm_q7', 'Dotaz', ago: 10_000));
+	$conversation = $conversationOf($psid);
+
+	// The application's own messages: app ID, idempotency key as metadata, or the stored message ID.
+	$receive($echo($psid, 'm_own_app', 'Own 1', ago: 9000, message: ['app_id' => 1000000000000099]));
+	$key = (string) $database->query('SELECT idempotency_key FROM outbox ORDER BY id LIMIT 1')->fetchField();
+	$receive($echo($psid, 'm_own_metadata', 'Own 2', ago: 8000, message: ['metadata' => $key]));
+	$receive($echo($psid, 'm_sent_1', 'Own 3', ago: 7000));
+	Assert::false($conversations->isTakenOver($conversation));
+
+	// A person in Meta Business Suite (another app ID).
+	$receive($echo($psid, 'm_person', 'Odpovídá člověk', ago: 6000, message: ['app_id' => 263902037430900]));
+	Assert::true($conversations->isTakenOver($conversation));
+	Assert::null($inbox->find($conversation)?->assignee_name);
+	$audit = $database->query("SELECT operator_id, details FROM admin_audit WHERE action = 'conversation.takeover' AND target_id = ?", $conversation)->fetch();
+	Assert::same([null, 'reply outside the application'], [$audit?->operator_id, $audit?->details]);
+
+	// A repeated delivery of the same echo after a release changes nothing; a newer reply takes it over again.
+	$conversations->release($conversation, 1);
+	$receive($echo($psid, 'm_person', 'Odpovídá člověk', ago: 6000, message: ['app_id' => 263902037430900]));
+	$receive($echo($psid, 'm_person_old', 'Starší odpověď doručená pozdě', ago: 5000));
+	Assert::false($conversations->isTakenOver($conversation), 'A reply older than the release does not take it over.');
+	$receive($echo($psid, 'm_person_new', 'Nová odpověď', ago: -5000));
+	Assert::true($conversations->isTakenOver($conversation));
+	Assert::count(2, $meta->writes, 'Nothing was sent.');
 });

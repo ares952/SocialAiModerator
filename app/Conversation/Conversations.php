@@ -21,7 +21,8 @@ use Nette\Database\SqlLiteral;
  * A message unsent by the customer loses its text, also when the unsend arrives first.
  * The projection is idempotent. Runs inside the transaction of the event processing.
  * An operator takes a conversation over and releases it explicitly (FR-M05); while it is taken
- * over, no AI reply is drafted or sent.
+ * over, no AI reply is drafted or sent. A reply written by a person outside the application (an
+ * echo that is not the application's own, EchoGuard) takes the conversation over automatically.
  */
 final class Conversations
 {
@@ -44,6 +45,7 @@ final class Conversations
 		private readonly Explorer $database,
 		private readonly Encryptor $encryptor,
 		private readonly AuditLog $audit,
+		private readonly EchoGuard $echoes,
 	) {
 	}
 
@@ -131,7 +133,7 @@ final class Conversations
 	{
 		$this->database->transaction(function () use ($conversationId, $operatorId): void {
 			$this->database->query(
-				'UPDATE social_conversations SET human_takeover_at = NULL, assignee_id = NULL WHERE id = ?',
+				'UPDATE social_conversations SET human_takeover_at = NULL, assignee_id = NULL, released_at = NOW(3) WHERE id = ?',
 				$conversationId,
 			);
 			$this->audit->write($operatorId, AuditAction::ConversationRelease, self::TargetType, $conversationId);
@@ -161,7 +163,7 @@ final class Conversations
 		$text = $event->text === null ? null : $this->encryptor->encrypt($event->text, self::TextContext);
 		// Nette formats DateTime parameters without milliseconds.
 		$occurredAt = $event->occurredAt?->format('Y-m-d H:i:s.v');
-		match ($event->type) {
+		$inserted = match ($event->type) {
 			EventType::MessageReceived, EventType::MessageEcho => $this->database->query(
 				// A repeated delivery changes nothing; an unsent message never gets its text back.
 				'INSERT INTO social_messages ? ON DUPLICATE KEY UPDATE id = id',
@@ -172,7 +174,7 @@ final class Conversations
 					'text_encrypted' => $text,
 					'sent_at' => $occurredAt,
 				],
-			),
+			)->getRowCount() === 1,
 			EventType::MessageDeleted => $this->database->query(
 				'INSERT INTO social_messages ? ON DUPLICATE KEY UPDATE text_encrypted = NULL, deleted_at = VALUES(deleted_at)',
 				[
@@ -181,9 +183,12 @@ final class Conversations
 					'direction' => Direction::Incoming->value,
 					'deleted_at' => $occurredAt ?? new SqlLiteral('NOW(3)'),
 				],
-			),
+			)->getRowCount() === 1,
 			default => throw new \LogicException("{$event->type->value} is not a message event."),
 		};
+		if ($event->type === EventType::MessageEcho && $inserted && !$this->echoes->isOwn($event)) {
+			$this->takeoverByReply($conversationId, $occurredAt);
+		}
 
 		if ($event->type === EventType::MessageReceived && $occurredAt !== null) {
 			$this->database->query(
@@ -198,6 +203,27 @@ final class Conversations
 				$occurredAt,
 				$conversationId,
 			);
+		}
+	}
+
+
+	/**
+	 * A person answered outside the application: the conversation is taken over (without an
+	 * assignee) until an operator releases it. A reply older than the last release changes nothing.
+	 *
+	 * @param string|null $at Meta time of the reply; null = now
+	 */
+	private function takeoverByReply(int $conversationId, ?string $at): void
+	{
+		$taken = $this->database->query(
+			'UPDATE social_conversations SET human_takeover_at = COALESCE(?, NOW(3)), assignee_id = NULL
+			WHERE id = ? AND human_takeover_at IS NULL AND (released_at IS NULL OR COALESCE(?, NOW(3)) > released_at)',
+			$at,
+			$conversationId,
+			$at,
+		)->getRowCount() === 1;
+		if ($taken) {
+			$this->audit->write(null, AuditAction::ConversationTakeover, self::TargetType, $conversationId, 'reply outside the application');
 		}
 	}
 

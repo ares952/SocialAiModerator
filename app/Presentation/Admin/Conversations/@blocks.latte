@@ -9,7 +9,11 @@
 
 {define state, Nette\Database\Row $conversation}
 	{if $conversation->human_takeover_at !== null}
-		<span class="badge text-bg-info">{_'conversations.state.takeover', 1, [name => $conversation->assignee_name ?? '—']}</span>
+		{if $conversation->assignee_name === null}
+			<span class="badge text-bg-info">{_'conversations.state.takeover-outside'}</span>
+		{else}
+			<span class="badge text-bg-info">{_'conversations.state.takeover', 1, [name => $conversation->assignee_name]}</span>
+		{/if}
 	{else}
 		<span class="badge text-bg-light border">{_'conversations.state.ai'}</span>
 	{/if}

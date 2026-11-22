@@ -57,6 +57,14 @@ Obsah zpráv vidí jen moderátor a administrátor a každé zobrazení se zapis
   `conversation.takeover`, `conversation.release`). Během převzetí AI nepřipravuje návrhy
   a dříve připravené AI odpovědi se neodešlou (`human_takeover`); vlastní odpověď operátora
   odejít může.
+- **Automatické převzetí:** když účet zákazníkovi odpoví mimo aplikaci (Meta Business Suite,
+  aplikace Instagram), konverzace se převezme sama, bez přiřazeného operátora („převzato –
+  odpověď mimo aplikaci“, audit `conversation.takeover` bez operátora). AI pak neodpovídá,
+  dokud konverzaci někdo výslovně neuvolní. Vlastní zprávy aplikace se poznají podle `app_id`
+  v echu (Messenger, `META_APP_ID`), podle idempotenčního klíče, který aplikace posílá jako
+  `metadata` zprávy, nebo podle ID odeslané zprávy. Když se echo nepozná, konverzace se raději
+  převezme – AI se tím jen zastaví. Odpověď starší než poslední uvolnění konverzaci znovu
+  nepřevezme. **Ověřit** s reálným Graph klientem, že echo Instagramu nese `metadata`.
 - **Vlastní odpověď operátora** se píše v detailu konverzace, platí pro ni stejné kontroly
   (okno, panic switch, režim) a v režimu pozorování ji nelze odeslat.
 - **Jedna odpověď na zprávu:** když po zprávě zákazníka přišlo echo odpovědi účtu (např. odpověď

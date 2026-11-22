@@ -39,6 +39,10 @@ final readonly class NormalizedEvent
 		public ?string $parentId = null,
 		/** The customer of a message: the sender of a received message, the recipient of an echo. */
 		public ?string $customerId = null,
+		/** Meta app that sent an echoed message (Messenger), without a prefix. */
+		public ?string $appId = null,
+		/** Metadata the sender attached to an echoed message (the application's idempotency key). */
+		public ?string $metadata = null,
 	) {
 	}
 
