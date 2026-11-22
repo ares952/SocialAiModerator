@@ -27,6 +27,8 @@ test('defaults are the initial proposals of the specification', function (): voi
 	Assert::equal(Strictness::Balanced->abuseRules(), $settings->abuseRules);
 	Assert::same(Strictness::Balanced->spamHideMin(), $settings->hideMinSpamProbability);
 	Assert::null($settings->mixedHideMin);
+	Assert::same(1, $settings->maxRepeats);
+	Assert::same(24, $settings->repeatWindowHours);
 });
 
 
@@ -48,8 +50,13 @@ test('settings survive the JSON round trip', function (): void {
 	Assert::equal($settings, PolicySettings::fromArray($settings->toArray()));
 	Assert::equal(new PolicySettings, PolicySettings::fromArray([]));
 
-	$off = new PolicySettings(maxLinks: null);
+	$off = new PolicySettings(maxLinks: null, maxRepeats: null);
 	Assert::null(PolicySettings::fromArray($off->toArray())->maxLinks);
+	Assert::null(PolicySettings::fromArray($off->toArray())->maxRepeats);
+
+	$repeats = new PolicySettings(maxRepeats: 3, repeatWindowHours: 72);
+	Assert::equal($repeats, PolicySettings::fromArray($repeats->toArray()));
+	Assert::equal($repeats, $repeats->withStrictness(Strictness::Balanced, Strictness::Balanced->spamHideMin(), Strictness::Balanced->abuseRules(), null));
 
 	$strict = new PolicySettings(hideMinSpamProbability: 0.90, strictness: Strictness::Strict);
 	Assert::equal($strict, PolicySettings::fromArray($strict->toArray()));
@@ -127,4 +134,15 @@ test('the link limit is between 0 and 20 or off', function (): void {
 	Assert::exception(fn() => new PolicySettings(maxLinks: -1), InvalidPolicy::class, 'policy.error.max-links');
 	Assert::exception(fn() => new PolicySettings(maxLinks: 21), InvalidPolicy::class, 'policy.error.max-links');
 	Assert::exception(fn() => PolicySettings::fromArray(['max_links' => '3']), InvalidPolicy::class, 'policy.error.max-links');
+});
+
+
+test('the repeat limit is between 0 and 20 or off, the window between 1 and 168 hours', function (): void {
+	Assert::same(0, (new PolicySettings(maxRepeats: 0))->maxRepeats);
+	Assert::exception(fn() => new PolicySettings(maxRepeats: 21), InvalidPolicy::class, 'policy.error.max-repeats');
+	Assert::exception(fn() => PolicySettings::fromArray(['max_repeats' => '2']), InvalidPolicy::class, 'policy.error.max-repeats');
+	Assert::same(168, (new PolicySettings(repeatWindowHours: 168))->repeatWindowHours);
+	Assert::exception(fn() => new PolicySettings(repeatWindowHours: 0), InvalidPolicy::class, 'policy.error.repeat-window');
+	Assert::exception(fn() => new PolicySettings(repeatWindowHours: 169), InvalidPolicy::class, 'policy.error.repeat-window');
+	Assert::exception(fn() => PolicySettings::fromArray(['repeat_window_hours' => null]), InvalidPolicy::class, 'policy.error.repeat-window');
 });

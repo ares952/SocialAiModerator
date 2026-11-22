@@ -107,9 +107,9 @@ test('an event without anything to moderate is ignored, an unsupported one goes 
 });
 
 
-test('events:normalize fills events without a type and keeps their status', function () use ($database, $encryptor): void {
+test('events:normalize fills events without a type and keeps their status', function () use ($database, $encryptor, $queue): void {
 	$database->query("UPDATE social_events SET event_type = NULL, external_id = NULL, occurred_at = NULL, status = 'review'");
-	$command = new CommandTester(new EventsNormalizeCommand($database, $encryptor, new EventNormalizer));
+	$command = new CommandTester(new EventsNormalizeCommand($database, $encryptor, new EventNormalizer, TestServices::eventProcessor($database, $encryptor, $queue)));
 
 	Assert::same(0, $command->execute([]));
 	Assert::same("comment.created: 1\n1 events normalized\n", $command->getDisplay());

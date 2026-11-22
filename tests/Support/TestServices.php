@@ -7,6 +7,8 @@ namespace Tests\Support;
 use App\Ai\Classifier;
 use App\Ai\OpenAiClient;
 use App\Audit\AuditLog;
+use App\Comment\Comments;
+use App\Conversation\Conversations;
 use App\Core\Encryptor;
 use App\Evaluation\EvaluationRunner;
 use App\Evaluation\EvaluationSamples;
@@ -70,7 +72,14 @@ final class TestServices
 
 	public static function eventProcessor(Explorer $database, Encryptor $encryptor, JobQueue $queue): EventProcessor
 	{
-		return new EventProcessor($database, $encryptor, new EventNormalizer, $queue);
+		return new EventProcessor(
+			$database,
+			$encryptor,
+			new EventNormalizer,
+			$queue,
+			new Comments($database, $encryptor),
+			new Conversations($database, $encryptor),
+		);
 	}
 
 
@@ -85,6 +94,8 @@ final class TestServices
 			new AutomationSwitch($database, new AuditLog($database)),
 			new Decisions($database, $encryptor),
 			$queue,
+			new Comments($database, $encryptor),
+			new Conversations($database, $encryptor),
 		);
 	}
 }

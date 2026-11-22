@@ -16,6 +16,8 @@ final readonly class PolicySettings
 	public array $abuseRules;
 
 	public const MaxLinksLimit = 20;
+	public const MaxRepeatsLimit = 20;
+	public const RepeatWindowLimit = 168;
 
 	/** Lower-case host name with at least two labels, e.g. spam.example or xn--80ak6aa92e.com. */
 	private const DomainPattern = '~^(?:[\p{Ll}\p{N}](?:[\p{Ll}\p{N}-]*[\p{Ll}\p{N}])?\.)+(?:\p{Ll}{2,}|xn--[a-z0-9-]+)$~u';
@@ -26,6 +28,9 @@ final readonly class PolicySettings
 	 * @param list<string> $blockedDomains lower-case spam domains; a link to them or their subdomains
 	 *        is never kept or answered
 	 * @param ?int $maxLinks more links than this are never kept or answered; null turns the rule off
+	 * @param ?int $maxRepeats more earlier identical texts of the same author within the repeat
+	 *        window are never kept or answered; null turns the rule off
+	 * @param int $repeatWindowHours how far back the repeated-text rule looks
 	 * @param ?array<string, AbuseRule> $abuseRules rules per kind of inappropriate content; null takes
 	 *        the preset of $strictness
 	 * @param ?float $mixedHideMin abuse score from which a text with a factual point is hidden; only
@@ -48,6 +53,8 @@ final readonly class PolicySettings
 		public Strictness $strictness = Strictness::Balanced,
 		?array $abuseRules = null,
 		public ?float $mixedHideMin = null,
+		public ?int $maxRepeats = 1,
+		public int $repeatWindowHours = 24,
 	) {
 		$thresholds = [
 			$hideMinConfidence,
@@ -74,6 +81,12 @@ final readonly class PolicySettings
 		}
 		if ($maxLinks !== null && ($maxLinks < 0 || $maxLinks > self::MaxLinksLimit)) {
 			throw new InvalidPolicy('policy.error.max-links');
+		}
+		if ($maxRepeats !== null && ($maxRepeats < 0 || $maxRepeats > self::MaxRepeatsLimit)) {
+			throw new InvalidPolicy('policy.error.max-repeats');
+		}
+		if ($repeatWindowHours < 1 || $repeatWindowHours > self::RepeatWindowLimit) {
+			throw new InvalidPolicy('policy.error.repeat-window');
 		}
 
 		$abuseRules ??= $strictness === Strictness::Custom
@@ -118,6 +131,8 @@ final readonly class PolicySettings
 			strictness: $strictness,
 			abuseRules: $abuseRules,
 			mixedHideMin: $mixedHideMin,
+			maxRepeats: $this->maxRepeats,
+			repeatWindowHours: $this->repeatWindowHours,
 		);
 	}
 
@@ -161,10 +176,14 @@ final readonly class PolicySettings
 			otherLanguage: Action::tryFrom(is_string($data['other_language'] ?? null) ? $data['other_language'] : '')
 				?? $defaults->otherLanguage,
 			blockedDomains: $strings('blocked_domains'),
-			maxLinks: array_key_exists('max_links', $data) ? self::maxLinks($data['max_links']) : $defaults->maxLinks,
+			maxLinks: array_key_exists('max_links', $data) ? self::count($data['max_links'], 'policy.error.max-links') : $defaults->maxLinks,
 			strictness: $strictness,
 			abuseRules: isset($data['abuse_rules']) ? self::abuseRules($data['abuse_rules']) : null,
 			mixedHideMin: self::threshold($data['mixed_hide_min'] ?? null),
+			maxRepeats: array_key_exists('max_repeats', $data) ? self::count($data['max_repeats'], 'policy.error.max-repeats') : $defaults->maxRepeats,
+			repeatWindowHours: array_key_exists('repeat_window_hours', $data)
+				? self::count($data['repeat_window_hours'], 'policy.error.repeat-window') ?? throw new InvalidPolicy('policy.error.repeat-window')
+				: $defaults->repeatWindowHours,
 		);
 	}
 
@@ -210,11 +229,11 @@ final readonly class PolicySettings
 	/**
 	 * @throws InvalidPolicy
 	 */
-	private static function maxLinks(mixed $value): ?int
+	private static function count(mixed $value, string $error): ?int
 	{
 		return $value === null || is_int($value)
 			? $value
-			: throw new InvalidPolicy('policy.error.max-links');
+			: throw new InvalidPolicy($error);
 	}
 
 
@@ -239,6 +258,8 @@ final readonly class PolicySettings
 				'review_min' => $rule->reviewMin,
 			], $this->abuseRules),
 			'mixed_hide_min' => $this->mixedHideMin,
+			'max_repeats' => $this->maxRepeats,
+			'repeat_window_hours' => $this->repeatWindowHours,
 		];
 	}
 }

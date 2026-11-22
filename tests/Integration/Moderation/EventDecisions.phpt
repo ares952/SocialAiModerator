@@ -201,6 +201,50 @@ test('messages are decided, echoes, reactions and texts without content are not'
 });
 
 
+test('a text repeated by the same author goes to review instead of being kept', function () use ($receive, $comment, $decider, $decisions, $client): void {
+	$praise = FakeOpenAiClient::classification([
+		'category' => 'praise',
+		'sentiment' => 'positive',
+		'recommended_action' => 'keep',
+	]);
+	$results = [];
+	foreach (['r1', 'r2', 'r3'] as $commentId) {
+		// The repeat window counts from the Meta time of the comment.
+		$item = $comment($commentId, 'Synthetic  praise, LOVE it');
+		$item['value']['created_time'] = time();
+		$id = $receive('changes', $item);
+		$client->queue($praise);
+		$decider->decide($id, lastAttempt: false);
+		$decision = $decisions->forEvent($id)[0];
+		$results[] = [$decision->action, Json::decode($decision->result_json, forceArrays: true)['reasons']];
+	}
+
+	Assert::same([
+		['keep', []],
+		['keep', []],
+		['review', ['repeated_text']],
+	], $results, 'The default policy allows one earlier identical text.');
+});
+
+
+test('own comments of the Page are ignored and never decided', function () use ($receive, $decideJobs, $database): void {
+	$id = $receive('changes', [
+		'field' => 'feed',
+		'value' => [
+			'item' => 'comment',
+			'verb' => 'add',
+			'comment_id' => 'own1',
+			'created_time' => 1763640000,
+			'message' => 'Synthetic reply of the Page',
+			'from' => ['id' => '1000000000000001', 'name' => 'Test Page'],
+		],
+	]);
+	Assert::same(0, $decideJobs($id));
+	Assert::same('ignored', $database->query('SELECT status FROM social_events WHERE id = ?', $id)->fetchField());
+	Assert::same(1, $database->query("SELECT own FROM social_comments WHERE external_id = 'fb:own1'")->fetchField());
+});
+
+
 test('events of an inactive account are never decided', function () use ($receive, $comment, $decider, $database): void {
 	$database->query("UPDATE social_accounts SET status = 'disabled'");
 	$id = $receive('changes', $comment('c7', 'Synthetic text'));

@@ -1665,6 +1665,33 @@
   }
  },
  {
+  "key": "policy.form.maxRepeats",
+  "lang": "cs",
+  "translations": {
+   "1": "Maximální počet opakování textu",
+   "2": "Maximální počet opakování textu",
+   "5": "Maximální počet opakování textu"
+  }
+ },
+ {
+  "key": "policy.form.maxRepeats-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Když stejný autor pošle stejný text vícekrát, než je tento počet předchozích výskytů, jde obsah ke kontrole člověkem místo ponechání nebo odpovědi. Prázdné pole pravidlo vypne.",
+   "2": "Když stejný autor pošle stejný text vícekrát, než je tento počet předchozích výskytů, jde obsah ke kontrole člověkem místo ponechání nebo odpovědi. Prázdné pole pravidlo vypne.",
+   "5": "Když stejný autor pošle stejný text vícekrát, než je tento počet předchozích výskytů, jde obsah ke kontrole člověkem místo ponechání nebo odpovědi. Prázdné pole pravidlo vypne."
+  }
+ },
+ {
+  "key": "policy.form.repeatWindowHours",
+  "lang": "cs",
+  "translations": {
+   "1": "Okno pro opakování (hodiny)",
+   "2": "Okno pro opakování (hodiny)",
+   "5": "Okno pro opakování (hodiny)"
+  }
+ },
+ {
   "key": "policy.form.save",
   "lang": "cs",
   "translations": {
@@ -4398,6 +4425,33 @@
    "1": "chybí publikovaná znalost",
    "2": "chybí publikovaná znalost",
    "5": "chybí publikovaná znalost"
+  }
+ },
+ {
+  "key": "policy.error.max-repeats",
+  "lang": "cs",
+  "translations": {
+   "1": "Maximální počet opakování musí být mezi 0 a 20.",
+   "2": "Maximální počet opakování musí být mezi 0 a 20.",
+   "5": "Maximální počet opakování musí být mezi 0 a 20."
+  }
+ },
+ {
+  "key": "policy.error.repeat-window",
+  "lang": "cs",
+  "translations": {
+   "1": "Okno pro opakování musí být mezi 1 a 168 hodinami.",
+   "2": "Okno pro opakování musí být mezi 1 a 168 hodinami.",
+   "5": "Okno pro opakování musí být mezi 1 a 168 hodinami."
+  }
+ },
+ {
+  "key": "decision.reason.repeated_text",
+  "lang": "cs",
+  "translations": {
+   "1": "opakovaný text od stejného autora",
+   "2": "opakovaný text od stejného autora",
+   "5": "opakovaný text od stejného autora"
   }
  }
 ]

@@ -13,4 +13,7 @@ enum RuleHit: string
 {
 	case BlockedDomain = 'blocked_domain';
 	case TooManyLinks = 'too_many_links';
+
+	/** The same author sent the same text repeatedly within the repeat window. */
+	case RepeatedText = 'repeated_text';
 }

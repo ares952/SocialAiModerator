@@ -17,6 +17,8 @@ final readonly class CustomerContent
 		public Platform $platform,
 		public ContentKind $kind,
 		public string $text,
+		/** Earlier identical texts of the same author within the repeat window of the policy. */
+		public int $repeats = 0,
 	) {
 	}
 }

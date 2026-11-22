@@ -15,6 +15,20 @@ Formát sekce:
 - **Ověření:** jak potvrdit, že je hotovo
 ```
 
+## 0.9.0
+
+- **Týká se:** všech instancí
+- **Kdy:** po kroku 10 (migrace)
+- **Akce:**
+  - `docker compose exec -T php bin/console events:normalize --all`: promítne už přijaté
+    komentáře a zprávy aktivních účtů do nových tabulek komentářů a konverzací (nemění stav
+    událostí, nespouští AI ani žádnou akci; opakovaný běh dá stejný výsledek);
+  - pravidlo opakovaného textu platí i pro dosavadní verze pravidel: od třetího stejného textu
+    téhož autora během 24 hodin jde komentář nebo zpráva ke kontrole místo ponechání nebo
+    odpovědi. Jiný limit nebo vypnutí se nastaví v administraci (Pravidla moderace).
+- **Ověření:** výpis příkazu končí `N events normalized`;
+  `encryption:rotate --dry-run` hlásí i u `social_comments` a `social_messages` `0 failed`.
+
 ## 0.8.0
 
 - **Týká se:** všech instancí

@@ -105,6 +105,16 @@ final class PolicyPresenter extends AdminPresenter
 			->setDefaultValue($settings->maxLinks)
 			->addCondition(Form::Filled)
 				->addRule(Form::Range, 'policy.error.max-links', [0, PolicySettings::MaxLinksLimit]);
+		$form->addInteger('maxRepeats', 'policy.form.maxRepeats')
+			->setNullable()
+			->setOption('description', 'policy.form.maxRepeats-note')
+			->setDefaultValue($settings->maxRepeats)
+			->addCondition(Form::Filled)
+				->addRule(Form::Range, 'policy.error.max-repeats', [0, PolicySettings::MaxRepeatsLimit]);
+		$form->addInteger('repeatWindowHours', 'policy.form.repeatWindowHours')
+			->setRequired('form.error.required')
+			->addRule(Form::Range, 'policy.error.repeat-window', [1, PolicySettings::RepeatWindowLimit])
+			->setDefaultValue($settings->repeatWindowHours);
 		$form->addSubmit('send', 'policy.form.save');
 
 		$form->onSuccess[] = function (Form $form) use ($settings): void {
@@ -125,6 +135,8 @@ final class PolicyPresenter extends AdminPresenter
 					strictness: $settings->strictness,
 					abuseRules: $settings->abuseRules,
 					mixedHideMin: $settings->mixedHideMin,
+					maxRepeats: is_int($values['maxRepeats']) ? $values['maxRepeats'] : null,
+					repeatWindowHours: (int) $values['repeatWindowHours'],
 				);
 			} catch (InvalidPolicy $e) {
 				$form->addError($e->getMessage());

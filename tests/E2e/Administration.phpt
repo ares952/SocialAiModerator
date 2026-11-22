@@ -64,6 +64,8 @@ test('policy: switches, validation, new version and the panic switch', function 
 		'otherLanguage' => 'handoff',
 		'blockedDomains' => "Spam.example\nwin.example, spam.example",
 		'maxLinks' => '3',
+		'maxRepeats' => '2',
+		'repeatWindowHours' => '48',
 		'send' => '1',
 	];
 	$invalid = $browser->submit('/admin/policy', 'policyForm', ['hideMinConfidence' => '0.2'] + $fields);
@@ -74,11 +76,16 @@ test('policy: switches, validation, new version and the panic switch', function 
 	Assert::same(200, $domain->status);
 	Assert::contains('Neplatná doména. Zadejte jen názvy domén (např. spam.example), každou na samostatný řádek.', $domain->messages());
 
+	$window = $browser->submit('/admin/policy', 'policyForm', ['repeatWindowHours' => '200'] + $fields);
+	Assert::same(200, $window->status);
+	Assert::contains('Okno pro opakování musí být mezi 1 a 168 hodinami.', $window->messages());
+
 	$saved = $browser->submit('/admin/policy', 'policyForm', $fields);
 	Assert::same(303, $saved->status);
 	$page = $browser->get($saved->location() ?? '');
 	Assert::contains('Uložena verze 1 pravidel.', $page->messages());
 	Assert::contains("spam.example\nwin.example</textarea>", $page->body);
+	Assert::match('%A%name="repeatWindowHours"%A%value="48"%A%', $page->body);
 
 	Assert::contains('Vyvážená', $page->body);
 	Assert::contains('„Počkej, až tě potkám na ulici.“', $page->body, 'Each level shows its criteria and examples.');

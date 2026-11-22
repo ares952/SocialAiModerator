@@ -19,8 +19,9 @@ namespace App\Moderation;
  * - inappropriate content (abuse_type) follows the rules of the strictness level: hide, review or
  *   keep; a text with a factual point (criticism, question) is hidden only by the custom level's
  *   mixed threshold, otherwise it goes at most to review (docs/moderation-strictness.md);
- * - a content rule hit (blocked domain, too many links) turns keep and reply into review, so a text
- *   that talks the model into "praise" or "faq" still reaches a human; it never hides on its own;
+ * - a content rule hit (blocked domain, too many links, repeated text) turns keep and reply into
+ *   review, so a text that talks the model into "praise" or "faq" still reaches a human; it never
+ *   hides on its own;
  * - unknown => review;
  * - FAQ is answered only in a supported language, with published knowledge and above the reply
  *   threshold;
@@ -202,7 +203,7 @@ final class PolicyEngine
 	 */
 	private function rules(CustomerContent $content, Action $action, PolicySettings $settings, array &$reasons): Action
 	{
-		$hits = ContentRules::hits($content->text, $settings);
+		$hits = ContentRules::hits($content, $settings);
 		foreach ($hits as $hit) {
 			$reasons[] = $hit->value;
 		}

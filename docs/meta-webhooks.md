@@ -59,7 +59,8 @@ Mety. Tato metadata jsou ve sloupcích `social_events`; text zůstává jen v za
 | Typ | Zdroj | Stav po zpracování |
 | --- | --- | --- |
 | `comment.created`, `comment.edited`, `comment.removed`, `comment.hidden`, `comment.unhidden` | FB `feed` (`item: comment`, `verb` `add`/`edited`/`remove`/`hide`/`unhide`), IG `comments` (jen nové komentáře) | `review` |
-| `message.received`, `message.echo`, `message.deleted` | `messaging` (`message`, `is_echo`, `is_deleted`) | `review` |
+| `message.received`, `message.deleted` | `messaging` (`message`, `is_deleted`) | `review` |
+| `message.echo` | `messaging` (`message` s `is_echo`) | `ignored` |
 | `postback` | `messaging` (`postback`) | `review` |
 | `other` | reakce, potvrzení přečtení a doručení, vlastní příspěvky Page | `ignored` |
 | `unsupported` | cokoli jiného, např. příspěvek návštěvníka, `standby`, neznámé pole | `review`, důvod v `last_error` |
@@ -68,6 +69,17 @@ Mety. Tato metadata jsou ve sloupcích `social_events`; text zůstává jen v za
   položky `entry`), `messaging` v milisekundách. Chybějící nebo nečitelný čas zůstane prázdný.
 - Testovací tlačítko v App Dashboardu posílá Messenger pole jako `changes` s časem v sekundách
   a ukázkovými hodnotami Mety; normalizér je rozpozná, uloží se ale jako `ignored` (neznámý účet).
+- Vlastní komentář účtu (autor = ID Page nebo IG účtu, např. odpověď Page) a echo vlastní
+  zprávy skončí jako `ignored`, nikdy nedostanou rozhodnutí AI a nemohou spustit odpověď.
+- Komentáře a zprávy se zároveň promítnou do aktuálního stavu (tabulky `social_posts`,
+  `social_comments`, `social_conversations`, `social_messages`; texty šifrovaně). Události
+  mohou přijít opakovaně a v jiném pořadí: každá změna nese čas podle Mety (u komentáře bez času
+  čas přijetí) a starší změna nepřepíše novější. Smazaný komentář zůstane smazaný a přijde
+  o text; zrušená zpráva přijde o text, i když zrušení dorazí dřív než zpráva.
+- Konverzace patří jednomu účtu a jednomu zákazníkovi (odesílatel příchozí zprávy, příjemce
+  echa). Komunikační okno (`window_expires_at`) je 24 hodin od nejnovější zprávy zákazníka
+  s časem ověřeným Metou; echo ani zpráva bez času okno neposunou. Okno se znovu ověří
+  v okamžiku odeslání, až budou existovat odchozí akce.
 - Komentář (`comment.created`, `comment.edited`) nebo příchozí zpráva s textem dostane úlohu
   `event.decide`: klasifikace přes OpenAI (text s redigovanými e-maily, telefony a odkazy, bez
   autora) a rozhodnutí `PolicyEngine` s aktivními pravidly, panic switchem a stavem účtu. Výsledek
@@ -77,8 +89,9 @@ Mety. Tato metadata jsou ve sloupcích `social_events`; text zůstává jen v za
 - Detail události (`/admin/events/detail/<id>`) ukazuje text a autora jen moderátorovi
   a administrátorovi; každé zobrazení se zapíše do auditu (`event.content.view`).
 - Starší události bez typu (nebo po změně normalizéru všechny s `--all`) doplní
-  `docker compose exec php bin/console events:normalize`. Příkaz mění jen metadata, nikdy stav
-  ani nespouští zpracování.
+  `docker compose exec php bin/console events:normalize`. Zpracované události aktivních účtů
+  přitom znovu promítne do komentářů a konverzací (opakovaný běh dá stejný výsledek). Příkaz
+  nikdy nemění stav události, nespouští rozhodnutí AI ani žádnou akci.
 
 ## 2. Konfigurace instance
 
@@ -218,7 +231,8 @@ dvakrát.
 
 ## 5. Šifrovací klíč a jeho rotace
 
-- `APP_ENCRYPTION_KEY` šifruje tokeny, payloady událostí a evaluační vzorky (XChaCha20-Poly1305,
+- `APP_ENCRYPTION_KEY` šifruje tokeny, payloady událostí, texty komentářů a zpráv, důvody
+  rozhodnutí AI a evaluační vzorky (XChaCha20-Poly1305,
   libsodium). Klíč je jen v `config/secrets/app.env`, nikdy v databázi ani v zálohách DB.
 - Každá zašifrovaná hodnota nese ID klíče (otisk, ne klíč). `encryption:rotate` vypíše ID
   aktuálního klíče.

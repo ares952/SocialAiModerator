@@ -29,6 +29,16 @@ final readonly class NormalizedEvent
 		public ?string $author = null,
 		/** Facebook or Instagram link of the post the comment belongs to. */
 		public ?string $permalink = null,
+		/** Comment author with the platform prefix. */
+		public ?string $authorId = null,
+		/** The comment is written by the account itself (e.g. a reply of the Page). */
+		public bool $own = false,
+		/** Post or media the comment belongs to, with the platform prefix. */
+		public ?string $postId = null,
+		/** Comment this one replies to, with the platform prefix; null for a top-level comment. */
+		public ?string $parentId = null,
+		/** The customer of a message: the sender of a received message, the recipient of an echo. */
+		public ?string $customerId = null,
 	) {
 	}
 

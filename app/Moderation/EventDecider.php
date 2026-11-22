@@ -8,8 +8,11 @@ use App\Account\AccountStatus;
 use App\Ai\Classifier;
 use App\Ai\InvalidModelOutput;
 use App\Ai\OpenAiFailure;
+use App\Comment\Comments;
+use App\Conversation\Conversations;
 use App\Ingest\EventStatus;
 use App\Ingest\EventStore;
+use App\Meta\NormalizedEvent;
 use App\Meta\Platform;
 use App\Queue\JobQueue;
 use App\Queue\JobType;
@@ -21,6 +24,7 @@ use Nette\Database\Explorer;
  * let the PolicyEngine decide with the active policy, the panic switch and the account state,
  * and store the decision. Nothing is executed here; in `observe` mode the decision is advice for
  * the moderator. A failed classification is stored as a fail-closed review with the error.
+ * The repeated-text rule counts earlier identical texts of the same comment author or customer.
  * An event that already has a classified decision is skipped, so a repeated job does not call
  * the model again; after a failure the decision can be requested again (request()).
  */
@@ -35,6 +39,8 @@ final class EventDecider
 		private readonly AutomationSwitch $switch,
 		private readonly Decisions $decisions,
 		private readonly JobQueue $queue,
+		private readonly Comments $comments,
+		private readonly Conversations $conversations,
 	) {
 	}
 
@@ -85,7 +91,13 @@ final class EventDecider
 			return;
 		}
 
-		$content = new CustomerContent(Platform::from($event->platform), $kind, $normalized->text);
+		$policy = $this->policies->active();
+		$content = new CustomerContent(
+			Platform::from($event->platform),
+			$kind,
+			$normalized->text,
+			$this->repeats((int) $event->account_id, $normalized, $kind, $policy->settings->repeatWindowHours),
+		);
 		$classified = null;
 		$error = null;
 		try {
@@ -103,7 +115,7 @@ final class EventDecider
 			$classified?->classification,
 			$content,
 			$classified !== null && $classified->moderationFlagged,
-			$this->policies->active(),
+			$policy,
 			new AutomationContext(
 				paused: $this->switch->isPaused($event->account_id),
 				accountActive: $event->account_status === AccountStatus::Active->value,
@@ -117,5 +129,20 @@ final class EventDecider
 			Classifier::PromptVersion,
 			$error,
 		);
+	}
+
+
+	private function repeats(int $accountId, NormalizedEvent $event, ContentKind $kind, int $hours): int
+	{
+		$personId = $kind === ContentKind::Comment ? $event->authorId : $event->customerId;
+		if ($personId === null || $event->externalId === null || $event->text === null) {
+			return 0;
+		}
+
+		$earlier = $kind === ContentKind::Comment
+			? $this->comments->recentTexts($accountId, $personId, $event->externalId, $hours)
+			: $this->conversations->recentTexts($accountId, $personId, $event->externalId, $hours);
+
+		return ContentRules::repeats($event->text, $earlier);
 	}
 }

@@ -13,7 +13,9 @@ use Nette\Database\Explorer;
 /**
  * Retention periods editable by an admin, and the purge that applies them: events older than
  * the period of their kind are deleted with their AI decisions and worker jobs, the audit log
- * likewise. Data without a period is kept. Deletion runs in small batches, so it never blocks
+ * likewise. The projected state follows the same period: comments not changed within it (and
+ * posts left without comments), messages older than it (and conversations left without
+ * messages). Data without a period is kept. Deletion runs in small batches, so it never blocks
  * the ingest for long.
  */
 final class Retention
@@ -89,7 +91,8 @@ final class Retention
 	/**
 	 * Deletes everything older than its period.
 	 *
-	 * @return array<string, int> RetentionData value => deleted rows (only kinds with a period)
+	 * @return array<string, int> RetentionData value => deleted events or audit rows (only kinds
+	 *         with a period); the projected comments and messages are deleted along
 	 */
 	public function purge(): array
 	{
@@ -99,9 +102,15 @@ final class Retention
 				continue;
 			}
 
-			$deleted[$data] = $data === RetentionData::Audit->value
-				? $this->purgeAudit($days)
-				: $this->purgeEvents(RetentionData::from($data), $days);
+			$data = RetentionData::from($data);
+			$deleted[$data->value] = $data === RetentionData::Audit
+				? $this->purgeRows('DELETE FROM admin_audit WHERE created_at < NOW() - INTERVAL ? DAY ORDER BY id LIMIT ?', $days)
+				: $this->purgeEvents($data, $days);
+			match ($data) {
+				RetentionData::Comments => $this->purgeComments($days),
+				RetentionData::Messages => $this->purgeMessages($days),
+				default => null,
+			};
 		}
 
 		return $deleted;
@@ -149,15 +158,42 @@ final class Retention
 	}
 
 
-	private function purgeAudit(int $days): int
+	private function purgeComments(int $days): void
+	{
+		$this->purgeRows('DELETE FROM social_comments WHERE updated_at < NOW() - INTERVAL ? DAY ORDER BY id LIMIT ?', $days);
+		$this->purgeRows(
+			'DELETE FROM social_posts
+			WHERE created_at < NOW() - INTERVAL ? DAY
+				AND NOT EXISTS (SELECT 1 FROM social_comments c WHERE c.post_id = social_posts.id)
+			ORDER BY id LIMIT ?',
+			$days,
+		);
+	}
+
+
+	private function purgeMessages(int $days): void
+	{
+		$this->purgeRows('DELETE FROM social_messages WHERE created_at < NOW() - INTERVAL ? DAY ORDER BY id LIMIT ?', $days);
+		$this->purgeRows(
+			'DELETE FROM social_conversations
+			WHERE created_at < NOW() - INTERVAL ? DAY
+				AND NOT EXISTS (SELECT 1 FROM social_messages m WHERE m.conversation_id = social_conversations.id)
+			ORDER BY id LIMIT ?',
+			$days,
+		);
+	}
+
+
+	/**
+	 * Runs a DELETE with the parameters (days, batch size) until a batch is not full.
+	 *
+	 * @param literal-string $sql
+	 */
+	private function purgeRows(string $sql, int $days): int
 	{
 		$deleted = 0;
 		do {
-			$count = $this->database->query(
-				'DELETE FROM admin_audit WHERE created_at < NOW() - INTERVAL ? DAY ORDER BY id LIMIT ?',
-				$days,
-				self::BatchSize,
-			)->getRowCount() ?? 0;
+			$count = $this->database->query($sql, $days, self::BatchSize)->getRowCount() ?? 0;
 			$deleted += $count;
 		} while ($count === self::BatchSize);
 

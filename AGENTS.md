@@ -65,6 +65,7 @@ The repository root is also the Docker Compose project directory. It follows the
 │   │   └── schemas/                strict JSON Schemas for model outputs
 │   ├── Moderation/                 PolicyEngine, policies (versioned), rule checks, decisions
 │   ├── Knowledge/                  knowledge sources, versions, validity, publishing
+│   ├── Comment/                    posts and comments projected from events, visibility
 │   ├── Conversation/               conversations, reply window, takeover/release, echo guard
 │   ├── Outbox/                     ActionDispatcher (the ONLY Meta writer), idempotency, states
 │   ├── Audit/                      admin_audit writer

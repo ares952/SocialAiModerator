@@ -7,11 +7,11 @@ namespace App\Moderation;
 
 /**
  * Deterministic checks of the customer text that do not depend on the AI (specification §5.1,
- * step 2): links to blocked domains and too many links. Links are only parsed, never fetched.
+ * step 2): links to blocked domains, too many links and a text repeated by the same author.
+ * Links are only parsed, never fetched. The account's own comments and message echoes never
+ * reach the rules; the event processing ignores them.
  *
  * A link is an address with `http(s)://` or `www.`, or a bare host name such as `spam.example`.
- * Repeated messages and own echo need the author and the conversation of an event and follow with
- * the conversations (Milestone 4).
  */
 final class ContentRules
 {
@@ -22,9 +22,9 @@ final class ContentRules
 	/**
 	 * @return list<RuleHit>
 	 */
-	public static function hits(#[\SensitiveParameter] string $text, PolicySettings $settings): array
+	public static function hits(CustomerContent $content, PolicySettings $settings): array
 	{
-		$hosts = self::hosts($text);
+		$hosts = self::hosts($content->text);
 		$hits = [];
 		if (array_any($hosts, fn(string $host): bool => self::isBlocked($host, $settings->blockedDomains))) {
 			$hits[] = RuleHit::BlockedDomain;
@@ -32,8 +32,30 @@ final class ContentRules
 		if ($settings->maxLinks !== null && count($hosts) > $settings->maxLinks) {
 			$hits[] = RuleHit::TooManyLinks;
 		}
+		if ($settings->maxRepeats !== null && $content->repeats > $settings->maxRepeats) {
+			$hits[] = RuleHit::RepeatedText;
+		}
 
 		return $hits;
+	}
+
+
+	/**
+	 * How many of the earlier texts are the same as the text, ignoring case and whitespace.
+	 *
+	 * @param list<string> $earlier
+	 */
+	public static function repeats(#[\SensitiveParameter] string $text, #[\SensitiveParameter] array $earlier): int
+	{
+		$normalized = self::normalize($text);
+
+		return count(array_filter($earlier, fn(string $other): bool => self::normalize($other) === $normalized));
+	}
+
+
+	private static function normalize(#[\SensitiveParameter] string $text): string
+	{
+		return mb_strtolower(trim((string) preg_replace('~\s+~u', ' ', $text)));
 	}
 
 

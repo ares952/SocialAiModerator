@@ -254,3 +254,49 @@ test('customer text, author and post link are read but never part of the columns
 	]));
 	Assert::same([null, null], [$event->text, $event->permalink], 'Blank text and foreign links are dropped.');
 });
+
+
+test('comments carry their author, post, parent and whether the account wrote them', function () use ($fixture, $single, $feed): void {
+	$shape = static fn (NormalizedEvent $event): array => [$event->authorId, $event->postId, $event->parentId, $event->own];
+
+	Assert::same(['fb:2100000000000001', 'fb:1000000000000001_2200000000000001', null, false], $shape($fixture('page-comment')), 'A top-level comment has no parent.');
+	Assert::same(
+		['fb:2100000000000001', 'fb:1000000000000001_2200000000000001', 'fb:2200000000000001_2300000000000001', false],
+		$shape($fixture('page-comment-reply')),
+	);
+	Assert::same(['ig:1780000000000001', 'ig:1790000000000001', null, false], $shape($fixture('instagram-comment')));
+	Assert::same(['ig:1780000000000002', 'ig:1790000000000001', 'ig:1800000000000001', false], $shape($fixture('instagram-comment-reply')));
+
+	$own = $single($feed([
+		'item' => 'comment',
+		'verb' => 'add',
+		'comment_id' => '1_2',
+		'message' => 'Synthetic reply of the Page',
+		'from' => ['id' => '1000000000000001', 'name' => 'Test Page'],
+	]));
+	Assert::true($own->own);
+
+	$ownInstagram = WebhookBatch::parse(Json::encode([
+		'object' => 'instagram',
+		'entry' => [
+			[
+				'id' => '1700000000000001',
+				'time' => 1763640000,
+				'changes' => [
+					['field' => 'comments', 'value' => ['id' => '18', 'text' => 'Synthetic reply', 'from' => ['id' => '1700000000000001', 'username' => 'account']]],
+				],
+			],
+		],
+	]))->events[0];
+	Assert::true((new EventNormalizer)->normalize($ownInstagram->payload)->own);
+});
+
+
+test('a message belongs to its customer: the sender, or the recipient of an echo', function () use ($fixture): void {
+	Assert::same('ig:5100000000000001', $fixture('instagram-message')->customerId);
+	Assert::same('ig:5100000000000001', $fixture('instagram-message-echo')->customerId);
+	Assert::same('ig:5100000000000001', $fixture('instagram-message-deleted')->customerId);
+	Assert::same('fb:6100000000000001', $fixture('page-message-echo')->customerId);
+	Assert::same('fb:12334', $fixture('page-message-dashboard-test')->customerId);
+	Assert::null($fixture('page-comment')->customerId);
+});

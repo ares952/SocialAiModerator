@@ -11,8 +11,9 @@ enum EventStatus: string
 	case Received = 'received';
 
 	/**
-	 * Account not connected or not active (never processed), or an event without anything to
-	 * moderate (App\Meta\EventType::Other); kept for audit.
+	 * Account not connected or not active (never processed), an event without anything to
+	 * moderate (App\Meta\EventType::Other), or the account's own comment or message echo;
+	 * kept for audit.
 	 */
 	case Ignored = 'ignored';
 

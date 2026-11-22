@@ -20,6 +20,8 @@ services:
 	- App\Ingest\EventStore
 	- App\Ingest\EventProcessor
 	- App\Ingest\EventOverview
+	- App\Comment\Comments
+	- App\Conversation\Conversations
 	-
 		create: App\Queue\JobQueue
 		arguments:

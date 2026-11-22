@@ -10,8 +10,9 @@ use Nette\Utils\Json;
 
 /**
  * Maps one stored webhook event (WebhookBatch payload: object, entry_id, entry_time, list, item)
- * to its type, external ID and time, and reads the customer text and author. Facebook `feed` and Instagram `comments` have different
- * structures and are mapped separately; Messenger and Instagram messaging share the Messenger
+ * to its type, external ID and time, and reads the customer content: text, author, post, parent
+ * comment and the customer of a conversation. Facebook `feed` and Instagram `comments` have
+ * different structures and are mapped separately; Messenger and Instagram messaging share the Messenger
  * Platform format. Anything unknown becomes Unsupported with a reason, so a human sees it.
  */
 final class EventNormalizer
@@ -82,7 +83,7 @@ final class EventNormalizer
 		return match (true) {
 			in_array($field, self::MessagingFields, true) => $this->message($platform, $value, inMilliseconds: false),
 			$platform === Platform::Facebook && $field === 'feed' => $this->feed($value, $data['entry_id'] ?? null),
-			$platform === Platform::Instagram && $field === 'comments' => $this->instagramComment($value, $data['entry_time'] ?? null),
+			$platform === Platform::Instagram && $field === 'comments' => $this->instagramComment($value, $data['entry_id'] ?? null, $data['entry_time'] ?? null),
 			default => NormalizedEvent::unsupported('change `' . self::token($field) . '` is not supported'),
 		};
 	}
@@ -121,14 +122,23 @@ final class EventNormalizer
 		}
 
 		$post = $value['post'] ?? null;
+		$from = is_array($value['from'] ?? null) ? $value['from'] : [];
+		$authorId = self::id($from['id'] ?? null);
+		$postId = self::id($value['post_id'] ?? null);
+		$parentId = self::id($value['parent_id'] ?? null);
 
 		return new NormalizedEvent(
 			$type,
 			Platform::Facebook->externalId($commentId),
 			$occurredAt,
 			text: self::text($value['message'] ?? null),
-			author: self::text(is_array($value['from'] ?? null) ? $value['from']['name'] ?? null : null),
+			author: self::text($from['name'] ?? null),
 			permalink: self::permalink(is_array($post) ? $post['permalink_url'] ?? null : null),
+			authorId: self::prefixed(Platform::Facebook, $authorId),
+			own: $authorId !== null && $authorId === self::id($pageId),
+			postId: self::prefixed(Platform::Facebook, $postId),
+			// A top-level comment has the post as its parent.
+			parentId: $parentId === $postId ? null : self::prefixed(Platform::Facebook, $parentId),
 		);
 	}
 
@@ -139,19 +149,26 @@ final class EventNormalizer
 	 *
 	 * @param array<mixed> $value
 	 */
-	private function instagramComment(array $value, mixed $entryTime): NormalizedEvent
+	private function instagramComment(array $value, mixed $accountId, mixed $entryTime): NormalizedEvent
 	{
 		$commentId = self::id($value['id'] ?? null);
 		if ($commentId === null) {
 			return NormalizedEvent::unsupported('comment has no id');
 		}
 
+		$from = is_array($value['from'] ?? null) ? $value['from'] : [];
+		$authorId = self::id($from['id'] ?? null);
+
 		return new NormalizedEvent(
 			EventType::CommentCreated,
 			Platform::Instagram->externalId($commentId),
 			self::fromSeconds($entryTime),
 			text: self::text($value['text'] ?? null),
-			author: self::text(is_array($value['from'] ?? null) ? $value['from']['username'] ?? null : null),
+			author: self::text($from['username'] ?? null),
+			authorId: self::prefixed(Platform::Instagram, $authorId),
+			own: $authorId !== null && $authorId === self::id($accountId),
+			postId: self::prefixed(Platform::Instagram, self::id(is_array($value['media'] ?? null) ? $value['media']['id'] ?? null : null)),
+			parentId: self::prefixed(Platform::Instagram, self::id($value['parent_id'] ?? null)),
 		);
 	}
 
@@ -178,12 +195,14 @@ final class EventNormalizer
 				($message['is_echo'] ?? false) === true => EventType::MessageEcho,
 				default => EventType::MessageReceived,
 			};
+			$customer = $type === EventType::MessageEcho ? $item['recipient'] ?? null : $item['sender'] ?? null;
 
 			return new NormalizedEvent(
 				$type,
 				$platform->externalId($mid),
 				$occurredAt,
 				text: $type === EventType::MessageDeleted ? null : self::text($message['text'] ?? null),
+				customerId: self::prefixed($platform, self::id(is_array($customer) ? $customer['id'] ?? null : null)),
 			);
 		}
 
@@ -237,6 +256,12 @@ final class EventNormalizer
 		}
 
 		return is_string($value) && preg_match('~^[\x21-\x7E]{1,250}$~D', $value) ? $value : null;
+	}
+
+
+	private static function prefixed(Platform $platform, ?string $id): ?string
+	{
+		return $id === null ? null : $platform->externalId($id);
 	}
 
 

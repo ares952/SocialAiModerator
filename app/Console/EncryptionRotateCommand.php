@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Console;
 
 use App\Account\Credentials;
+use App\Comment\Comments;
+use App\Conversation\Conversations;
 use App\Core\DecryptionFailed;
 use App\Core\Encryptor;
 use App\Evaluation\EvaluationSamples;
@@ -32,6 +34,8 @@ final class EncryptionRotateCommand extends Command
 		'social_events' => ['payload_encrypted', EventStore::PayloadContext],
 		'evaluation_samples' => ['text_encrypted', EvaluationSamples::TextContext],
 		'moderation_decisions' => ['reason_encrypted', Decisions::ReasonContext],
+		'social_comments' => ['text_encrypted', Comments::TextContext],
+		'social_messages' => ['text_encrypted', Conversations::TextContext],
 	];
 
 	private const BatchSize = 500;

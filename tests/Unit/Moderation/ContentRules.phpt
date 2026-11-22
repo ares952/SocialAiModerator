@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Meta\Platform;
+use App\Moderation\ContentKind;
 use App\Moderation\ContentRules;
+use App\Moderation\CustomerContent;
 use App\Moderation\PolicySettings;
 use App\Moderation\RuleHit;
 use Tester\Assert;
@@ -12,7 +15,8 @@ require __DIR__ . '/../../bootstrap.php';
 // Specification §5.1, step 2. Synthetic texts and *.example domains only.
 
 $blocked = new PolicySettings(blockedDomains: ['spam.example', 'xn--80ak6aa92e.com'], maxLinks: null);
-$hits = static fn(string $text, PolicySettings $settings): array => ContentRules::hits($text, $settings);
+$content = static fn(string $text, int $repeats = 0): CustomerContent => new CustomerContent(Platform::Facebook, ContentKind::Comment, $text, $repeats);
+$hits = static fn(string $text, PolicySettings $settings): array => ContentRules::hits($content($text), $settings);
 
 
 test('a blocked domain matches in every link form and on subdomains', function () use ($blocked, $hits): void {
@@ -60,10 +64,28 @@ test('Czech text without spaces after a full stop, numbers and e-mails are not l
 });
 
 
-test('both rules can match at once', function (): void {
-	$settings = new PolicySettings(blockedDomains: ['spam.example'], maxLinks: 1);
+test('all rules can match at once', function () use ($content): void {
+	$settings = new PolicySettings(blockedDomains: ['spam.example'], maxLinks: 1, maxRepeats: 0);
 	Assert::same(
-		[RuleHit::BlockedDomain, RuleHit::TooManyLinks],
-		ContentRules::hits('https://spam.example https://other.example', $settings),
+		[RuleHit::BlockedDomain, RuleHit::TooManyLinks, RuleHit::RepeatedText],
+		ContentRules::hits($content('https://spam.example https://other.example', repeats: 1), $settings),
 	);
+});
+
+
+test('a text repeated more often than allowed matches; null turns the rule off', function () use ($content): void {
+	$settings = new PolicySettings(maxRepeats: 1);
+	Assert::same([], ContentRules::hits($content('Napište mi', repeats: 1), $settings));
+	Assert::same([RuleHit::RepeatedText], ContentRules::hits($content('Napište mi', repeats: 2), $settings));
+	Assert::same([], ContentRules::hits($content('Napište mi', repeats: 9), new PolicySettings(maxRepeats: null)));
+});
+
+
+test('repeats compare texts without case and whitespace differences', function (): void {
+	Assert::same(2, ContentRules::repeats('Levné  sledující ZDE', [
+		'levné sledující zde',
+		"  Levné\nsledující zde ",
+		'Levné sledující tady',
+	]));
+	Assert::same(0, ContentRules::repeats('Kolik stojí kurz?', []));
 });
