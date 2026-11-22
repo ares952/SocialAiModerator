@@ -1,0 +1,137 @@
+[
+	{
+		"platform": "facebook",
+		"kind": "comment",
+		"language": "cs",
+		"text": "Počkej, až tě potkám na ulici, pak uvidíš.",
+		"expected_category": "abuse",
+		"expected_action": "hide",
+		"note": "výhrůžka: skrýt na všech úrovních"
+	},
+	{
+		"platform": "instagram",
+		"kind": "message",
+		"language": "cs",
+		"text": "Vím, kde bydlíš. Jestli mi nevrátíte peníze, něco se ti stane.",
+		"expected_category": "refund",
+		"expected_action": "handoff",
+		"note": "výhrůžka + vracení peněz: citlivé téma vyhrává"
+	},
+	{
+		"platform": "facebook",
+		"kind": "comment",
+		"language": "cs",
+		"text": "No jasně, náš velký expert zase promluvil 😂",
+		"expected_category": "abuse",
+		"expected_action": "keep",
+		"note": "výsměch: Vyvážená ponechá, Přísná skryje"
+	},
+	{
+		"platform": "instagram",
+		"kind": "comment",
+		"language": "cs",
+		"text": "Hlavně že ty tomu rozumíš nejlíp, viď?",
+		"expected_category": "abuse",
+		"expected_action": "keep",
+		"note": "pasivní agrese: Vyvážená ponechá, Přísná skryje"
+	},
+	{
+		"platform": "facebook",
+		"kind": "comment",
+		"language": "cs",
+		"text": "Kurz je předražený a nefunguje, jste banda zlodějů.",
+		"expected_category": "legitimate_criticism",
+		"expected_action": "review",
+		"note": "věcná výtka + urážka: nikdy neskrýt, jen kontrola"
+	},
+	{
+		"platform": "instagram",
+		"kind": "comment",
+		"language": "cs",
+		"text": "To je ku*va dobrý cvičení, po týdnu vidím rozdíl!",
+		"expected_category": "praise",
+		"expected_action": "review",
+		"note": "sprostá slova v pochvale: Vyvážená ke kontrole"
+	},
+	{
+		"platform": "facebook",
+		"kind": "comment",
+		"language": "en",
+		"text": "I will find you and make you regret this.",
+		"expected_category": "abuse",
+		"expected_action": "hide",
+		"note": "threat"
+	},
+	{
+		"platform": "instagram",
+		"kind": "message",
+		"language": "en",
+		"text": "Keep posting this crap and I will make sure you get hurt.",
+		"expected_category": "abuse",
+		"expected_action": "review",
+		"note": "threat in a private message: cannot be hidden"
+	},
+	{
+		"platform": "facebook",
+		"kind": "comment",
+		"language": "en",
+		"text": "Wow, another miracle guru. Bet you also sell crystals 🙄",
+		"expected_category": "abuse",
+		"expected_action": "keep",
+		"note": "ridicule"
+	},
+	{
+		"platform": "instagram",
+		"kind": "comment",
+		"language": "en",
+		"text": "Your videos are boring and badly lit, and you are an idiot.",
+		"expected_category": "legitimate_criticism",
+		"expected_action": "review",
+		"note": "factual point + insult"
+	},
+	{
+		"platform": "facebook",
+		"kind": "comment",
+		"language": "en",
+		"text": "This sh*t actually works, my jawline looks great!",
+		"expected_category": "praise",
+		"expected_action": "review",
+		"note": "profanity in praise"
+	},
+	{
+		"platform": "instagram",
+		"kind": "comment",
+		"language": "es",
+		"text": "Te voy a encontrar y te vas a arrepentir.",
+		"expected_category": "abuse",
+		"expected_action": "hide",
+		"note": "amenaza"
+	},
+	{
+		"platform": "facebook",
+		"kind": "comment",
+		"language": "es",
+		"text": "Claro, la gran experta ha hablado otra vez 😂",
+		"expected_category": "abuse",
+		"expected_action": "keep",
+		"note": "burla"
+	},
+	{
+		"platform": "instagram",
+		"kind": "comment",
+		"language": "es",
+		"text": "Qué bien que tú lo sepas todo, ¿verdad?",
+		"expected_category": "abuse",
+		"expected_action": "keep",
+		"note": "agresión pasiva"
+	},
+	{
+		"platform": "facebook",
+		"kind": "comment",
+		"language": "es",
+		"text": "El curso es carísimo y no sirve, sois unos ladrones.",
+		"expected_category": "legitimate_criticism",
+		"expected_action": "review",
+		"note": "crítica + insulto"
+	}
+]

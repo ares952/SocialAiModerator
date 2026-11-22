@@ -8,10 +8,13 @@ namespace App\Moderation;
 /**
  * Thresholds, allowed automatic actions and content rules of a policy version
  * (moderation_policies.settings_json). The defaults are the initial proposals of specification
- * §5.4, not calibrated values: tune them with the evaluation set.
+ * §5.4 and the balanced strictness level, not calibrated values: tune them with the evaluation set.
  */
 final readonly class PolicySettings
 {
+	/** @var array<string, AbuseRule> keyed by AbuseType value, every kind of AbuseType::ruled() */
+	public array $abuseRules;
+
 	public const MaxLinksLimit = 20;
 
 	/** Lower-case host name with at least two labels, e.g. spam.example or xn--80ak6aa92e.com. */
@@ -23,6 +26,10 @@ final readonly class PolicySettings
 	 * @param list<string> $blockedDomains lower-case spam domains; a link to them or their subdomains
 	 *        is never kept or answered
 	 * @param ?int $maxLinks more links than this are never kept or answered; null turns the rule off
+	 * @param ?array<string, AbuseRule> $abuseRules rules per kind of inappropriate content; null takes
+	 *        the preset of $strictness
+	 * @param ?float $mixedHideMin abuse score from which a text with a factual point is hidden; only
+	 *        the custom level may set it, otherwise such a text goes at most to review
 	 */
 	public function __construct(
 		public float $hideMinConfidence = 0.95,
@@ -38,6 +45,9 @@ final readonly class PolicySettings
 		public Action $otherLanguage = Action::Handoff,
 		public array $blockedDomains = [],
 		public ?int $maxLinks = 2,
+		public Strictness $strictness = Strictness::Balanced,
+		?array $abuseRules = null,
+		public ?float $mixedHideMin = null,
 	) {
 		$thresholds = [
 			$hideMinConfidence,
@@ -65,6 +75,56 @@ final readonly class PolicySettings
 		if ($maxLinks !== null && ($maxLinks < 0 || $maxLinks > self::MaxLinksLimit)) {
 			throw new InvalidPolicy('policy.error.max-links');
 		}
+
+		$abuseRules ??= $strictness === Strictness::Custom
+			? throw new InvalidPolicy('policy.error.abuse-rules')
+			: $strictness->abuseRules();
+		$kinds = array_map(fn(AbuseType $type) => $type->value, AbuseType::ruled());
+		$keys = array_keys($abuseRules);
+		sort($kinds);
+		sort($keys);
+		if ($keys !== $kinds) {
+			throw new InvalidPolicy('policy.error.abuse-rules');
+		}
+		$this->abuseRules = $abuseRules;
+
+		if ($mixedHideMin !== null && $strictness !== Strictness::Custom) {
+			throw new InvalidPolicy('policy.error.mixed-custom');
+		}
+		if ($mixedHideMin !== null && ($mixedHideMin < 0.5 || $mixedHideMin > 1.0)) {
+			throw new InvalidPolicy('policy.error.threshold');
+		}
+	}
+
+
+	/**
+	 * The same settings with another strictness level and its thresholds.
+	 *
+	 * @param array<string, AbuseRule> $abuseRules
+	 * @throws InvalidPolicy
+	 */
+	public function withStrictness(Strictness $strictness, float $spamHideMin, array $abuseRules, ?float $mixedHideMin): self
+	{
+		return new self(
+			hideMinConfidence: $this->hideMinConfidence,
+			hideMinSpamProbability: $spamHideMin,
+			replyMinConfidence: $this->replyMinConfidence,
+			autoHide: $this->autoHide,
+			autoReplyCategories: $this->autoReplyCategories,
+			languages: $this->languages,
+			otherLanguage: $this->otherLanguage,
+			blockedDomains: $this->blockedDomains,
+			maxLinks: $this->maxLinks,
+			strictness: $strictness,
+			abuseRules: $abuseRules,
+			mixedHideMin: $mixedHideMin,
+		);
+	}
+
+
+	public function abuseRule(AbuseType $type): AbuseRule
+	{
+		return $this->abuseRules[$type->value] ?? throw new \LogicException("No rule for $type->value.");
 	}
 
 
@@ -88,6 +148,8 @@ final readonly class PolicySettings
 		}
 
 		$defaults = new self;
+		$strictness = Strictness::tryFrom(is_string($data['strictness'] ?? null) ? $data['strictness'] : '')
+			?? (isset($data['strictness']) ? throw new InvalidPolicy('policy.error.strictness') : Strictness::Balanced);
 
 		return new self(
 			hideMinConfidence: $float('hide_min_confidence', $defaults->hideMinConfidence),
@@ -100,7 +162,48 @@ final readonly class PolicySettings
 				?? $defaults->otherLanguage,
 			blockedDomains: $strings('blocked_domains'),
 			maxLinks: array_key_exists('max_links', $data) ? self::maxLinks($data['max_links']) : $defaults->maxLinks,
+			strictness: $strictness,
+			abuseRules: isset($data['abuse_rules']) ? self::abuseRules($data['abuse_rules']) : null,
+			mixedHideMin: self::threshold($data['mixed_hide_min'] ?? null),
 		);
+	}
+
+
+	/**
+	 * @return array<string, AbuseRule>
+	 * @throws InvalidPolicy
+	 */
+	private static function abuseRules(mixed $value): array
+	{
+		if (!is_array($value)) {
+			throw new InvalidPolicy('policy.error.abuse-rules');
+		}
+
+		$rules = [];
+		foreach ($value as $type => $rule) {
+			if (!is_array($rule)) {
+				throw new InvalidPolicy('policy.error.abuse-rules');
+			}
+			$rules[(string) $type] = new AbuseRule(
+				self::threshold($rule['hide_min'] ?? null),
+				self::threshold($rule['review_min'] ?? null),
+			);
+		}
+
+		return $rules;
+	}
+
+
+	/**
+	 * @throws InvalidPolicy
+	 */
+	private static function threshold(mixed $value): ?float
+	{
+		return match (true) {
+			$value === null => null,
+			is_int($value), is_float($value) => (float) $value,
+			default => throw new InvalidPolicy('policy.error.threshold'),
+		};
 	}
 
 
@@ -130,6 +233,12 @@ final readonly class PolicySettings
 			'other_language' => $this->otherLanguage->value,
 			'blocked_domains' => $this->blockedDomains,
 			'max_links' => $this->maxLinks,
+			'strictness' => $this->strictness->value,
+			'abuse_rules' => array_map(fn(AbuseRule $rule) => [
+				'hide_min' => $rule->hideMin,
+				'review_min' => $rule->reviewMin,
+			], $this->abuseRules),
+			'mixed_hide_min' => $this->mixedHideMin,
 		];
 	}
 }

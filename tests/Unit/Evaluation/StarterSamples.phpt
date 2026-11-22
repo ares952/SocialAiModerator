@@ -83,3 +83,29 @@ test('all three languages and every category are covered, links are fictitious',
 		}
 	}
 });
+
+
+test('the strictness samples are importable and labelled for the balanced level', function (): void {
+	$items = Json::decode(FileSystem::read(__DIR__ . '/../../../docs/evaluation/strictness-samples.json'), forceArrays: true);
+	Assert::true(is_array($items) && array_is_list($items) && count($items) >= 12);
+	foreach ($items as $index => $item) {
+		$sample = new Sample(
+			platform: Platform::from($item['platform']),
+			kind: ContentKind::from($item['kind']),
+			language: $item['language'],
+			text: $item['text'],
+			expectedCategory: Category::from($item['expected_category']),
+			expectedAction: Action::from($item['expected_action']),
+			note: $item['note'] ?? null,
+		);
+		Assert::notContains('@', $sample->text, "#$index");
+		Assert::false(
+			$sample->kind === ContentKind::Message && $sample->expectedAction === Action::Hide,
+			"#$index: a private message cannot be hidden",
+		);
+		Assert::false(
+			$sample->expectedCategory === Category::LegitimateCriticism && $sample->expectedAction === Action::Hide,
+			"#$index: criticism is never hidden by a preset level",
+		);
+	}
+});

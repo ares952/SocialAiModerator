@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
+use App\Moderation\AbuseRule;
+use App\Moderation\AbuseType;
 use App\Moderation\Action;
 use App\Moderation\Category;
 use App\Moderation\InvalidPolicy;
 use App\Moderation\PolicySettings;
+use App\Moderation\Strictness;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -20,6 +23,23 @@ test('defaults are the initial proposals of the specification', function (): voi
 	Assert::same(Action::Handoff, $settings->otherLanguage);
 	Assert::same([], $settings->blockedDomains);
 	Assert::same(2, $settings->maxLinks);
+	Assert::same(Strictness::Balanced, $settings->strictness);
+	Assert::equal(Strictness::Balanced->abuseRules(), $settings->abuseRules);
+	Assert::same(Strictness::Balanced->spamHideMin(), $settings->hideMinSpamProbability);
+	Assert::null($settings->mixedHideMin);
+});
+
+
+test('every preset rules all kinds of abuse and no preset hides a mixed text', function (): void {
+	foreach (Strictness::presets() as $strictness) {
+		$settings = new PolicySettings(hideMinSpamProbability: $strictness->spamHideMin(), strictness: $strictness);
+		foreach (AbuseType::ruled() as $type) {
+			Assert::type(AbuseRule::class, $settings->abuseRule($type));
+		}
+		Assert::null($settings->mixedHideMin);
+		Assert::same(Action::Hide, $settings->abuseRule(AbuseType::Threat)->action(0.95), "$strictness->value hides threats");
+	}
+	Assert::exception(fn() => Strictness::Custom->abuseRules(), LogicException::class);
 });
 
 
@@ -30,6 +50,47 @@ test('settings survive the JSON round trip', function (): void {
 
 	$off = new PolicySettings(maxLinks: null);
 	Assert::null(PolicySettings::fromArray($off->toArray())->maxLinks);
+
+	$strict = new PolicySettings(hideMinSpamProbability: 0.90, strictness: Strictness::Strict);
+	Assert::equal($strict, PolicySettings::fromArray($strict->toArray()));
+
+	$rules = Strictness::Strict->abuseRules();
+	$rules[AbuseType::Insult->value] = new AbuseRule(null, 0.55);
+	$custom = new PolicySettings(strictness: Strictness::Custom, abuseRules: $rules, mixedHideMin: 0.97);
+	Assert::equal($custom, PolicySettings::fromArray($custom->toArray()));
+});
+
+
+test('stored thresholds win over the preset of the stored level', function (): void {
+	$stored = (new PolicySettings)->toArray();
+	$stored['abuse_rules']['insult'] = ['hide_min' => 0.99, 'review_min' => 0.75];
+	$settings = PolicySettings::fromArray($stored);
+	Assert::same(Strictness::Balanced, $settings->strictness);
+	Assert::equal(new AbuseRule(0.99, 0.75), $settings->abuseRule(AbuseType::Insult));
+});
+
+
+test('abuse rules are complete and consistent, mixed texts are hidden only by the custom level', function (): void {
+	Assert::exception(fn() => new PolicySettings(strictness: Strictness::Custom), InvalidPolicy::class, 'policy.error.abuse-rules');
+	Assert::exception(
+		fn() => new PolicySettings(abuseRules: [AbuseType::Insult->value => new AbuseRule(0.9, 0.7)]),
+		InvalidPolicy::class,
+		'policy.error.abuse-rules',
+	);
+	Assert::exception(fn() => new AbuseRule(0.70, 0.90), InvalidPolicy::class, 'policy.error.review-above-hide');
+	Assert::exception(fn() => new AbuseRule(0.40, null), InvalidPolicy::class, 'policy.error.threshold');
+	Assert::exception(fn() => new PolicySettings(mixedHideMin: 0.95), InvalidPolicy::class, 'policy.error.mixed-custom');
+	Assert::exception(
+		fn() => new PolicySettings(strictness: Strictness::Custom, abuseRules: Strictness::Strict->abuseRules(), mixedHideMin: 0.3),
+		InvalidPolicy::class,
+		'policy.error.threshold',
+	);
+	Assert::exception(fn() => PolicySettings::fromArray(['strictness' => 'lenient']), InvalidPolicy::class, 'policy.error.strictness');
+	Assert::exception(
+		fn() => PolicySettings::fromArray(['abuse_rules' => ['insult' => ['hide_min' => '0.9']]]),
+		InvalidPolicy::class,
+		'policy.error.threshold',
+	);
 });
 
 

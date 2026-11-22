@@ -8,6 +8,7 @@ use App\Ai\ModerationResponse;
 use App\Ai\OpenAiFailure;
 use App\Ai\Redactor;
 use App\Ai\StructuredResponse;
+use App\Moderation\AbuseType;
 use App\Moderation\Action;
 use App\Moderation\Category;
 use Nette\Utils\Json;
@@ -32,12 +33,17 @@ test('valid classification is parsed', function (): void {
 		'category' => 'spam',
 		'recommended_action' => 'hide',
 		'confidence' => 1,
-		'knowledge_required' => ['pricing_current'],
-	]));
+		'abuse_type' => 'insult',
+		'abuse_score' => 0.8,
+		'knowledge_required' => ['pricing_current', 'invented_key'],
+	]), ['pricing_current', 'opening_hours']);
 	Assert::same(Category::Spam, $classification->category);
 	Assert::same(Action::Hide, $classification->recommendedAction);
 	Assert::same(1.0, $classification->confidence);
-	Assert::same(['pricing_current'], $classification->knowledgeRequired);
+	Assert::same(AbuseType::Insult, $classification->abuseType);
+	Assert::same(0.8, $classification->abuseScore);
+	Assert::true($classification->hasSubstance);
+	Assert::same(['pricing_current'], $classification->knowledgeRequired, 'keys that were not offered are dropped');
 });
 
 
@@ -50,20 +56,23 @@ test('output outside the contract is rejected', function (): void {
 		['confidence' => '0.9'],
 		['language' => 'Czech'],
 		['requires_human' => 'no'],
+		['abuse_type' => 'hate_speech'],
+		['abuse_score' => 1.5],
+		['has_substance' => 1],
 		['knowledge_required' => ['../etc/passwd']],
 		['reason' => str_repeat('x', 501)],
 		['extra' => 'field'],
 	];
 	foreach ($invalid as $override) {
 		Assert::exception(
-			fn() => ClassificationParser::parse(FakeOpenAiClient::classification($override)),
+			fn() => ClassificationParser::parse(FakeOpenAiClient::classification($override), []),
 			InvalidModelOutput::class,
 		);
 	}
 
 	$missing = FakeOpenAiClient::classification();
 	unset($missing['reason']);
-	Assert::exception(fn() => ClassificationParser::parse($missing), InvalidModelOutput::class);
+	Assert::exception(fn() => ClassificationParser::parse($missing, []), InvalidModelOutput::class);
 });
 
 

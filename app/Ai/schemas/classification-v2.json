@@ -1,0 +1,102 @@
+{
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"category",
+		"language",
+		"sentiment",
+		"confidence",
+		"spam_probability",
+		"abuse_type",
+		"abuse_score",
+		"has_substance",
+		"recommended_action",
+		"requires_human",
+		"reason",
+		"knowledge_required"
+	],
+	"properties": {
+		"category": {
+			"type": "string",
+			"enum": [
+				"spam",
+				"scam",
+				"abuse",
+				"legitimate_criticism",
+				"praise",
+				"faq",
+				"support_issue",
+				"billing",
+				"refund",
+				"health",
+				"legal",
+				"unknown"
+			]
+		},
+		"language": {
+			"type": "string",
+			"description": "ISO 639-1 code of the customer text, or und when it cannot be determined"
+		},
+		"sentiment": {
+			"type": "string",
+			"enum": [
+				"positive",
+				"neutral",
+				"negative"
+			]
+		},
+		"confidence": {
+			"type": "number",
+			"description": "Confidence in the category, 0 to 1"
+		},
+		"spam_probability": {
+			"type": "number",
+			"description": "Probability that the text is spam or a scam, 0 to 1"
+		},
+		"abuse_type": {
+			"type": "string",
+			"enum": [
+				"none",
+				"threat",
+				"profanity",
+				"insult",
+				"ridicule",
+				"passive_aggression"
+			],
+			"description": "The most serious kind of inappropriate content in the text, or none"
+		},
+		"abuse_score": {
+			"type": "number",
+			"description": "How clearly the text contains abuse_type, 0 to 1; 0 when abuse_type is none"
+		},
+		"has_substance": {
+			"type": "boolean",
+			"description": "The text contains a factual objection, question or opinion about the product, service or business"
+		},
+		"recommended_action": {
+			"type": "string",
+			"enum": [
+				"ignore",
+				"keep",
+				"hide",
+				"reply",
+				"review",
+				"handoff"
+			]
+		},
+		"requires_human": {
+			"type": "boolean"
+		},
+		"reason": {
+			"type": "string",
+			"description": "One short English sentence, without quoting personal data"
+		},
+		"knowledge_required": {
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"description": "Knowledge keys from the provided list needed for a reply"
+		}
+	}
+}

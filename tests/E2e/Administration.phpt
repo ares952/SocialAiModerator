@@ -58,7 +58,6 @@ test('policy: switches, validation, new version and the panic switch', function 
 	$fields = [
 		'mode' => 'observe',
 		'hideMinConfidence' => '0.96',
-		'hideMinSpamProbability' => '0.95',
 		'replyMinConfidence' => '0.9',
 		'autoReplyCategories' => ['faq'],
 		'languages' => 'cs, en, es',
@@ -80,6 +79,45 @@ test('policy: switches, validation, new version and the panic switch', function 
 	$page = $browser->get($saved->location() ?? '');
 	Assert::contains('Uložena verze 1 pravidel.', $page->messages());
 	Assert::contains("spam.example\nwin.example</textarea>", $page->body);
+
+	Assert::contains('Vyvážená', $page->body);
+	Assert::contains('„Počkej, až tě potkám na ulici.“', $page->body, 'Each level shows its criteria and examples.');
+
+	$strict = $browser->submit('/admin/policy', 'strictnessForm', [
+		'strictness' => 'strict',
+		'insult_hide' => '0.4',
+		'send' => '1',
+	]);
+	Assert::same(303, $strict->status, 'A preset ignores the custom thresholds.');
+	$page = $browser->get($strict->location() ?? '');
+	Assert::contains('Uložena verze 2 pravidel.', $page->messages());
+	Assert::same(1, preg_match('~<input(?=[^>]*value="strict")(?=[^>]*checked)[^>]*>~', $page->body), 'The strict level is selected.');
+
+	$custom = [
+		'strictness' => 'custom',
+		'spamHideMin' => '0.95',
+		'threat_hide' => '0.8',
+		'threat_review' => '0.5',
+		'profanity_hide' => '',
+		'profanity_review' => '0.7',
+		'insult_hide' => '0.7',
+		'insult_review' => '0.9',
+		'ridicule_hide' => '',
+		'ridicule_review' => '',
+		'passive_aggression_hide' => '',
+		'passive_aggression_review' => '',
+		'mixedHideMin' => '0.97',
+		'send' => '1',
+	];
+	$invalid = $browser->submit('/admin/policy', 'strictnessForm', $custom);
+	Assert::same(200, $invalid->status);
+	Assert::contains('Práh kontroly nesmí být vyšší než práh skrytí.', $invalid->body);
+
+	$saved = $browser->submit('/admin/policy', 'strictnessForm', ['insult_review' => '0.6'] + $custom);
+	Assert::same(303, $saved->status);
+	$page = $browser->get($saved->location() ?? '');
+	Assert::contains('Uložena verze 3 pravidel.', $page->messages());
+	Assert::contains('Vlastní (danger zone)', $page->body);
 
 	Assert::same(303, $browser->submit('/admin/policy', 'pauseForm', ['reason' => 'e2e', 'pause' => '1'])->status);
 	Assert::contains('automatika vypnuta', $browser->get('/')->body);

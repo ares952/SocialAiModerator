@@ -10,15 +10,20 @@ namespace App\Moderation;
  * output is untrusted advice: it can make a decision more cautious, never less. Rules:
  *
  * - no classification (model error, invalid output) => review (fail closed);
- * - complaints, billing, refunds, health, legal, or the model asking for a human => handoff;
+ * - complaints, billing, refunds, health and legal => handoff; the model asking for a human =>
+ *   review for abuse, spam, scam and unknown, handoff otherwise;
  * - legitimate criticism and praise are kept, whatever the model recommends, unless a content
- *   rule matched;
+ *   rule or an inappropriate tone matched;
  * - spam/scam is hidden only above both hide thresholds, otherwise review; a private message
  *   cannot be hidden, so it goes to review;
+ * - inappropriate content (abuse_type) follows the rules of the strictness level: hide, review or
+ *   keep; a text with a factual point (criticism, question) is hidden only by the custom level's
+ *   mixed threshold, otherwise it goes at most to review (docs/moderation-strictness.md);
  * - a content rule hit (blocked domain, too many links) turns keep and reply into review, so a text
  *   that talks the model into "praise" or "faq" still reaches a human; it never hides on its own;
- * - abuse and unknown => review;
- * - FAQ is answered only above the reply threshold and in a supported language;
+ * - unknown => review;
+ * - FAQ is answered only in a supported language, with published knowledge and above the reply
+ *   threshold;
  * - the action runs without a human only in `automatic` mode, without a pause, for an active
  *   account and when the policy explicitly allows that action.
  */
@@ -78,15 +83,18 @@ final class PolicyEngine
 		if ($classification->requiresHuman || $classification->recommendedAction === Action::Handoff) {
 			$reasons[] = 'model_requires_human';
 
-			return Action::Handoff;
+			return in_array($category, [Category::Abuse, Category::Spam, Category::Scam, Category::Unknown], true)
+				? Action::Review
+				: Action::Handoff;
 		}
 
 		$action = match ($category) {
-			Category::LegitimateCriticism, Category::Praise => Action::Keep,
+			Category::LegitimateCriticism, Category::Praise, Category::Abuse => Action::Keep,
 			Category::Spam, Category::Scam => $this->hide($classification, $settings, $reasons),
 			Category::Faq => $this->reply($classification, $settings, $reasons),
 			default => Action::Review,
 		};
+		$action = $this->tone($classification, $action, $settings, $reasons);
 		if ($action === Action::Review && $reasons === []) {
 			$reasons[] = 'category_needs_review';
 		}
@@ -99,6 +107,90 @@ final class PolicyEngine
 		if ($action === Action::Reply && $moderationFlagged) {
 			$reasons[] = 'moderation_flagged';
 			$action = Action::Review;
+		}
+
+		return $action;
+	}
+
+
+	/**
+	 * Applies the strictness rule of the inappropriate content found by the model. Spam, scam and
+	 * unknown keep their own handling; legitimate criticism and questions always have a factual
+	 * point, so they are never hidden below the custom mixed threshold.
+	 *
+	 * @param list<string> $reasons
+	 */
+	private function tone(Classification $classification, Action $action, PolicySettings $settings, array &$reasons): Action
+	{
+		$category = $classification->category;
+		$type = $classification->abuseType;
+		if ($type === AbuseType::None) {
+			if ($category === Category::Abuse) {
+				$reasons[] = 'abuse_type_missing';
+
+				return Action::Review;
+			}
+
+			return $action;
+		}
+		if (!in_array($category, [Category::Abuse, Category::Praise, Category::LegitimateCriticism, Category::Faq], true)) {
+			return $action;
+		}
+
+		$reasons[] = "abuse_$type->value";
+		$score = $classification->abuseScore;
+		$tone = $settings->abuseRule($type)->action($score);
+		$mixed = $classification->hasSubstance
+			|| $category === Category::LegitimateCriticism
+			|| $category === Category::Faq;
+		if ($tone === Action::Hide && $mixed && ($settings->mixedHideMin === null || $score < $settings->mixedHideMin)) {
+			$reasons[] = 'mixed_content';
+			$tone = Action::Review;
+		}
+		if ($tone === Action::Hide && $classification->confidence < $settings->hideMinConfidence) {
+			$reasons[] = 'below_hide_threshold';
+			$tone = Action::Review;
+		}
+
+		return match ($tone) {
+			Action::Hide => $this->hidden($type, $reasons),
+			Action::Review => $action === Action::Handoff ? $action : $this->reviewed($reasons),
+			default => $this->tolerated($category, $action, $reasons),
+		};
+	}
+
+
+	/**
+	 * @param list<string> $reasons
+	 */
+	private function hidden(AbuseType $type, array &$reasons): Action
+	{
+		if ($type === AbuseType::Threat) {
+			$reasons[] = 'threat_hidden';
+		}
+
+		return Action::Hide;
+	}
+
+
+	/**
+	 * @param list<string> $reasons
+	 */
+	private function reviewed(array &$reasons): Action
+	{
+		$reasons[] = 'abuse_review';
+
+		return Action::Review;
+	}
+
+
+	/**
+	 * @param list<string> $reasons
+	 */
+	private function tolerated(Category $category, Action $action, array &$reasons): Action
+	{
+		if ($category === Category::Abuse) {
+			$reasons[] = 'abuse_tolerated';
 		}
 
 		return $action;
@@ -148,6 +240,11 @@ final class PolicyEngine
 			$reasons[] = 'unsupported_language';
 
 			return $settings->otherLanguage;
+		}
+		if ($classification->knowledgeRequired === []) {
+			$reasons[] = 'knowledge_missing';
+
+			return Action::Handoff;
 		}
 		if ($classification->confidence < $settings->replyMinConfidence) {
 			$reasons[] = 'below_reply_threshold';

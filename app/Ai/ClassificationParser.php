@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Ai;
 
+use App\Moderation\AbuseType;
 use App\Moderation\Action;
 use App\Moderation\Category;
 use App\Moderation\Classification;
@@ -21,9 +22,11 @@ final class ClassificationParser
 
 	/**
 	 * @param array<mixed> $output
+	 * @param list<string> $knowledgeKeys keys of the published knowledge offered to the model; other
+	 *        keys in knowledge_required are dropped, so a reply never relies on invented knowledge
 	 * @throws InvalidModelOutput
 	 */
-	public static function parse(array $output): Classification
+	public static function parse(array $output, array $knowledgeKeys): Classification
 	{
 		$expected = [
 			'category',
@@ -31,6 +34,9 @@ final class ClassificationParser
 			'sentiment',
 			'confidence',
 			'spam_probability',
+			'abuse_type',
+			'abuse_score',
+			'has_substance',
 			'recommended_action',
 			'requires_human',
 			'reason',
@@ -60,8 +66,10 @@ final class ClassificationParser
 		) {
 			throw new InvalidModelOutput('Invalid knowledge_required.');
 		}
-		if (!is_bool($output['requires_human'])) {
-			throw new InvalidModelOutput('Invalid requires_human.');
+		foreach (['requires_human', 'has_substance'] as $field) {
+			if (!is_bool($output[$field])) {
+				throw new InvalidModelOutput("Invalid $field.");
+			}
 		}
 
 		return new Classification(
@@ -70,11 +78,14 @@ final class ClassificationParser
 			sentiment: Sentiment::tryFrom(self::string($output['sentiment'])) ?? throw new InvalidModelOutput('Invalid sentiment.'),
 			confidence: self::probability($output['confidence'], 'confidence'),
 			spamProbability: self::probability($output['spam_probability'], 'spam_probability'),
+			abuseType: AbuseType::tryFrom(self::string($output['abuse_type'])) ?? throw new InvalidModelOutput('Invalid abuse_type.'),
+			abuseScore: self::probability($output['abuse_score'], 'abuse_score'),
+			hasSubstance: $output['has_substance'],
 			recommendedAction: Action::tryFrom(self::string($output['recommended_action']))
 				?? throw new InvalidModelOutput('Invalid recommended_action.'),
 			requiresHuman: $output['requires_human'],
 			reason: $reason,
-			knowledgeRequired: $knowledge,
+			knowledgeRequired: array_values(array_intersect($knowledge, $knowledgeKeys)),
 		);
 	}
 

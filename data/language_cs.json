@@ -1584,15 +1584,6 @@
   }
  },
  {
-  "key": "policy.form.hideMinSpamProbability",
-  "lang": "cs",
-  "translations": {
-   "1": "Skrytí: minimální pravděpodobnost spamu",
-   "2": "Skrytí: minimální pravděpodobnost spamu",
-   "5": "Skrytí: minimální pravděpodobnost spamu"
-  }
- },
- {
   "key": "policy.form.replyMinConfidence",
   "lang": "cs",
   "translations": {
@@ -3723,6 +3714,690 @@
    "1": "Lhůty retence jsou uložené.",
    "2": "Lhůty retence jsou uložené.",
    "5": "Lhůty retence jsou uložené."
+  }
+ },
+ {
+  "key": "abuse.type.spam",
+  "lang": "cs",
+  "translations": {
+   "1": "Spam a podvody",
+   "2": "Spam a podvody",
+   "5": "Spam a podvody"
+  }
+ },
+ {
+  "key": "abuse.type.threat",
+  "lang": "cs",
+  "translations": {
+   "1": "Výhrůžky a násilí",
+   "2": "Výhrůžky a násilí",
+   "5": "Výhrůžky a násilí"
+  }
+ },
+ {
+  "key": "abuse.type.profanity",
+  "lang": "cs",
+  "translations": {
+   "1": "Sprostá slova",
+   "2": "Sprostá slova",
+   "5": "Sprostá slova"
+  }
+ },
+ {
+  "key": "abuse.type.insult",
+  "lang": "cs",
+  "translations": {
+   "1": "Urážky a osobní útoky",
+   "2": "Urážky a osobní útoky",
+   "5": "Urážky a osobní útoky"
+  }
+ },
+ {
+  "key": "abuse.type.ridicule",
+  "lang": "cs",
+  "translations": {
+   "1": "Výsměch",
+   "2": "Výsměch",
+   "5": "Výsměch"
+  }
+ },
+ {
+  "key": "abuse.type.passive_aggression",
+  "lang": "cs",
+  "translations": {
+   "1": "Pasivní agrese",
+   "2": "Pasivní agrese",
+   "5": "Pasivní agrese"
+  }
+ },
+ {
+  "key": "abuse.type.mixed",
+  "lang": "cs",
+  "translations": {
+   "1": "Věcná výtka s nevhodným tónem",
+   "2": "Věcná výtka s nevhodným tónem",
+   "5": "Věcná výtka s nevhodným tónem"
+  }
+ },
+ {
+  "key": "policy.strictness.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Úroveň přísnosti",
+   "2": "Úroveň přísnosti",
+   "5": "Úroveň přísnosti"
+  }
+ },
+ {
+  "key": "policy.strictness.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Úroveň určuje, které druhy nevhodného obsahu se skryjí, které jdou ke kontrole a které zůstanou. Uložení vytvoří novou verzi politiky.",
+   "2": "Úroveň určuje, které druhy nevhodného obsahu se skryjí, které jdou ke kontrole a které zůstanou. Uložení vytvoří novou verzi politiky.",
+   "5": "Úroveň určuje, které druhy nevhodného obsahu se skryjí, které jdou ke kontrole a které zůstanou. Uložení vytvoří novou verzi politiky."
+  }
+ },
+ {
+  "key": "policy.strictness.benevolent",
+  "lang": "cs",
+  "translations": {
+   "1": "Benevolentní",
+   "2": "Benevolentní",
+   "5": "Benevolentní"
+  }
+ },
+ {
+  "key": "policy.strictness.balanced",
+  "lang": "cs",
+  "translations": {
+   "1": "Vyvážená",
+   "2": "Vyvážená",
+   "5": "Vyvážená"
+  }
+ },
+ {
+  "key": "policy.strictness.strict",
+  "lang": "cs",
+  "translations": {
+   "1": "Přísná",
+   "2": "Přísná",
+   "5": "Přísná"
+  }
+ },
+ {
+  "key": "policy.strictness.custom",
+  "lang": "cs",
+  "translations": {
+   "1": "Vlastní (danger zone)",
+   "2": "Vlastní (danger zone)",
+   "5": "Vlastní (danger zone)"
+  }
+ },
+ {
+  "key": "policy.strictness.benevolent.summary",
+  "lang": "cs",
+  "translations": {
+   "1": "skryje výhrůžky a spam",
+   "2": "skryje výhrůžky a spam",
+   "5": "skryje výhrůžky a spam"
+  }
+ },
+ {
+  "key": "policy.strictness.balanced.summary",
+  "lang": "cs",
+  "translations": {
+   "1": "+ sprostá slova a urážky ke kontrole",
+   "2": "+ sprostá slova a urážky ke kontrole",
+   "5": "+ sprostá slova a urážky ke kontrole"
+  }
+ },
+ {
+  "key": "policy.strictness.strict.summary",
+  "lang": "cs",
+  "translations": {
+   "1": "+ skryje i urážky, výsměch a pasivní agresi",
+   "2": "+ skryje i urážky, výsměch a pasivní agresi",
+   "5": "+ skryje i urážky, výsměch a pasivní agresi"
+  }
+ },
+ {
+  "key": "policy.strictness.custom.summary",
+  "lang": "cs",
+  "translations": {
+   "1": "vlastní prahy, i pro kritiku s nevhodným tónem",
+   "2": "vlastní prahy, i pro kritiku s nevhodným tónem",
+   "5": "vlastní prahy, i pro kritiku s nevhodným tónem"
+  }
+ },
+ {
+  "key": "policy.strictness.save",
+  "lang": "cs",
+  "translations": {
+   "1": "Uložit úroveň přísnosti",
+   "2": "Uložit úroveň přísnosti",
+   "5": "Uložit úroveň přísnosti"
+  }
+ },
+ {
+  "key": "policy.strictness.hides",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrývá",
+   "2": "Skrývá",
+   "5": "Skrývá"
+  }
+ },
+ {
+  "key": "policy.strictness.reviews",
+  "lang": "cs",
+  "translations": {
+   "1": "Ke kontrole (bez skrytí)",
+   "2": "Ke kontrole (bez skrytí)",
+   "5": "Ke kontrole (bez skrytí)"
+  }
+ },
+ {
+  "key": "policy.strictness.keeps",
+  "lang": "cs",
+  "translations": {
+   "1": "Vždy zůstává / ponechává",
+   "2": "Vždy zůstává / ponechává",
+   "5": "Vždy zůstává / ponechává"
+  }
+ },
+ {
+  "key": "policy.strictness.criticism",
+  "lang": "cs",
+  "translations": {
+   "1": "Věcná kritika",
+   "2": "Věcná kritika",
+   "5": "Věcná kritika"
+  }
+ },
+ {
+  "key": "policy.strictness.disagreement",
+  "lang": "cs",
+  "translations": {
+   "1": "Nesouhlas",
+   "2": "Nesouhlas",
+   "5": "Nesouhlas"
+  }
+ },
+ {
+  "key": "policy.strictness.column.type",
+  "lang": "cs",
+  "translations": {
+   "1": "Druh obsahu",
+   "2": "Druh obsahu",
+   "5": "Druh obsahu"
+  }
+ },
+ {
+  "key": "policy.strictness.column.criterion",
+  "lang": "cs",
+  "translations": {
+   "1": "Kritérium",
+   "2": "Kritérium",
+   "5": "Kritérium"
+  }
+ },
+ {
+  "key": "policy.strictness.column.example",
+  "lang": "cs",
+  "translations": {
+   "1": "Ukázka",
+   "2": "Ukázka",
+   "5": "Ukázka"
+  }
+ },
+ {
+  "key": "policy.strictness.column.outcome",
+  "lang": "cs",
+  "translations": {
+   "1": "Prahy a výsledek",
+   "2": "Prahy a výsledek",
+   "5": "Prahy a výsledek"
+  }
+ },
+ {
+  "key": "policy.strictness.column.hide",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrýt od skóre",
+   "2": "Skrýt od skóre",
+   "5": "Skrýt od skóre"
+  }
+ },
+ {
+  "key": "policy.strictness.column.review",
+  "lang": "cs",
+  "translations": {
+   "1": "Ke kontrole od skóre",
+   "2": "Ke kontrole od skóre",
+   "5": "Ke kontrole od skóre"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.spam",
+  "lang": "cs",
+  "translations": {
+   "1": "kategorie spam nebo podvod; skóre = pravděpodobnost spamu",
+   "2": "kategorie spam nebo podvod; skóre = pravděpodobnost spamu",
+   "5": "kategorie spam nebo podvod; skóre = pravděpodobnost spamu"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.threat",
+  "lang": "cs",
+  "translations": {
+   "1": "výhrůžka násilím nebo újmou, zastrašování",
+   "2": "výhrůžka násilím nebo újmou, zastrašování",
+   "5": "výhrůžka násilím nebo újmou, zastrašování"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.profanity",
+  "lang": "cs",
+  "translations": {
+   "1": "vulgární nebo obscénní slova, i maskovaná",
+   "2": "vulgární nebo obscénní slova, i maskovaná",
+   "5": "vulgární nebo obscénní slova, i maskovaná"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.insult",
+  "lang": "cs",
+  "translations": {
+   "1": "útok na osobu nebo skupinu, nadávky, ponižování",
+   "2": "útok na osobu nebo skupinu, nadávky, ponižování",
+   "5": "útok na osobu nebo skupinu, nadávky, ponižování"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.ridicule",
+  "lang": "cs",
+  "translations": {
+   "1": "posměch a sarkasmus mířený na osobu, ne na věc",
+   "2": "posměch a sarkasmus mířený na osobu, ne na věc",
+   "5": "posměch a sarkasmus mířený na osobu, ne na věc"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.passive_aggression",
+  "lang": "cs",
+  "translations": {
+   "1": "skrytá nevraživost, povýšené nebo jízlivé poznámky",
+   "2": "skrytá nevraživost, povýšené nebo jízlivé poznámky",
+   "5": "skrytá nevraživost, povýšené nebo jízlivé poznámky"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.mixed",
+  "lang": "cs",
+  "translations": {
+   "1": "text obsahuje věcnou výtku nebo dotaz a zároveň nevhodný tón",
+   "2": "text obsahuje věcnou výtku nebo dotaz a zároveň nevhodný tón",
+   "5": "text obsahuje věcnou výtku nebo dotaz a zároveň nevhodný tón"
+  }
+ },
+ {
+  "key": "policy.strictness.example.spam",
+  "lang": "cs",
+  "translations": {
+   "1": "„Vydělej 5 000 denně z domu, napiš mi do zpráv.“",
+   "2": "„Vydělej 5 000 denně z domu, napiš mi do zpráv.“",
+   "5": "„Vydělej 5 000 denně z domu, napiš mi do zpráv.“"
+  }
+ },
+ {
+  "key": "policy.strictness.example.threat",
+  "lang": "cs",
+  "translations": {
+   "1": "„Počkej, až tě potkám na ulici.“",
+   "2": "„Počkej, až tě potkám na ulici.“",
+   "5": "„Počkej, až tě potkám na ulici.“"
+  }
+ },
+ {
+  "key": "policy.strictness.example.profanity",
+  "lang": "cs",
+  "translations": {
+   "1": "„To je ale zas*aná pí*ovina.“",
+   "2": "„To je ale zas*aná pí*ovina.“",
+   "5": "„To je ale zas*aná pí*ovina.“"
+  }
+ },
+ {
+  "key": "policy.strictness.example.insult",
+  "lang": "cs",
+  "translations": {
+   "1": "„Ty jsi fakt ubožák, běž se léčit.“",
+   "2": "„Ty jsi fakt ubožák, běž se léčit.“",
+   "5": "„Ty jsi fakt ubožák, běž se léčit.“"
+  }
+ },
+ {
+  "key": "policy.strictness.example.ridicule",
+  "lang": "cs",
+  "translations": {
+   "1": "„No jasně, náš velký expert zase promluvil 😂“",
+   "2": "„No jasně, náš velký expert zase promluvil 😂“",
+   "5": "„No jasně, náš velký expert zase promluvil 😂“"
+  }
+ },
+ {
+  "key": "policy.strictness.example.passive_aggression",
+  "lang": "cs",
+  "translations": {
+   "1": "„Hlavně že ty tomu rozumíš nejlíp, viď?“",
+   "2": "„Hlavně že ty tomu rozumíš nejlíp, viď?“",
+   "5": "„Hlavně že ty tomu rozumíš nejlíp, viď?“"
+  }
+ },
+ {
+  "key": "policy.strictness.example.mixed",
+  "lang": "cs",
+  "translations": {
+   "1": "„Kurz je předražený, jste banda zlodějů.“",
+   "2": "„Kurz je předražený, jste banda zlodějů.“",
+   "5": "„Kurz je předražený, jste banda zlodějů.“"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.spam",
+  "lang": "cs",
+  "translations": {
+   "1": "od %hide% skrýt · pod %hide% ke kontrole",
+   "2": "od %hide% skrýt · pod %hide% ke kontrole",
+   "5": "od %hide% skrýt · pod %hide% ke kontrole"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.hide-review",
+  "lang": "cs",
+  "translations": {
+   "1": "od %hide% skrýt · %review%–%hide% ke kontrole · pod %review% ponechat",
+   "2": "od %hide% skrýt · %review%–%hide% ke kontrole · pod %review% ponechat",
+   "5": "od %hide% skrýt · %review%–%hide% ke kontrole · pod %review% ponechat"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.hide",
+  "lang": "cs",
+  "translations": {
+   "1": "od %hide% skrýt · pod %hide% ponechat",
+   "2": "od %hide% skrýt · pod %hide% ponechat",
+   "5": "od %hide% skrýt · pod %hide% ponechat"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.review",
+  "lang": "cs",
+  "translations": {
+   "1": "od %review% ke kontrole · pod %review% ponechat · nikdy neskrýt",
+   "2": "od %review% ke kontrole · pod %review% ponechat · nikdy neskrýt",
+   "5": "od %review% ke kontrole · pod %review% ponechat · nikdy neskrýt"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.keep",
+  "lang": "cs",
+  "translations": {
+   "1": "vždy ponechat",
+   "2": "vždy ponechat",
+   "5": "vždy ponechat"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.mixed-review",
+  "lang": "cs",
+  "translations": {
+   "1": "nikdy neskrýt · kde by druh obsahu skryl, jde ke kontrole",
+   "2": "nikdy neskrýt · kde by druh obsahu skryl, jde ke kontrole",
+   "5": "nikdy neskrýt · kde by druh obsahu skryl, jde ke kontrole"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.mixed-hide",
+  "lang": "cs",
+  "translations": {
+   "1": "od %hide% skrýt · jinak nejvýše ke kontrole",
+   "2": "od %hide% skrýt · jinak nejvýše ke kontrole",
+   "5": "od %hide% skrýt · jinak nejvýše ke kontrole"
+  }
+ },
+ {
+  "key": "policy.strictness.rule.score",
+  "lang": "cs",
+  "translations": {
+   "1": "Skóre 0–1 určuje model: jak jednoznačně text daný druh obsahuje. Hodnoty jsou počáteční, ladí se vyhodnocením.",
+   "2": "Skóre 0–1 určuje model: jak jednoznačně text daný druh obsahuje. Hodnoty jsou počáteční, ladí se vyhodnocením.",
+   "5": "Skóre 0–1 určuje model: jak jednoznačně text daný druh obsahuje. Hodnoty jsou počáteční, ladí se vyhodnocením."
+  }
+ },
+ {
+  "key": "policy.strictness.rule.confidence",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrytí vyžaduje i jistotu kategorie aspoň %confidence% a souhlas modelu, jinak jde ke kontrole.",
+   "2": "Skrytí vyžaduje i jistotu kategorie aspoň %confidence% a souhlas modelu, jinak jde ke kontrole.",
+   "5": "Skrytí vyžaduje i jistotu kategorie aspoň %confidence% a souhlas modelu, jinak jde ke kontrole."
+  }
+ },
+ {
+  "key": "policy.strictness.rule.threat",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrytá výhrůžka se vždy označí ke kontrole člověkem.",
+   "2": "Skrytá výhrůžka se vždy označí ke kontrole člověkem.",
+   "5": "Skrytá výhrůžka se vždy označí ke kontrole člověkem."
+  }
+ },
+ {
+  "key": "policy.strictness.rule.message",
+  "lang": "cs",
+  "translations": {
+   "1": "Soukromou zprávu nelze skrýt: místo skrytí jde ke kontrole.",
+   "2": "Soukromou zprávu nelze skrýt: místo skrytí jde ke kontrole.",
+   "5": "Soukromou zprávu nelze skrýt: místo skrytí jde ke kontrole."
+  }
+ },
+ {
+  "key": "policy.strictness.rule.handoff",
+  "lang": "cs",
+  "translations": {
+   "1": "Stížnosti, platby, vracení peněz, zdraví a právní témata jdou vždy člověku. Skrytí je vratné, nic se nemaže.",
+   "2": "Stížnosti, platby, vracení peněz, zdraví a právní témata jdou vždy člověku. Skrytí je vratné, nic se nemaže.",
+   "5": "Stížnosti, platby, vracení peněz, zdraví a právní témata jdou vždy člověku. Skrytí je vratné, nic se nemaže."
+  }
+ },
+ {
+  "key": "policy.strictness.execution",
+  "lang": "cs",
+  "translations": {
+   "1": "Skrytí se provede automaticky jen v režimu Automatický se zapnutým automatickým skrytím a bez panic switche, jinak je to návrh. Nyní: režim %mode%, automatické skrytí %autoHide%.",
+   "2": "Skrytí se provede automaticky jen v režimu Automatický se zapnutým automatickým skrytím a bez panic switche, jinak je to návrh. Nyní: režim %mode%, automatické skrytí %autoHide%.",
+   "5": "Skrytí se provede automaticky jen v režimu Automatický se zapnutým automatickým skrytím a bez panic switche, jinak je to návrh. Nyní: režim %mode%, automatické skrytí %autoHide%."
+  }
+ },
+ {
+  "key": "policy.strictness.custom.warning-title",
+  "lang": "cs",
+  "translations": {
+   "1": "Danger zone: vlastní prahy",
+   "2": "Danger zone: vlastní prahy",
+   "5": "Danger zone: vlastní prahy"
+  }
+ },
+ {
+  "key": "policy.strictness.custom.warning",
+  "lang": "cs",
+  "translations": {
+   "1": "Vlastní prahy mohou automaticky skrývat i kritiku s nevhodným tónem nebo naopak propustit urážky. Změnu ověřte vyhodnocením a sledujte skryté komentáře.",
+   "2": "Vlastní prahy mohou automaticky skrývat i kritiku s nevhodným tónem nebo naopak propustit urážky. Změnu ověřte vyhodnocením a sledujte skryté komentáře.",
+   "5": "Vlastní prahy mohou automaticky skrývat i kritiku s nevhodným tónem nebo naopak propustit urážky. Změnu ověřte vyhodnocením a sledujte skryté komentáře."
+  }
+ },
+ {
+  "key": "policy.strictness.custom.spam-review",
+  "lang": "cs",
+  "translations": {
+   "1": "pod prahem vždy ke kontrole",
+   "2": "pod prahem vždy ke kontrole",
+   "5": "pod prahem vždy ke kontrole"
+  }
+ },
+ {
+  "key": "policy.strictness.custom.mixed-review",
+  "lang": "cs",
+  "translations": {
+   "1": "pod prahem nejvýše ke kontrole podle druhu",
+   "2": "pod prahem nejvýše ke kontrole podle druhu",
+   "5": "pod prahem nejvýše ke kontrole podle druhu"
+  }
+ },
+ {
+  "key": "policy.strictness.custom.empty",
+  "lang": "cs",
+  "translations": {
+   "1": "Prázdné pole = práh vypnutý. Rozsah 0,50–1,00; práh kontroly nesmí být vyšší než práh skrytí.",
+   "2": "Prázdné pole = práh vypnutý. Rozsah 0,50–1,00; práh kontroly nesmí být vyšší než práh skrytí.",
+   "5": "Prázdné pole = práh vypnutý. Rozsah 0,50–1,00; práh kontroly nesmí být vyšší než práh skrytí."
+  }
+ },
+ {
+  "key": "policy.error.review-above-hide",
+  "lang": "cs",
+  "translations": {
+   "1": "Práh kontroly nesmí být vyšší než práh skrytí.",
+   "2": "Práh kontroly nesmí být vyšší než práh skrytí.",
+   "5": "Práh kontroly nesmí být vyšší než práh skrytí."
+  }
+ },
+ {
+  "key": "policy.error.abuse-rules",
+  "lang": "cs",
+  "translations": {
+   "1": "Pravidla pro nevhodný obsah jsou neúplná.",
+   "2": "Pravidla pro nevhodný obsah jsou neúplná.",
+   "5": "Pravidla pro nevhodný obsah jsou neúplná."
+  }
+ },
+ {
+  "key": "policy.error.mixed-custom",
+  "lang": "cs",
+  "translations": {
+   "1": "Práh pro věcnou výtku s nevhodným tónem lze nastavit jen u vlastní úrovně.",
+   "2": "Práh pro věcnou výtku s nevhodným tónem lze nastavit jen u vlastní úrovně.",
+   "5": "Práh pro věcnou výtku s nevhodným tónem lze nastavit jen u vlastní úrovně."
+  }
+ },
+ {
+  "key": "policy.error.strictness",
+  "lang": "cs",
+  "translations": {
+   "1": "Neznámá úroveň přísnosti.",
+   "2": "Neznámá úroveň přísnosti.",
+   "5": "Neznámá úroveň přísnosti."
+  }
+ },
+ {
+  "key": "decision.reason.abuse_threat",
+  "lang": "cs",
+  "translations": {
+   "1": "výhrůžka",
+   "2": "výhrůžka",
+   "5": "výhrůžka"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_profanity",
+  "lang": "cs",
+  "translations": {
+   "1": "sprostá slova",
+   "2": "sprostá slova",
+   "5": "sprostá slova"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_insult",
+  "lang": "cs",
+  "translations": {
+   "1": "urážka",
+   "2": "urážka",
+   "5": "urážka"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_ridicule",
+  "lang": "cs",
+  "translations": {
+   "1": "výsměch",
+   "2": "výsměch",
+   "5": "výsměch"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_passive_aggression",
+  "lang": "cs",
+  "translations": {
+   "1": "pasivní agrese",
+   "2": "pasivní agrese",
+   "5": "pasivní agrese"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_review",
+  "lang": "cs",
+  "translations": {
+   "1": "ke kontrole podle úrovně přísnosti",
+   "2": "ke kontrole podle úrovně přísnosti",
+   "5": "ke kontrole podle úrovně přísnosti"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_tolerated",
+  "lang": "cs",
+  "translations": {
+   "1": "ponecháno podle úrovně přísnosti",
+   "2": "ponecháno podle úrovně přísnosti",
+   "5": "ponecháno podle úrovně přísnosti"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_type_missing",
+  "lang": "cs",
+  "translations": {
+   "1": "chybí druh nevhodného obsahu",
+   "2": "chybí druh nevhodného obsahu",
+   "5": "chybí druh nevhodného obsahu"
+  }
+ },
+ {
+  "key": "decision.reason.mixed_content",
+  "lang": "cs",
+  "translations": {
+   "1": "obsahuje věcnou výtku",
+   "2": "obsahuje věcnou výtku",
+   "5": "obsahuje věcnou výtku"
+  }
+ },
+ {
+  "key": "decision.reason.threat_hidden",
+  "lang": "cs",
+  "translations": {
+   "1": "skrytá výhrůžka – zkontrolovat",
+   "2": "skrytá výhrůžka – zkontrolovat",
+   "5": "skrytá výhrůžka – zkontrolovat"
+  }
+ },
+ {
+  "key": "decision.reason.knowledge_missing",
+  "lang": "cs",
+  "translations": {
+   "1": "chybí publikovaná znalost",
+   "2": "chybí publikovaná znalost",
+   "5": "chybí publikovaná znalost"
   }
  }
 ]

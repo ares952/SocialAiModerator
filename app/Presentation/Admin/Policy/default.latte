@@ -2,6 +2,8 @@
 {varType list<Nette\Database\Row> $history}
 {varType Nette\Database\Row|null $pause}
 {varType bool $canManage}
+{varType list<App\Moderation\Strictness> $presets}
+{varType list<App\Moderation\AbuseType> $abuseTypes}
 
 {block content}
 <h1 class="h3 mb-4" n:block="title">{_'policy.title'}</h1>
@@ -33,6 +35,80 @@
 	</div>
 </div>
 
+{var $settings = $policy->settings}
+<div class="card mb-4">
+	<div class="card-header d-flex flex-wrap align-items-center gap-2">
+		<span class="me-auto">{_'policy.strictness.title'}</span>
+		<span n:class="badge, $settings->strictness === App\Moderation\Strictness::Custom ? text-bg-danger : text-bg-info">
+			{_"policy.strictness.{$settings->strictness->value}"}
+		</span>
+	</div>
+	<div class="card-body">
+		<p class="small text-body-secondary">{_'policy.strictness.note'}</p>
+		{if $canManage}
+			<form n:name="strictnessForm" class="strictness-form">
+				<div n:foreach="$form->getOwnErrors() as $error" class="alert alert-danger">{$error}</div>
+				<div class="row g-2 mb-3">
+					<div n:foreach="App\Moderation\Strictness::cases() as $level" class="col-6 col-lg-3">
+						<input n:name="strictness:{$level->value}" class="btn-check">
+						<label n:name="strictness:{$level->value}" n:class="btn, w-100, h-100, text-start, $level === App\Moderation\Strictness::Custom ? btn-outline-danger : btn-outline-primary">
+							<span class="d-block fw-semibold">{_"policy.strictness.{$level->value}"}</span>
+							<small class="d-block">{_"policy.strictness.{$level->value}.summary"}</small>
+						</label>
+					</div>
+				</div>
+
+				<div n:foreach="$presets as $preset" class="strictness-panel strictness-panel-{$preset->value}">
+					{include rules, spam: $preset->spamHideMin(), rules: $preset->abuseRules(), mixed: null, types: $abuseTypes, confidence: $settings->hideMinConfidence}
+				</div>
+
+				<div class="strictness-panel strictness-panel-custom">
+					<div class="alert alert-danger">
+						<h3 class="h6">{_'policy.strictness.custom.warning-title'}</h3>
+						<p class="mb-0 small">{_'policy.strictness.custom.warning'}</p>
+					</div>
+					<div class="table-responsive">
+						<table class="table table-sm align-middle">
+							<thead>
+								<tr>
+									<th scope="col">{_'policy.strictness.column.type'}</th>
+									<th scope="col">{_'policy.strictness.column.hide'}</th>
+									<th scope="col">{_'policy.strictness.column.review'}</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th scope="row">{_'abuse.type.spam'}</th>
+									<td><input n:name="spamHideMin" class="form-control form-control-sm"></td>
+									<td class="small text-body-secondary">{_'policy.strictness.custom.spam-review'}</td>
+								</tr>
+								<tr n:foreach="$abuseTypes as $type">
+									<th scope="row">{_"abuse.type.{$type->value}"}</th>
+									<td><input n:name="{$type->value}_hide" class="form-control form-control-sm"></td>
+									<td><input n:name="{$type->value}_review" class="form-control form-control-sm"></td>
+								</tr>
+								<tr class="table-danger">
+									<th scope="row">{_'abuse.type.mixed'}</th>
+									<td><input n:name="mixedHideMin" class="form-control form-control-sm"></td>
+									<td class="small">{_'policy.strictness.custom.mixed-review'}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<p class="small text-body-secondary">{_'policy.strictness.custom.empty'}</p>
+				</div>
+
+				<button n:name="send" class="btn btn-primary">{_'policy.strictness.save'}</button>
+			</form>
+		{else}
+			{include rules, spam: $settings->hideMinSpamProbability, rules: $settings->abuseRules, mixed: $settings->mixedHideMin, types: $abuseTypes, confidence: $settings->hideMinConfidence}
+		{/if}
+		<p class="small text-body-secondary mb-0 mt-3">
+			{_'policy.strictness.execution', 1, [mode => ("mode.{$policy->mode->value}"|translate), autoHide => (($settings->autoHide ? 'common.yes' : 'common.no')|translate)]}
+		</p>
+	</div>
+</div>
+
 <div class="row g-4">
 	<div class="col-12 col-xl-7">
 		<div class="card">
@@ -48,7 +124,6 @@
 					{var $settings = $policy->settings}
 					<dl class="row mb-0">
 						<dt class="col-sm-7">{_'policy.form.hideMinConfidence'}</dt><dd class="col-sm-5">{$settings->hideMinConfidence}</dd>
-						<dt class="col-sm-7">{_'policy.form.hideMinSpamProbability'}</dt><dd class="col-sm-5">{$settings->hideMinSpamProbability}</dd>
 						<dt class="col-sm-7">{_'policy.form.replyMinConfidence'}</dt><dd class="col-sm-5">{$settings->replyMinConfidence}</dd>
 						<dt class="col-sm-7">{_'policy.form.autoHide'}</dt><dd class="col-sm-5">{if $settings->autoHide}{_'common.yes'}{else}{_'common.no'}{/if}</dd>
 						<dt class="col-sm-7">{_'policy.form.autoReplyCategories'}</dt>
@@ -87,3 +162,87 @@
 		</div>
 	</div>
 </div>
+
+
+{define rules, float $spam, array $rules, ?float $mixed, array $types, float $confidence}
+	<div class="row g-3 mb-3 small">
+		<div class="col-md-4">
+			<h3 class="h6">{_'policy.strictness.hides'}</h3>
+			<span class="badge rounded-pill text-bg-danger">{_'abuse.type.spam'}</span>
+			{foreach $types as $type}
+				<span n:if="$rules[$type->value]->hideMin !== null" class="badge rounded-pill text-bg-danger">{_"abuse.type.{$type->value}"}</span>
+			{/foreach}
+			<span n:if="$mixed !== null" class="badge rounded-pill text-bg-danger">{_'abuse.type.mixed'}</span>
+		</div>
+		<div class="col-md-4">
+			<h3 class="h6">{_'policy.strictness.reviews'}</h3>
+			{foreach $types as $type}
+				<span n:if="$rules[$type->value]->hideMin === null && $rules[$type->value]->reviewMin !== null" class="badge rounded-pill text-bg-warning">{_"abuse.type.{$type->value}"}</span>
+			{/foreach}
+		</div>
+		<div class="col-md-4">
+			<h3 class="h6">{_'policy.strictness.keeps'}</h3>
+			<span class="badge rounded-pill text-bg-success">{_'policy.strictness.criticism'}</span>
+			<span class="badge rounded-pill text-bg-success">{_'policy.strictness.disagreement'}</span>
+			{foreach $types as $type}
+				<span n:if="$rules[$type->value]->hideMin === null && $rules[$type->value]->reviewMin === null" class="badge rounded-pill text-bg-secondary">{_"abuse.type.{$type->value}"}</span>
+			{/foreach}
+		</div>
+	</div>
+	<div class="table-responsive">
+		<table class="table table-sm align-middle small">
+			<thead>
+				<tr>
+					<th scope="col">{_'policy.strictness.column.type'}</th>
+					<th scope="col">{_'policy.strictness.column.criterion'}</th>
+					<th scope="col">{_'policy.strictness.column.example'}</th>
+					<th scope="col">{_'policy.strictness.column.outcome'}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">{_'abuse.type.spam'}</th>
+					<td>{_'policy.strictness.criterion.spam'}</td>
+					<td class="fst-italic">{_'policy.strictness.example.spam'}</td>
+					<td>{_'policy.strictness.outcome.spam', 1, [hide => ($spam|number:2)]}</td>
+				</tr>
+				<tr n:foreach="$types as $type">
+					{var $rule = $rules[$type->value]}
+					<th scope="row">{_"abuse.type.{$type->value}"}</th>
+					<td>{_"policy.strictness.criterion.{$type->value}"}</td>
+					<td class="fst-italic">{_"policy.strictness.example.{$type->value}"}</td>
+					<td>
+						{if $rule->hideMin !== null && $rule->reviewMin !== null}
+							{_'policy.strictness.outcome.hide-review', 1, [hide => ($rule->hideMin|number:2), review => ($rule->reviewMin|number:2)]}
+						{elseif $rule->hideMin !== null}
+							{_'policy.strictness.outcome.hide', 1, [hide => ($rule->hideMin|number:2)]}
+						{elseif $rule->reviewMin !== null}
+							{_'policy.strictness.outcome.review', 1, [review => ($rule->reviewMin|number:2)]}
+						{else}
+							{_'policy.strictness.outcome.keep'}
+						{/if}
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">{_'abuse.type.mixed'}</th>
+					<td>{_'policy.strictness.criterion.mixed'}</td>
+					<td class="fst-italic">{_'policy.strictness.example.mixed'}</td>
+					<td>
+						{if $mixed === null}
+							{_'policy.strictness.outcome.mixed-review'}
+						{else}
+							{_'policy.strictness.outcome.mixed-hide', 1, [hide => ($mixed|number:2)]}
+						{/if}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<ul class="small text-body-secondary mb-0">
+		<li>{_'policy.strictness.rule.score'}</li>
+		<li>{_'policy.strictness.rule.confidence', 1, [confidence => ($confidence|number:2)]}</li>
+		<li>{_'policy.strictness.rule.threat'}</li>
+		<li>{_'policy.strictness.rule.message'}</li>
+		<li>{_'policy.strictness.rule.handoff'}</li>
+	</ul>
+{/define}

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Moderation\AbuseRule;
+use App\Moderation\AbuseType;
 use App\Moderation\Action;
 use App\Moderation\AutomationContext;
 use App\Moderation\Category;
@@ -15,6 +17,7 @@ use App\Moderation\PolicyEngine;
 use App\Moderation\PolicySettings;
 use App\Moderation\RuleHit;
 use App\Moderation\Sentiment;
+use App\Moderation\Strictness;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -40,17 +43,44 @@ $classification = static fn(
 	float $spam = 0.01,
 	bool $requiresHuman = false,
 	string $language = 'cs',
+	AbuseType $abuse = AbuseType::None,
+	float $abuseScore = 0.0,
+	bool $substance = false,
+	?string $knowledge = 'pricing_current',
 ): Classification => new Classification(
 	category: $category,
 	language: $language,
 	sentiment: Sentiment::Neutral,
 	confidence: $confidence,
 	spamProbability: $spam,
+	abuseType: $abuse,
+	abuseScore: $abuseScore,
+	hasSubstance: $substance,
 	recommendedAction: $recommended,
 	requiresHuman: $requiresHuman,
 	reason: 'test',
-	knowledgeRequired: [],
+	knowledgeRequired: $knowledge === null ? [] : [$knowledge],
 );
+$abusive = static fn(
+	AbuseType $type,
+	float $score,
+	Category $category = Category::Abuse,
+	bool $substance = false,
+	Action $recommended = Action::Hide,
+	float $confidence = 0.99,
+): Classification => $classification(
+	$category,
+	$recommended,
+	$confidence,
+	abuse: $type,
+	abuseScore: $score,
+	substance: $substance,
+);
+$level = static fn(Strictness $strictness): Policy => new Policy(8, Mode::Automatic, new PolicySettings(
+	hideMinSpamProbability: $strictness->spamHideMin(),
+	autoHide: true,
+	strictness: $strictness,
+));
 
 
 test('without a classification the event goes to review (fail closed)', function () use ($engine, $automatic, $open, $comment): void {
@@ -110,11 +140,15 @@ test('the model can only make a decision more cautious', function () use ($engin
 	Assert::same(Action::Handoff, $handoff->action);
 
 	$human = $engine->decide($classification(Category::Spam, Action::Hide, 0.99, 0.99, requiresHuman: true), $comment, false, $automatic, $open);
-	Assert::same(Action::Handoff, $human->action);
+	Assert::same(Action::Review, $human->action, 'moderation content goes to a moderator, not to the business');
+	Assert::same(['model_requires_human'], $human->reasons);
+
+	$praise = $engine->decide($classification(Category::Praise, Action::Keep, requiresHuman: true), $comment, false, $automatic, $open);
+	Assert::same(Action::Handoff, $praise->action);
 });
 
 
-test('abuse and unknown content go to review, never hidden automatically', function () use ($engine, $automatic, $open, $classification, $comment): void {
+test('abuse without a kind and unknown content go to review, never hidden automatically', function () use ($engine, $automatic, $open, $classification, $comment): void {
 	foreach ([Category::Abuse, Category::Unknown] as $category) {
 		$decision = $engine->decide($classification($category, Action::Hide, 0.99, 0.99), $comment, false, $automatic, $open);
 		Assert::same(Action::Review, $decision->action);
@@ -137,6 +171,166 @@ test('FAQ reply needs the threshold, a supported language and no moderation flag
 	$flagged = $engine->decide($classification(Category::Faq, Action::Reply), $comment, true, $automatic, $open);
 	Assert::same(Action::Review, $flagged->action);
 	Assert::same(['moderation_flagged'], $flagged->reasons);
+});
+
+
+test('a FAQ without published knowledge is handed off, never answered', function () use ($engine, $automatic, $open, $classification, $comment): void {
+	$decision = $engine->decide($classification(Category::Faq, Action::Reply, knowledge: null), $comment, false, $automatic, $open);
+	Assert::same(Action::Handoff, $decision->action);
+	Assert::false($decision->automatic);
+	Assert::same(['knowledge_missing'], $decision->reasons);
+});
+
+
+test('each strictness level hides, reviews or keeps every kind of abuse by its thresholds', function () use ($engine, $open, $abusive, $level, $comment): void {
+	$expected = [
+		'benevolent' => [
+			['threat', 0.95, Action::Hide],
+			['threat', 0.60, Action::Review],
+			['profanity', 0.99, Action::Keep],
+			['insult', 0.95, Action::Review],
+			['insult', 0.80, Action::Keep],
+			['ridicule', 0.99, Action::Keep],
+			['passive_aggression', 0.99, Action::Keep],
+		],
+		'balanced' => [
+			['threat', 0.86, Action::Hide],
+			['threat', 0.84, Action::Review],
+			['profanity', 0.99, Action::Review],
+			['insult', 0.99, Action::Review],
+			['insult', 0.60, Action::Keep],
+			['ridicule', 0.99, Action::Keep],
+			['passive_aggression', 0.99, Action::Keep],
+		],
+		'strict' => [
+			['threat', 0.80, Action::Hide],
+			['profanity', 0.90, Action::Hide],
+			['profanity', 0.70, Action::Review],
+			['insult', 0.85, Action::Hide],
+			['insult', 0.50, Action::Keep],
+			['ridicule', 0.96, Action::Hide],
+			['ridicule', 0.80, Action::Review],
+			['passive_aggression', 0.95, Action::Hide],
+			['passive_aggression', 0.90, Action::Review],
+			['passive_aggression', 0.70, Action::Keep],
+		],
+	];
+	foreach ($expected as $strictness => $cases) {
+		$policy = $level(Strictness::from($strictness));
+		foreach ($cases as [$type, $score, $action]) {
+			$decision = $engine->decide($abusive(AbuseType::from($type), $score), $comment, false, $policy, $open);
+			Assert::same($action, $decision->action, "$strictness / $type / $score");
+			Assert::same($action === Action::Hide, $decision->automatic, "$strictness / $type / $score");
+			Assert::contains("abuse_$type", $decision->reasons);
+		}
+	}
+});
+
+
+test('a hidden threat is flagged for a human, kept abuse is visible in the reasons', function () use ($engine, $open, $abusive, $level, $comment): void {
+	$threat = $engine->decide($abusive(AbuseType::Threat, 0.99), $comment, false, $level(Strictness::Benevolent), $open);
+	Assert::same(Action::Hide, $threat->action);
+	Assert::same(['abuse_threat', 'threat_hidden'], $threat->reasons);
+
+	$kept = $engine->decide($abusive(AbuseType::Profanity, 0.99), $comment, false, $level(Strictness::Benevolent), $open);
+	Assert::same(Action::Keep, $kept->action);
+	Assert::same(['abuse_profanity', 'abuse_tolerated'], $kept->reasons);
+});
+
+
+test('a text with a factual point is never hidden by a preset level', function () use ($engine, $open, $abusive, $level, $comment): void {
+	$strict = $level(Strictness::Strict);
+	$mixed = $engine->decide($abusive(AbuseType::Insult, 0.99, substance: true), $comment, false, $strict, $open);
+	Assert::same(Action::Review, $mixed->action);
+	Assert::same(['abuse_insult', 'mixed_content', 'abuse_review'], $mixed->reasons);
+
+	$criticism = $engine->decide($abusive(AbuseType::Profanity, 0.99, Category::LegitimateCriticism), $comment, false, $strict, $open);
+	Assert::same(Action::Review, $criticism->action, 'criticism counts as a factual point even without has_substance');
+
+	$tolerated = $engine->decide($abusive(AbuseType::Ridicule, 0.99, Category::LegitimateCriticism, recommended: Action::Keep), $comment, false, $level(Strictness::Balanced), $open);
+	Assert::same(Action::Keep, $tolerated->action);
+});
+
+
+test('the custom level may hide a text with a factual point above its own threshold', function () use ($engine, $open, $abusive, $comment): void {
+	$rules = [];
+	foreach (AbuseType::ruled() as $type) {
+		$rules[$type->value] = new AbuseRule(0.80, 0.60);
+	}
+	$custom = new Policy(9, Mode::Automatic, new PolicySettings(
+		autoHide: true,
+		strictness: Strictness::Custom,
+		abuseRules: $rules,
+		mixedHideMin: 0.90,
+	));
+
+	$above = $engine->decide($abusive(AbuseType::Insult, 0.95, substance: true), $comment, false, $custom, $open);
+	Assert::same(Action::Hide, $above->action);
+	Assert::true($above->automatic);
+
+	$below = $engine->decide($abusive(AbuseType::Insult, 0.85, substance: true), $comment, false, $custom, $open);
+	Assert::same(Action::Review, $below->action);
+	Assert::contains('mixed_content', $below->reasons);
+});
+
+
+test('abuse is hidden only with the model agreeing, a confident category and in a comment', function () use ($engine, $open, $abusive, $level, $comment, $message): void {
+	$strict = $level(Strictness::Strict);
+	$disagrees = $engine->decide($abusive(AbuseType::Insult, 0.99, recommended: Action::Review), $comment, false, $strict, $open);
+	Assert::same(Action::Review, $disagrees->action);
+	Assert::contains('model_disagrees', $disagrees->reasons);
+
+	$unsure = $engine->decide($abusive(AbuseType::Insult, 0.99, confidence: 0.80), $comment, false, $strict, $open);
+	Assert::same(Action::Review, $unsure->action);
+	Assert::contains('below_hide_threshold', $unsure->reasons);
+
+	$private = $engine->decide($abusive(AbuseType::Insult, 0.99), $message, false, $strict, $open);
+	Assert::same(Action::Review, $private->action);
+	Assert::contains('message_not_hideable', $private->reasons);
+
+	$observe = new Policy(10, Mode::Observe, new PolicySettings(hideMinSpamProbability: 0.90, autoHide: true, strictness: Strictness::Strict));
+	$observed = $engine->decide($abusive(AbuseType::Insult, 0.99), $comment, false, $observe, $open);
+	Assert::same(Action::Hide, $observed->action);
+	Assert::false($observed->automatic);
+});
+
+
+test('a tolerated tone keeps praise and answers a question, a sensitive topic stays handed off', function () use ($engine, $automatic, $open, $classification, $level, $comment): void {
+	$praise = $engine->decide(
+		$classification(Category::Praise, Action::Keep, abuse: AbuseType::Profanity, abuseScore: 0.99),
+		$comment,
+		false,
+		$level(Strictness::Benevolent),
+		$open,
+	);
+	Assert::same(Action::Keep, $praise->action);
+
+	$question = $engine->decide(
+		$classification(Category::Faq, Action::Reply, abuse: AbuseType::Ridicule, abuseScore: 0.99, substance: true),
+		$comment,
+		false,
+		$automatic,
+		$open,
+	);
+	Assert::same(Action::Reply, $question->action);
+
+	$rude = $engine->decide(
+		$classification(Category::Faq, Action::Reply, abuse: AbuseType::Insult, abuseScore: 0.99, substance: true),
+		$comment,
+		false,
+		$automatic,
+		$open,
+	);
+	Assert::same(Action::Review, $rude->action);
+
+	$refund = $engine->decide(
+		$classification(Category::Refund, Action::Handoff, abuse: AbuseType::Threat, abuseScore: 0.99),
+		$comment,
+		false,
+		$level(Strictness::Strict),
+		$open,
+	);
+	Assert::same(Action::Handoff, $refund->action);
 });
 
 

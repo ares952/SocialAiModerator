@@ -1408,14 +1408,6 @@
   }
  },
  {
-  "key": "policy.form.hideMinSpamProbability",
-  "lang": "en",
-  "translations": {
-   "1": "Hide: minimum spam probability",
-   "2": "Hide: minimum spam probability"
-  }
- },
- {
   "key": "policy.form.replyMinConfidence",
   "lang": "en",
   "translations": {
@@ -3309,6 +3301,614 @@
   "translations": {
    "1": "Retention periods saved.",
    "2": "Retention periods saved."
+  }
+ },
+ {
+  "key": "abuse.type.spam",
+  "lang": "en",
+  "translations": {
+   "1": "Spam and scams",
+   "2": "Spam and scams"
+  }
+ },
+ {
+  "key": "abuse.type.threat",
+  "lang": "en",
+  "translations": {
+   "1": "Threats and violence",
+   "2": "Threats and violence"
+  }
+ },
+ {
+  "key": "abuse.type.profanity",
+  "lang": "en",
+  "translations": {
+   "1": "Profanity",
+   "2": "Profanity"
+  }
+ },
+ {
+  "key": "abuse.type.insult",
+  "lang": "en",
+  "translations": {
+   "1": "Insults and personal attacks",
+   "2": "Insults and personal attacks"
+  }
+ },
+ {
+  "key": "abuse.type.ridicule",
+  "lang": "en",
+  "translations": {
+   "1": "Ridicule",
+   "2": "Ridicule"
+  }
+ },
+ {
+  "key": "abuse.type.passive_aggression",
+  "lang": "en",
+  "translations": {
+   "1": "Passive aggression",
+   "2": "Passive aggression"
+  }
+ },
+ {
+  "key": "abuse.type.mixed",
+  "lang": "en",
+  "translations": {
+   "1": "Factual point with an abusive tone",
+   "2": "Factual point with an abusive tone"
+  }
+ },
+ {
+  "key": "policy.strictness.title",
+  "lang": "en",
+  "translations": {
+   "1": "Strictness level",
+   "2": "Strictness level"
+  }
+ },
+ {
+  "key": "policy.strictness.note",
+  "lang": "en",
+  "translations": {
+   "1": "The level decides which kinds of inappropriate content are hidden, which go to review and which stay. Saving creates a new policy version.",
+   "2": "The level decides which kinds of inappropriate content are hidden, which go to review and which stay. Saving creates a new policy version."
+  }
+ },
+ {
+  "key": "policy.strictness.benevolent",
+  "lang": "en",
+  "translations": {
+   "1": "Lenient",
+   "2": "Lenient"
+  }
+ },
+ {
+  "key": "policy.strictness.balanced",
+  "lang": "en",
+  "translations": {
+   "1": "Balanced",
+   "2": "Balanced"
+  }
+ },
+ {
+  "key": "policy.strictness.strict",
+  "lang": "en",
+  "translations": {
+   "1": "Strict",
+   "2": "Strict"
+  }
+ },
+ {
+  "key": "policy.strictness.custom",
+  "lang": "en",
+  "translations": {
+   "1": "Custom (danger zone)",
+   "2": "Custom (danger zone)"
+  }
+ },
+ {
+  "key": "policy.strictness.benevolent.summary",
+  "lang": "en",
+  "translations": {
+   "1": "hides threats and spam",
+   "2": "hides threats and spam"
+  }
+ },
+ {
+  "key": "policy.strictness.balanced.summary",
+  "lang": "en",
+  "translations": {
+   "1": "+ profanity and insults to review",
+   "2": "+ profanity and insults to review"
+  }
+ },
+ {
+  "key": "policy.strictness.strict.summary",
+  "lang": "en",
+  "translations": {
+   "1": "+ also hides insults, ridicule and passive aggression",
+   "2": "+ also hides insults, ridicule and passive aggression"
+  }
+ },
+ {
+  "key": "policy.strictness.custom.summary",
+  "lang": "en",
+  "translations": {
+   "1": "own thresholds, also for criticism with an abusive tone",
+   "2": "own thresholds, also for criticism with an abusive tone"
+  }
+ },
+ {
+  "key": "policy.strictness.save",
+  "lang": "en",
+  "translations": {
+   "1": "Save strictness level",
+   "2": "Save strictness level"
+  }
+ },
+ {
+  "key": "policy.strictness.hides",
+  "lang": "en",
+  "translations": {
+   "1": "Hides",
+   "2": "Hides"
+  }
+ },
+ {
+  "key": "policy.strictness.reviews",
+  "lang": "en",
+  "translations": {
+   "1": "To review (not hidden)",
+   "2": "To review (not hidden)"
+  }
+ },
+ {
+  "key": "policy.strictness.keeps",
+  "lang": "en",
+  "translations": {
+   "1": "Always stays / kept",
+   "2": "Always stays / kept"
+  }
+ },
+ {
+  "key": "policy.strictness.criticism",
+  "lang": "en",
+  "translations": {
+   "1": "Factual criticism",
+   "2": "Factual criticism"
+  }
+ },
+ {
+  "key": "policy.strictness.disagreement",
+  "lang": "en",
+  "translations": {
+   "1": "Disagreement",
+   "2": "Disagreement"
+  }
+ },
+ {
+  "key": "policy.strictness.column.type",
+  "lang": "en",
+  "translations": {
+   "1": "Kind of content",
+   "2": "Kind of content"
+  }
+ },
+ {
+  "key": "policy.strictness.column.criterion",
+  "lang": "en",
+  "translations": {
+   "1": "Criterion",
+   "2": "Criterion"
+  }
+ },
+ {
+  "key": "policy.strictness.column.example",
+  "lang": "en",
+  "translations": {
+   "1": "Example",
+   "2": "Example"
+  }
+ },
+ {
+  "key": "policy.strictness.column.outcome",
+  "lang": "en",
+  "translations": {
+   "1": "Thresholds and outcome",
+   "2": "Thresholds and outcome"
+  }
+ },
+ {
+  "key": "policy.strictness.column.hide",
+  "lang": "en",
+  "translations": {
+   "1": "Hide from score",
+   "2": "Hide from score"
+  }
+ },
+ {
+  "key": "policy.strictness.column.review",
+  "lang": "en",
+  "translations": {
+   "1": "Review from score",
+   "2": "Review from score"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.spam",
+  "lang": "en",
+  "translations": {
+   "1": "category spam or scam; score = spam probability",
+   "2": "category spam or scam; score = spam probability"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.threat",
+  "lang": "en",
+  "translations": {
+   "1": "threat of violence or harm, intimidation",
+   "2": "threat of violence or harm, intimidation"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.profanity",
+  "lang": "en",
+  "translations": {
+   "1": "vulgar or obscene words, also masked",
+   "2": "vulgar or obscene words, also masked"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.insult",
+  "lang": "en",
+  "translations": {
+   "1": "attack on a person or group, name-calling, degrading remarks",
+   "2": "attack on a person or group, name-calling, degrading remarks"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.ridicule",
+  "lang": "en",
+  "translations": {
+   "1": "mockery and sarcasm aimed at a person, not at a fact",
+   "2": "mockery and sarcasm aimed at a person, not at a fact"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.passive_aggression",
+  "lang": "en",
+  "translations": {
+   "1": "veiled hostility, condescending or needling remarks",
+   "2": "veiled hostility, condescending or needling remarks"
+  }
+ },
+ {
+  "key": "policy.strictness.criterion.mixed",
+  "lang": "en",
+  "translations": {
+   "1": "the text contains a factual point or question and an abusive tone",
+   "2": "the text contains a factual point or question and an abusive tone"
+  }
+ },
+ {
+  "key": "policy.strictness.example.spam",
+  "lang": "en",
+  "translations": {
+   "1": "“Earn 5,000 a day from home, message me.”",
+   "2": "“Earn 5,000 a day from home, message me.”"
+  }
+ },
+ {
+  "key": "policy.strictness.example.threat",
+  "lang": "en",
+  "translations": {
+   "1": "“Wait till I meet you in the street.”",
+   "2": "“Wait till I meet you in the street.”"
+  }
+ },
+ {
+  "key": "policy.strictness.example.profanity",
+  "lang": "en",
+  "translations": {
+   "1": "“What a f*cking pile of sh*t.”",
+   "2": "“What a f*cking pile of sh*t.”"
+  }
+ },
+ {
+  "key": "policy.strictness.example.insult",
+  "lang": "en",
+  "translations": {
+   "1": "“You are pathetic, go get treated.”",
+   "2": "“You are pathetic, go get treated.”"
+  }
+ },
+ {
+  "key": "policy.strictness.example.ridicule",
+  "lang": "en",
+  "translations": {
+   "1": "“Sure, our great expert has spoken again 😂”",
+   "2": "“Sure, our great expert has spoken again 😂”"
+  }
+ },
+ {
+  "key": "policy.strictness.example.passive_aggression",
+  "lang": "en",
+  "translations": {
+   "1": "“Good thing you know best, right?”",
+   "2": "“Good thing you know best, right?”"
+  }
+ },
+ {
+  "key": "policy.strictness.example.mixed",
+  "lang": "en",
+  "translations": {
+   "1": "“The course is overpriced, you are a bunch of thieves.”",
+   "2": "“The course is overpriced, you are a bunch of thieves.”"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.spam",
+  "lang": "en",
+  "translations": {
+   "1": "from %hide% hide · below %hide% review",
+   "2": "from %hide% hide · below %hide% review"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.hide-review",
+  "lang": "en",
+  "translations": {
+   "1": "from %hide% hide · %review%–%hide% review · below %review% keep",
+   "2": "from %hide% hide · %review%–%hide% review · below %review% keep"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.hide",
+  "lang": "en",
+  "translations": {
+   "1": "from %hide% hide · below %hide% keep",
+   "2": "from %hide% hide · below %hide% keep"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.review",
+  "lang": "en",
+  "translations": {
+   "1": "from %review% review · below %review% keep · never hidden",
+   "2": "from %review% review · below %review% keep · never hidden"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.keep",
+  "lang": "en",
+  "translations": {
+   "1": "always kept",
+   "2": "always kept"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.mixed-review",
+  "lang": "en",
+  "translations": {
+   "1": "never hidden · where the kind would be hidden, it goes to review",
+   "2": "never hidden · where the kind would be hidden, it goes to review"
+  }
+ },
+ {
+  "key": "policy.strictness.outcome.mixed-hide",
+  "lang": "en",
+  "translations": {
+   "1": "from %hide% hide · otherwise at most review",
+   "2": "from %hide% hide · otherwise at most review"
+  }
+ },
+ {
+  "key": "policy.strictness.rule.score",
+  "lang": "en",
+  "translations": {
+   "1": "The 0–1 score comes from the model: how clearly the text contains the kind. The values are initial and are tuned with the evaluation.",
+   "2": "The 0–1 score comes from the model: how clearly the text contains the kind. The values are initial and are tuned with the evaluation."
+  }
+ },
+ {
+  "key": "policy.strictness.rule.confidence",
+  "lang": "en",
+  "translations": {
+   "1": "Hiding also needs a category confidence of at least %confidence% and the model agreeing, otherwise it goes to review.",
+   "2": "Hiding also needs a category confidence of at least %confidence% and the model agreeing, otherwise it goes to review."
+  }
+ },
+ {
+  "key": "policy.strictness.rule.threat",
+  "lang": "en",
+  "translations": {
+   "1": "A hidden threat is always flagged for a human.",
+   "2": "A hidden threat is always flagged for a human."
+  }
+ },
+ {
+  "key": "policy.strictness.rule.message",
+  "lang": "en",
+  "translations": {
+   "1": "A private message cannot be hidden: it goes to review instead.",
+   "2": "A private message cannot be hidden: it goes to review instead."
+  }
+ },
+ {
+  "key": "policy.strictness.rule.handoff",
+  "lang": "en",
+  "translations": {
+   "1": "Complaints, billing, refunds, health and legal topics always go to a human. Hiding is reversible, nothing is deleted.",
+   "2": "Complaints, billing, refunds, health and legal topics always go to a human. Hiding is reversible, nothing is deleted."
+  }
+ },
+ {
+  "key": "policy.strictness.execution",
+  "lang": "en",
+  "translations": {
+   "1": "Hiding runs automatically only in automatic mode with automatic hiding enabled and without the panic switch; otherwise it is a proposal. Now: mode %mode%, automatic hiding %autoHide%.",
+   "2": "Hiding runs automatically only in automatic mode with automatic hiding enabled and without the panic switch; otherwise it is a proposal. Now: mode %mode%, automatic hiding %autoHide%."
+  }
+ },
+ {
+  "key": "policy.strictness.custom.warning-title",
+  "lang": "en",
+  "translations": {
+   "1": "Danger zone: custom thresholds",
+   "2": "Danger zone: custom thresholds"
+  }
+ },
+ {
+  "key": "policy.strictness.custom.warning",
+  "lang": "en",
+  "translations": {
+   "1": "Custom thresholds can hide even criticism with an abusive tone automatically, or let insults through. Verify the change with an evaluation and watch the hidden comments.",
+   "2": "Custom thresholds can hide even criticism with an abusive tone automatically, or let insults through. Verify the change with an evaluation and watch the hidden comments."
+  }
+ },
+ {
+  "key": "policy.strictness.custom.spam-review",
+  "lang": "en",
+  "translations": {
+   "1": "always review below the threshold",
+   "2": "always review below the threshold"
+  }
+ },
+ {
+  "key": "policy.strictness.custom.mixed-review",
+  "lang": "en",
+  "translations": {
+   "1": "below the threshold at most review by the kind",
+   "2": "below the threshold at most review by the kind"
+  }
+ },
+ {
+  "key": "policy.strictness.custom.empty",
+  "lang": "en",
+  "translations": {
+   "1": "Empty field = threshold off. Range 0.50–1.00; the review threshold must not be higher than the hide threshold.",
+   "2": "Empty field = threshold off. Range 0.50–1.00; the review threshold must not be higher than the hide threshold."
+  }
+ },
+ {
+  "key": "policy.error.review-above-hide",
+  "lang": "en",
+  "translations": {
+   "1": "The review threshold must not be higher than the hide threshold.",
+   "2": "The review threshold must not be higher than the hide threshold."
+  }
+ },
+ {
+  "key": "policy.error.abuse-rules",
+  "lang": "en",
+  "translations": {
+   "1": "The rules for inappropriate content are incomplete.",
+   "2": "The rules for inappropriate content are incomplete."
+  }
+ },
+ {
+  "key": "policy.error.mixed-custom",
+  "lang": "en",
+  "translations": {
+   "1": "The threshold for a factual point with an abusive tone can be set only on the custom level.",
+   "2": "The threshold for a factual point with an abusive tone can be set only on the custom level."
+  }
+ },
+ {
+  "key": "policy.error.strictness",
+  "lang": "en",
+  "translations": {
+   "1": "Unknown strictness level.",
+   "2": "Unknown strictness level."
+  }
+ },
+ {
+  "key": "decision.reason.abuse_threat",
+  "lang": "en",
+  "translations": {
+   "1": "threat",
+   "2": "threat"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_profanity",
+  "lang": "en",
+  "translations": {
+   "1": "profanity",
+   "2": "profanity"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_insult",
+  "lang": "en",
+  "translations": {
+   "1": "insult",
+   "2": "insult"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_ridicule",
+  "lang": "en",
+  "translations": {
+   "1": "ridicule",
+   "2": "ridicule"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_passive_aggression",
+  "lang": "en",
+  "translations": {
+   "1": "passive aggression",
+   "2": "passive aggression"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_review",
+  "lang": "en",
+  "translations": {
+   "1": "review by the strictness level",
+   "2": "review by the strictness level"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_tolerated",
+  "lang": "en",
+  "translations": {
+   "1": "kept by the strictness level",
+   "2": "kept by the strictness level"
+  }
+ },
+ {
+  "key": "decision.reason.abuse_type_missing",
+  "lang": "en",
+  "translations": {
+   "1": "kind of inappropriate content missing",
+   "2": "kind of inappropriate content missing"
+  }
+ },
+ {
+  "key": "decision.reason.mixed_content",
+  "lang": "en",
+  "translations": {
+   "1": "contains a factual point",
+   "2": "contains a factual point"
+  }
+ },
+ {
+  "key": "decision.reason.threat_hidden",
+  "lang": "en",
+  "translations": {
+   "1": "hidden threat – check",
+   "2": "hidden threat – check"
+  }
+ },
+ {
+  "key": "decision.reason.knowledge_missing",
+  "lang": "en",
+  "translations": {
+   "1": "no published knowledge",
+   "2": "no published knowledge"
   }
  }
 ]

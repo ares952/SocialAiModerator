@@ -18,7 +18,7 @@ use Nette\Utils\Json;
  */
 final class Classifier
 {
-	public const PromptVersion = 'classifier-v1';
+	public const PromptVersion = 'classifier-v2';
 	private const SchemaName = 'classification';
 
 
@@ -52,9 +52,10 @@ final class Classifier
 			? new ModerationResponse(false, [])
 			: $this->client->moderate($this->moderationModel, $text);
 
+		$knowledge = $this->knowledge->publishedKeys();
 		$response = $this->client->structured(
 			$this->model,
-			$this->instructions(),
+			$this->instructions($knowledge),
 			Json::encode([
 				'platform' => $content->platform->value,
 				'kind' => $content->kind->value,
@@ -65,7 +66,7 @@ final class Classifier
 		);
 
 		return new ClassifierResult(
-			classification: ClassificationParser::parse($response->output),
+			classification: ClassificationParser::parse($response->output, array_map('strval', array_keys($knowledge))),
 			moderationFlagged: $moderation->flagged,
 			moderationCategories: $moderation->categories,
 			model: $response->model !== '' ? $response->model : $this->model,
@@ -76,10 +77,13 @@ final class Classifier
 	}
 
 
-	private function instructions(): string
+	/**
+	 * @param array<string, string> $knowledge published key => title
+	 */
+	private function instructions(array $knowledge): string
 	{
 		$keys = [];
-		foreach ($this->knowledge->publishedKeys() as $key => $title) {
+		foreach ($knowledge as $key => $title) {
 			$keys[] = "- $key: $title";
 		}
 
@@ -94,7 +98,7 @@ final class Classifier
 	 */
 	private static function schema(): array
 	{
-		$schema = Json::decode(FileSystem::read(__DIR__ . '/schemas/classification-v1.json'), forceArrays: true);
+		$schema = Json::decode(FileSystem::read(__DIR__ . '/schemas/classification-v2.json'), forceArrays: true);
 		if (!is_array($schema)) {
 			throw new \LogicException('Invalid classification schema.');
 		}

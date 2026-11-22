@@ -91,7 +91,7 @@ test('a comment with text is queued, classified and decided without any external
 	$rows = $decisions->forEvent($id);
 	Assert::count(1, $rows);
 	$decision = $rows[0];
-	Assert::same(['reply', 0, 'faq', 'test-model-2026', 'classifier-v1', 0, 120, 40, null], [
+	Assert::same(['handoff', 0, 'faq', 'test-model-2026', 'classifier-v2', 0, 120, 40, null], [
 		$decision->action,
 		$decision->automatic,
 		$decision->category,
@@ -103,7 +103,8 @@ test('a comment with text is queued, classified and decided without any external
 		$decision->error,
 	]);
 	$result = Json::decode($decision->result_json, forceArrays: true);
-	Assert::same(['mode_observe', 'auto_reply_not_allowed'], $result['reasons']);
+	Assert::same(['knowledge_missing'], $result['reasons'], 'No published knowledge, so the question is handed off.');
+	Assert::same('none', $result['classification']['abuse_type']);
 	Assert::same('cs', $result['classification']['language']);
 	Assert::same('Question about the price.', $decisions->reason($decision));
 	Assert::notContains('Question about the price', (string) $database->query('SELECT CAST(reason_encrypted AS CHAR) FROM moderation_decisions')->fetchField());
@@ -159,7 +160,12 @@ test('the panic switch and handoff categories are part of the decision', functio
 	$switch = new AutomationSwitch($database, new AuditLog($database));
 	$switch->pause(null, 'test', 1);
 	$id = $receive('changes', $comment('c5', 'Synthetic text'));
-	$client->queue(FakeOpenAiClient::classification());
+	$client->queue(FakeOpenAiClient::classification([
+		'category' => 'spam',
+		'recommended_action' => 'hide',
+		'confidence' => 0.99,
+		'spam_probability' => 0.99,
+	]));
 	$decider->decide($id, lastAttempt: false);
 	Assert::contains('automation_paused', Json::decode($decisions->forEvent($id)[0]->result_json, forceArrays: true)['reasons']);
 	$switch->resume(null, 1);

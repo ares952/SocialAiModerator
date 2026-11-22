@@ -69,6 +69,9 @@
 							{$decision->model} · {$decision->prompt_version} · {_'events.detail.policy', 1, [version => $decision->policy_version]}
 							{if $result['classification'] !== null}
 								· {$result['classification']['language']} · {_'events.detail.spam', 1, [value => ($result['classification']['spam_probability']|number:2)]}
+								{if ($result['classification']['abuse_type'] ?? 'none') !== 'none'}
+									· {_"abuse.type.{$result['classification']['abuse_type']}"} ({$result['classification']['abuse_score']|number:2})
+								{/if}
 							{/if}
 						</div>
 					</li>

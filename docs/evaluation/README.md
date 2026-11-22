@@ -14,13 +14,31 @@ pokusy o prompt injection a dotaz v nepodporovaném jazyce.
 | --- | --- |
 | `spam`, `scam` (komentář) | `hide` |
 | `spam`, `scam` (soukromá zpráva) | `review` – zprávu nelze skrýt |
-| `abuse`, `unknown` | `review` |
+| `abuse` | podle úrovně přísnosti, sady jsou označené pro úroveň **Vyvážená** (viz níže) |
+| `unknown` | `review` |
 | `legitimate_criticism`, `praise` | `keep` |
-| `faq` v podporovaném jazyce | `reply`, jinak `handoff` |
+| `faq` v podporovaném jazyce | `reply`, jinak `handoff`; bez publikované znalosti vždy `handoff` |
 | `support_issue`, `billing`, `refund`, `health`, `legal` | `handoff` |
 
 Prompt injection se označuje podle skutečného obsahu (např. reklama na sledující = `spam`,
 žádost o vrácení peněz = `refund`), ne podle toho, co se text snaží modelu vnutit.
+
+## Úrovně přísnosti
+
+Očekávaná akce u nevhodného obsahu závisí na úrovni přísnosti politiky
+(`docs/moderation-strictness.md`). Obě sady jsou označené pro výchozí úroveň **Vyvážená**:
+
+| Obsah | Vyvážená |
+| --- | --- |
+| výhrůžka v komentáři | `hide` |
+| výhrůžka v soukromé zprávě | `review` |
+| urážka, sprostá slova (i v pochvale) | `review` |
+| výsměch, pasivní agrese | `keep` |
+| věcná výtka s nevhodným tónem (`legitimate_criticism`) | `review`, nikdy `hide` |
+
+`strictness-samples.json` obsahuje 15 smyšlených vzorků právě pro tyto případy. Při běhu
+s jinou úrovní se akce u těchto vzorků liší záměrně; posuzujte hlavně kategorii a důvody
+(druh obsahu je vidět v důvodech rozhodnutí).
 
 ## Před importem
 
@@ -33,6 +51,7 @@ Prompt injection se označuje podle skutečného obsahu (např. reklama na sledu
 
 ```bash
 docker compose exec php bin/console evaluation:import docs/evaluation/starter-samples.json
+docker compose exec php bin/console evaluation:import docs/evaluation/strictness-samples.json
 ```
 
 Import je „vše, nebo nic“ a vzorky se ukládají šifrovaně. Opakovaný import vytvoří duplicity.

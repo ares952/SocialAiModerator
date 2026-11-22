@@ -42,3 +42,18 @@
 	white-space: pre-wrap;
 	overflow-wrap: anywhere;
 }
+
+/* Policy strictness: only the description of the selected level is shown. Browsers without
+   :has() show all levels. */
+@supports selector(:has(*)) {
+	.strictness-form .strictness-panel {
+		display: none;
+	}
+
+	.strictness-form:has(input[value="benevolent"]:checked) .strictness-panel-benevolent,
+	.strictness-form:has(input[value="balanced"]:checked) .strictness-panel-balanced,
+	.strictness-form:has(input[value="strict"]:checked) .strictness-panel-strict,
+	.strictness-form:has(input[value="custom"]:checked) .strictness-panel-custom {
+		display: block;
+	}
+}
