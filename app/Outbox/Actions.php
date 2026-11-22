@@ -57,7 +57,8 @@ final class Actions
 	/**
 	 * Creates the action of an AI decision about a comment or a customer message: a hide waits for
 	 * a human, or is queued right away when the policy allows it without one; a reply waits for
-	 * its draft and then for a human. Other decisions create no action.
+	 * its draft, then for a human, or is queued with the draft when the policy allows an automatic
+	 * reply. Other decisions create no action.
 	 *
 	 * @param int|null $commentId the comment, or null for a reply to the message $messageId
 	 * @param string $externalId the comment, or the customer the message reply goes to
@@ -73,7 +74,7 @@ final class Actions
 			return;
 		}
 
-		$automatic = $type === ActionType::Hide && $decision->automatic;
+		$automatic = $decision->automatic;
 		$this->database->transaction(function () use ($eventId, $decisionId, $commentId, $messageId, $externalId, $type, $automatic): void {
 			$this->database->query('INSERT INTO moderation_actions ?', [
 				'comment_id' => $commentId,
@@ -81,39 +82,71 @@ final class Actions
 				'event_id' => $eventId,
 				'decision_id' => $decisionId,
 				'type' => $type->value,
-				'status' => ($automatic ? ActionStatus::Approved : ActionStatus::Pending)->value,
+				// A reply waits for its draft even when it may go without a human.
+				'status' => ($automatic && $type !== ActionType::Reply ? ActionStatus::Approved : ActionStatus::Pending)->value,
 				'automatic' => $automatic,
 				'external_target_id' => $externalId,
 			]);
 			$actionId = (int) $this->database->getInsertId();
-			if ($automatic) {
-				$this->enqueue($actionId, $type);
-			} elseif ($type === ActionType::Reply) {
+			if ($type === ActionType::Reply) {
 				$this->queue->push(JobType::DraftReply, $actionId);
+			} elseif ($automatic) {
+				$this->enqueue($actionId, $type);
 			}
 		});
 	}
 
 
 	/**
-	 * Stores the draft of a pending reply; false when the action no longer waits for one.
+	 * Stores the draft of a pending reply; an automatic reply is queued with it right away (the
+	 * ActionDispatcher still checks it). False when the action no longer waits for a draft.
 	 */
 	public function saveDraft(int $actionId, ReplyDraft $draft): bool
 	{
-		return $this->database->query(
-			'UPDATE moderation_actions SET ? WHERE id = ? AND type = ? AND status = ? AND text_encrypted IS NULL',
-			[
+		return $this->database->transaction(function () use ($actionId, $draft): bool {
+			$automatic = $this->database->query(
+				'SELECT automatic FROM moderation_actions WHERE id = ? AND type = ? AND status = ? AND text_encrypted IS NULL FOR UPDATE',
+				$actionId,
+				ActionType::Reply->value,
+				ActionStatus::Pending->value,
+			)->fetchField();
+			if ($automatic === null) {
+				return false;
+			}
+
+			$this->database->query('UPDATE moderation_actions SET ? WHERE id = ?', [
 				'text_encrypted' => $this->encryptor->encrypt($draft->text, self::TextContext),
 				'knowledge_json' => Json::encode($draft->knowledge),
 				'model' => $draft->model,
 				'prompt_version' => $draft->promptVersion,
 				'input_tokens' => $draft->inputTokens,
 				'output_tokens' => $draft->outputTokens,
-			],
-			$actionId,
-			ActionType::Reply->value,
+				'status' => ($automatic ? ActionStatus::Approved : ActionStatus::Pending)->value,
+			], $actionId);
+			if ($automatic) {
+				$this->enqueue($actionId, ActionType::Reply);
+			}
+
+			return true;
+		});
+	}
+
+
+	/**
+	 * An automatic action the rules no longer allow without a human (mode, limits) goes back to
+	 * the approval queue with the reasons; its unsent outbox record is dropped.
+	 *
+	 * @param list<string> $reasons
+	 */
+	public function returnToHuman(int $actionId, array $reasons): void
+	{
+		$this->database->query('DELETE FROM outbox WHERE action_id = ? AND status = ?', $actionId, OutboxStatus::Pending->value);
+		$this->database->query(
+			'UPDATE moderation_actions SET status = ?, reasons_json = ? WHERE id = ? AND reviewed_by IS NULL',
 			ActionStatus::Pending->value,
-		)->getRowCount() === 1;
+			Json::encode($reasons),
+			$actionId,
+		);
 	}
 
 

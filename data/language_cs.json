@@ -5184,15 +5184,6 @@
   }
  },
  {
-  "key": "decision.reason.reply_needs_human",
-  "lang": "cs",
-  "translations": {
-   "1": "odpověď schvaluje člověk",
-   "2": "odpověď schvaluje člověk",
-   "5": "odpověď schvaluje člověk"
-  }
- },
- {
   "key": "decision.reason.comment_hidden",
   "lang": "cs",
   "translations": {
@@ -6243,6 +6234,78 @@
    "1": "Klasifikace a návrhy odpovědí; bez moderation endpointu a bez návrhů, které skončily bez použitelné odpovědi. Cenu spočítejte podle ceníku OpenAI.",
    "2": "Klasifikace a návrhy odpovědí; bez moderation endpointu a bez návrhů, které skončily bez použitelné odpovědi. Cenu spočítejte podle ceníku OpenAI.",
    "5": "Klasifikace a návrhy odpovědí; bez moderation endpointu a bez návrhů, které skončily bez použitelné odpovědi. Cenu spočítejte podle ceníku OpenAI."
+  }
+ },
+ {
+  "key": "policy.form.autoReplyCategories-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Jen v režimu automatického jednání a jen s návrhem, který prošel kontrolou faktů vůči publikovaným znalostem.",
+   "2": "Jen v režimu automatického jednání a jen s návrhem, který prošel kontrolou faktů vůči publikovaným znalostem.",
+   "5": "Jen v režimu automatického jednání a jen s návrhem, který prošel kontrolou faktů vůči publikovaným znalostem."
+  }
+ },
+ {
+  "key": "policy.form.autoRepliesPerConversation",
+  "lang": "cs",
+  "translations": {
+   "1": "Automatické odpovědi do jedné konverzace za 24 hodin",
+   "2": "Automatické odpovědi do jedné konverzace za 24 hodin",
+   "5": "Automatické odpovědi do jedné konverzace za 24 hodin"
+  }
+ },
+ {
+  "key": "policy.form.autoRepliesPerDay",
+  "lang": "cs",
+  "translations": {
+   "1": "Automatické odpovědi účtu za 24 hodin",
+   "2": "Automatické odpovědi účtu za 24 hodin",
+   "5": "Automatické odpovědi účtu za 24 hodin"
+  }
+ },
+ {
+  "key": "policy.form.autoRepliesPerDay-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Komentáře i zprávy dohromady. Odpověď nad limit se vrátí ke schválení člověkem.",
+   "2": "Komentáře i zprávy dohromady. Odpověď nad limit se vrátí ke schválení člověkem.",
+   "5": "Komentáře i zprávy dohromady. Odpověď nad limit se vrátí ke schválení člověkem."
+  }
+ },
+ {
+  "key": "policy.error.auto-replies-conversation",
+  "lang": "cs",
+  "translations": {
+   "1": "Limit pro konverzaci musí být 1 až 20.",
+   "2": "Limit pro konverzaci musí být 1 až 20.",
+   "5": "Limit pro konverzaci musí být 1 až 20."
+  }
+ },
+ {
+  "key": "policy.error.auto-replies-day",
+  "lang": "cs",
+  "translations": {
+   "1": "Denní limit musí být 1 až 1000.",
+   "2": "Denní limit musí být 1 až 1000.",
+   "5": "Denní limit musí být 1 až 1000."
+  }
+ },
+ {
+  "key": "decision.reason.auto_reply_limit_conversation",
+  "lang": "cs",
+  "translations": {
+   "1": "limit automatických odpovědí v konverzaci",
+   "2": "limit automatických odpovědí v konverzaci",
+   "5": "limit automatických odpovědí v konverzaci"
+  }
+ },
+ {
+  "key": "decision.reason.auto_reply_limit_day",
+  "lang": "cs",
+  "translations": {
+   "1": "denní limit automatických odpovědí",
+   "2": "denní limit automatických odpovědí",
+   "5": "denní limit automatických odpovědí"
   }
  }
 ]

@@ -75,6 +75,8 @@ test('policy: switches, validation, new version and the panic switch', function 
 		'maxLinks' => '3',
 		'maxRepeats' => '2',
 		'repeatWindowHours' => '48',
+		'autoRepliesPerConversation' => '2',
+		'autoRepliesPerDay' => '15',
 		'send' => '1',
 	];
 	$invalid = $browser->submit('/admin/policy', 'policyForm', ['hideMinConfidence' => '0.2'] + $fields);
@@ -95,6 +97,9 @@ test('policy: switches, validation, new version and the panic switch', function 
 	Assert::contains('Uložena verze 1 pravidel.', $page->messages());
 	Assert::contains("spam.example\nwin.example</textarea>", $page->body);
 	Assert::match('%A%name="repeatWindowHours"%A%value="48"%A%', $page->body);
+	Assert::match('%A%name="autoRepliesPerDay"%A%value="15"%A%', $page->body);
+	$limit = $browser->submit('/admin/policy', 'policyForm', ['autoRepliesPerConversation' => '0'] + $fields);
+	Assert::contains('Limit pro konverzaci musí být 1 až 20.', $limit->messages());
 
 	Assert::contains('Vyvážená', $page->body);
 	Assert::contains('„Počkej, až tě potkám na ulici.“', $page->body, 'Each level shows its criteria and examples.');

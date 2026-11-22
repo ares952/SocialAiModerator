@@ -127,6 +127,7 @@ final class TestServices
 			switch: new AutomationSwitch($database, new AuditLog($database)),
 			comments: new Comments($database, $encryptor),
 			encryptor: $encryptor,
+			actions: self::actions($database, $encryptor, new JobQueue($database, 3, 10, 25, 600)),
 			logger: $logger,
 		);
 	}

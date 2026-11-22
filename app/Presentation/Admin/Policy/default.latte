@@ -132,6 +132,8 @@
 						</dd>
 						<dt class="col-sm-7">{_'policy.form.languages'}</dt><dd class="col-sm-5">{implode(', ', $settings->languages)}</dd>
 						<dt class="col-sm-7">{_'policy.form.otherLanguage'}</dt><dd class="col-sm-5">{_"action.{$settings->otherLanguage->value}"}</dd>
+						<dt class="col-sm-7">{_'policy.form.autoRepliesPerConversation'}</dt><dd class="col-sm-5">{$settings->autoRepliesPerConversation}</dd>
+						<dt class="col-sm-7">{_'policy.form.autoRepliesPerDay'}</dt><dd class="col-sm-5">{$settings->autoRepliesPerDay}</dd>
 						<dt class="col-sm-7">{_'policy.form.maxLinks'}</dt><dd class="col-sm-5">{$settings->maxLinks ?? '—'}</dd>
 						<dt class="col-sm-7">{_'policy.form.maxRepeats'}</dt><dd class="col-sm-5">{$settings->maxRepeats ?? '—'}</dd>
 						<dt class="col-sm-7">{_'policy.form.repeatWindowHours'}</dt><dd class="col-sm-5">{$settings->repeatWindowHours}</dd>

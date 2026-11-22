@@ -18,6 +18,7 @@ use App\Meta\MetaFailure;
 use App\Meta\MetaWriteUnavailable;
 use App\Meta\Platform;
 use App\Moderation\AutomationContext;
+use App\Moderation\Category;
 use App\Moderation\AutomationSwitch;
 use App\Moderation\Policies;
 use App\Moderation\PolicyEngine;
@@ -36,7 +37,9 @@ use Nette\Utils\Strings;
  * 1. In one transaction it locks the record, re-validates the action through the PolicyEngine
  *    with the current policy, mode, panic switch, account and comment state, gets the token and
  *    marks the record `sending`. A record found in `sending` was interrupted, so its result is
- *    `unknown`. During a pause the record waits (Postponed) and is checked again later.
+ *    `unknown`. During a pause the record waits (Postponed) and is checked again later. An
+ *    automatic action stopped only by rules for actions without a human (mode, automatic reply
+ *    categories and limits) goes back to the approval queue instead of being blocked.
  * 2. It calls Meta (hide, unhide, the approved reply to a comment or a private message) and stores the result: `sent`,
  *    `failed`, or `unknown` when Meta may have applied it. Only a failure that surely changed
  *    nothing is retried by the queue.
@@ -53,6 +56,7 @@ final class ActionDispatcher
 		private readonly AutomationSwitch $switch,
 		private readonly Comments $comments,
 		private readonly Encryptor $encryptor,
+		private readonly Actions $actions,
 		private readonly Logger $logger,
 	) {
 	}
@@ -114,6 +118,40 @@ final class ActionDispatcher
 	}
 
 
+	/**
+	 * Automatic replies of the account and of the conversation sent, being sent or with an unknown
+	 * result within 24 hours (other than this one).
+	 *
+	 * @return array{int, int}
+	 */
+	private function automaticReplies(Row $action): array
+	{
+		$row = $this->database->query(
+			'SELECT COUNT(*) AS account, SUM(m.conversation_id <=> ?) AS conversation
+			FROM moderation_actions r
+			LEFT JOIN social_comments c ON c.id = r.comment_id
+			LEFT JOIN social_messages m ON m.id = r.message_id
+			LEFT JOIN social_conversations v ON v.id = m.conversation_id
+			WHERE r.type = ? AND r.automatic = 1 AND r.reviewed_by IS NULL AND r.id <> ? AND r.status IN (?)
+				AND r.updated_at >= NOW(3) - INTERVAL 24 HOUR AND COALESCE(c.account_id, v.account_id) = ?',
+			$action->conversation_id,
+			ActionType::Reply->value,
+			$action->action_id,
+			[
+				ActionStatus::Sending->value,
+				ActionStatus::Sent->value,
+				ActionStatus::Unknown->value,
+			],
+			$action->account_id,
+		)->fetch();
+
+		return [
+			(int) $row?->account,
+			$action->conversation_id === null ? 0 : (int) $row?->conversation,
+		];
+	}
+
+
 	private function text(Row $action): string
 	{
 		$encrypted = $action->text_encrypted;
@@ -133,7 +171,8 @@ final class ActionDispatcher
 	{
 		$action = $this->database->query(
 			'SELECT x.id AS outbox_id, x.status AS outbox_status, x.idempotency_key, a.id AS action_id, a.type, a.automatic,
-				a.decision_id, a.external_target_id, a.text_encrypted, a.comment_id, a.message_id,
+				a.decision_id, a.reviewed_by, a.external_target_id, a.text_encrypted, a.comment_id, a.message_id,
+				m.conversation_id, d.category,
 				COALESCE(c.account_id, v.account_id) AS account_id, s.platform, s.status AS account_status,
 				c.visibility, c.own, c.text_changed_at > a.created_at AS changed,
 				v.window_expires_at > NOW(3) AS window_open, v.human_takeover_at IS NOT NULL AS taken_over,
@@ -152,6 +191,7 @@ final class ActionDispatcher
 			LEFT JOIN social_comments c ON c.id = a.comment_id
 			LEFT JOIN social_messages m ON m.id = a.message_id
 			LEFT JOIN social_conversations v ON v.id = m.conversation_id
+			LEFT JOIN moderation_decisions d ON d.id = a.decision_id
 			JOIN social_accounts s ON s.id = COALESCE(c.account_id, v.account_id)
 			WHERE x.id = ?
 			FOR UPDATE',
@@ -178,13 +218,20 @@ final class ActionDispatcher
 			return null;
 		}
 
+		$type = ActionType::from($action->type);
+		$byHuman = $action->reviewed_by !== null;
+		[$accountReplies, $conversationReplies] = !$byHuman && $type === ActionType::Reply
+			? $this->automaticReplies($action)
+			: [0, 0];
 		$blocked = $this->engine->blocks(
-			ActionType::from($action->type),
-			!$action->automatic,
+			$type,
+			$byHuman,
 			$this->policies->active(),
 			new AutomationContext(
 				paused: $this->switch->isPaused($action->account_id),
 				accountActive: $action->account_status === AccountStatus::Active->value,
+				accountReplies: $accountReplies,
+				conversationReplies: $conversationReplies,
 			),
 			$action->message_id === null
 				? new ActionTarget(
@@ -200,9 +247,15 @@ final class ActionDispatcher
 					deleted: (bool) $action->deleted,
 					replied: (bool) $action->replied,
 				),
+			$action->category === null ? null : Category::tryFrom($action->category),
 		);
 		if ($blocked === ['automation_paused']) {
 			throw new Postponed('Automation is paused.', $this->pauseRetrySeconds);
+		}
+		if ($blocked !== [] && !$byHuman && array_diff($blocked, PolicyEngine::AutomationReasons) === []) {
+			$this->actions->returnToHuman($action->action_id, $blocked);
+
+			return null;
 		}
 		if ($blocked !== []) {
 			$this->finish($action, OutboxStatus::Blocked, ActionStatus::Blocked, null, $blocked);

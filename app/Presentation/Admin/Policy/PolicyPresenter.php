@@ -86,7 +86,17 @@ final class PolicyPresenter extends AdminPresenter
 			}
 		}
 		$form->addCheckboxList('autoReplyCategories', 'policy.form.autoReplyCategories', $categories)
+			->setOption('description', 'policy.form.autoReplyCategories-note')
 			->setDefaultValue(array_map(fn(Category $category) => $category->value, $settings->autoReplyCategories));
+		$form->addInteger('autoRepliesPerConversation', 'policy.form.autoRepliesPerConversation')
+			->setRequired('form.error.required')
+			->addRule(Form::Range, 'policy.error.auto-replies-conversation', [1, PolicySettings::ConversationRepliesLimit])
+			->setDefaultValue($settings->autoRepliesPerConversation);
+		$form->addInteger('autoRepliesPerDay', 'policy.form.autoRepliesPerDay')
+			->setRequired('form.error.required')
+			->addRule(Form::Range, 'policy.error.auto-replies-day', [1, PolicySettings::DailyRepliesLimit])
+			->setOption('description', 'policy.form.autoRepliesPerDay-note')
+			->setDefaultValue($settings->autoRepliesPerDay);
 		$form->addText('languages', 'policy.form.languages')
 			->setRequired('form.error.required')
 			->addRule(Form::Pattern, 'policy.error.languages', '[a-z]{2}( *, *[a-z]{2})*')
@@ -137,6 +147,8 @@ final class PolicyPresenter extends AdminPresenter
 					mixedHideMin: $settings->mixedHideMin,
 					maxRepeats: is_int($values['maxRepeats']) ? $values['maxRepeats'] : null,
 					repeatWindowHours: (int) $values['repeatWindowHours'],
+					autoRepliesPerConversation: (int) $values['autoRepliesPerConversation'],
+					autoRepliesPerDay: (int) $values['autoRepliesPerDay'],
 				);
 			} catch (InvalidPolicy $e) {
 				$form->addError($e->getMessage());

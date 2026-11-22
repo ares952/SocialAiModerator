@@ -15,6 +15,16 @@ Formát sekce:
 - **Ověření:** jak potvrdit, že je hotovo
 ```
 
+## 0.14.1
+
+- **Týká se:** všech instancí
+- **Kdy:** před krokem 12 (spuštění workeru)
+- **Akce:** v administraci (Pravidla moderace) zkontrolovat aktivní pravidla. Pokud jsou v režimu
+  automatického jednání a mají povolené kategorie pro automatické odpovědi, začnou po aktualizaci
+  odpovědi v těchto kategoriích odcházet bez schválení člověkem (do limitů 2 za konverzaci
+  a 20 za účet za 24 hodin). Pokud to není žádoucí, kategorie odškrtnout nebo přepnout režim.
+- **Ověření:** stránka Pravidla moderace ukazuje očekávaný režim, kategorie a limity.
+
 ## 0.13.0
 
 - **Týká se:** všech instancí

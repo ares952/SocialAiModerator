@@ -18,6 +18,8 @@ final readonly class PolicySettings
 	public const MaxLinksLimit = 20;
 	public const MaxRepeatsLimit = 20;
 	public const RepeatWindowLimit = 168;
+	public const ConversationRepliesLimit = 20;
+	public const DailyRepliesLimit = 1000;
 
 	/** Lower-case host name with at least two labels, e.g. spam.example or xn--80ak6aa92e.com. */
 	private const DomainPattern = '~^(?:[\p{Ll}\p{N}](?:[\p{Ll}\p{N}-]*[\p{Ll}\p{N}])?\.)+(?:\p{Ll}{2,}|xn--[a-z0-9-]+)$~u';
@@ -35,6 +37,9 @@ final readonly class PolicySettings
 	 *        the preset of $strictness
 	 * @param ?float $mixedHideMin abuse score from which a text with a factual point is hidden; only
 	 *        the custom level may set it, otherwise such a text goes at most to review
+	 * @param int $autoRepliesPerConversation automatic replies to one conversation within 24 hours
+	 *        (specification §11, MAX_AUTO_REPLIES_PER_CONVERSATION_PER_DAY, editable here at runtime)
+	 * @param int $autoRepliesPerDay automatic replies of one account within 24 hours (§8.1, §10 M5)
 	 */
 	public function __construct(
 		public float $hideMinConfidence = 0.95,
@@ -55,6 +60,8 @@ final readonly class PolicySettings
 		public ?float $mixedHideMin = null,
 		public ?int $maxRepeats = 1,
 		public int $repeatWindowHours = 24,
+		public int $autoRepliesPerConversation = 2,
+		public int $autoRepliesPerDay = 20,
 	) {
 		$thresholds = [
 			$hideMinConfidence,
@@ -87,6 +94,12 @@ final readonly class PolicySettings
 		}
 		if ($repeatWindowHours < 1 || $repeatWindowHours > self::RepeatWindowLimit) {
 			throw new InvalidPolicy('policy.error.repeat-window');
+		}
+		if ($autoRepliesPerConversation < 1 || $autoRepliesPerConversation > self::ConversationRepliesLimit) {
+			throw new InvalidPolicy('policy.error.auto-replies-conversation');
+		}
+		if ($autoRepliesPerDay < 1 || $autoRepliesPerDay > self::DailyRepliesLimit) {
+			throw new InvalidPolicy('policy.error.auto-replies-day');
 		}
 
 		if ($abuseRules === null) {
@@ -136,6 +149,8 @@ final readonly class PolicySettings
 			mixedHideMin: $mixedHideMin,
 			maxRepeats: $this->maxRepeats,
 			repeatWindowHours: $this->repeatWindowHours,
+			autoRepliesPerConversation: $this->autoRepliesPerConversation,
+			autoRepliesPerDay: $this->autoRepliesPerDay,
 		);
 	}
 
@@ -190,6 +205,12 @@ final readonly class PolicySettings
 			repeatWindowHours: array_key_exists('repeat_window_hours', $data)
 				? self::count($data['repeat_window_hours'], 'policy.error.repeat-window') ?? throw new InvalidPolicy('policy.error.repeat-window')
 				: $defaults->repeatWindowHours,
+			autoRepliesPerConversation: array_key_exists('auto_replies_per_conversation', $data)
+				? self::count($data['auto_replies_per_conversation'], 'policy.error.auto-replies-conversation') ?? throw new InvalidPolicy('policy.error.auto-replies-conversation')
+				: $defaults->autoRepliesPerConversation,
+			autoRepliesPerDay: array_key_exists('auto_replies_per_day', $data)
+				? self::count($data['auto_replies_per_day'], 'policy.error.auto-replies-day') ?? throw new InvalidPolicy('policy.error.auto-replies-day')
+				: $defaults->autoRepliesPerDay,
 		);
 	}
 
@@ -266,6 +287,8 @@ final readonly class PolicySettings
 			'mixed_hide_min' => $this->mixedHideMin,
 			'max_repeats' => $this->maxRepeats,
 			'repeat_window_hours' => $this->repeatWindowHours,
+			'auto_replies_per_conversation' => $this->autoRepliesPerConversation,
+			'auto_replies_per_day' => $this->autoRepliesPerDay,
 		];
 	}
 }

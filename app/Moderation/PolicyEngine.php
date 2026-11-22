@@ -62,11 +62,23 @@ final class PolicyEngine
 	}
 
 
+	/** Reasons that only stop an action without a human; a person may still approve it. */
+	public const AutomationReasons = [
+		'mode_assisted',
+		'auto_hide_disabled',
+		'unhide_needs_human',
+		'auto_reply_not_allowed',
+		'auto_reply_limit_conversation',
+		'auto_reply_limit_day',
+	];
+
+
 	/**
 	 * Reasons that forbid sending the action now; empty when it may be sent. Nothing is sent in
-	 * `observe` mode or during a pause (global or of the account), not even after a human approval;
-	 * without a human only `automatic` mode with an allowed automatic hide sends. Unhiding and
-	 * replying always need a human. A comment that is removed or already in the requested state is
+	 * `observe` mode or during a pause (global or of the account), not even after a human approval.
+	 * Without a human only `automatic` mode sends: a hide when automatic hiding is on, a reply in
+	 * a category allowed for automatic replies and within the limits of automatic replies per
+	 * conversation and per account in 24 hours. Unhiding always needs a human. A comment that is removed or already in the requested state is
 	 * not touched; the account's own comment and a comment edited since the action was created are
 	 * neither hidden nor answered, a hidden comment is not answered and a comment gets at most one
 	 * reply. A reply to a private message follows conversationBlocks().
@@ -79,6 +91,7 @@ final class PolicyEngine
 		Policy $policy,
 		AutomationContext $context,
 		ActionTarget|ConversationTarget $target,
+		?Category $category = null,
 	): array {
 		$blocked = [];
 		if ($policy->mode === Mode::Observe) {
@@ -92,7 +105,7 @@ final class PolicyEngine
 				...match ($type) {
 					ActionType::Hide => $policy->settings->autoHide ? [] : ['auto_hide_disabled'],
 					ActionType::Unhide => ['unhide_needs_human'],
-					ActionType::Reply => ['reply_needs_human'],
+					ActionType::Reply => $this->autoReplyBlocks($policy->settings, $context, $target, $category),
 				},
 			];
 		}
@@ -109,6 +122,26 @@ final class PolicyEngine
 				? $this->conversationBlocks($type, $target)
 				: $this->commentBlocks($type, $target)),
 		];
+	}
+
+
+	/**
+	 * @return list<string>
+	 */
+	private function autoReplyBlocks(PolicySettings $settings, AutomationContext $context, ActionTarget|ConversationTarget $target, ?Category $category): array
+	{
+		$blocked = [];
+		if ($category === null || !in_array($category, $settings->autoReplyCategories, true)) {
+			$blocked[] = 'auto_reply_not_allowed';
+		}
+		if ($target instanceof ConversationTarget && $context->conversationReplies >= $settings->autoRepliesPerConversation) {
+			$blocked[] = 'auto_reply_limit_conversation';
+		}
+		if ($context->accountReplies >= $settings->autoRepliesPerDay) {
+			$blocked[] = 'auto_reply_limit_day';
+		}
+
+		return $blocked;
 	}
 
 

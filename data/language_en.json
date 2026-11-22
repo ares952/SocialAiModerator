@@ -4608,14 +4608,6 @@
   }
  },
  {
-  "key": "decision.reason.reply_needs_human",
-  "lang": "en",
-  "translations": {
-   "1": "a reply needs a human",
-   "2": "a reply needs a human"
-  }
- },
- {
   "key": "decision.reason.comment_hidden",
   "lang": "en",
   "translations": {
@@ -5549,6 +5541,70 @@
   "translations": {
    "1": "Classification and reply drafts; without the moderation endpoint and without drafts that ended without a usable reply. Compute the price from the OpenAI price list.",
    "2": "Classification and reply drafts; without the moderation endpoint and without drafts that ended without a usable reply. Compute the price from the OpenAI price list."
+  }
+ },
+ {
+  "key": "policy.form.autoReplyCategories-note",
+  "lang": "en",
+  "translations": {
+   "1": "Only in automatic mode and only with a draft that passed the fact check against the published knowledge.",
+   "2": "Only in automatic mode and only with a draft that passed the fact check against the published knowledge."
+  }
+ },
+ {
+  "key": "policy.form.autoRepliesPerConversation",
+  "lang": "en",
+  "translations": {
+   "1": "Automatic replies to one conversation in 24 hours",
+   "2": "Automatic replies to one conversation in 24 hours"
+  }
+ },
+ {
+  "key": "policy.form.autoRepliesPerDay",
+  "lang": "en",
+  "translations": {
+   "1": "Automatic replies of an account in 24 hours",
+   "2": "Automatic replies of an account in 24 hours"
+  }
+ },
+ {
+  "key": "policy.form.autoRepliesPerDay-note",
+  "lang": "en",
+  "translations": {
+   "1": "Comments and messages together. A reply over the limit goes back for human approval.",
+   "2": "Comments and messages together. A reply over the limit goes back for human approval."
+  }
+ },
+ {
+  "key": "policy.error.auto-replies-conversation",
+  "lang": "en",
+  "translations": {
+   "1": "The conversation limit must be 1 to 20.",
+   "2": "The conversation limit must be 1 to 20."
+  }
+ },
+ {
+  "key": "policy.error.auto-replies-day",
+  "lang": "en",
+  "translations": {
+   "1": "The daily limit must be 1 to 1000.",
+   "2": "The daily limit must be 1 to 1000."
+  }
+ },
+ {
+  "key": "decision.reason.auto_reply_limit_conversation",
+  "lang": "en",
+  "translations": {
+   "1": "automatic reply limit of the conversation",
+   "2": "automatic reply limit of the conversation"
+  }
+ },
+ {
+  "key": "decision.reason.auto_reply_limit_day",
+  "lang": "en",
+  "translations": {
+   "1": "daily automatic reply limit",
+   "2": "daily automatic reply limit"
   }
  }
 ]

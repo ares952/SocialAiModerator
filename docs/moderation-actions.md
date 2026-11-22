@@ -31,7 +31,8 @@ Konkrétní Graph endpointy se implementují až po potvrzení oprávnění (`do
    zdroji (klíč a verze), modelem a verzí promptu.
 4. Moderátor v detailu události návrh zkontroluje, případně upraví a schválí, nebo zamítne.
    Úprava se pozná podle štítku „upraveno moderátorem“ a v auditu (`action.approve`, `edited`).
-5. Odpověď se **nikdy neodesílá bez člověka**; na jeden komentář jde nejvýš jedna odpověď.
+5. Bez člověka odejde odpověď jen jako **automatická odpověď** (oddíl níže); na jeden komentář
+   jde nejvýš jedna odpověď.
 
 Když znalost chybí, model odpovědět neumí, návrh neprojde kontrolou nebo volání selže, zásah
 skončí jako `blocked` s důvodem (`knowledge_missing`, `reply_not_answerable`, `reply_invalid`,
@@ -71,13 +72,31 @@ Obsah zpráv vidí jen moderátor a administrátor a každé zobrazení se zapis
   z Meta Business Suite) nebo už odešla jiná odpověď, další se neodešle (`already_replied`).
   Echo vlastních zpráv nikdy nespouští návrh odpovědi.
 
+## Automatické odpovědi
+
+Odpověď na komentář nebo zprávu odejde bez schválení člověkem, jen když platí všechno:
+
+- pravidla jsou v režimu `automatic`, automatika není pozastavená a účet je aktivní;
+- kategorie je v pravidlech povolená pro automatické odpovědi (citlivá témata povolit nejde);
+- návrh prošel kontrolou faktů vůči publikovaným znalostem;
+- nejsou vyčerpané limity automatických odpovědí za 24 hodin: do jedné konverzace
+  (`autoRepliesPerConversation`, výchozí 2, odpovídá `MAX_AUTO_REPLIES_PER_CONVERSATION_PER_DAY`
+  ze specifikace §11) a celkem za účet (`autoRepliesPerDay`, výchozí 20). Limity jsou součástí
+  verzovaných pravidel a mění se v administraci bez nasazení;
+- platí všechny ostatní kontroly (okno, převzetí, echo, stav komentáře, jedna odpověď).
+
+Když automatickou odpověď zastaví jen pravidla pro jednání bez člověka (jiný režim, kategorie,
+limit), nezahodí se: vrátí se do fronty ke schválení s důvodem a moderátor ji může odeslat.
+Ostatní důvody (např. převzetí, vypršelé okno) ji zastaví úplně.
+
 ## Co zastaví odeslání
 
 | Důvod | Kdy |
 | --- | --- |
 | `mode_observe` | pravidla jsou v režimu pozorování – neodejde nic, ani po schválení |
-| `mode_assisted`, `auto_hide_disabled` | zásah bez člověka, ale pravidla automatiku nedovolují |
-| `unhide_needs_human`, `reply_needs_human` | odkrytí a odpověď vždy jen člověkem |
+| `mode_assisted`, `auto_hide_disabled`, `auto_reply_not_allowed` | zásah bez člověka, ale pravidla automatiku nedovolují (vrátí se ke schválení) |
+| `auto_reply_limit_conversation`, `auto_reply_limit_day` | vyčerpaný limit automatických odpovědí (vrátí se ke schválení) |
+| `unhide_needs_human` | odkrytí vždy jen člověkem |
 | `automation_paused` | panic switch (globální nebo účtu) – zásah **čeká** a ověří se znovu po `outbox.pauseRetrySeconds` |
 | `account_inactive` | účet není aktivní |
 | `comment_removed`, `already_hidden`, `already_visible` | komentář je smazaný nebo už v požadovaném stavu |

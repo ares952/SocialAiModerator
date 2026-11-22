@@ -146,3 +146,13 @@ test('the repeat limit is between 0 and 20 or off, the window between 1 and 168 
 	Assert::exception(fn() => new PolicySettings(repeatWindowHours: 169), InvalidPolicy::class, 'policy.error.repeat-window');
 	Assert::exception(fn() => PolicySettings::fromArray(['repeat_window_hours' => null]), InvalidPolicy::class, 'policy.error.repeat-window');
 });
+
+
+test('automatic reply limits are part of the settings and validated', function (): void {
+	$settings = new PolicySettings(autoRepliesPerConversation: 3, autoRepliesPerDay: 40);
+	Assert::same([3, 40], [PolicySettings::fromArray($settings->toArray())->autoRepliesPerConversation, PolicySettings::fromArray($settings->toArray())->autoRepliesPerDay]);
+	Assert::same([2, 20], [PolicySettings::fromArray([])->autoRepliesPerConversation, PolicySettings::fromArray([])->autoRepliesPerDay]);
+	Assert::exception(fn() => new PolicySettings(autoRepliesPerConversation: 0), App\Moderation\InvalidPolicy::class, 'policy.error.auto-replies-conversation');
+	Assert::exception(fn() => new PolicySettings(autoRepliesPerDay: 1001), App\Moderation\InvalidPolicy::class, 'policy.error.auto-replies-day');
+	Assert::exception(fn() => PolicySettings::fromArray(['auto_replies_per_day' => null]), App\Moderation\InvalidPolicy::class, 'policy.error.auto-replies-day');
+});

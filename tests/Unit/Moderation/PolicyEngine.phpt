@@ -488,10 +488,9 @@ test('the comment state at send time wins', function () use ($engine, $automatic
 });
 
 
-test('a reply always needs a human and goes at most once to a visible comment', function () use ($engine, $automatic, $open): void {
+test('a reply goes at most once to a visible comment', function () use ($engine, $automatic, $open): void {
 	$visible = new ActionTarget(Visibility::Visible, own: false, changed: false);
 
-	Assert::same(['reply_needs_human'], $engine->blocks(ActionType::Reply, false, $automatic, $open, $visible));
 	Assert::same([], $engine->blocks(ActionType::Reply, true, $automatic, $open, $visible));
 	Assert::same(['comment_hidden'], $engine->blocks(ActionType::Reply, true, $automatic, $open, new ActionTarget(Visibility::Hidden, own: false, changed: false)));
 	Assert::same(['own_comment'], $engine->blocks(ActionType::Reply, true, $automatic, $open, new ActionTarget(Visibility::Visible, own: true, changed: false)));
@@ -504,11 +503,33 @@ test('a private message is answered only in the window, once, and never with an 
 	$target = static fn(bool $window = true, bool $takenOver = false, bool $drafted = true, bool $deleted = false, bool $replied = false) => new ConversationTarget($window, $takenOver, $drafted, $deleted, $replied);
 
 	Assert::same([], $engine->blocks(ActionType::Reply, true, $automatic, $open, $target()));
-	Assert::same(['reply_needs_human'], $engine->blocks(ActionType::Reply, false, $automatic, $open, $target()));
+	Assert::same(['auto_reply_not_allowed'], $engine->blocks(ActionType::Reply, false, $automatic, $open, $target()));
 	Assert::same(['window_expired'], $engine->blocks(ActionType::Reply, true, $automatic, $open, $target(window: false)));
 	Assert::same(['human_takeover'], $engine->blocks(ActionType::Reply, true, $automatic, $open, $target(takenOver: true)));
 	Assert::same([], $engine->blocks(ActionType::Reply, true, $automatic, $open, $target(takenOver: true, drafted: false)), 'The operator writes during a takeover.');
 	Assert::same(['message_deleted'], $engine->blocks(ActionType::Reply, true, $automatic, $open, $target(deleted: true)));
 	Assert::same(['already_replied'], $engine->blocks(ActionType::Reply, true, $automatic, $open, $target(replied: true)));
 	Assert::exception(fn() => $engine->blocks(ActionType::Hide, true, $automatic, $open, $target()), LogicException::class);
+});
+
+
+test('an automatic reply needs automatic mode, an allowed category and free limits', function () use ($engine, $automatic, $open): void {
+	$comment = new ActionTarget(Visibility::Visible, own: false, changed: false);
+	$conversation = new ConversationTarget(windowOpen: true, takenOver: false, drafted: true, deleted: false, replied: false);
+	$assisted = new Policy(2, Mode::Assisted, new PolicySettings(autoReplyCategories: [Category::Faq]));
+	$limits = new Policy(3, Mode::Automatic, new PolicySettings(autoReplyCategories: [Category::Faq], autoRepliesPerConversation: 2, autoRepliesPerDay: 5));
+	$busy = static fn(int $account, int $conversation) => new AutomationContext(paused: false, accountActive: true, accountReplies: $account, conversationReplies: $conversation);
+
+	Assert::same([], $engine->blocks(ActionType::Reply, false, $automatic, $open, $comment, Category::Faq));
+	Assert::same([], $engine->blocks(ActionType::Reply, false, $automatic, $open, $conversation, Category::Faq));
+	Assert::same(['auto_reply_not_allowed'], $engine->blocks(ActionType::Reply, false, $automatic, $open, $comment, Category::Praise));
+	Assert::same(['auto_reply_not_allowed'], $engine->blocks(ActionType::Reply, false, $automatic, $open, $comment), 'An operator text is never automatic.');
+	Assert::same(['mode_assisted'], $engine->blocks(ActionType::Reply, false, $assisted, $open, $comment, Category::Faq));
+
+	Assert::same([], $engine->blocks(ActionType::Reply, false, $limits, $busy(4, 1), $conversation, Category::Faq));
+	Assert::same(['auto_reply_limit_conversation'], $engine->blocks(ActionType::Reply, false, $limits, $busy(4, 2), $conversation, Category::Faq));
+	Assert::same(['auto_reply_limit_day'], $engine->blocks(ActionType::Reply, false, $limits, $busy(5, 0), $comment, Category::Faq));
+	Assert::same([], $engine->blocks(ActionType::Reply, true, $limits, $busy(50, 50), $conversation, Category::Faq), 'Limits apply only without a human.');
+	Assert::same([], array_diff(['mode_assisted', 'auto_reply_limit_day'], PolicyEngine::AutomationReasons));
+	Assert::notSame([], array_diff(['window_expired'], PolicyEngine::AutomationReasons));
 });
