@@ -6,7 +6,9 @@ namespace App\Outbox;
 
 use App\Account\AccessToken;
 use App\Account\AccountStatus;
+use App\Account\Credentials;
 use App\Account\TokenProvider;
+use App\Account\TokenStatus;
 use App\Account\TokenUnavailable;
 use App\Comment\Comments;
 use App\Comment\Visibility;
@@ -15,7 +17,6 @@ use App\Core\Encryptor;
 use App\Core\Logger;
 use App\Meta\MetaClient;
 use App\Meta\MetaFailure;
-use App\Meta\MetaWriteUnavailable;
 use App\Meta\Platform;
 use App\Moderation\AutomationContext;
 use App\Moderation\Category;
@@ -51,6 +52,7 @@ final class ActionDispatcher
 		private readonly Explorer $database,
 		private readonly MetaClient $meta,
 		private readonly TokenProvider $tokens,
+		private readonly Credentials $credentials,
 		private readonly Policies $policies,
 		private readonly PolicyEngine $engine,
 		private readonly AutomationSwitch $switch,
@@ -91,16 +93,13 @@ final class ActionDispatcher
 			} elseif ($action->message_id === null) {
 				$replyId = $this->meta->replyComment($platform, $token, $target, $text);
 			} else {
-				$replyId = $this->meta->sendMessage($platform, $token, $target, $text, (string) $action->idempotency_key);
+				$replyId = $this->meta->sendMessage($platform, $token, (string) $action->account_external_id, $target, $text, (string) $action->idempotency_key);
 			}
-		} catch (MetaWriteUnavailable $e) {
-			$this->finish($action, OutboxStatus::Blocked, ActionStatus::Blocked, $e, [
-				'meta_write_unavailable',
-			]);
-			$this->logger->warning('Action blocked, Meta write API not connected', $context);
-
-			return;
 		} catch (MetaFailure $e) {
+			if ($e->invalidToken()) {
+				// Meta rejected the token: stop using it until it is replaced (alarm token_invalid).
+				$this->credentials->recordCheck($action->account_id, TokenStatus::Invalid);
+			}
 			$this->failed($action, $e, $lastAttempt, $context);
 
 			return;
@@ -173,7 +172,7 @@ final class ActionDispatcher
 			'SELECT x.id AS outbox_id, x.status AS outbox_status, x.idempotency_key, a.id AS action_id, a.type, a.automatic,
 				a.decision_id, a.reviewed_by, a.external_target_id, a.text_encrypted, a.comment_id, a.message_id,
 				m.conversation_id, d.category,
-				COALESCE(c.account_id, v.account_id) AS account_id, s.platform, s.status AS account_status,
+				COALESCE(c.account_id, v.account_id) AS account_id, s.platform, s.external_id AS account_external_id, s.status AS account_status,
 				c.visibility, c.own, c.text_changed_at > a.created_at AS changed,
 				v.window_expires_at > NOW(3) AS window_open, v.human_takeover_at IS NOT NULL AS taken_over,
 				m.deleted_at IS NOT NULL AS deleted,

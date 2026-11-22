@@ -15,6 +15,17 @@ Formát sekce:
 - **Ověření:** jak potvrdit, že je hotovo
 ```
 
+## 0.17.2
+
+- **Týká se:** všech instancí
+- **Kdy:** před krokem 12 (spuštění workeru)
+- **Akce:** zápis do Mety je od této verze skutečný. Zkontrolovat na stránce Pravidla moderace
+  režim (v režimu pozorování se nic neodešle) a v Zásazích stav „schváleno“: takové zásahy po
+  spuštění workeru odejdou na Facebook/Instagram. Nechtěné zamítnout, nebo předem zapnout nouzové
+  vypnutí.
+- **Ověření:** režim a schválené zásahy odpovídají záměru; po spuštění workeru se v Zásazích
+  objevují stavy „provedeno“ jen u zamýšlených zásahů.
+
 ## 0.17.1
 
 - **Týká se:** všech instancí s uloženými tokeny

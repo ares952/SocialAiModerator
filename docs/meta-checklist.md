@@ -1,8 +1,8 @@
 # Meta: přístupy, oprávnění a checklist (Milestone 0)
 
 Podklad pro rozhodnutí a nastavení přístupu k Facebook Page a Instagram Professional účtu
-(specifikace §3, §10 – Milestone 0). Aplikace z Graph API zatím jen **čte** (kontrola tokenů,
-oddíl 8); zápisy čekají na živé ověření. Provozní postup
+(specifikace §3, §10 – Milestone 0). Aplikace z Graph API čte (kontrola tokenů, komentáře) a přes
+`ActionDispatcher` zapisuje (oddíl 8). Provozní postup
 pro webhooky, tokeny a odběr je v `docs/meta-webhooks.md`.
 
 > Údaje o Meta API se často mění. Každý bod označený **ověřit** zkontrolovat v aktuální
@@ -145,14 +145,14 @@ developers.facebook.com, ověřeno 22. 11. 2026.
 | Operace | Endpoint | Oprávnění | Stav |
 | --- | --- | --- | --- |
 | Kontrola tokenu | `GET /debug_token?input_token=…` s app tokenem `APP_ID\|APP_SECRET` | – | ✓ 0.17.1 |
-| FB komentář: čtení | `GET /{comment-id}?fields=id,message,from,created_time,is_hidden,can_hide,parent` | `pages_read_engagement`, `pages_read_user_content` | pole **ověřit živě** |
+| FB komentář: čtení | `GET /{comment-id}?fields=id,message,from,created_time,is_hidden,can_hide,parent` | `pages_read_engagement`, `pages_read_user_content` | ✓ ověřeno živě 22. 11. (všechna pole) |
 | FB komentář: skrytí | `POST /{comment-id}` `is_hidden=true\|false` | `pages_manage_engagement` | |
 | FB komentář: odpověď | `POST /{comment-id}/comments` `message` | `pages_manage_engagement` | **ověřit živě** (reference tvorbu neuvádí) |
-| IG komentář: čtení | `GET /{ig-comment-id}?fields=id,text,timestamp,username,hidden,from,parent_id,media{id}` | `instagram_basic`, `instagram_manage_comments`, `pages_read_engagement` | |
-| IG komentář: skrytí | `POST /{ig-comment-id}?hide=true\|false` | jako čtení | typ tokenu **ověřit živě** |
+| IG komentář: čtení | `GET /{ig-comment-id}?fields=id,text,timestamp,username,hidden,from,parent_id,media{id}` | `instagram_basic`, `instagram_manage_comments` | ✓ ověřeno živě 22. 11. (System User token; `can_hide` IG nevrací) |
+| IG komentář: skrytí | `POST /{ig-comment-id}?hide=true\|false` | jako čtení | ✓ System User token ověřen ručně (Graph API Explorer) 22. 11.; z aplikace až se zápisovým klientem |
 | IG komentář: odpověď | `POST /{ig-comment-id}/replies?message=…` | jako čtení | jen top-level, ne skryté |
 | Zpráva Messenger | `POST /{page-id}/messages`, `recipient.id`=PSID, `messaging_type=RESPONSE`, `message={text, metadata}` | `pages_messaging` | |
-| Zpráva IG Direct | `POST /{page-id}/messages`, `recipient.id`=IGSID | `instagram_basic`, `instagram_manage_messages`, `pages_manage_metadata` | echo s `metadata` **ověřit živě** |
+| Zpráva IG Direct | `POST /{page-id}/messages`, `recipient.id`=IGSID | `instagram_basic`, `instagram_manage_messages` | echo s `metadata` **ověřit živě** |
 
 - Kontrola tokenu (`App\Account\TokenCheck`): platnost, token této aplikace, expirace a skutečně
   udělená oprávnění se uloží k účtu; chybějící oprávnění (`Platform::requiredScopes()`) hlásí
@@ -163,5 +163,15 @@ developers.facebook.com, ověřeno 22. 11. 2026.
   (`MetaFailure::fromGraph`).
 - Zprávy: okno 24 hodin; `HUMAN_AGENT` (7 dní) jen pro ruční odpovědi člověka.
 - Reconciliace v1 jen pro komentáře; mazání komentářů (FR-C08) mimo rozsah v1.
-- Další krok: živé ověření na testovacích účtech (čtení komentáře FB i IG, odpověď na FB komentář,
-  typ tokenu pro IG komentáře, IG echo s `metadata`), pak zápisový klient za `ActionDispatcher`.
+- Povinná oprávnění (`Platform::requiredScopes()`): Page token `pages_manage_engagement`,
+  `pages_manage_metadata`, `pages_messaging`, `pages_read_engagement`, `pages_read_user_content`;
+  IG System User token `instagram_basic`, `instagram_manage_comments`, `instagram_manage_messages`
+  (oprávnění Page k němu podle živého ověření nepatří).
+- Živé čtení: `bin/console meta:read <účet> <fb:…|ig:…>` – vypíše jen přítomnost polí, stav skrytí
+  a délku textu, nikdy text.
+- Zápisový klient (`HttpMetaClient`, 0.17.2): parametry a token v těle POST; bez odpovědi po
+  odeslání je výsledek `unknown`, nespojení se opakuje; kód 190 označí token za neplatný. Bez
+  `META_APP_ID` (e2e stack) neodejde žádný požadavek. Zprávy jdou přes `/{id účtu}/messages`;
+  u Instagramu se System User tokenem **ověřit živě** (dokumentace uvádí `/{page-id}/messages`).
+- Zbývá ověřit živě z aplikace (režim se schvalováním na testovací instanci): skrytí/odkrytí FB
+  a IG, odpověď na FB a IG komentář, zpráva Messenger a IG Direct včetně echa s `metadata`.

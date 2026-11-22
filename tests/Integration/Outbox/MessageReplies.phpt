@@ -153,6 +153,7 @@ test('a message gets a draft with the conversation as context, approved and sent
 	Assert::same([
 		'platform' => Platform::Facebook,
 		'token' => 'synthetic-page-token',
+		'sender' => 'fb:1000000000000001',
 		'recipient' => 'fb:2400000000000001',
 		'message' => 'Online předplatné stojí 289 Kč měsíčně.',
 		'metadata' => "reply:$id",

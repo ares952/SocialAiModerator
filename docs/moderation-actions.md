@@ -2,8 +2,9 @@
 
 Skrývání, odkrývání a odpovědi na komentáře a soukromé zprávy (specifikace §2.1, §3.5, §5.3, §6,
 Milestone 3 a 4). Stav: zásahy, návrhy odpovědí, jednotný inbox, schvalování a odesílání přes
-outbox jsou hotové, **zápis do Mety zatím zapojený není** (`UnavailableMetaClient`).
-Konkrétní Graph endpointy se implementují až po potvrzení oprávnění (`docs/meta-checklist.md`).
+outbox jsou hotové a zápis do Mety je zapojený (`HttpMetaClient`, endpointy v
+`docs/meta-checklist.md` oddíl 8). V režimu pozorování se nezapisuje nic; v ostatních režimech
+odchází jen to, co projde kontrolou `PolicyEngine` v okamžiku odeslání.
 
 ## Tok
 
@@ -126,7 +127,7 @@ frontu sama. Vyřizovat a předávat smí moderátor a administrátor, číst fr
 | `comment_hidden` | na skrytý komentář se neodpovídá |
 | `already_replied` | komentář už odpověď má (nebo možná má, stav `unknown`) |
 | `token_unavailable` | účet nemá platný token |
-| `meta_write_unavailable` | zápis do Mety ještě není zapojený |
+| `meta_write_unavailable` | jen starší záznamy (do 0.17.1): zápis do Mety tehdy nebyl zapojený |
 | `window_expired` | u soukromé zprávy vypršelo okno pro odpověď |
 | `human_takeover` | konverzaci převzal člověk (jen odpovědi napsané AI) |
 | `message_deleted` | zákazník zprávu zrušil |

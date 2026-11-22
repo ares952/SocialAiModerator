@@ -54,12 +54,12 @@ enum Platform: string
 				'pages_read_engagement',
 				'pages_read_user_content',
 			],
+			// Verified live 2026-11-22: the system user token reads, hides and unhides comments
+			// without the Page permissions (those belong to the Page token).
 			self::Instagram => [
 				'instagram_basic',
 				'instagram_manage_comments',
 				'instagram_manage_messages',
-				'pages_manage_metadata',
-				'pages_read_engagement',
 			],
 		};
 	}

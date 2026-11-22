@@ -44,7 +44,7 @@ DB_NAME=socialai_e2e
 DB_USER=socialai
 DB_PASSWORD=$db_password
 APP_ENCRYPTION_KEY=$(openssl rand -base64 32)
-# Empty: the Graph reader (token checks) refuses to call Meta without it.
+# Empty: no Graph API request leaves the e2e stack (App\Meta\GraphApi refuses without it).
 META_APP_ID=
 META_APP_SECRET=$(random 16)
 META_WEBHOOK_VERIFY_TOKEN=$(random 16)

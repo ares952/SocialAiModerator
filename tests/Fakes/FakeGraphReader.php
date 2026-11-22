@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Fakes;
 
+use App\Account\AccessToken;
+use App\Meta\CommentInfo;
 use App\Meta\GraphReader;
 use App\Meta\MetaFailure;
+use App\Meta\Platform;
 use App\Meta\TokenInfo;
 
 
@@ -27,6 +30,12 @@ final class FakeGraphReader implements GraphReader
 		$this->answers[$token] = $answer;
 
 		return $this;
+	}
+
+
+	public function comment(Platform $platform, AccessToken $token, string $commentId): CommentInfo
+	{
+		throw new \LogicException('No scripted comment.');
 	}
 
 

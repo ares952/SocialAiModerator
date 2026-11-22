@@ -15,7 +15,7 @@ use App\Meta\Platform;
  */
 final class FakeMetaClient implements MetaClient
 {
-	/** @var list<array{platform: Platform, token: string, comment?: string, hidden?: bool, reply?: string, recipient?: string, message?: string, metadata?: string}> */
+	/** @var list<array{platform: Platform, token: string, comment?: string, hidden?: bool, reply?: string, sender?: string, recipient?: string, message?: string, metadata?: string}> */
 	public array $writes = [];
 
 	/** @var list<MetaFailure> */
@@ -56,11 +56,12 @@ final class FakeMetaClient implements MetaClient
 	}
 
 
-	public function sendMessage(Platform $platform, AccessToken $token, string $recipientId, string $text, string $metadata): string
+	public function sendMessage(Platform $platform, AccessToken $token, string $senderId, string $recipientId, string $text, string $metadata): string
 	{
 		$this->writes[] = [
 			'platform' => $platform,
 			'token' => $token->value,
+			'sender' => $senderId,
 			'recipient' => $recipientId,
 			'message' => $text,
 			'metadata' => $metadata,

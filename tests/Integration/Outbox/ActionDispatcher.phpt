@@ -9,7 +9,6 @@ use App\Core\Encryptor;
 use App\Ingest\WebhookBatch;
 use App\Meta\MetaFailure;
 use App\Meta\Platform;
-use App\Meta\UnavailableMetaClient;
 use App\Moderation\AutomationSwitch;
 use App\Moderation\Mode;
 use App\Moderation\Policies;
@@ -292,9 +291,18 @@ test('a failure that changed nothing is retried by the queue, then fails', funct
 });
 
 
-test('without a connected Meta client an action is blocked and nothing is sent', function () use ($spam, $action, $reasons, $database, $encryptor, $log): void {
+test('a token Meta rejects is marked invalid and stops further sends', function () use ($spam, $action, $reasons, $dispatcher, $meta, $database, $accountId): void {
 	$id = $spam('c13');
-	TestServices::dispatcher($database, $encryptor, new UnavailableMetaClient, $log->logger)->send($action($id)->outbox_id, lastAttempt: false);
-	Assert::same(['blocked', 'blocked'], [$action($id)->status, $action($id)->outbox_status]);
-	Assert::same(['meta_write_unavailable'], $reasons($id));
+	$meta->fail(new MetaFailure('HTTP 400 (code 190/463)', uncertain: false, transient: false, httpStatus: 400, errorCode: 190, errorSubcode: 463));
+	$dispatcher->send($action($id)->outbox_id, lastAttempt: false);
+	Assert::same('failed', $action($id)->status);
+	Assert::same('invalid', $database->query('SELECT status FROM account_credentials WHERE social_account_id = ?', $accountId)->fetchField());
+
+	$writes = count($meta->writes);
+	$next = $spam('c14');
+	$dispatcher->send($action($next)->outbox_id, lastAttempt: false);
+	Assert::same(['blocked', 'blocked'], [$action($next)->status, $action($next)->outbox_status]);
+	Assert::same(['token_unavailable'], $reasons($next));
+	Assert::same($writes, count($meta->writes), 'Nothing more is sent with the rejected token.');
+	$database->query("UPDATE account_credentials SET status = 'valid' WHERE social_account_id = ?", $accountId);
 });

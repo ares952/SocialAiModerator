@@ -125,6 +125,7 @@ final class TestServices
 			database: $database,
 			meta: $meta,
 			tokens: new TokenProvider($database, $encryptor),
+			credentials: new Credentials($database, $encryptor, new AuditLog($database)),
 			policies: self::policies($database),
 			engine: new PolicyEngine,
 			switch: new AutomationSwitch($database, new AuditLog($database)),
