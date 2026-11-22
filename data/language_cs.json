@@ -6309,7 +6309,7 @@
   }
  },
  {
-  "key": "dashboard.chart.unclassified",
+  "key": "chart.unclassified",
   "lang": "cs",
   "translations": {
    "1": "Klasifikace selhala",
@@ -6354,7 +6354,7 @@
   }
  },
  {
-  "key": "dashboard.chart.data",
+  "key": "chart.data",
   "lang": "cs",
   "translations": {
    "1": "Zobrazit data",
@@ -6363,7 +6363,7 @@
   }
  },
  {
-  "key": "dashboard.chart.empty",
+  "key": "chart.empty",
   "lang": "cs",
   "translations": {
    "1": "Za zvolené období nejsou žádná data.",
@@ -6426,7 +6426,7 @@
   }
  },
  {
-  "key": "dashboard.series.count",
+  "key": "chart.count",
   "lang": "cs",
   "translations": {
    "1": "Počet",
@@ -6462,7 +6462,7 @@
   }
  },
  {
-  "key": "dashboard.outcome.pending",
+  "key": "chart.outcome.pending",
   "lang": "cs",
   "translations": {
    "1": "Čeká na schválení",
@@ -6471,7 +6471,7 @@
   }
  },
  {
-  "key": "dashboard.outcome.approved",
+  "key": "chart.outcome.approved",
   "lang": "cs",
   "translations": {
    "1": "Schváleno, odesílá se",
@@ -6480,7 +6480,7 @@
   }
  },
  {
-  "key": "dashboard.outcome.sent",
+  "key": "chart.outcome.sent",
   "lang": "cs",
   "translations": {
    "1": "Provedeno",
@@ -6489,7 +6489,7 @@
   }
  },
  {
-  "key": "dashboard.outcome.rejected",
+  "key": "chart.outcome.rejected",
   "lang": "cs",
   "translations": {
    "1": "Zamítnuto moderátorem",
@@ -6498,7 +6498,7 @@
   }
  },
  {
-  "key": "dashboard.outcome.blocked",
+  "key": "chart.outcome.blocked",
   "lang": "cs",
   "translations": {
    "1": "Zastaveno pravidly",
@@ -6507,7 +6507,7 @@
   }
  },
  {
-  "key": "dashboard.outcome.failed",
+  "key": "chart.outcome.failed",
   "lang": "cs",
   "translations": {
    "1": "Selhalo nebo neznámý výsledek",
@@ -6522,6 +6522,159 @@
    "1": "Sociální účty",
    "2": "Sociální účty",
    "5": "Sociální účty"
+  }
+ },
+ {
+  "key": "chart.export",
+  "lang": "cs",
+  "translations": {
+   "1": "Stáhnout CSV",
+   "2": "Stáhnout CSV",
+   "5": "Stáhnout CSV"
+  }
+ },
+ {
+  "key": "chart.column.item",
+  "lang": "cs",
+  "translations": {
+   "1": "Položka",
+   "2": "Položka",
+   "5": "Položka"
+  }
+ },
+ {
+  "key": "filter.platform",
+  "lang": "cs",
+  "translations": {
+   "1": "Platforma",
+   "2": "Platforma",
+   "5": "Platforma"
+  }
+ },
+ {
+  "key": "filter.account",
+  "lang": "cs",
+  "translations": {
+   "1": "Účet",
+   "2": "Účet",
+   "5": "Účet"
+  }
+ },
+ {
+  "key": "filter.all",
+  "lang": "cs",
+  "translations": {
+   "1": "Vše",
+   "2": "Vše",
+   "5": "Vše"
+  }
+ },
+ {
+  "key": "filter.apply",
+  "lang": "cs",
+  "translations": {
+   "1": "Filtrovat",
+   "2": "Filtrovat",
+   "5": "Filtrovat"
+  }
+ },
+ {
+  "key": "filter.reset",
+  "lang": "cs",
+  "translations": {
+   "1": "Zrušit filtr",
+   "2": "Zrušit filtr",
+   "5": "Zrušit filtr"
+  }
+ },
+ {
+  "key": "filter.account.all",
+  "lang": "cs",
+  "translations": {
+   "1": "Všechny účty",
+   "2": "Všechny účty",
+   "5": "Všechny účty"
+  }
+ },
+ {
+  "key": "dashboard.filter.note",
+  "lang": "cs",
+  "translations": {
+   "1": "Upozornění, stavy událostí a fronta úloh platí vždy pro celý provoz.",
+   "2": "Upozornění, stavy událostí a fronta úloh platí vždy pro celý provoz.",
+   "5": "Upozornění, stavy událostí a fronta úloh platí vždy pro celý provoz."
+  }
+ },
+ {
+  "key": "actions.chart.outcomes",
+  "lang": "cs",
+  "translations": {
+   "1": "Zásahy za 30 dní podle výsledku",
+   "2": "Zásahy za 30 dní podle výsledku",
+   "5": "Zásahy za 30 dní podle výsledku"
+  }
+ },
+ {
+  "key": "actions.chart.reasons",
+  "lang": "cs",
+  "translations": {
+   "1": "Důvody zastavení a vrácení člověku za 30 dní",
+   "2": "Důvody zastavení a vrácení člověku za 30 dní",
+   "5": "Důvody zastavení a vrácení člověku za 30 dní"
+  }
+ },
+ {
+  "key": "actions.filter.type.all",
+  "lang": "cs",
+  "translations": {
+   "1": "Všechny typy",
+   "2": "Všechny typy",
+   "5": "Všechny typy"
+  }
+ },
+ {
+  "key": "account.chart.events",
+  "lang": "cs",
+  "translations": {
+   "1": "Přijaté události podle účtu za 30 dní",
+   "2": "Přijaté události podle účtu za 30 dní",
+   "5": "Přijaté události podle účtu za 30 dní"
+  }
+ },
+ {
+  "key": "evaluation.chart.accuracy",
+  "lang": "cs",
+  "translations": {
+   "1": "Přesnost posledních běhů (%)",
+   "2": "Přesnost posledních běhů (%)",
+   "5": "Přesnost posledních běhů (%)"
+  }
+ },
+ {
+  "key": "evaluation.chart.categories",
+  "lang": "cs",
+  "translations": {
+   "1": "Správně a chybně zařazené vzorky podle očekávané kategorie",
+   "2": "Správně a chybně zařazené vzorky podle očekávané kategorie",
+   "5": "Správně a chybně zařazené vzorky podle očekávané kategorie"
+  }
+ },
+ {
+  "key": "evaluation.chart.correct",
+  "lang": "cs",
+  "translations": {
+   "1": "Správně",
+   "2": "Správně",
+   "5": "Správně"
+  }
+ },
+ {
+  "key": "evaluation.chart.wrong",
+  "lang": "cs",
+  "translations": {
+   "1": "Chybně",
+   "2": "Chybně",
+   "5": "Chybně"
   }
  }
 ]

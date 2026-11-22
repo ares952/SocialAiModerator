@@ -2,6 +2,8 @@
 {varType list<App\Ingest\EventStatus> $statuses}
 {varType App\Meta\EventType|null $type}
 {varType list<App\Meta\EventType> $types}
+{varType int|null $account}
+{varType list<Nette\Database\Row> $accounts}
 {varType Nette\Utils\Paginator $paginator}
 {varType list<Nette\Database\Row> $events}
 
@@ -20,6 +22,7 @@
 			<a n:class="nav-link, $status === $item ? active" n:href="this, status: $item->value, page: null">{_"event.status.{$item->value}"}</a>
 		</li>
 	</ul>
+	{include '../@accountFilter.latte', account: $account, accounts: $accounts}
 	<div class="dropdown">
 		<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-coreui-toggle="dropdown" aria-expanded="false">
 			{if $type === null}{_'events.filter.type.all'}{else}{_"event.type.{$type->value}"}{/if}

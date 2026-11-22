@@ -1,5 +1,11 @@
 {varType App\Outbox\ActionStatus|null $status}
 {varType list<App\Outbox\ActionStatus> $statuses}
+{varType App\Outbox\ActionType|null $type}
+{varType list<App\Outbox\ActionType> $types}
+{varType int|null $account}
+{varType list<Nette\Database\Row> $accounts}
+{varType array<string, array<string, mixed>> $charts}
+{import '../@chart.latte'}
 {varType Nette\Utils\Paginator $paginator}
 {varType list<Nette\Database\Row> $actions}
 
@@ -10,14 +16,51 @@
 </div>
 <p class="text-body-secondary">{_'actions.note'}</p>
 
-<ul class="nav nav-pills flex-wrap mb-3">
-	<li class="nav-item">
-		<a n:class="nav-link, $status === null ? active" n:href="this, status: null, page: null">{_'actions.filter.all'}</a>
-	</li>
-	<li n:foreach="$statuses as $item" class="nav-item">
-		<a n:class="nav-link, $status === $item ? active" n:href="this, status: $item->value, page: null">{_"action.status.{$item->value}"}</a>
-	</li>
-</ul>
+<div class="row g-4 mb-4">
+	<div class="col-12 col-xl-7">
+		<div class="card h-100">
+			<div class="card-body">
+				<h2 class="h5 card-title mb-3">{_'actions.chart.outcomes'}</h2>
+				{include chart, $charts['outcomes'], export: outcomes}
+			</div>
+		</div>
+	</div>
+	<div class="col-12 col-xl-5">
+		<div class="card h-100">
+			<div class="card-body">
+				<h2 class="h5 card-title mb-3">{_'actions.chart.reasons'}</h2>
+				{if $charts['reasons']['labels'] === []}
+					<p class="text-body-secondary mb-0">{_'chart.empty'}</p>
+				{else}
+					{include chart, $charts['reasons'], export: reasons}
+				{/if}
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+	<ul class="nav nav-pills flex-wrap me-auto">
+		<li class="nav-item">
+			<a n:class="nav-link, $status === null ? active" n:href="this, status: null, page: null">{_'actions.filter.all'}</a>
+		</li>
+		<li n:foreach="$statuses as $item" class="nav-item">
+			<a n:class="nav-link, $status === $item ? active" n:href="this, status: $item->value, page: null">{_"action.status.{$item->value}"}</a>
+		</li>
+	</ul>
+	{include '../@accountFilter.latte', account: $account, accounts: $accounts}
+	<div class="dropdown">
+		<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-coreui-toggle="dropdown" aria-expanded="false">
+			{if $type === null}{_'actions.filter.type.all'}{else}{_"action.type.{$type->value}"}{/if}
+		</button>
+		<ul class="dropdown-menu dropdown-menu-end">
+			<li><a n:class="dropdown-item, $type === null ? active" n:href="this, type: null, page: null">{_'actions.filter.type.all'}</a></li>
+			<li n:foreach="$types as $item">
+				<a n:class="dropdown-item, $type === $item ? active" n:href="this, type: $item->value, page: null">{_"action.type.{$item->value}"}</a>
+			</li>
+		</ul>
+	</div>
+</div>
 
 {if $actions === []}
 	<div class="alert alert-secondary">{_'actions.empty'}</div>
@@ -80,3 +123,6 @@
 		</ul>
 	</nav>
 {/if}
+{/block}
+
+{block scripts}{include chartScripts}{/block}

@@ -3,6 +3,8 @@
 {varType list<Nette\Database\Row> $results}
 {varType array<int, string> $texts}
 {varType list<App\Moderation\Category> $categories}
+{varType array<string, array<string, mixed>> $charts}
+{import '../@chart.latte'}
 
 {block content}
 <nav aria-label="breadcrumb">
@@ -54,6 +56,13 @@
 </div>
 
 {if $report['confusion'] !== []}
+	<div class="card mb-4">
+		<div class="card-body">
+			<h2 class="h5 card-title mb-3">{_'evaluation.chart.categories'}</h2>
+			{include chart, $charts['categories'], export: categories}
+		</div>
+	</div>
+
 	<h2 class="h5">{_'evaluation.confusion'}</h2>
 	<p class="small text-body-secondary">{_'evaluation.confusion-note'}</p>
 	<div class="table-responsive mb-4">
@@ -118,3 +127,6 @@
 		</tbody>
 	</table>
 </div>
+{/block}
+
+{block scripts}{include chartScripts}{/block}

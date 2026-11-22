@@ -1,0 +1,17 @@
+{* Account filter of a list (ListFilters): a dropdown of links that keep the other filters. *}
+{varType int|null $account}
+{varType list<Nette\Database\Row> $accounts}
+<div class="dropdown" n:if="$accounts !== []">
+	<button class="btn btn-outline-secondary dropdown-toggle" type="button" data-coreui-toggle="dropdown" aria-expanded="false">
+		{var $selected = $account === null ? null : array_values(array_filter($accounts, fn($item): bool => $item->id === $account))[0] ?? null}
+		{if $selected === null}{_'filter.account.all'}{else}{$selected->name}{/if}
+	</button>
+	<ul class="dropdown-menu dropdown-menu-end">
+		<li><a n:class="dropdown-item, $account === null ? active" n:href="this, account: null, page: null">{_'filter.account.all'}</a></li>
+		<li n:foreach="$accounts as $item">
+			<a n:class="dropdown-item, $account === $item->id ? active" n:href="this, account: $item->id, page: null">
+				{$item->name} <span class="text-body-secondary small">({_"platform.{$item->platform}"})</span>
+			</a>
+		</li>
+	</ul>
+</div>

@@ -1,0 +1,38 @@
+{*
+ * Chart drawn by www/assets/admin/charts.js from a definition of App\Presentation\Admin\Charts.
+ * The canvas has a text summary for screen readers; unless it is a sparkline, the values are also
+ * available as a table under the chart (accessibility, no JavaScript) and, with an export name,
+ * as a CSV download (ChartExport of the presenter). Pages with charts include chartScripts.
+ *}
+{define chart, array $chart, string $size = 'md', ?string $export = null}
+	<div class="chart-box chart-box-{$size}">
+		<canvas data-chart={$chart} role="img" aria-label="{$chart['summary']}"></canvas>
+	</div>
+	<details n:if="empty($chart['sparkline'])" class="small mt-2 chart-data">
+		<summary class="text-body-secondary">{_'chart.data'}</summary>
+		<div class="table-responsive mt-2">
+			<table class="table table-sm mb-0">
+				<thead>
+					<tr>
+						<th scope="col"></th>
+						<th n:foreach="$chart['datasets'] as $dataset" scope="col" class="text-end">{$dataset['label']}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr n:foreach="$chart['labels'] as $index => $label">
+						<th scope="row" class="fw-normal">{$label}</th>
+						<td n:foreach="$chart['datasets'] as $dataset" class="text-end">{$dataset['data'][$index] ?? '—'}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<a n:if="$export !== null" n:href="export!, chart: $export" class="btn btn-sm btn-outline-secondary mt-2" download>
+			<svg class="icon me-1" aria-hidden="true"><use href="{$icons}#download"></use></svg>{_'chart.export'}
+		</a>
+	</details>
+{/define}
+
+{define chartScripts}
+	<script src="{$basePath}/assets/vendor/chartjs-4.6.1/chart.umd.min.js"></script>
+	<script src="{$basePath}/assets/admin/charts.js?v={$appVersion}"></script>
+{/define}

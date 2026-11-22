@@ -5608,7 +5608,7 @@
   }
  },
  {
-  "key": "dashboard.chart.unclassified",
+  "key": "chart.unclassified",
   "lang": "en",
   "translations": {
    "1": "Classification failed",
@@ -5648,7 +5648,7 @@
   }
  },
  {
-  "key": "dashboard.chart.data",
+  "key": "chart.data",
   "lang": "en",
   "translations": {
    "1": "Show data",
@@ -5656,7 +5656,7 @@
   }
  },
  {
-  "key": "dashboard.chart.empty",
+  "key": "chart.empty",
   "lang": "en",
   "translations": {
    "1": "There is no data for the chosen period.",
@@ -5712,7 +5712,7 @@
   }
  },
  {
-  "key": "dashboard.series.count",
+  "key": "chart.count",
   "lang": "en",
   "translations": {
    "1": "Count",
@@ -5744,7 +5744,7 @@
   }
  },
  {
-  "key": "dashboard.outcome.pending",
+  "key": "chart.outcome.pending",
   "lang": "en",
   "translations": {
    "1": "Awaiting approval",
@@ -5752,7 +5752,7 @@
   }
  },
  {
-  "key": "dashboard.outcome.approved",
+  "key": "chart.outcome.approved",
   "lang": "en",
   "translations": {
    "1": "Approved, being sent",
@@ -5760,7 +5760,7 @@
   }
  },
  {
-  "key": "dashboard.outcome.sent",
+  "key": "chart.outcome.sent",
   "lang": "en",
   "translations": {
    "1": "Done",
@@ -5768,7 +5768,7 @@
   }
  },
  {
-  "key": "dashboard.outcome.rejected",
+  "key": "chart.outcome.rejected",
   "lang": "en",
   "translations": {
    "1": "Rejected by a moderator",
@@ -5776,7 +5776,7 @@
   }
  },
  {
-  "key": "dashboard.outcome.blocked",
+  "key": "chart.outcome.blocked",
   "lang": "en",
   "translations": {
    "1": "Stopped by the rules",
@@ -5784,7 +5784,7 @@
   }
  },
  {
-  "key": "dashboard.outcome.failed",
+  "key": "chart.outcome.failed",
   "lang": "en",
   "translations": {
    "1": "Failed or unknown result",
@@ -5797,6 +5797,142 @@
   "translations": {
    "1": "Social accounts",
    "2": "Social accounts"
+  }
+ },
+ {
+  "key": "chart.export",
+  "lang": "en",
+  "translations": {
+   "1": "Download CSV",
+   "2": "Download CSV"
+  }
+ },
+ {
+  "key": "chart.column.item",
+  "lang": "en",
+  "translations": {
+   "1": "Item",
+   "2": "Item"
+  }
+ },
+ {
+  "key": "filter.platform",
+  "lang": "en",
+  "translations": {
+   "1": "Platform",
+   "2": "Platform"
+  }
+ },
+ {
+  "key": "filter.account",
+  "lang": "en",
+  "translations": {
+   "1": "Account",
+   "2": "Account"
+  }
+ },
+ {
+  "key": "filter.all",
+  "lang": "en",
+  "translations": {
+   "1": "All",
+   "2": "All"
+  }
+ },
+ {
+  "key": "filter.apply",
+  "lang": "en",
+  "translations": {
+   "1": "Filter",
+   "2": "Filter"
+  }
+ },
+ {
+  "key": "filter.reset",
+  "lang": "en",
+  "translations": {
+   "1": "Clear filter",
+   "2": "Clear filter"
+  }
+ },
+ {
+  "key": "filter.account.all",
+  "lang": "en",
+  "translations": {
+   "1": "All accounts",
+   "2": "All accounts"
+  }
+ },
+ {
+  "key": "dashboard.filter.note",
+  "lang": "en",
+  "translations": {
+   "1": "Alarms, event states and the job queue always cover all traffic.",
+   "2": "Alarms, event states and the job queue always cover all traffic."
+  }
+ },
+ {
+  "key": "actions.chart.outcomes",
+  "lang": "en",
+  "translations": {
+   "1": "Interventions of the last 30 days by outcome",
+   "2": "Interventions of the last 30 days by outcome"
+  }
+ },
+ {
+  "key": "actions.chart.reasons",
+  "lang": "en",
+  "translations": {
+   "1": "Reasons for stopping or returning to a human, last 30 days",
+   "2": "Reasons for stopping or returning to a human, last 30 days"
+  }
+ },
+ {
+  "key": "actions.filter.type.all",
+  "lang": "en",
+  "translations": {
+   "1": "All types",
+   "2": "All types"
+  }
+ },
+ {
+  "key": "account.chart.events",
+  "lang": "en",
+  "translations": {
+   "1": "Received events per account, last 30 days",
+   "2": "Received events per account, last 30 days"
+  }
+ },
+ {
+  "key": "evaluation.chart.accuracy",
+  "lang": "en",
+  "translations": {
+   "1": "Accuracy of the latest runs (%)",
+   "2": "Accuracy of the latest runs (%)"
+  }
+ },
+ {
+  "key": "evaluation.chart.categories",
+  "lang": "en",
+  "translations": {
+   "1": "Correctly and wrongly classified samples by expected category",
+   "2": "Correctly and wrongly classified samples by expected category"
+  }
+ },
+ {
+  "key": "evaluation.chart.correct",
+  "lang": "en",
+  "translations": {
+   "1": "Correct",
+   "2": "Correct"
+  }
+ },
+ {
+  "key": "evaluation.chart.wrong",
+  "lang": "en",
+  "translations": {
+   "1": "Wrong",
+   "2": "Wrong"
   }
  }
 ]

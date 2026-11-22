@@ -332,6 +332,36 @@ test('dashboard: alarms and numbers; alarm thresholds are saved and audited', fu
 		Assert::same(200, $browser->get("/?range=$range")->status, $range);
 	}
 	Assert::same(404, $browser->get('/?range=nonsense')->status);
+
+	// filters: an empty value from the filter form redirects to the clean URL, invalid values are 404
+	Assert::same(200, $browser->get('/?range=7d&platform=instagram')->status);
+	Assert::same('/?range=7d', $browser->get('/?range=7d&platform=&account=')->location());
+	Assert::same(404, $browser->get('/?platform=nonsense')->status);
+	Assert::same(404, $browser->get('/?account=999999')->status);
+	Assert::same(404, $browser->get('/?account=abc')->status);
+	$accountId = (int) $data->database->query('SELECT id FROM social_accounts ORDER BY id LIMIT 1')->fetchField();
+	Assert::true($accountId > 0, 'The accounts test added an account.');
+	Assert::contains('Upozornění, stavy událostí a fronta úloh platí vždy pro celý provoz.', $browser->get("/?account=$accountId")->body);
+	Assert::same(200, $browser->get("/admin/events?account=$accountId")->status);
+	Assert::same(200, $browser->get("/admin/actions?account=$accountId&type=hide")->status);
+	Assert::same(404, $browser->get('/admin/events?account=999999')->status);
+	Assert::same(404, $browser->get('/admin/actions?type=nonsense')->status);
+
+	// CSV exports of the charts
+	$csv = $browser->get('/?range=7d&do=export&chart=traffic');
+	Assert::same(200, $csv->status);
+	Assert::contains('text/csv', $csv->headers['content-type'][0] ?? '');
+	Assert::match('attachment; filename="traffic-%d%-%d%.csv"', $csv->headers['content-disposition'][0] ?? '');
+	Assert::same("\u{FEFF}Položka;Komentáře;\"Zprávy zákazníků\";\"Ostatní události\";\"Rozhodnutí AI\"", strtok($csv->body, "\n"));
+	Assert::same(8, substr_count($csv->body, "\n"), 'header and 7 days');
+	Assert::same(404, $browser->get('/?do=export&chart=nonsense')->status);
+	foreach (['/admin/actions?do=export&chart=reasons', '/admin/accounts?do=export&chart=events', '/admin/evaluation?do=export&chart=accuracy'] as $export) {
+		Assert::same(200, $browser->get($export)->status, $export);
+	}
+	foreach (['/admin/actions', '/admin/accounts', '/admin/evaluation'] as $page) {
+		Assert::contains('/assets/admin/charts.js', $browser->get($page)->body, $page);
+	}
+
 	foreach (['/assets/admin/icons.svg', '/assets/admin/charts.js', '/assets/vendor/coreui-5.9.1/js/coreui.bundle.min.js'] as $asset) {
 		Assert::same(200, $browser->get($asset)->status, $asset);
 	}

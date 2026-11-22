@@ -204,6 +204,18 @@ Never connect a live production Page or real accounts in tests or during develop
 - Pin the Graph API version through configuration (`META_GRAPH_API_VERSION`). Keep `graph.facebook.com` and `graph.instagram.com` paths separate.
 - Thresholds, retention, limits, and knowledge content are editable at runtime (DB or admin) without a redeploy. Never hard-code them.
 
+## Admin UI
+
+The conventions are in `docs/admin-ui.md`.
+
+- Always build admin screens with CoreUI 5 free components (cards, callouts, badges, progress groups, sidebar navigation, dropdowns) and `data-coreui-*` attributes. Do not add another UI framework, CoreUI PRO components, or inline scripts. Custom CSS goes only into `www/assets/admin/admin.css` and uses `--cui-*` variables, so the light and dark themes keep working.
+- Add a visual overview wherever it makes sense: data over time, distributions, or comparisons that operators read at a glance. Use a Chart.js chart through the `data-chart` convention:
+  - the data comes from a domain read model;
+  - the chart definition with translated labels is built in PHP;
+  - every chart has a table fallback and a CSV export of the same data.
+- Do not chart a single number or tiny lists, where a tile or a table is clearer. Charts, filters and exports never contain customer content (comment or message text, author names).
+- Lists and charts that operators narrow down get filters as GET parameters. An invalid filter value returns 404, like the existing lists.
+
 ## Workflow
 
 - Run tools inside containers from the repository root:

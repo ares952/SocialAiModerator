@@ -51,6 +51,7 @@ services:
 	- App\Monitoring\Alarms(heartbeatFile: %tempDir%/worker.heartbeat)
 	- App\Monitoring\Metrics
 	- App\Monitoring\MetricSeries
+	- App\Presentation\Admin\Charts
 	- App\Presentation\Admin\Dashboard\DashboardData
 	- App\Moderation\Policies(defaultMode: App\Moderation\Mode::from(%env.AUTOMATION_DEFAULT_MODE%))
 	- App\Moderation\AutomationSwitch

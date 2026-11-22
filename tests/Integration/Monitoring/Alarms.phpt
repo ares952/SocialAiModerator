@@ -7,15 +7,18 @@ use App\Account\TokenType;
 use App\Audit\AuditLog;
 use App\Console\MonitorCheckCommand;
 use App\Core\Encryptor;
+use App\Meta\Platform;
 use App\Monitoring\Alarm;
 use App\Monitoring\Alarms;
 use App\Monitoring\AlarmThresholds;
 use App\Monitoring\MetricRange;
 use App\Monitoring\Metrics;
 use App\Monitoring\MetricSeries;
+use App\Monitoring\Scope;
 use App\Monitoring\Timeline;
 use App\Moderation\Mode;
 use App\Moderation\PolicySettings;
+use App\Outbox\ActionType;
 use Symfony\Component\Console\Tester\CommandTester;
 use Tester\Assert;
 use Tests\Support\TestDatabase;
@@ -193,13 +196,14 @@ test('dashboard series and breakdowns, token usage per model', function () use (
 	$series = new MetricSeries($database);
 	$timeline = Timeline::create(MetricRange::Day, new DateTimeImmutable, new DateTimeZone('Europe/Prague'), 2);
 	$current = $timeline->current();
-	$events = $series->events($timeline);
+	$all = new Scope;
+	$events = $series->events($timeline, $all);
 	Assert::same([1, 0], [array_sum($timeline->last($events['comments'])), array_sum($timeline->last($events['messages']))]);
-	$decisions = $series->decisions($timeline);
+	$decisions = $series->decisions($timeline, $all);
 	Assert::same([1, 1], [array_sum($timeline->last($decisions['decisions'])), array_sum($timeline->last($decisions['escalations']))]);
-	Assert::same(['handoff' => 1], $metrics->decisionActions($current));
-	Assert::same(['faq' => 1], $metrics->categories($current));
-	$actions = $series->actions($timeline);
+	Assert::same(['handoff' => 1], $metrics->decisionActions($current, $all));
+	Assert::same(['faq' => 1], $metrics->categories($current, $all));
+	$actions = $series->actions($timeline, $all);
 	Assert::same([1, 0], [array_sum($timeline->last($actions['hides'])), array_sum($timeline->last($actions['replies']))], 'The blocked reply has no draft text.');
 	Assert::same([
 		'hide' => [
@@ -218,13 +222,40 @@ test('dashboard series and breakdowns, token usage per model', function () use (
 			'blocked' => 0,
 			'failed' => 0,
 		],
-	], $metrics->outcomes($current));
+	], $metrics->outcomes($current, $all));
+	$outcomes = $series->outcomes($current, $all);
+	Assert::same([0, 0, 0, 1, 1, 0], array_map(fn(array $values): int => array_sum($values), array_values($outcomes)));
+	Assert::same([0, 0, 0, 1, 0, 0], array_map(fn(array $values): int => array_sum($values), array_values($series->outcomes($current, $all, ActionType::Reply))));
+	Assert::same([
+		'mode_observe' => 1,
+		'rejected' => 1,
+	], $metrics->reasons($current, $all));
+	Assert::same(['rejected' => 1], $metrics->reasons($current, $all, ActionType::Reply));
 	Assert::same([
 		['model' => 'model-a', 'calls' => 1, 'input' => 100, 'output' => 20],
 		['model' => 'model-b', 'calls' => 1, 'input' => 300, 'output' => 40],
-	], $metrics->tokens($current));
-	Assert::same([120, 340], array_map(fn(array $values): int => array_sum($values), array_values($series->tokens($current))));
-	Assert::same(['model-a', 'model-b'], array_keys($series->tokens($current)));
-	Assert::same(0, $metrics->approvals()['count']);
+	], $metrics->tokens($current, $all));
+	Assert::same([120, 340], array_map(fn(array $values): int => array_sum($values), array_values($series->tokens($current, $all))));
+	Assert::same(['model-a', 'model-b'], array_keys($series->tokens($current, $all)));
+	Assert::same(0, $metrics->approvals($all)['count']);
+	Assert::same(['Test Page'], array_keys($series->accounts($current)));
+
+	// Scopes: the account and its platform see the same numbers, another platform sees nothing.
+	foreach ([new Scope(accountId: $accountId), new Scope(Platform::Facebook)] as $scope) {
+		Assert::same(['handoff' => 1], $metrics->decisionActions($current, $scope));
+		Assert::same(2, count($metrics->reasons($current, $scope)));
+		Assert::same(2, count($metrics->tokens($current, $scope)));
+	}
+	$instagram = new Scope(Platform::Instagram);
+	Assert::same([], $metrics->decisionActions($current, $instagram));
+	Assert::same([], $metrics->categories($current, $instagram));
+	Assert::same([], $metrics->outcomes($current, $instagram));
+	Assert::same([], $metrics->reasons($current, $instagram));
+	Assert::same([], $metrics->tokens($current, $instagram));
+	Assert::same([], $metrics->platforms($current, $instagram));
+	Assert::same(0, array_sum($current->last($series->events($current, $instagram)['comments'])));
+	Assert::same(0, array_sum($series->actions($current, $instagram)['hides']));
+	Assert::same([], $series->tokens($current, $instagram));
+	Assert::same(0, $metrics->approvals($instagram)['count']);
 	Assert::same($accountId, (int) $database->query('SELECT account_id FROM social_events WHERE id = ?', $eventId)->fetchField());
 });

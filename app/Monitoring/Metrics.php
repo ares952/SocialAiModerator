@@ -5,27 +5,18 @@ declare(strict_types=1);
 namespace App\Monitoring;
 
 use App\Outbox\ActionStatus;
+use App\Outbox\ActionType;
 use Nette\Database\Explorer;
 
 
 /**
- * Breakdowns of the dashboard over the period of a Timeline (specification §4.3, §8.4): AI
- * decisions by action and category, outcomes of interventions, events by platform and token usage
- * per model; plus the approvals waiting right now. Results never contain customer content.
+ * Breakdowns over the period of a Timeline for the traffic of a Scope (specification §4.3, §8.4):
+ * AI decisions by action and category, outcomes of interventions and the reasons that stopped
+ * them, events by platform and token usage per model; plus the approvals waiting right now.
+ * Results never contain customer content.
  */
 final class Metrics
 {
-	/** Outcome of an intervention on the dashboard => action statuses. */
-	public const Outcomes = [
-		'pending' => [ActionStatus::Pending],
-		'approved' => [ActionStatus::Approved, ActionStatus::Sending],
-		'sent' => [ActionStatus::Sent],
-		'rejected' => [],
-		'blocked' => [],
-		'failed' => [ActionStatus::Failed, ActionStatus::Unknown],
-	];
-
-
 	public function __construct(
 		private readonly Explorer $database,
 	) {
@@ -35,13 +26,16 @@ final class Metrics
 	/**
 	 * @return array<string, int> App\Moderation\Action value => decisions, most frequent first
 	 */
-	public function decisionActions(Timeline $timeline): array
+	public function decisionActions(Timeline $timeline, Scope $scope): array
 	{
 		return $this->database->query(
-			'SELECT action, COUNT(*) AS cnt FROM moderation_decisions WHERE created_at >= ? AND created_at < ?
-			GROUP BY action ORDER BY cnt DESC, action',
+			'SELECT d.action, COUNT(*) AS cnt FROM moderation_decisions d
+			JOIN social_events e ON e.id = d.event_id
+			WHERE d.created_at >= ? AND d.created_at < ? AND ?and
+			GROUP BY d.action ORDER BY cnt DESC, d.action',
 			$timeline->since,
 			$timeline->until,
+			$scope->events('e'),
 		)->fetchPairs('action', 'cnt');
 	}
 
@@ -50,44 +44,45 @@ final class Metrics
 	 * @return array<string, int> App\Moderation\Category value, '' when the classification failed,
 	 *     => decisions, most frequent first
 	 */
-	public function categories(Timeline $timeline): array
+	public function categories(Timeline $timeline, Scope $scope): array
 	{
 		return $this->database->query(
-			"SELECT COALESCE(category, '') AS category, COUNT(*) AS cnt FROM moderation_decisions
-			WHERE created_at >= ? AND created_at < ?
-			GROUP BY category ORDER BY cnt DESC, category",
+			"SELECT COALESCE(d.category, '') AS category, COUNT(*) AS cnt FROM moderation_decisions d
+			JOIN social_events e ON e.id = d.event_id
+			WHERE d.created_at >= ? AND d.created_at < ? AND ?and
+			GROUP BY d.category ORDER BY cnt DESC, category",
 			$timeline->since,
 			$timeline->until,
+			$scope->events('e'),
 		)->fetchPairs('category', 'cnt');
 	}
 
 
 	/**
-	 * Interventions by type and outcome (keys of Outcomes). A blocked action counts as rejected
-	 * when a moderator rejected it, otherwise as blocked by the rules.
+	 * Interventions by type and outcome.
 	 *
-	 * @return array<string, array<string, int>> App\Outbox\ActionType value => outcome => actions
+	 * @return array<string, array<string, int>> App\Outbox\ActionType value => Outcome value => actions,
+	 *     every outcome present
 	 */
-	public function outcomes(Timeline $timeline): array
+	public function outcomes(Timeline $timeline, Scope $scope): array
 	{
 		$rows = $this->database->query(
-			'SELECT type, status, JSON_CONTAINS(COALESCE(reasons_json, JSON_ARRAY()), ?) AS rejected, COUNT(*) AS cnt
-			FROM moderation_actions WHERE created_at >= ? AND created_at < ?
-			GROUP BY type, status, rejected
-			ORDER BY type',
+			'SELECT a.type, a.status, JSON_CONTAINS(COALESCE(a.reasons_json, JSON_ARRAY()), ?) AS rejected, COUNT(*) AS cnt
+			FROM moderation_actions a ' . Scope::ActionAccount . '
+			WHERE a.created_at >= ? AND a.created_at < ? AND ?and
+			GROUP BY a.type, a.status, rejected
+			ORDER BY a.type',
 			'"rejected"',
 			$timeline->since,
 			$timeline->until,
+			$scope->accounts('s'),
 		)->fetchAll();
 
 		$outcomes = [];
 		foreach ($rows as $row) {
-			$status = ActionStatus::from((string) $row->status);
-			$outcome = $status === ActionStatus::Blocked
-				? ((bool) $row->rejected ? 'rejected' : 'blocked')
-				: self::outcome($status);
-			$outcomes[(string) $row->type] ??= array_fill_keys(array_keys(self::Outcomes), 0);
-			$outcomes[(string) $row->type][$outcome] += (int) $row->cnt;
+			$outcome = Outcome::of(ActionStatus::from((string) $row->status), (bool) $row->rejected);
+			$outcomes[(string) $row->type] ??= array_fill_keys(array_map(fn(Outcome $item): string => $item->value, Outcome::cases()), 0);
+			$outcomes[(string) $row->type][$outcome->value] += (int) $row->cnt;
 		}
 
 		return $outcomes;
@@ -95,15 +90,39 @@ final class Metrics
 
 
 	/**
-	 * @return array<string, int> App\Meta\Platform value => received events
+	 * Reasons recorded on interventions (what stopped them or returned them to a human).
+	 *
+	 * @return array<string, int> reason code (decision.reason.<code>) => interventions, most frequent first
 	 */
-	public function platforms(Timeline $timeline): array
+	public function reasons(Timeline $timeline, Scope $scope, ?ActionType $type = null): array
 	{
 		return $this->database->query(
-			'SELECT platform, COUNT(*) AS cnt FROM social_events WHERE received_at >= ? AND received_at < ?
-			GROUP BY platform ORDER BY platform',
+			'SELECT r.reason, COUNT(*) AS cnt
+			FROM moderation_actions a ' . Scope::ActionAccount . '
+			CROSS JOIN JSON_TABLE(a.reasons_json, \'$[*]\' COLUMNS (reason VARCHAR(64) PATH \'$\')) r
+			WHERE a.created_at >= ? AND a.created_at < ? AND a.reasons_json IS NOT NULL AND ?and
+			GROUP BY r.reason ORDER BY cnt DESC, r.reason',
 			$timeline->since,
 			$timeline->until,
+			$scope->accounts('s') + ($type === null ? [] : [
+				'a.type' => $type->value,
+			]),
+		)->fetchPairs('reason', 'cnt');
+	}
+
+
+	/**
+	 * @return array<string, int> App\Meta\Platform value => received events
+	 */
+	public function platforms(Timeline $timeline, Scope $scope): array
+	{
+		return $this->database->query(
+			'SELECT e.platform, COUNT(*) AS cnt FROM social_events e
+			WHERE e.received_at >= ? AND e.received_at < ? AND ?and
+			GROUP BY e.platform ORDER BY e.platform',
+			$timeline->since,
+			$timeline->until,
+			$scope->events('e'),
 		)->fetchPairs('platform', 'cnt');
 	}
 
@@ -113,22 +132,25 @@ final class Metrics
 	 *
 	 * @return list<array{model: string, calls: int, input: int, output: int}>
 	 */
-	public function tokens(Timeline $timeline): array
+	public function tokens(Timeline $timeline, Scope $scope): array
 	{
 		$rows = $this->database->query(
 			'SELECT model, COUNT(*) AS calls, SUM(input_tokens) AS input, SUM(output_tokens) AS output FROM (
-				SELECT model, input_tokens, output_tokens FROM moderation_decisions
-				WHERE created_at >= ? AND created_at < ? AND input_tokens IS NOT NULL
+				SELECT d.model, d.input_tokens, d.output_tokens FROM moderation_decisions d
+				JOIN social_events e ON e.id = d.event_id
+				WHERE d.created_at >= ? AND d.created_at < ? AND d.input_tokens IS NOT NULL AND ?and
 				UNION ALL
-				SELECT model, input_tokens, output_tokens FROM moderation_actions
-				WHERE created_at >= ? AND created_at < ? AND input_tokens IS NOT NULL
+				SELECT a.model, a.input_tokens, a.output_tokens FROM moderation_actions a ' . Scope::ActionAccount . '
+				WHERE a.created_at >= ? AND a.created_at < ? AND a.input_tokens IS NOT NULL AND ?and
 			) usage_rows
 			GROUP BY model
 			ORDER BY model',
 			$timeline->since,
 			$timeline->until,
+			$scope->events('e'),
 			$timeline->since,
 			$timeline->until,
+			$scope->accounts('s'),
 		)->fetchAll();
 
 		return array_map(fn($row) => [
@@ -145,28 +167,18 @@ final class Metrics
 	 *
 	 * @return array{count: int, oldest: ?\DateTimeImmutable}
 	 */
-	public function approvals(): array
+	public function approvals(Scope $scope): array
 	{
 		$row = $this->database->query(
-			'SELECT COUNT(*) AS cnt, MIN(created_at) AS oldest FROM moderation_actions WHERE status = ?',
+			'SELECT COUNT(*) AS cnt, MIN(a.created_at) AS oldest FROM moderation_actions a ' . Scope::ActionAccount . '
+			WHERE a.status = ? AND ?and',
 			ActionStatus::Pending->value,
+			$scope->accounts('s'),
 		)->fetch();
 
 		return [
 			'count' => (int) $row?->cnt,
 			'oldest' => $row?->oldest instanceof \DateTimeInterface ? \DateTimeImmutable::createFromInterface($row->oldest) : null,
 		];
-	}
-
-
-	private static function outcome(ActionStatus $status): string
-	{
-		foreach (self::Outcomes as $outcome => $statuses) {
-			if (in_array($status, $statuses, true)) {
-				return $outcome;
-			}
-		}
-
-		throw new \LogicException("Action status {$status->value} has no dashboard outcome.");
 	}
 }

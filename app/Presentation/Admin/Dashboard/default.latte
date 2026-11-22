@@ -1,5 +1,8 @@
 {varType App\Monitoring\MetricRange $range}
 {varType list<App\Monitoring\MetricRange> $ranges}
+{varType App\Monitoring\Scope $scope}
+{varType list<App\Meta\Platform> $platforms}
+{varType list<Nette\Database\Row> $accounts}
 {varType array<string, int> $eventCounts}
 {varType list<App\Ingest\EventStatus> $eventStatuses}
 {varType array<string, int> $jobCounts}
@@ -8,17 +11,11 @@
 {varType bool $paused}
 {varType list<App\Monitoring\Alarm> $alarms}
 {varType list<array{key: string, icon: string, color: string, value: int, change: ?int, oldest: ?DateTimeImmutable, chart: ?array<string, mixed>, link: array{string, array<string, string>}}> $tiles}
-{varType array<string, mixed> $traffic}
 {varType array{events: int, decisions: int, share: ?int, average: ?float} $totals}
-{varType array<string, mixed> $decisionChart}
-{varType array<string, mixed> $categoryChart}
-{varType array<string, mixed> $outcomeChart}
-{varType array<string, mixed> $classificationChart}
-{varType array<string, mixed> $tokenChart}
 {varType list<array{model: string, calls: int, input: int, output: int}> $tokens}
-{varType array<string, mixed> $platformChart}
+{varType array<string, array<string, mixed>> $charts}
 {varType string $icons}
-{import '@chart.latte'}
+{import '../@chart.latte'}
 
 {block content}
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
@@ -28,6 +25,33 @@
 			n:attr="aria-current: $item === $range ? page">{_"dashboard.range.{$item->value}"}</a>
 	</div>
 </div>
+
+<form method="get" action="{link this}" class="card card-body bg-body mb-4 py-2">
+	<div class="row g-2 align-items-end">
+		<input type="hidden" name="range" value="{$range->value}">
+		<div class="col-12 col-sm-auto">
+			<label for="filter-platform" class="form-label small text-body-secondary mb-1">{_'filter.platform'}</label>
+			<select id="filter-platform" name="platform" class="form-select form-select-sm">
+				<option value="">{_'filter.all'}</option>
+				<option n:foreach="$platforms as $item" value="{$item->value}" n:attr="selected: $scope->platform === $item">{_"platform.{$item->value}"}</option>
+			</select>
+		</div>
+		<div class="col-12 col-sm-auto">
+			<label for="filter-account" class="form-label small text-body-secondary mb-1">{_'filter.account'}</label>
+			<select id="filter-account" name="account" class="form-select form-select-sm">
+				<option value="">{_'filter.all'}</option>
+				<option n:foreach="$accounts as $item" value="{$item->id}" n:attr="selected: $scope->accountId === $item->id">{$item->name} ({_"platform.{$item->platform}"})</option>
+			</select>
+		</div>
+		<div class="col-12 col-sm-auto d-flex gap-2">
+			<button type="submit" class="btn btn-sm btn-primary">
+				<svg class="icon me-1" aria-hidden="true"><use href="{$icons}#filter"></use></svg>{_'filter.apply'}
+			</button>
+			<a n:if="!$scope->all()" n:href="this, platform: null, account: null" class="btn btn-sm btn-outline-secondary">{_'filter.reset'}</a>
+		</div>
+		<div n:if="!$scope->all()" class="col-12 col-lg text-lg-end small text-body-secondary">{_'dashboard.filter.note'}</div>
+	</div>
+</form>
 
 <div n:class="callout, $paused ? 'callout-danger' : 'callout-primary', 'bg-body', 'd-flex', 'flex-wrap', 'justify-content-between', 'align-items-center', 'gap-2', 'mt-0'">
 	<span>
@@ -82,7 +106,7 @@
 <div class="card mb-4">
 	<div class="card-body">
 		<h2 class="h5 card-title mb-3">{_'dashboard.chart.traffic'}</h2>
-		{include chart, $traffic, size: 'lg'}
+		{include chart, $charts['traffic'], size: 'lg', export: traffic}
 	</div>
 	<div class="card-footer bg-body">
 		<div class="row row-cols-2 row-cols-md-4 g-3 text-center">
@@ -111,10 +135,10 @@
 		<div class="card h-100">
 			<div class="card-body">
 				<h2 class="h5 card-title mb-3">{_'dashboard.chart.decisions'}</h2>
-				{if $decisionChart['labels'] === []}
-					<p class="text-body-secondary mb-0">{_'dashboard.chart.empty'}</p>
+				{if $charts['decisions']['labels'] === []}
+					<p class="text-body-secondary mb-0">{_'chart.empty'}</p>
 				{else}
-					{include chart, $decisionChart}
+					{include chart, $charts['decisions'], export: decisions}
 				{/if}
 			</div>
 		</div>
@@ -123,10 +147,10 @@
 		<div class="card h-100">
 			<div class="card-body">
 				<h2 class="h5 card-title mb-3">{_'dashboard.chart.categories'}</h2>
-				{if $categoryChart['labels'] === []}
-					<p class="text-body-secondary mb-0">{_'dashboard.chart.empty'}</p>
+				{if $charts['categories']['labels'] === []}
+					<p class="text-body-secondary mb-0">{_'chart.empty'}</p>
 				{else}
-					{include chart, $categoryChart}
+					{include chart, $charts['categories'], export: categories}
 				{/if}
 			</div>
 		</div>
@@ -136,10 +160,10 @@
 		<div class="card h-100">
 			<div class="card-body">
 				<h2 class="h5 card-title mb-3">{_'dashboard.chart.outcomes'}</h2>
-				{if $outcomeChart['labels'] === []}
-					<p class="text-body-secondary mb-0">{_'dashboard.chart.empty'}</p>
+				{if $charts['outcomes']['labels'] === []}
+					<p class="text-body-secondary mb-0">{_'chart.empty'}</p>
 				{else}
-					{include chart, $outcomeChart}
+					{include chart, $charts['outcomes'], export: outcomes}
 				{/if}
 			</div>
 		</div>
@@ -148,7 +172,7 @@
 		<div class="card h-100">
 			<div class="card-body">
 				<h2 class="h5 card-title mb-3">{_'dashboard.chart.classification'}</h2>
-				{include chart, $classificationChart}
+				{include chart, $charts['classification'], export: classification}
 			</div>
 		</div>
 	</div>
@@ -160,7 +184,7 @@
 				{if $tokens === []}
 					<p class="text-body-secondary mb-0">{_'dashboard.tokens.none'}</p>
 				{else}
-					{include chart, $tokenChart}
+					{include chart, $charts['tokens'], export: tokens}
 					<ul class="list-unstyled small mt-3 mb-0">
 						<li n:foreach="$tokens as $usage">
 							<code>{$usage['model']}</code>: {_'dashboard.tokens.usage', $usage['calls'], [input => ($usage['input']|number), output => ($usage['output']|number)]}
@@ -178,10 +202,10 @@
 					<h2 class="h5 card-title mb-0">{_'dashboard.chart.platforms'}</h2>
 					<a class="small" n:href=":Admin:Accounts:" n:if="$user->isAllowed('accounts', 'view')">{_'dashboard.accounts-link'}</a>
 				</div>
-				{if $platformChart['labels'] === []}
-					<p class="text-body-secondary mb-0">{_'dashboard.chart.empty'}</p>
+				{if $charts['platforms']['labels'] === []}
+					<p class="text-body-secondary mb-0">{_'chart.empty'}</p>
 				{else}
-					{include chart, $platformChart}
+					{include chart, $charts['platforms'], export: platforms}
 				{/if}
 			</div>
 		</div>
@@ -230,7 +254,4 @@
 </div>
 {/block}
 
-{block scripts}
-	<script src="{$basePath}/assets/vendor/chartjs-4.6.1/chart.umd.min.js"></script>
-	<script src="{$basePath}/assets/admin/charts.js?v={$appVersion}"></script>
-{/block}
+{block scripts}{include chartScripts}{/block}

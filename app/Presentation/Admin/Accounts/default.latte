@@ -1,5 +1,7 @@
 {varType list<Nette\Database\Row> $accounts}
 {varType bool $canManage}
+{varType array<string, array<string, mixed>> $charts}
+{import '../@chart.latte'}
 
 {block content}
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
@@ -12,6 +14,17 @@
 {if $accounts === []}
 	<div class="alert alert-secondary">{_'account.empty'}</div>
 {else}
+	<div class="card mb-4">
+		<div class="card-body">
+			<h2 class="h5 card-title mb-3">{_'account.chart.events'}</h2>
+			{if $charts['events']['datasets'] === []}
+				<p class="text-body-secondary mb-0">{_'chart.empty'}</p>
+			{else}
+				{include chart, $charts['events'], export: events}
+			{/if}
+		</div>
+	</div>
+
 	<div class="table-responsive">
 		<table class="table table-hover align-middle">
 			<thead>
@@ -67,3 +80,6 @@
 		</table>
 	</div>
 {/if}
+{/block}
+
+{block scripts}{include chartScripts}{/block}

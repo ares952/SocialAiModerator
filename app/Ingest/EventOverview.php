@@ -35,11 +35,11 @@ final class EventOverview
 	}
 
 
-	public function count(?EventStatus $status, ?EventType $type): int
+	public function count(?EventStatus $status, ?EventType $type, ?int $accountId): int
 	{
 		return (int) $this->database->query(
 			'SELECT COUNT(*) FROM social_events e WHERE ?and',
-			self::filter($status, $type),
+			self::filter($status, $type, $accountId),
 		)->fetchField();
 	}
 
@@ -49,7 +49,7 @@ final class EventOverview
 	 *
 	 * @return list<Row>
 	 */
-	public function page(?EventStatus $status, ?EventType $type, int $limit, int $offset): array
+	public function page(?EventStatus $status, ?EventType $type, ?int $accountId, int $limit, int $offset): array
 	{
 		return $this->database->query(
 			'SELECT e.id, e.received_at, e.occurred_at, e.platform, e.account_external_id, a.name AS account_name,
@@ -63,7 +63,7 @@ final class EventOverview
 			ORDER BY e.id DESC
 			LIMIT ? OFFSET ?',
 			JobType::ProcessEvent->value,
-			self::filter($status, $type),
+			self::filter($status, $type, $accountId),
 			$limit,
 			$offset,
 		)->fetchAll();
@@ -107,9 +107,9 @@ final class EventOverview
 
 
 	/**
-	 * @return array<string, string>
+	 * @return array<string, int|string>
 	 */
-	private static function filter(?EventStatus $status, ?EventType $type): array
+	private static function filter(?EventStatus $status, ?EventType $type, ?int $accountId): array
 	{
 		$filter = [];
 		if ($status !== null) {
@@ -118,6 +118,10 @@ final class EventOverview
 
 		if ($type !== null) {
 			$filter['e.event_type'] = $type->value;
+		}
+
+		if ($accountId !== null) {
+			$filter['e.account_id'] = $accountId;
 		}
 
 		return $filter;

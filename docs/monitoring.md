@@ -36,7 +36,9 @@ a skončí s kódem 1.
 ## Přehled provozu
 
 Přehled ukazuje čísla a grafy za zvolené období: posledních 24 hodin po hodinách, nebo 7 či 30
-kalendářních dnů (včetně dneška) po dnech v časovém pásmu `timezone`.
+kalendářních dnů (včetně dneška) po dnech v časovém pásmu `timezone`. Lze je zúžit na platformu
+nebo jeden účet; upozornění, stavy událostí a fronta úloh platí vždy pro celý provoz a selhané
+úlohy fronty se s filtrem nepočítají. Data každého grafu jdou stáhnout jako CSV.
 
 - **Dlaždice:** přijaté události, zásahy čekající na schválení (nejstarší), předání člověku,
   navržená skrytí, návrhy odpovědí a selhání (zásahy selhané nebo s neznámým výsledkem a selhané

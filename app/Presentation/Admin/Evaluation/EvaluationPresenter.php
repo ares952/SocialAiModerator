@@ -14,16 +14,31 @@ use App\Moderation\Category;
 use App\Moderation\ContentKind;
 use App\Operator\Authorization;
 use App\Presentation\Admin\AdminPresenter;
+use App\Presentation\Admin\ChartExport;
+use App\Presentation\Admin\Charts;
 use Nette\Application\UI\Form;
 
 
 /**
  * Evaluation set and runs (Milestone 2): moderators label samples, an admin starts a run, everyone
- * reads the metrics. Sample texts are shown only to those who may edit them.
+ * reads the metrics. Sample texts are shown only to those who may edit them. Charts: accuracy of
+ * the last runs, and correct and wrong categories of one run.
+ *
+ * @phpstan-import-type Chart from Charts
  */
 final class EvaluationPresenter extends AdminPresenter
 {
+	use ChartExport;
+
+	/** Runs in the accuracy chart, the newest ones. */
+	private const ChartRuns = 20;
+
 	private ?int $sampleId = null;
+
+	private ?int $runId = null;
+
+	/** @var array{total: int, done: int, failed: int, pending: int, categoryCorrect: int, actionCorrect: int, automatic: int, criticismHidden: int, missedHandoff: int, falseHide: int, missedHide: int, inputTokens: int, outputTokens: int, confusion: array<string, array<string, int>>}|null */
+	private ?array $report = null;
 
 
 	public function __construct(
@@ -86,10 +101,19 @@ final class EvaluationPresenter extends AdminPresenter
 	}
 
 
+	public function renderDefault(): void
+	{
+		$this->template->setParameters([
+			'charts' => $this->exportCharts(),
+		]);
+	}
+
+
 	public function actionRun(int $id): void
 	{
 		$this->requireAllowed(Authorization::Evaluation, Authorization::View);
 		$run = $this->runs->find($id) ?? $this->error();
+		$this->runId = $id;
 		$canEdit = $this->getUser()->isAllowed(Authorization::Evaluation, Authorization::Edit);
 		$texts = [];
 		if ($canEdit) {
@@ -100,11 +124,59 @@ final class EvaluationPresenter extends AdminPresenter
 
 		$this->template->setParameters([
 			'run' => $run,
-			'report' => $this->runs->report($id),
+			'report' => $this->report(),
 			'results' => $this->runs->results($id),
 			'texts' => $texts,
 			'categories' => Category::cases(),
+			'charts' => $this->exportCharts(),
 		]);
+	}
+
+
+	/**
+	 * Accuracy of the newest runs on the overview, correct and wrong categories on a run.
+	 *
+	 * @return array<string, Chart>
+	 */
+	protected function exportCharts(): array
+	{
+		if ($this->runId !== null) {
+			$confusion = $this->report()['confusion'];
+			$expected = array_values(array_filter(Category::cases(), fn(Category $category): bool => isset($confusion[$category->value])));
+			$correct = array_map(fn(Category $category): int => $confusion[$category->value][$category->value] ?? 0, $expected);
+
+			return [
+				'categories' => $this->charts->chart('bar', array_map(
+					fn(Category $category): string => $this->translator->translate("category.{$category->value}"),
+					$expected,
+				), [
+					$this->charts->dataset('evaluation.chart.correct', 'success', $correct),
+					$this->charts->dataset('evaluation.chart.wrong', 'danger', array_map(
+						fn(Category $category, int $right): int => array_sum($confusion[$category->value]) - $right,
+						$expected,
+						$correct,
+					)),
+				], [
+					'stacked' => true,
+					'horizontal' => true,
+				]),
+			];
+		}
+
+		$runs = array_reverse(array_slice($this->runs->all(), 0, self::ChartRuns));
+		$percent = fn(mixed $part, mixed $done): ?float => (int) $done === 0 ? null : round(100 * (int) $part / (int) $done, 1);
+
+		return [
+			'accuracy' => $this->charts->chart('bar', array_map(
+				fn($run): string => "#{$run->id} {$run->model}",
+				$runs,
+			), [
+				$this->charts->dataset('evaluation.metric.category', 'primary', array_map(fn($run): ?float => $percent($run->category_correct, $run->done), $runs)),
+				$this->charts->dataset('evaluation.metric.action', 'teal', array_map(fn($run): ?float => $percent($run->action_correct, $run->done), $runs)),
+			], [
+				'unit' => '%',
+			], $this->translator->translate('evaluation.chart.accuracy')),
+		];
 	}
 
 
@@ -196,5 +268,20 @@ final class EvaluationPresenter extends AdminPresenter
 		}
 
 		return $options;
+	}
+
+
+	/**
+	 * @return array{
+	 *     total: int, done: int, failed: int, pending: int,
+	 *     categoryCorrect: int, actionCorrect: int, automatic: int,
+	 *     criticismHidden: int, missedHandoff: int, falseHide: int, missedHide: int,
+	 *     inputTokens: int, outputTokens: int,
+	 *     confusion: array<string, array<string, int>>
+	 * }
+	 */
+	private function report(): array
+	{
+		return $this->report ??= $this->runs->report($this->runId ?? throw new \LogicException('No run is shown.'));
 	}
 }

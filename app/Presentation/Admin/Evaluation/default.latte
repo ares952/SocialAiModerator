@@ -2,6 +2,8 @@
 {varType int $sampleCount}
 {varType bool $canEdit}
 {varType bool $canRun}
+{varType array<string, array<string, mixed>> $charts}
+{import '../@chart.latte'}
 
 {block content}
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
@@ -16,6 +18,13 @@
 {if $runs === []}
 	<div class="alert alert-secondary">{_'evaluation.runs-empty'}</div>
 {else}
+	<div class="card mb-4">
+		<div class="card-body">
+			<h2 class="h5 card-title mb-3">{_'evaluation.chart.accuracy'}</h2>
+			{include chart, $charts['accuracy'], export: accuracy}
+		</div>
+	</div>
+
 	<div class="table-responsive">
 		<table class="table table-hover align-middle">
 			<thead>
@@ -41,3 +50,6 @@
 		</table>
 	</div>
 {/if}
+{/block}
+
+{block scripts}{include chartScripts}{/block}

@@ -11,19 +11,29 @@ use App\Account\InvalidAccount;
 use App\Account\InvalidCredential;
 use App\Account\TokenType;
 use App\Meta\Platform;
+use App\Monitoring\MetricRange;
+use App\Monitoring\MetricSeries;
+use App\Monitoring\Timeline;
 use App\Moderation\AutomationSwitch;
 use App\Operator\Authorization;
 use App\Presentation\Admin\AdminPresenter;
+use App\Presentation\Admin\ChartExport;
+use App\Presentation\Admin\Charts;
 use Nette\Application\UI\Form;
 use Nette\Database\Row;
 
 
 /**
  * Connected social accounts: everyone reads, an admin adds, (de)activates and pauses them and
- * stores their Meta access tokens. A stored token is never shown again.
+ * stores their Meta access tokens. A stored token is never shown again. The overview charts the
+ * received events per account over the last 30 days.
+ *
+ * @phpstan-import-type Chart from Charts
  */
 final class AccountsPresenter extends AdminPresenter
 {
+	use ChartExport;
+
 	private ?Row $account = null;
 
 
@@ -31,6 +41,7 @@ final class AccountsPresenter extends AdminPresenter
 		private readonly Accounts $accounts,
 		private readonly AutomationSwitch $automation,
 		private readonly Credentials $credentials,
+		private readonly MetricSeries $series,
 	) {
 		parent::__construct();
 	}
@@ -43,6 +54,29 @@ final class AccountsPresenter extends AdminPresenter
 			'accounts' => $this->accounts->all(),
 			'canManage' => $this->getUser()->isAllowed(Authorization::Accounts, Authorization::Manage),
 		]);
+	}
+
+
+	public function renderDefault(): void
+	{
+		$this->template->setParameters([
+			'charts' => $this->exportCharts(),
+		]);
+	}
+
+
+	/**
+	 * @return array{events: Chart}
+	 */
+	protected function exportCharts(): array
+	{
+		$timeline = Timeline::create(MetricRange::Month, new \DateTimeImmutable, new \DateTimeZone($this->timezone));
+
+		return [
+			'events' => $this->charts->chart('bar', $this->charts->labels($timeline), $this->charts->named($this->series->accounts($timeline)), [
+				'stacked' => true,
+			]),
+		];
 	}
 
 

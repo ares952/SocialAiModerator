@@ -313,13 +313,17 @@ final class Actions
 	}
 
 
-	public function count(?ActionStatus $status): int
+	public function count(?ActionStatus $status, ?ActionType $type, ?int $accountId): int
 	{
 		return (int) $this->database->query(
-			'SELECT COUNT(*) FROM moderation_actions WHERE ?',
-			$status === null ? [] : [
-				'status' => $status->value,
-			],
+			'SELECT COUNT(*)
+			FROM moderation_actions a
+			LEFT JOIN social_comments c ON c.id = a.comment_id
+			LEFT JOIN social_messages m ON m.id = a.message_id
+			LEFT JOIN social_conversations v ON v.id = m.conversation_id
+			JOIN social_accounts s ON s.id = COALESCE(c.account_id, v.account_id)
+			WHERE ?and',
+			self::filter($status, $type, $accountId),
 		)->fetchField();
 	}
 
@@ -329,7 +333,7 @@ final class Actions
 	 *
 	 * @return list<Row>
 	 */
-	public function page(?ActionStatus $status, int $limit, int $offset): array
+	public function page(?ActionStatus $status, ?ActionType $type, ?int $accountId, int $limit, int $offset): array
 	{
 		return $this->database->query(
 			'SELECT a.id, a.event_id, a.type, a.status, a.automatic, a.reasons_json, a.created_at,
@@ -341,15 +345,35 @@ final class Actions
 			LEFT JOIN social_conversations v ON v.id = m.conversation_id
 			JOIN social_accounts s ON s.id = COALESCE(c.account_id, v.account_id)
 			LEFT JOIN operators o ON o.id = a.reviewed_by
-			WHERE ?
+			WHERE ?and
 			ORDER BY a.id DESC
 			LIMIT ? OFFSET ?',
-			$status === null ? [] : [
-				'a.status' => $status->value,
-			],
+			self::filter($status, $type, $accountId),
 			$limit,
 			$offset,
 		)->fetchAll();
+	}
+
+
+	/**
+	 * @return array<string, int|string> conditions on moderation_actions `a` and social_accounts `s`
+	 */
+	private static function filter(?ActionStatus $status, ?ActionType $type, ?int $accountId): array
+	{
+		$filter = [];
+		if ($status !== null) {
+			$filter['a.status'] = $status->value;
+		}
+
+		if ($type !== null) {
+			$filter['a.type'] = $type->value;
+		}
+
+		if ($accountId !== null) {
+			$filter['s.id'] = $accountId;
+		}
+
+		return $filter;
 	}
 
 

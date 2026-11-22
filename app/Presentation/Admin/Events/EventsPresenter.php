@@ -21,6 +21,7 @@ use App\Outbox\ActionType;
 use App\Operator\Authorization;
 use App\Presentation\Admin\ActionReview;
 use App\Presentation\Admin\AdminPresenter;
+use App\Presentation\Admin\ListFilters;
 use Nette\Database\Row;
 use Nette\Utils\Paginator;
 
@@ -34,6 +35,7 @@ use Nette\Utils\Paginator;
 final class EventsPresenter extends AdminPresenter
 {
 	use ActionReview;
+	use ListFilters;
 
 	private const PerPage = 50;
 
@@ -53,15 +55,16 @@ final class EventsPresenter extends AdminPresenter
 	}
 
 
-	public function actionDefault(?string $status = null, ?string $type = null, int $page = 1): void
+	public function actionDefault(?string $status = null, ?string $type = null, ?string $account = null, int $page = 1): void
 	{
 		$this->requireAllowed(Authorization::Events, Authorization::View);
 
 		$statusFilter = $status === null ? null : EventStatus::tryFrom($status) ?? $this->error();
 		$typeFilter = $type === null ? null : EventType::tryFrom($type) ?? $this->error();
+		$accountFilter = $this->accountFilter($account);
 		$paginator = new Paginator;
 		$paginator->setItemsPerPage(self::PerPage);
-		$paginator->setItemCount($this->events->count($statusFilter, $typeFilter));
+		$paginator->setItemCount($this->events->count($statusFilter, $typeFilter, $accountFilter));
 		$paginator->setPage($page);
 
 		$this->template->setParameters([
@@ -69,8 +72,10 @@ final class EventsPresenter extends AdminPresenter
 			'statuses' => EventStatus::cases(),
 			'type' => $typeFilter,
 			'types' => EventType::cases(),
+			'account' => $accountFilter,
+			'accounts' => $this->filterAccounts(),
 			'paginator' => $paginator,
-			'events' => $this->events->page($statusFilter, $typeFilter, $paginator->getLength(), $paginator->getOffset()),
+			'events' => $this->events->page($statusFilter, $typeFilter, $accountFilter, $paginator->getLength(), $paginator->getOffset()),
 		]);
 	}
 
