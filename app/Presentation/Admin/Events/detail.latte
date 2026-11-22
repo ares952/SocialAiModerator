@@ -9,6 +9,7 @@
 {varType list<Nette\Database\Row> $actions}
 {varType bool $canAct}
 {varType bool $observe}
+{varType int|null $conversationId}
 {varType array<int, string|null> $replies}
 {varType int|null $draft}
 
@@ -103,52 +104,9 @@
 				</div>
 			{else}
 				<ul class="list-group list-group-flush">
-					<li n:foreach="$actions as $action" class="list-group-item">
-						<div class="d-flex flex-wrap align-items-center gap-2 mb-1">
-							<span class="fw-semibold">{_"action.type.{$action->type}"}</span>
-							{include '../@actionStatus.latte', status: $action->status}
-							<span n:if="$action->automatic" class="badge text-bg-warning">{_'evaluation.automatic'}</span>
-							<span class="ms-auto small text-body-secondary">{$action->created_at|localTime}</span>
-						</div>
-						{if $action->type === 'reply'}
-							{if !$canRead}
-							{elseif $action->id === $draft && $canAct && !$observe}
-								<form n:name="replyForm" class="mb-2">
-									<ul n:if="$form->hasErrors()" class="text-danger small mb-1">
-										<li n:foreach="$form->getErrors() as $error">{$error}</li>
-									</ul>
-									<input n:name="action">
-									<label n:name="text" class="form-label small text-body-secondary">{_'events.detail.actions.reply-text'}</label>
-									<textarea n:name="text" class="form-control mb-2"></textarea>
-									<button n:name="approve" class="btn btn-sm btn-primary">{_'events.detail.actions.approve-reply'}</button>
-								</form>
-							{elseif ($replies[$action->id] ?? null) !== null}
-								<p class="customer-text border-start ps-2 mb-1">{$replies[$action->id]}</p>
-							{elseif $action->status === 'pending'}
-								<p class="small text-body-secondary mb-1">{_'events.detail.actions.drafting'}</p>
-							{/if}
-							<div n:if="$action->knowledge_json !== null" class="small text-body-secondary mb-1">
-								{_'events.detail.actions.knowledge'}:
-								{foreach Nette\Utils\Json::decode($action->knowledge_json, forceArrays: true) as $source}
-									<a n:href="Knowledge:detail, id: $source['id']">{$source['key']} v{$source['version']}</a>{sep}, {/sep}
-								{/foreach}
-								· {$action->model} · {$action->prompt_version}
-								<span n:if="$action->edited" class="badge text-bg-light border">{_'events.detail.actions.edited'}</span>
-							</div>
-						{/if}
-						<div n:if="$action->reasons_json !== null" class="mb-1">
-							<span n:foreach="Nette\Utils\Json::decode($action->reasons_json, forceArrays: true) as $reason" class="badge text-bg-light border me-1">{_"decision.reason.$reason"}</span>
-						</div>
-						<div n:if="$action->last_error !== null" class="small text-danger text-break mb-1">{$action->last_error}</div>
-						<div class="small text-body-secondary">
-							{if $action->reviewed_by_name !== null}{_'events.detail.actions.reviewed', 1, [name => $action->reviewed_by_name, time => ($action->reviewed_at|localTime)]}{/if}
-							{if $action->executed_at !== null} · {_'events.detail.actions.executed', 1, [time => ($action->executed_at|localTime)]}{/if}
-						</div>
-						<div n:if="$canAct && $action->status === 'pending'" class="d-flex gap-2 mt-2">
-							<a n:if="!$observe && $action->type !== 'reply'" class="btn btn-sm btn-danger" n:href="approve!, id: $event->id, action: $action->id">{_'events.detail.actions.approve'}</a>
-							<a class="btn btn-sm btn-outline-secondary" n:href="reject!, id: $event->id, action: $action->id">{_'events.detail.actions.reject'}</a>
-						</div>
-					</li>
+					{foreach $actions as $action}
+						{include '../@action.latte', action: $action, replies: $replies, draft: $draft, canRead: $canRead, canAct: $canAct, observe: $observe, id: $event->id}
+					{/foreach}
 				</ul>
 			{/if}
 		</div>
@@ -170,6 +128,8 @@
 					<dd class="col-sm-7">{$event->received_at|localTime}</dd>
 					<dt class="col-sm-5">{_'events.detail.occurred'}</dt>
 					<dd class="col-sm-7">{if $event->occurred_at !== null}{$event->occurred_at|localTime}{else}—{/if}</dd>
+					<dt n:if="$conversationId !== null" class="col-sm-5">{_'events.detail.conversation'}</dt>
+					<dd n:if="$conversationId !== null" class="col-sm-7"><a n:href="Conversations:detail, id: $conversationId">{_'actions.open-conversation', 1, [id => $conversationId]}</a></dd>
 					<dt class="col-sm-5">{_'events.detail.external'}</dt>
 					<dd class="col-sm-7 text-break">{$event->external_id ?? '—'}</dd>
 					<dt class="col-sm-5">{_'events.detail.attempts'}</dt>

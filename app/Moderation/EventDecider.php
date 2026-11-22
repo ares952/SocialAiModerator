@@ -23,8 +23,10 @@ use Nette\Database\Explorer;
 /**
  * Worker step for one comment or message (job event.decide, specification §5.1): classify it,
  * let the PolicyEngine decide with the active policy, the panic switch and the account state,
- * and store the decision. A hide of a comment becomes a moderation action (Actions::propose());
- * nothing is sent here, the ActionDispatcher checks every action again before sending. A failed classification is stored as a fail-closed review with the error.
+ * and store the decision. A hide of a comment and a reply to a comment or a message become
+ * moderation actions (Actions::propose()); nothing is sent here, the ActionDispatcher checks
+ * every action again before sending. A failed classification is stored as a fail-closed review
+ * with the error.
  * The repeated-text rule counts earlier identical texts of the same comment author or customer.
  * An event that already has a classified decision is skipped, so a repeated job does not call
  * the model again; after a failure the decision can be requested again (request()).
@@ -132,11 +134,21 @@ final class EventDecider
 				Classifier::PromptVersion,
 				$error,
 			);
-			$comment = $kind === ContentKind::Comment && $normalized->externalId !== null
-				? $this->comments->find((int) $event->account_id, $normalized->externalId)
-				: null;
-			if ($comment !== null) {
-				$this->actions->propose($eventId, $decisionId, $comment->id, $comment->external_id, $decision);
+			$accountId = (int) $event->account_id;
+			$externalId = $normalized->externalId;
+			if ($externalId === null) {
+				return;
+			}
+			if ($kind === ContentKind::Comment) {
+				$comment = $this->comments->find($accountId, $externalId);
+				if ($comment !== null) {
+					$this->actions->propose($eventId, $decisionId, $comment->id, null, $comment->external_id, $decision);
+				}
+			} else {
+				$message = $this->conversations->message($accountId, $externalId);
+				if ($message !== null) {
+					$this->actions->propose($eventId, $decisionId, null, $message->id, $message->customer_external_id, $decision);
+				}
 			}
 		});
 	}

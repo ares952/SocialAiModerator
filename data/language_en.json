@@ -4670,5 +4670,405 @@
    "1": "The reply text must have 1 to 1000 characters.",
    "2": "The reply text must have 1 to 1000 characters."
   }
+ },
+ {
+  "key": "admin.menu.conversations",
+  "lang": "en",
+  "translations": {
+   "1": "Messages",
+   "2": "Messages"
+  }
+ },
+ {
+  "key": "conversations.title",
+  "lang": "en",
+  "translations": {
+   "1": "Messages",
+   "2": "Messages"
+  }
+ },
+ {
+  "key": "conversations.total",
+  "lang": "en",
+  "translations": {
+   "1": "%count% conversation",
+   "2": "%count% conversations"
+  }
+ },
+ {
+  "key": "conversations.filter.all",
+  "lang": "en",
+  "translations": {
+   "1": "All",
+   "2": "All"
+  }
+ },
+ {
+  "key": "conversations.filter.open",
+  "lang": "en",
+  "translations": {
+   "1": "Open window",
+   "2": "Open window"
+  }
+ },
+ {
+  "key": "conversations.filter.pending",
+  "lang": "en",
+  "translations": {
+   "1": "Awaiting approval",
+   "2": "Awaiting approval"
+  }
+ },
+ {
+  "key": "conversations.filter.takeover",
+  "lang": "en",
+  "translations": {
+   "1": "Taken over",
+   "2": "Taken over"
+  }
+ },
+ {
+  "key": "conversations.empty",
+  "lang": "en",
+  "translations": {
+   "1": "No conversations.",
+   "2": "No conversations."
+  }
+ },
+ {
+  "key": "conversations.column.account",
+  "lang": "en",
+  "translations": {
+   "1": "Account",
+   "2": "Account"
+  }
+ },
+ {
+  "key": "conversations.column.customer",
+  "lang": "en",
+  "translations": {
+   "1": "Customer",
+   "2": "Customer"
+  }
+ },
+ {
+  "key": "conversations.column.last",
+  "lang": "en",
+  "translations": {
+   "1": "Last message",
+   "2": "Last message"
+  }
+ },
+ {
+  "key": "conversations.column.window",
+  "lang": "en",
+  "translations": {
+   "1": "Reply window",
+   "2": "Reply window"
+  }
+ },
+ {
+  "key": "conversations.column.state",
+  "lang": "en",
+  "translations": {
+   "1": "State",
+   "2": "State"
+  }
+ },
+ {
+  "key": "conversations.pending",
+  "lang": "en",
+  "translations": {
+   "1": "%count% reply to approve",
+   "2": "%count% replies to approve"
+  }
+ },
+ {
+  "key": "conversations.window.open",
+  "lang": "en",
+  "translations": {
+   "1": "open until %time%",
+   "2": "open until %time%"
+  }
+ },
+ {
+  "key": "conversations.window.closed",
+  "lang": "en",
+  "translations": {
+   "1": "window closed",
+   "2": "window closed"
+  }
+ },
+ {
+  "key": "conversations.state.takeover",
+  "lang": "en",
+  "translations": {
+   "1": "taken over by %name%",
+   "2": "taken over by %name%"
+  }
+ },
+ {
+  "key": "conversations.state.ai",
+  "lang": "en",
+  "translations": {
+   "1": "AI drafts",
+   "2": "AI drafts"
+  }
+ },
+ {
+  "key": "conversations.back",
+  "lang": "en",
+  "translations": {
+   "1": "Back to messages",
+   "2": "Back to messages"
+  }
+ },
+ {
+  "key": "conversations.detail.title",
+  "lang": "en",
+  "translations": {
+   "1": "Conversation #%id%",
+   "2": "Conversation #%id%"
+  }
+ },
+ {
+  "key": "conversations.detail.messages",
+  "lang": "en",
+  "translations": {
+   "1": "Messages",
+   "2": "Messages"
+  }
+ },
+ {
+  "key": "conversations.detail.hidden",
+  "lang": "en",
+  "translations": {
+   "1": "Only moderators and admins see the message content.",
+   "2": "Only moderators and admins see the message content."
+  }
+ },
+ {
+  "key": "conversations.detail.none",
+  "lang": "en",
+  "translations": {
+   "1": "The conversation has no messages.",
+   "2": "The conversation has no messages."
+  }
+ },
+ {
+  "key": "conversations.detail.unsent",
+  "lang": "en",
+  "translations": {
+   "1": "message unsent by the customer",
+   "2": "message unsent by the customer"
+  }
+ },
+ {
+  "key": "conversations.detail.no-text",
+  "lang": "en",
+  "translations": {
+   "1": "no text (attachment)",
+   "2": "no text (attachment)"
+  }
+ },
+ {
+  "key": "conversations.detail.unverified",
+  "lang": "en",
+  "translations": {
+   "1": "time not verified by Meta",
+   "2": "time not verified by Meta"
+  }
+ },
+ {
+  "key": "conversations.detail.handling",
+  "lang": "en",
+  "translations": {
+   "1": "Who answers",
+   "2": "Who answers"
+  }
+ },
+ {
+  "key": "conversations.detail.last-customer",
+  "lang": "en",
+  "translations": {
+   "1": "Last customer message",
+   "2": "Last customer message"
+  }
+ },
+ {
+  "key": "conversations.detail.ai-note",
+  "lang": "en",
+  "translations": {
+   "1": "The AI drafts replies; a human approves every reply.",
+   "2": "The AI drafts replies; a human approves every reply."
+  }
+ },
+ {
+  "key": "conversations.detail.takeover-note",
+  "lang": "en",
+  "translations": {
+   "1": "A human handles the conversation: the AI drafts nothing and earlier drafts are not sent until you release it.",
+   "2": "A human handles the conversation: the AI drafts nothing and earlier drafts are not sent until you release it."
+  }
+ },
+ {
+  "key": "conversations.detail.replies",
+  "lang": "en",
+  "translations": {
+   "1": "Replies",
+   "2": "Replies"
+  }
+ },
+ {
+  "key": "conversations.detail.no-replies",
+  "lang": "en",
+  "translations": {
+   "1": "No replies yet.",
+   "2": "No replies yet."
+  }
+ },
+ {
+  "key": "conversations.takeover",
+  "lang": "en",
+  "translations": {
+   "1": "Take over",
+   "2": "Take over"
+  }
+ },
+ {
+  "key": "conversations.release",
+  "lang": "en",
+  "translations": {
+   "1": "Release to AI",
+   "2": "Release to AI"
+  }
+ },
+ {
+  "key": "conversations.taken-over",
+  "lang": "en",
+  "translations": {
+   "1": "You took the conversation over.",
+   "2": "You took the conversation over."
+  }
+ },
+ {
+  "key": "conversations.released",
+  "lang": "en",
+  "translations": {
+   "1": "The conversation is released.",
+   "2": "The conversation is released."
+  }
+ },
+ {
+  "key": "conversations.message.title",
+  "lang": "en",
+  "translations": {
+   "1": "Your reply",
+   "2": "Your reply"
+  }
+ },
+ {
+  "key": "conversations.message.text",
+  "lang": "en",
+  "translations": {
+   "1": "Message text",
+   "2": "Message text"
+  }
+ },
+ {
+  "key": "conversations.message.send",
+  "lang": "en",
+  "translations": {
+   "1": "Send",
+   "2": "Send"
+  }
+ },
+ {
+  "key": "conversations.message.queued",
+  "lang": "en",
+  "translations": {
+   "1": "The message waits to be sent.",
+   "2": "The message waits to be sent."
+  }
+ },
+ {
+  "key": "conversations.message.window-closed",
+  "lang": "en",
+  "translations": {
+   "1": "The reply window has closed; no message can be sent now.",
+   "2": "The reply window has closed; no message can be sent now."
+  }
+ },
+ {
+  "key": "action.type.message",
+  "lang": "en",
+  "translations": {
+   "1": "Reply to message",
+   "2": "Reply to message"
+  }
+ },
+ {
+  "key": "actions.open-conversation",
+  "lang": "en",
+  "translations": {
+   "1": "Conversation #%id%",
+   "2": "Conversation #%id%"
+  }
+ },
+ {
+  "key": "events.detail.conversation",
+  "lang": "en",
+  "translations": {
+   "1": "Conversation",
+   "2": "Conversation"
+  }
+ },
+ {
+  "key": "decision.reason.window_expired",
+  "lang": "en",
+  "translations": {
+   "1": "reply window closed",
+   "2": "reply window closed"
+  }
+ },
+ {
+  "key": "decision.reason.human_takeover",
+  "lang": "en",
+  "translations": {
+   "1": "taken over by a human",
+   "2": "taken over by a human"
+  }
+ },
+ {
+  "key": "decision.reason.message_deleted",
+  "lang": "en",
+  "translations": {
+   "1": "message unsent by the customer",
+   "2": "message unsent by the customer"
+  }
+ },
+ {
+  "key": "audit.action.conversation.takeover",
+  "lang": "en",
+  "translations": {
+   "1": "Conversation takeover",
+   "2": "Conversation takeover"
+  }
+ },
+ {
+  "key": "audit.action.conversation.release",
+  "lang": "en",
+  "translations": {
+   "1": "Conversation release",
+   "2": "Conversation release"
+  }
+ },
+ {
+  "key": "audit.action.conversation.content.view",
+  "lang": "en",
+  "translations": {
+   "1": "Conversation view",
+   "2": "Conversation view"
+  }
  }
 ]

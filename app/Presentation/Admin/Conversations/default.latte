@@ -1,0 +1,69 @@
+{import '@blocks.latte'}
+{varType App\Conversation\InboxFilter|null $filter}
+{varType list<App\Conversation\InboxFilter> $filters}
+{varType Nette\Utils\Paginator $paginator}
+{varType list<Nette\Database\Row> $conversations}
+
+{block content}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+	<h1 class="h3 mb-0" n:block="title">{_'conversations.title'}</h1>
+	<span class="text-body-secondary">{_'conversations.total', $paginator->getItemCount()}</span>
+</div>
+
+<ul class="nav nav-pills flex-wrap mb-3">
+	<li class="nav-item">
+		<a n:class="nav-link, $filter === null ? active" n:href="this, filter: null, page: null">{_'conversations.filter.all'}</a>
+	</li>
+	<li n:foreach="$filters as $item" class="nav-item">
+		<a n:class="nav-link, $filter === $item ? active" n:href="this, filter: $item->value, page: null">{_"conversations.filter.{$item->value}"}</a>
+	</li>
+</ul>
+
+{if $conversations === []}
+	<div class="alert alert-secondary">{_'conversations.empty'}</div>
+{else}
+	<div class="table-responsive">
+		<table class="table table-hover align-middle">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">{_'conversations.column.account'}</th>
+					<th scope="col">{_'conversations.column.customer'}</th>
+					<th scope="col">{_'conversations.column.last'}</th>
+					<th scope="col">{_'conversations.column.window'}</th>
+					<th scope="col">{_'conversations.column.state'}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr n:foreach="$conversations as $conversation">
+					<td><a n:href="detail, id: $conversation->id">{$conversation->id}</a></td>
+					<td>
+						<span class="badge badge-platform badge-{$conversation->platform} me-1">{_"platform.{$conversation->platform}"}</span>
+						{$conversation->account_name}
+					</td>
+					<td class="text-break small">{$conversation->customer_external_id}</td>
+					<td>{if $conversation->last_message_at !== null}{$conversation->last_message_at|localTime}{else}—{/if}</td>
+					<td>{include window, conversation: $conversation}</td>
+					<td>
+						{include state, conversation: $conversation}
+						<span n:if="$conversation->pending_replies > 0" class="badge text-bg-warning">{_'conversations.pending', $conversation->pending_replies}</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<nav n:if="$paginator->getPageCount() > 1" aria-label="{_'events.pages'}">
+		<ul class="pagination flex-wrap">
+			<li n:class="page-item, $paginator->isFirst() ? disabled">
+				<a class="page-link" n:href="this, page: $paginator->getPage() - 1">{_'events.previous'}</a>
+			</li>
+			<li class="page-item disabled">
+				<span class="page-link">{_'events.page', 1, [page => $paginator->getPage(), pages => $paginator->getPageCount()]}</span>
+			</li>
+			<li n:class="page-item, $paginator->isLast() ? disabled">
+				<a class="page-link" n:href="this, page: $paginator->getPage() + 1">{_'events.next'}</a>
+			</li>
+		</ul>
+	</nav>
+{/if}

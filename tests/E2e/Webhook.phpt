@@ -167,3 +167,74 @@ test('a signed event is stored and the worker normalizes it and moves it to revi
 	)->fetchField());
 	Assert::same(403, $browser->get("/admin/events/detail/$eventId?do=decide")->status, 'A viewer cannot request a decision.');
 });
+
+
+test('a Messenger message appears in the inbox; content for moderators, takeover is audited', function () use ($data, $secret): void {
+	$psid = '24' . random_int(10_000_000, 99_999_999);
+	$body = Json::encode([
+		'object' => 'page',
+		'entry' => [
+			[
+				'id' => '1000000000000042',
+				'time' => time() * 1000,
+				'messaging' => [
+					[
+						'sender' => ['id' => $psid],
+						'recipient' => ['id' => '1000000000000042'],
+						'timestamp' => time() * 1000,
+						'message' => ['mid' => 'm_e2e_' . $psid, 'text' => 'Synthetic private question'],
+					],
+				],
+			],
+		],
+	]);
+	$curl = curl_init(getenv('E2E_BASE_URL') . '/webhooks/meta');
+	curl_setopt_array($curl, [
+		CURLOPT_POST => true,
+		CURLOPT_POSTFIELDS => $body,
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_HTTPHEADER => [
+			'Content-Type: application/json',
+			'X-Hub-Signature-256: sha256=' . hash_hmac('sha256', $body, $secret),
+		],
+	]);
+	curl_exec($curl);
+	Assert::same(200, curl_getinfo($curl, CURLINFO_RESPONSE_CODE));
+
+	$conversation = null;
+	for ($i = 0; $i < 50 && $conversation === null; $i++) {
+		usleep(200_000);
+		$conversation = $data->database->query('SELECT id FROM social_conversations WHERE customer_external_id = ?', "fb:$psid")->fetchField();
+	}
+	Assert::notNull($conversation);
+
+	[$email, $password] = $data->operator('viewer');
+	$viewer = E2eBrowser::create();
+	Assert::same(303, $viewer->signIn($email, $password)->status);
+	Assert::contains("fb:$psid", $viewer->get('/admin/conversations')->body);
+	$detail = $viewer->get("/admin/conversations/detail/$conversation");
+	Assert::same(200, $detail->status);
+	Assert::contains('otevřené do', $detail->body);
+	Assert::notContains('Synthetic private question', $detail->body, 'A viewer never sees message content.');
+	Assert::same(403, $viewer->get("/admin/conversations/detail/$conversation?do=takeover")->status);
+
+	[$email, $password] = $data->operator('moderator');
+	$moderator = E2eBrowser::create();
+	Assert::same(303, $moderator->signIn($email, $password)->status);
+	$detail = $moderator->get("/admin/conversations/detail/$conversation");
+	Assert::contains('Synthetic private question', $detail->body);
+	Assert::contains('Pravidla jsou v režimu pozorování', $detail->body, 'Observe mode: no reply form.');
+	Assert::notContains('name="text"', $detail->body);
+
+	$link = $detail->link('~do=takeover~') ?? throw new LogicException('Missing takeover link.');
+	Assert::same(302, $moderator->get($link)->status);
+	Assert::contains('převzato – Moderator E2E', $moderator->get("/admin/conversations/detail/$conversation")->body);
+	Assert::same(1, $data->database->query(
+		"SELECT COUNT(*) FROM admin_audit WHERE action = 'conversation.takeover' AND target_id = ?",
+		(string) $conversation,
+	)->fetchField());
+	Assert::true($data->database->query(
+		"SELECT COUNT(*) FROM admin_audit WHERE action = 'conversation.content.view' AND target_id = ?",
+		(string) $conversation,
+	)->fetchField() >= 2);
+});

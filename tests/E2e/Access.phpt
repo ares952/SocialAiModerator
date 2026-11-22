@@ -69,7 +69,7 @@ test('a viewer reads but cannot change anything', function () use ($viewerEmail,
 	$browser = E2eBrowser::create();
 	Assert::same(303, $browser->signIn($viewerEmail, $viewerPassword)->status);
 
-	foreach (['/', '/admin/events', '/admin/actions', '/admin/accounts', '/admin/policy', '/admin/knowledge', '/admin/evaluation'] as $path) {
+	foreach (['/', '/admin/events', '/admin/actions', '/admin/conversations', '/admin/accounts', '/admin/policy', '/admin/knowledge', '/admin/evaluation'] as $path) {
 		Assert::same(200, $browser->get($path)->status, $path);
 	}
 	foreach (['/admin/operators', '/admin/audit', '/admin/retention', '/admin/accounts/add', '/admin/accounts/token/1', '/admin/knowledge/add', '/admin/knowledge/import', '/admin/evaluation/samples'] as $path) {

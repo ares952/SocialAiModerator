@@ -10,6 +10,7 @@ use App\Account\TokenProvider;
 use App\Account\TokenUnavailable;
 use App\Comment\Comments;
 use App\Comment\Visibility;
+use App\Conversation\Direction;
 use App\Core\Encryptor;
 use App\Core\Logger;
 use App\Meta\MetaClient;
@@ -36,7 +37,7 @@ use Nette\Utils\Strings;
  *    with the current policy, mode, panic switch, account and comment state, gets the token and
  *    marks the record `sending`. A record found in `sending` was interrupted, so its result is
  *    `unknown`. During a pause the record waits (Postponed) and is checked again later.
- * 2. It calls Meta (hide, unhide or the approved reply text) and stores the result: `sent`,
+ * 2. It calls Meta (hide, unhide, the approved reply to a comment or a private message) and stores the result: `sent`,
  *    `failed`, or `unknown` when Meta may have applied it. Only a failure that surely changed
  *    nothing is retried by the queue.
  */
@@ -78,19 +79,15 @@ final class ActionDispatcher
 		$type = ActionType::from($action->type);
 		$platform = Platform::from($action->platform);
 		$replyId = null;
+		$target = (string) $action->external_target_id;
+		$text = $type === ActionType::Reply ? $this->text($action) : null;
 		try {
-			if ($type === ActionType::Reply) {
-				$replyId = $this->meta->replyComment(
-					$platform,
-					$token,
-					$action->external_target_id,
-					$this->encryptor->decrypt(
-						$action->text_encrypted ?? throw new \LogicException('An approved reply has no text.'),
-						Actions::TextContext,
-					),
-				);
+			if ($text === null) {
+				$this->meta->hideComment($platform, $token, $target, $type === ActionType::Hide);
+			} elseif ($action->message_id === null) {
+				$replyId = $this->meta->replyComment($platform, $token, $target, $text);
 			} else {
-				$this->meta->hideComment($platform, $token, $action->external_target_id, $type === ActionType::Hide);
+				$replyId = $this->meta->sendMessage($platform, $token, $target, $text);
 			}
 		} catch (MetaWriteUnavailable $e) {
 			$this->finish($action, OutboxStatus::Blocked, ActionStatus::Blocked, $e, [
@@ -117,6 +114,17 @@ final class ActionDispatcher
 	}
 
 
+	private function text(Row $action): string
+	{
+		$encrypted = $action->text_encrypted;
+		if (!is_string($encrypted)) {
+			throw new \LogicException('An approved reply has no text.');
+		}
+
+		return $this->encryptor->decrypt($encrypted, Actions::TextContext);
+	}
+
+
 	/**
 	 * @return array{Row, AccessToken}|null null when there is nothing to send
 	 * @throws Postponed
@@ -125,16 +133,26 @@ final class ActionDispatcher
 	{
 		$action = $this->database->query(
 			'SELECT x.id AS outbox_id, x.status AS outbox_status, a.id AS action_id, a.type, a.automatic,
-				a.external_target_id, a.text_encrypted, a.comment_id, c.account_id, c.visibility, c.own,
-				c.text_changed_at > a.created_at AS changed, s.platform, s.status AS account_status,
+				a.decision_id, a.external_target_id, a.text_encrypted, a.comment_id, a.message_id,
+				COALESCE(c.account_id, v.account_id) AS account_id, s.platform, s.status AS account_status,
+				c.visibility, c.own, c.text_changed_at > a.created_at AS changed,
+				v.window_expires_at > NOW(3) AS window_open, v.human_takeover_at IS NOT NULL AS taken_over,
+				m.deleted_at IS NOT NULL AS deleted,
 				EXISTS (
 					SELECT 1 FROM moderation_actions r
-					WHERE r.comment_id = a.comment_id AND r.type = ? AND r.id <> a.id AND r.status IN (?)
+					WHERE r.type = ? AND r.id <> a.id AND r.status IN (?)
+						AND (r.comment_id = a.comment_id OR r.message_id = a.message_id)
+				) OR EXISTS (
+					SELECT 1 FROM social_messages o
+					WHERE o.conversation_id = m.conversation_id AND o.direction = ?
+						AND COALESCE(o.sent_at, o.created_at) > COALESCE(m.sent_at, m.created_at)
 				) AS replied
 			FROM outbox x
 			JOIN moderation_actions a ON a.id = x.action_id
-			JOIN social_comments c ON c.id = a.comment_id
-			JOIN social_accounts s ON s.id = c.account_id
+			LEFT JOIN social_comments c ON c.id = a.comment_id
+			LEFT JOIN social_messages m ON m.id = a.message_id
+			LEFT JOIN social_conversations v ON v.id = m.conversation_id
+			JOIN social_accounts s ON s.id = COALESCE(c.account_id, v.account_id)
 			WHERE x.id = ?
 			FOR UPDATE',
 			ActionType::Reply->value,
@@ -143,6 +161,7 @@ final class ActionDispatcher
 				ActionStatus::Sent->value,
 				ActionStatus::Unknown->value,
 			],
+			Direction::Outgoing->value,
 			$outboxId,
 		)->fetch();
 		if ($action === null) {
@@ -167,12 +186,20 @@ final class ActionDispatcher
 				paused: $this->switch->isPaused($action->account_id),
 				accountActive: $action->account_status === AccountStatus::Active->value,
 			),
-			new ActionTarget(
-				Visibility::from($action->visibility),
-				(bool) $action->own,
-				(bool) $action->changed,
-				(bool) $action->replied,
-			),
+			$action->message_id === null
+				? new ActionTarget(
+					Visibility::from($action->visibility),
+					(bool) $action->own,
+					(bool) $action->changed,
+					(bool) $action->replied,
+				)
+				: new ConversationTarget(
+					windowOpen: (bool) $action->window_open,
+					takenOver: (bool) $action->taken_over,
+					drafted: $action->decision_id !== null,
+					deleted: (bool) $action->deleted,
+					replied: (bool) $action->replied,
+				),
 		);
 		if ($blocked === ['automation_paused']) {
 			throw new Postponed('Automation is paused.', $this->pauseRetrySeconds);

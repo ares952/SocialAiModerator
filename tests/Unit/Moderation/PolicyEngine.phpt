@@ -21,6 +21,7 @@ use App\Moderation\Sentiment;
 use App\Moderation\Strictness;
 use App\Outbox\ActionTarget;
 use App\Outbox\ActionType;
+use App\Outbox\ConversationTarget;
 use Tester\Assert;
 
 require __DIR__ . '/../../bootstrap.php';
@@ -496,4 +497,18 @@ test('a reply always needs a human and goes at most once to a visible comment', 
 	Assert::same(['own_comment'], $engine->blocks(ActionType::Reply, true, $automatic, $open, new ActionTarget(Visibility::Visible, own: true, changed: false)));
 	Assert::same(['comment_changed'], $engine->blocks(ActionType::Reply, true, $automatic, $open, new ActionTarget(Visibility::Visible, own: false, changed: true)));
 	Assert::same(['already_replied'], $engine->blocks(ActionType::Reply, true, $automatic, $open, new ActionTarget(Visibility::Visible, own: false, changed: false, replied: true)));
+});
+
+
+test('a private message is answered only in the window, once, and never with an AI text during a takeover', function () use ($engine, $automatic, $open): void {
+	$target = static fn(bool $window = true, bool $takenOver = false, bool $drafted = true, bool $deleted = false, bool $replied = false) => new ConversationTarget($window, $takenOver, $drafted, $deleted, $replied);
+
+	Assert::same([], $engine->blocks(ActionType::Reply, true, $automatic, $open, $target()));
+	Assert::same(['reply_needs_human'], $engine->blocks(ActionType::Reply, false, $automatic, $open, $target()));
+	Assert::same(['window_expired'], $engine->blocks(ActionType::Reply, true, $automatic, $open, $target(window: false)));
+	Assert::same(['human_takeover'], $engine->blocks(ActionType::Reply, true, $automatic, $open, $target(takenOver: true)));
+	Assert::same([], $engine->blocks(ActionType::Reply, true, $automatic, $open, $target(takenOver: true, drafted: false)), 'The operator writes during a takeover.');
+	Assert::same(['message_deleted'], $engine->blocks(ActionType::Reply, true, $automatic, $open, $target(deleted: true)));
+	Assert::same(['already_replied'], $engine->blocks(ActionType::Reply, true, $automatic, $open, $target(replied: true)));
+	Assert::exception(fn() => $engine->blocks(ActionType::Hide, true, $automatic, $open, $target()), LogicException::class);
 });

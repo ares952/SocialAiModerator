@@ -21,6 +21,7 @@ test('every page renders in both languages', function () use ($browser): void {
 		'/' => 'Přehled',
 		'/admin/events' => 'Příchozí události',
 		'/admin/actions' => 'Zásahy u komentářů',
+		'/admin/conversations' => 'Zprávy',
 		'/admin/accounts' => 'Sociální účty',
 		'/admin/accounts/add' => 'Přidat účet',
 		'/admin/policy' => 'Pravidla moderace',
@@ -50,6 +51,9 @@ test('every page renders in both languages', function () use ($browser): void {
 	Assert::same(404, $browser->get('/admin/events?type=nonsense')->status);
 	Assert::same(200, $browser->get('/admin/actions?status=pending')->status);
 	Assert::same(404, $browser->get('/admin/actions?status=nonsense')->status);
+	Assert::same(200, $browser->get('/admin/conversations?filter=takeover')->status);
+	Assert::same(404, $browser->get('/admin/conversations?filter=nonsense')->status);
+	Assert::same(404, $browser->get('/admin/conversations/detail/999999999')->status);
 	Assert::same(404, $browser->get('/admin/events/detail/999999999')->status);
 });
 

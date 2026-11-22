@@ -31,4 +31,7 @@ enum AuditAction: string
 	case ActionApprove = 'action.approve';
 	case ActionReject = 'action.reject';
 	case ActionRequest = 'action.request';
+	case ConversationTakeover = 'conversation.takeover';
+	case ConversationRelease = 'conversation.release';
+	case ConversationContentView = 'conversation.content.view';
 }

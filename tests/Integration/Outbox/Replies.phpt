@@ -125,8 +125,8 @@ test('a FAQ comment gets a draft from the knowledge; an edited approval is sent 
 	Assert::same('Online předplatné stojí 289 Kč měsíčně.', $actions->text($row));
 	Assert::notContains('289', (string) $row->text_encrypted, 'The reply is encrypted at rest.');
 	Assert::same([['id' => $pricing, 'key' => 'pricing_current', 'version' => 1]], Json::decode((string) $row->knowledge_json, forceArrays: true));
-	Assert::same(['reply-model-2026', 'reply-v1'], [$row->model, $row->prompt_version]);
-	Assert::contains('"comment":"Kolik stojí předplatné?"', $client->requests[2]['input']);
+	Assert::same(['reply-model-2026', 'reply-v2'], [$row->model, $row->prompt_version]);
+	Assert::contains('"text":"Kolik stojí předplatné?"', $client->requests[2]['input']);
 
 	Assert::exception(fn() => $actions->approve($id, 1, '  '), InvalidAction::class, 'actions.error.text');
 	$actions->approve($id, 1, ' Dobrý den, online předplatné stojí 289 Kč měsíčně. ');

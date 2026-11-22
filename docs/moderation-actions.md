@@ -1,8 +1,8 @@
-# Zásahy u komentářů a outbox
+# Zásahy, odpovědi a outbox
 
-Skrývání, odkrývání a odpovědi na komentáře (specifikace §2.1, §5.3, §6, Milestone 3). Stav:
-zásahy, návrhy odpovědí, schvalování a odesílání přes outbox jsou hotové, **zápis do Mety zatím
-zapojený není** (`UnavailableMetaClient`).
+Skrývání, odkrývání a odpovědi na komentáře a soukromé zprávy (specifikace §2.1, §3.5, §5.3, §6,
+Milestone 3 a 4). Stav: zásahy, návrhy odpovědí, jednotný inbox, schvalování a odesílání přes
+outbox jsou hotové, **zápis do Mety zatím zapojený není** (`UnavailableMetaClient`).
 Konkrétní Graph endpointy se implementují až po potvrzení oprávnění (`docs/meta-checklist.md`).
 
 ## Tok
@@ -23,7 +23,7 @@ Konkrétní Graph endpointy se implementují až po potvrzení oprávnění (`do
 
 1. AI rozhodnutí `reply` u komentáře (dotaz v podporovaném jazyce s publikovanou znalostí nad
    prahem) vytvoří zásah `reply` ve stavu `pending` a úlohu `reply.draft`.
-2. `ReplyGenerator` (model `OPENAI_REPLY_MODEL`, prompt `app/Ai/prompts/reply-v1.md`) dostane
+2. `ReplyGenerator` (model `OPENAI_REPLY_MODEL`, prompt `app/Ai/prompts/reply-v2.md`) dostane
    jen aktuální publikované znalosti, které klasifikace označila, v jazyce komentáře. Komentář
    jde do modelu jako data, s nahrazenými kontakty.
 3. Návrh se kontroluje: každé číslo, odkaz a e-mail v odpovědi musí být v použitých znalostech
@@ -39,6 +39,29 @@ skončí jako `blocked` s důvodem (`knowledge_missing`, `reply_not_answerable`,
 
 Označení automatické AI komunikace v odpovědích (specifikace §13.9) zatím není rozhodnuté,
 odpovědi ho proto neobsahují.
+
+## Soukromé zprávy (jednotný inbox)
+
+Stránka **Zprávy** ukazuje konverzace Messengeru a Instagram Direct: účet, zákazníka (jen jeho
+ID), poslední zprávu, okno pro odpověď, kdo konverzaci řeší a počet odpovědí ke schválení.
+Obsah zpráv vidí jen moderátor a administrátor a každé zobrazení se zapisuje do auditu
+(`conversation.content.view`).
+
+- AI rozhodnutí `reply` u zprávy zákazníka vytvoří návrh odpovědi stejně jako u komentáře;
+  `ReplyGenerator` navíc dostane posledních několik zpráv konverzace jako kontext
+  (`Conversations::HistoryLimit`, s nahrazenými kontakty).
+- **Okno pro odpověď** je 24 hodin od poslední zprávy zákazníka s časem ověřeným Metou. Ověřuje se
+  při přípravě návrhu i **v okamžiku odeslání**; po vypršení zásah skončí `window_expired`.
+  Tag `HUMAN_AGENT` aplikace nepoužívá vůbec.
+- **Převzetí člověkem:** moderátor konverzaci převezme a později ji výslovně uvolní (audit
+  `conversation.takeover`, `conversation.release`). Během převzetí AI nepřipravuje návrhy
+  a dříve připravené AI odpovědi se neodešlou (`human_takeover`); vlastní odpověď operátora
+  odejít může.
+- **Vlastní odpověď operátora** se píše v detailu konverzace, platí pro ni stejné kontroly
+  (okno, panic switch, režim) a v režimu pozorování ji nelze odeslat.
+- **Jedna odpověď na zprávu:** když po zprávě zákazníka přišlo echo odpovědi účtu (např. odpověď
+  z Meta Business Suite) nebo už odešla jiná odpověď, další se neodešle (`already_replied`).
+  Echo vlastních zpráv nikdy nespouští návrh odpovědi.
 
 ## Co zastaví odeslání
 
@@ -56,6 +79,9 @@ odpovědi ho proto neobsahují.
 | `already_replied` | komentář už odpověď má (nebo možná má, stav `unknown`) |
 | `token_unavailable` | účet nemá platný token |
 | `meta_write_unavailable` | zápis do Mety ještě není zapojený |
+| `window_expired` | u soukromé zprávy vypršelo okno pro odpověď |
+| `human_takeover` | konverzaci převzal člověk (jen odpovědi napsané AI) |
+| `message_deleted` | zákazník zprávu zrušil |
 | `rejected` | zamítnuto moderátorem |
 
 ## Výsledek odeslání
@@ -68,13 +94,14 @@ odpovědi ho proto neobsahují.
 
 ## Oprávnění
 
-- `viewer` vidí přehled **Zásahy**.
-- `moderator` a `admin` schvalují, zamítají a vyžadují zásahy v detailu události.
+- `viewer` vidí přehledy **Zásahy** a **Zprávy** bez obsahu.
+- `moderator` a `admin` schvalují, zamítají a vyžadují zásahy v detailu události nebo
+  konverzace, čtou zprávy, píší vlastní odpovědi a konverzace přebírají a uvolňují.
 - V režimu pozorování lze zásahy jen zamítnout.
 
 ## Data
 
-- Zásah patří ke komentáři a maže se s ním (retence komentářů). Neobsahuje text komentáře, jen
+- Zásah patří ke komentáři nebo ke zprávě a maže se s nimi (retence komentářů a zpráv). Neobsahuje text komentáře, jen
   jeho externí ID. Text odpovědi je šifrovaný (`moderation_actions.text`, zahrnuto
   v `encryption:rotate`) a vidí ho jen moderátor a administrátor.
 - `result_json` obsahuje jen HTTP status a kód chyby Mety, případně ID odeslané odpovědi, nikdy

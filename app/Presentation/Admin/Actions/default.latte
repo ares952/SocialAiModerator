@@ -43,7 +43,7 @@
 						{$action->account_name}
 					</td>
 					<td>
-						{_"action.type.{$action->type}"}
+						{_($action->conversation_id === null ? "action.type.{$action->type}" : 'action.type.message')}
 						<div class="small text-body-secondary">
 							{if $action->automatic}{_'actions.source.automatic'}{elseif $action->reviewed_by_name !== null}{$action->reviewed_by_name}{else}{_'actions.source.proposed'}{/if}
 						</div>
@@ -55,7 +55,11 @@
 						</div>
 					</td>
 					<td>
-						{if $action->event_id !== null}<a n:href="Events:detail, id: $action->event_id">{_'actions.open', 1, [id => $action->event_id]}</a>{else}—{/if}
+						{if $action->conversation_id !== null}
+							<a n:href="Conversations:detail, id: $action->conversation_id">{_'actions.open-conversation', 1, [id => $action->conversation_id]}</a>
+						{elseif $action->event_id !== null}
+							<a n:href="Events:detail, id: $action->event_id">{_'actions.open', 1, [id => $action->event_id]}</a>
+						{else}—{/if}
 					</td>
 				</tr>
 			</tbody>

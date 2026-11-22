@@ -1,0 +1,16 @@
+{* Shared badges of the inbox pages. *}
+{define window, Nette\Database\Row $conversation}
+	{if $conversation->window_open}
+		<span class="badge text-bg-success">{_'conversations.window.open', 1, [time => ($conversation->window_expires_at|localTime)]}</span>
+	{else}
+		<span class="badge text-bg-secondary">{_'conversations.window.closed'}</span>
+	{/if}
+{/define}
+
+{define state, Nette\Database\Row $conversation}
+	{if $conversation->human_takeover_at !== null}
+		<span class="badge text-bg-info">{_'conversations.state.takeover', 1, [name => $conversation->assignee_name ?? '—']}</span>
+	{else}
+		<span class="badge text-bg-light border">{_'conversations.state.ai'}</span>
+	{/if}
+{/define}

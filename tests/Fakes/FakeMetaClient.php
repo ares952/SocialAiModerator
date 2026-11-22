@@ -15,7 +15,7 @@ use App\Meta\Platform;
  */
 final class FakeMetaClient implements MetaClient
 {
-	/** @var list<array{platform: Platform, token: string, comment: string, hidden?: bool, reply?: string}> */
+	/** @var list<array{platform: Platform, token: string, comment?: string, hidden?: bool, reply?: string, recipient?: string, message?: string}> */
 	public array $writes = [];
 
 	/** @var list<MetaFailure> */
@@ -53,6 +53,20 @@ final class FakeMetaClient implements MetaClient
 		$this->failNext();
 
 		return $platform->externalId('reply_' . count($this->writes));
+	}
+
+
+	public function sendMessage(Platform $platform, AccessToken $token, string $recipientId, string $text): string
+	{
+		$this->writes[] = [
+			'platform' => $platform,
+			'token' => $token->value,
+			'recipient' => $recipientId,
+			'message' => $text,
+		];
+		$this->failNext();
+
+		return $platform->externalId('m_sent_' . count($this->writes));
 	}
 
 

@@ -9,15 +9,16 @@ use Nette\Utils\Json;
 
 
 /**
- * Writes a reply suggestion to a comment only from published knowledge (specification §5.3). The
- * comment travels redacted and as a JSON value, separated from the versioned instructions. The
+ * Writes a reply suggestion to a comment or a private message only from published knowledge
+ * (specification §5.3, FR-M03). The customer text and the conversation history travel redacted and
+ * as JSON values, separated from the versioned instructions. The
  * output is untrusted: besides the strict schema, every link, e-mail address and number of the
  * reply must appear in the knowledge the reply relies on, so an invented price, discount or
  * contact never reaches a moderator as a ready answer. A human approves every reply.
  */
 final class ReplyGenerator
 {
-	public const PromptVersion = 'reply-v1';
+	public const PromptVersion = 'reply-v2';
 	public const MaxLength = 1000;
 	private const SchemaName = 'reply';
 
@@ -32,11 +33,13 @@ final class ReplyGenerator
 	/**
 	 * @param list<array{id: int, key: string, version: int, title: string, content: string}> $knowledge
 	 *        current published sources in the reply language
-	 * @return ReplyDraft|null null when the knowledge does not answer the comment
+	 * @param list<array{direction: string, text: string}>|null $history earlier messages of the
+	 *        conversation (oldest first); null for a comment
+	 * @return ReplyDraft|null null when the knowledge does not answer the comment or message
 	 * @throws OpenAiFailure
 	 * @throws InvalidModelOutput
 	 */
-	public function draft(#[\SensitiveParameter] string $comment, string $language, array $knowledge): ?ReplyDraft
+	public function draft(#[\SensitiveParameter] string $text, string $language, array $knowledge, #[\SensitiveParameter] ?array $history = null): ?ReplyDraft
 	{
 		if ($this->model === '') {
 			throw new OpenAiFailure('OPENAI_REPLY_MODEL is not set.', transient: false);
@@ -49,8 +52,13 @@ final class ReplyGenerator
 			$this->model,
 			FileSystem::read(__DIR__ . '/prompts/' . self::PromptVersion . '.md'),
 			Json::encode([
+				'kind' => $history === null ? 'comment' : 'message',
 				'language' => $language,
-				'comment' => Redactor::redact($comment),
+				'text' => Redactor::redact($text),
+				'history' => array_map(fn(array $message) => [
+					'from' => $message['direction'] === 'incoming' ? 'customer' : 'business',
+					'text' => Redactor::redact($message['text']),
+				], $history ?? []),
 				'knowledge' => array_map(fn(array $source) => [
 					'key' => $source['key'],
 					'title' => $source['title'],

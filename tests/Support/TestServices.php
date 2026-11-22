@@ -85,7 +85,7 @@ final class TestServices
 			new EventNormalizer,
 			$queue,
 			new Comments($database, $encryptor),
-			new Conversations($database, $encryptor),
+			new Conversations($database, $encryptor, new AuditLog($database)),
 		);
 	}
 
@@ -102,7 +102,7 @@ final class TestServices
 			new Decisions($database, $encryptor),
 			$queue,
 			new Comments($database, $encryptor),
-			new Conversations($database, $encryptor),
+			new Conversations($database, $encryptor, new AuditLog($database)),
 			self::actions($database, $encryptor, $queue),
 		);
 	}
@@ -137,6 +137,7 @@ final class TestServices
 			$database,
 			self::actions($database, $encryptor, $queue),
 			new Comments($database, $encryptor),
+			new Conversations($database, $encryptor, new AuditLog($database)),
 			self::knowledge($database),
 			new ReplyGenerator($client, $model),
 			$logger,

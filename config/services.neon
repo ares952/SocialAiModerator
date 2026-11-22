@@ -22,6 +22,7 @@ services:
 	- App\Ingest\EventOverview
 	- App\Comment\Comments
 	- App\Conversation\Conversations
+	- App\Conversation\Inbox
 	-
 		create: App\Queue\JobQueue
 		arguments:

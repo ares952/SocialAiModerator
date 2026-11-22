@@ -5254,5 +5254,455 @@
    "2": "Text odpovědi musí mít 1 až 1000 znaků.",
    "5": "Text odpovědi musí mít 1 až 1000 znaků."
   }
+ },
+ {
+  "key": "admin.menu.conversations",
+  "lang": "cs",
+  "translations": {
+   "1": "Zprávy",
+   "2": "Zprávy",
+   "5": "Zprávy"
+  }
+ },
+ {
+  "key": "conversations.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Zprávy",
+   "2": "Zprávy",
+   "5": "Zprávy"
+  }
+ },
+ {
+  "key": "conversations.total",
+  "lang": "cs",
+  "translations": {
+   "1": "%count% konverzace",
+   "2": "%count% konverzace",
+   "5": "%count% konverzací"
+  }
+ },
+ {
+  "key": "conversations.filter.all",
+  "lang": "cs",
+  "translations": {
+   "1": "Vše",
+   "2": "Vše",
+   "5": "Vše"
+  }
+ },
+ {
+  "key": "conversations.filter.open",
+  "lang": "cs",
+  "translations": {
+   "1": "Otevřené okno",
+   "2": "Otevřené okno",
+   "5": "Otevřené okno"
+  }
+ },
+ {
+  "key": "conversations.filter.pending",
+  "lang": "cs",
+  "translations": {
+   "1": "Čeká na schválení",
+   "2": "Čeká na schválení",
+   "5": "Čeká na schválení"
+  }
+ },
+ {
+  "key": "conversations.filter.takeover",
+  "lang": "cs",
+  "translations": {
+   "1": "Převzaté",
+   "2": "Převzaté",
+   "5": "Převzaté"
+  }
+ },
+ {
+  "key": "conversations.empty",
+  "lang": "cs",
+  "translations": {
+   "1": "Žádné konverzace.",
+   "2": "Žádné konverzace.",
+   "5": "Žádné konverzace."
+  }
+ },
+ {
+  "key": "conversations.column.account",
+  "lang": "cs",
+  "translations": {
+   "1": "Účet",
+   "2": "Účet",
+   "5": "Účet"
+  }
+ },
+ {
+  "key": "conversations.column.customer",
+  "lang": "cs",
+  "translations": {
+   "1": "Zákazník",
+   "2": "Zákazník",
+   "5": "Zákazník"
+  }
+ },
+ {
+  "key": "conversations.column.last",
+  "lang": "cs",
+  "translations": {
+   "1": "Poslední zpráva",
+   "2": "Poslední zpráva",
+   "5": "Poslední zpráva"
+  }
+ },
+ {
+  "key": "conversations.column.window",
+  "lang": "cs",
+  "translations": {
+   "1": "Okno pro odpověď",
+   "2": "Okno pro odpověď",
+   "5": "Okno pro odpověď"
+  }
+ },
+ {
+  "key": "conversations.column.state",
+  "lang": "cs",
+  "translations": {
+   "1": "Stav",
+   "2": "Stav",
+   "5": "Stav"
+  }
+ },
+ {
+  "key": "conversations.pending",
+  "lang": "cs",
+  "translations": {
+   "1": "%count% odpověď ke schválení",
+   "2": "%count% odpovědi ke schválení",
+   "5": "%count% odpovědí ke schválení"
+  }
+ },
+ {
+  "key": "conversations.window.open",
+  "lang": "cs",
+  "translations": {
+   "1": "otevřené do %time%",
+   "2": "otevřené do %time%",
+   "5": "otevřené do %time%"
+  }
+ },
+ {
+  "key": "conversations.window.closed",
+  "lang": "cs",
+  "translations": {
+   "1": "okno vypršelo",
+   "2": "okno vypršelo",
+   "5": "okno vypršelo"
+  }
+ },
+ {
+  "key": "conversations.state.takeover",
+  "lang": "cs",
+  "translations": {
+   "1": "převzato – %name%",
+   "2": "převzato – %name%",
+   "5": "převzato – %name%"
+  }
+ },
+ {
+  "key": "conversations.state.ai",
+  "lang": "cs",
+  "translations": {
+   "1": "návrhy AI",
+   "2": "návrhy AI",
+   "5": "návrhy AI"
+  }
+ },
+ {
+  "key": "conversations.back",
+  "lang": "cs",
+  "translations": {
+   "1": "Zpět na zprávy",
+   "2": "Zpět na zprávy",
+   "5": "Zpět na zprávy"
+  }
+ },
+ {
+  "key": "conversations.detail.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Konverzace #%id%",
+   "2": "Konverzace #%id%",
+   "5": "Konverzace #%id%"
+  }
+ },
+ {
+  "key": "conversations.detail.messages",
+  "lang": "cs",
+  "translations": {
+   "1": "Zprávy",
+   "2": "Zprávy",
+   "5": "Zprávy"
+  }
+ },
+ {
+  "key": "conversations.detail.hidden",
+  "lang": "cs",
+  "translations": {
+   "1": "Obsah zpráv vidí jen moderátor a administrátor.",
+   "2": "Obsah zpráv vidí jen moderátor a administrátor.",
+   "5": "Obsah zpráv vidí jen moderátor a administrátor."
+  }
+ },
+ {
+  "key": "conversations.detail.none",
+  "lang": "cs",
+  "translations": {
+   "1": "Konverzace nemá žádné zprávy.",
+   "2": "Konverzace nemá žádné zprávy.",
+   "5": "Konverzace nemá žádné zprávy."
+  }
+ },
+ {
+  "key": "conversations.detail.unsent",
+  "lang": "cs",
+  "translations": {
+   "1": "zpráva zrušená zákazníkem",
+   "2": "zpráva zrušená zákazníkem",
+   "5": "zpráva zrušená zákazníkem"
+  }
+ },
+ {
+  "key": "conversations.detail.no-text",
+  "lang": "cs",
+  "translations": {
+   "1": "bez textu (příloha)",
+   "2": "bez textu (příloha)",
+   "5": "bez textu (příloha)"
+  }
+ },
+ {
+  "key": "conversations.detail.unverified",
+  "lang": "cs",
+  "translations": {
+   "1": "čas neověřený Metou",
+   "2": "čas neověřený Metou",
+   "5": "čas neověřený Metou"
+  }
+ },
+ {
+  "key": "conversations.detail.handling",
+  "lang": "cs",
+  "translations": {
+   "1": "Kdo odpovídá",
+   "2": "Kdo odpovídá",
+   "5": "Kdo odpovídá"
+  }
+ },
+ {
+  "key": "conversations.detail.last-customer",
+  "lang": "cs",
+  "translations": {
+   "1": "Poslední zpráva zákazníka",
+   "2": "Poslední zpráva zákazníka",
+   "5": "Poslední zpráva zákazníka"
+  }
+ },
+ {
+  "key": "conversations.detail.ai-note",
+  "lang": "cs",
+  "translations": {
+   "1": "AI připravuje návrhy odpovědí; každou odpověď schvaluje člověk.",
+   "2": "AI připravuje návrhy odpovědí; každou odpověď schvaluje člověk.",
+   "5": "AI připravuje návrhy odpovědí; každou odpověď schvaluje člověk."
+  }
+ },
+ {
+  "key": "conversations.detail.takeover-note",
+  "lang": "cs",
+  "translations": {
+   "1": "Konverzaci řeší člověk: AI nepřipravuje návrhy a dříve připravené se neodešlou, dokud ji neuvolníte.",
+   "2": "Konverzaci řeší člověk: AI nepřipravuje návrhy a dříve připravené se neodešlou, dokud ji neuvolníte.",
+   "5": "Konverzaci řeší člověk: AI nepřipravuje návrhy a dříve připravené se neodešlou, dokud ji neuvolníte."
+  }
+ },
+ {
+  "key": "conversations.detail.replies",
+  "lang": "cs",
+  "translations": {
+   "1": "Odpovědi",
+   "2": "Odpovědi",
+   "5": "Odpovědi"
+  }
+ },
+ {
+  "key": "conversations.detail.no-replies",
+  "lang": "cs",
+  "translations": {
+   "1": "Zatím žádné odpovědi.",
+   "2": "Zatím žádné odpovědi.",
+   "5": "Zatím žádné odpovědi."
+  }
+ },
+ {
+  "key": "conversations.takeover",
+  "lang": "cs",
+  "translations": {
+   "1": "Převzít",
+   "2": "Převzít",
+   "5": "Převzít"
+  }
+ },
+ {
+  "key": "conversations.release",
+  "lang": "cs",
+  "translations": {
+   "1": "Uvolnit pro AI",
+   "2": "Uvolnit pro AI",
+   "5": "Uvolnit pro AI"
+  }
+ },
+ {
+  "key": "conversations.taken-over",
+  "lang": "cs",
+  "translations": {
+   "1": "Konverzaci jste převzali.",
+   "2": "Konverzaci jste převzali.",
+   "5": "Konverzaci jste převzali."
+  }
+ },
+ {
+  "key": "conversations.released",
+  "lang": "cs",
+  "translations": {
+   "1": "Konverzace je uvolněná.",
+   "2": "Konverzace je uvolněná.",
+   "5": "Konverzace je uvolněná."
+  }
+ },
+ {
+  "key": "conversations.message.title",
+  "lang": "cs",
+  "translations": {
+   "1": "Vlastní odpověď",
+   "2": "Vlastní odpověď",
+   "5": "Vlastní odpověď"
+  }
+ },
+ {
+  "key": "conversations.message.text",
+  "lang": "cs",
+  "translations": {
+   "1": "Text zprávy",
+   "2": "Text zprávy",
+   "5": "Text zprávy"
+  }
+ },
+ {
+  "key": "conversations.message.send",
+  "lang": "cs",
+  "translations": {
+   "1": "Odeslat",
+   "2": "Odeslat",
+   "5": "Odeslat"
+  }
+ },
+ {
+  "key": "conversations.message.queued",
+  "lang": "cs",
+  "translations": {
+   "1": "Zpráva čeká na odeslání.",
+   "2": "Zpráva čeká na odeslání.",
+   "5": "Zpráva čeká na odeslání."
+  }
+ },
+ {
+  "key": "conversations.message.window-closed",
+  "lang": "cs",
+  "translations": {
+   "1": "Okno pro odpověď vypršelo; zprávu teď nelze poslat.",
+   "2": "Okno pro odpověď vypršelo; zprávu teď nelze poslat.",
+   "5": "Okno pro odpověď vypršelo; zprávu teď nelze poslat."
+  }
+ },
+ {
+  "key": "action.type.message",
+  "lang": "cs",
+  "translations": {
+   "1": "Odpovědět na zprávu",
+   "2": "Odpovědět na zprávu",
+   "5": "Odpovědět na zprávu"
+  }
+ },
+ {
+  "key": "actions.open-conversation",
+  "lang": "cs",
+  "translations": {
+   "1": "Konverzace #%id%",
+   "2": "Konverzace #%id%",
+   "5": "Konverzace #%id%"
+  }
+ },
+ {
+  "key": "events.detail.conversation",
+  "lang": "cs",
+  "translations": {
+   "1": "Konverzace",
+   "2": "Konverzace",
+   "5": "Konverzace"
+  }
+ },
+ {
+  "key": "decision.reason.window_expired",
+  "lang": "cs",
+  "translations": {
+   "1": "okno pro odpověď vypršelo",
+   "2": "okno pro odpověď vypršelo",
+   "5": "okno pro odpověď vypršelo"
+  }
+ },
+ {
+  "key": "decision.reason.human_takeover",
+  "lang": "cs",
+  "translations": {
+   "1": "konverzaci převzal člověk",
+   "2": "konverzaci převzal člověk",
+   "5": "konverzaci převzal člověk"
+  }
+ },
+ {
+  "key": "decision.reason.message_deleted",
+  "lang": "cs",
+  "translations": {
+   "1": "zákazník zprávu zrušil",
+   "2": "zákazník zprávu zrušil",
+   "5": "zákazník zprávu zrušil"
+  }
+ },
+ {
+  "key": "audit.action.conversation.takeover",
+  "lang": "cs",
+  "translations": {
+   "1": "Převzetí konverzace",
+   "2": "Převzetí konverzace",
+   "5": "Převzetí konverzace"
+  }
+ },
+ {
+  "key": "audit.action.conversation.release",
+  "lang": "cs",
+  "translations": {
+   "1": "Uvolnění konverzace",
+   "2": "Uvolnění konverzace",
+   "5": "Uvolnění konverzace"
+  }
+ },
+ {
+  "key": "audit.action.conversation.content.view",
+  "lang": "cs",
+  "translations": {
+   "1": "Zobrazení konverzace",
+   "2": "Zobrazení konverzace",
+   "5": "Zobrazení konverzace"
+  }
  }
 ]

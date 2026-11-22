@@ -1,0 +1,105 @@
+{import '@blocks.latte'}
+{varType Nette\Database\Row $conversation}
+{varType list<array{id: int, direction: string, text: ?string, sent_at: ?DateTimeInterface, created_at: DateTimeInterface, deleted: bool}> $messages}
+{varType list<Nette\Database\Row> $actions}
+{varType array<int, string|null> $replies}
+{varType int|null $draft}
+{varType bool $canRead}
+{varType bool $canAct}
+{varType bool $observe}
+
+{block content}
+<div class="mb-2">
+	<a n:href="default">&larr; {_'conversations.back'}</a>
+</div>
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+	<h1 class="h3 mb-0 me-auto" n:block="title">{_'conversations.detail.title', 1, [id => $conversation->id]}</h1>
+	<span class="badge badge-platform badge-{$conversation->platform}">{_"platform.{$conversation->platform}"}</span>
+	{include window, conversation: $conversation}
+	{include state, conversation: $conversation}
+</div>
+
+<div class="row g-3">
+	<div class="col-lg-7">
+		<div class="card mb-3">
+			<div class="card-header">{_'conversations.detail.messages'}</div>
+			<div class="card-body">
+				{if !$canRead}
+					<p class="text-body-secondary mb-0">{_'conversations.detail.hidden'}</p>
+				{elseif $messages === []}
+					<p class="text-body-secondary mb-0">{_'conversations.detail.none'}</p>
+				{else}
+					<div n:foreach="$messages as $message" n:class="'mb-2 d-flex', $message['direction'] === 'outgoing' ? 'justify-content-end'">
+						<div n:class="'rounded px-3 py-2 border', $message['direction'] === 'outgoing' ? 'bg-primary-subtle' : 'bg-body-tertiary'" style="max-width: 85%">
+							{if $message['deleted']}
+								<em class="text-body-secondary">{_'conversations.detail.unsent'}</em>
+							{elseif $message['text'] === null}
+								<em class="text-body-secondary">{_'conversations.detail.no-text'}</em>
+							{else}
+								<div class="customer-text">{$message['text']}</div>
+							{/if}
+							<div class="small text-body-secondary mt-1">
+								{($message['sent_at'] ?? $message['created_at'])|localTime}
+								{if $message['sent_at'] === null} · {_'conversations.detail.unverified'}{/if}
+							</div>
+						</div>
+					</div>
+					<p class="small text-body-secondary mt-2 mb-0">{_'events.detail.content.audited'}</p>
+				{/if}
+			</div>
+		</div>
+
+		<div n:if="$canAct && !$observe" class="card mb-3">
+			<div class="card-header">{_'conversations.message.title'}</div>
+			<div class="card-body">
+				{if $conversation->window_open}
+					{control messageForm}
+				{else}
+					<p class="text-body-secondary mb-0">{_'conversations.message.window-closed'}</p>
+				{/if}
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-5">
+		<div class="card mb-3">
+			<div class="card-header d-flex flex-wrap align-items-center gap-2">
+				<span class="me-auto">{_'conversations.detail.handling'}</span>
+				{if $canRead}
+					{if $conversation->human_takeover_at === null}
+						<a class="btn btn-sm btn-outline-primary" n:href="takeover!, id: $conversation->id">{_'conversations.takeover'}</a>
+					{else}
+						<a class="btn btn-sm btn-outline-secondary" n:href="release!, id: $conversation->id">{_'conversations.release'}</a>
+					{/if}
+				{/if}
+			</div>
+			<div class="card-body small">
+				<dl class="row mb-0">
+					<dt class="col-sm-5">{_'conversations.column.account'}</dt>
+					<dd class="col-sm-7">{$conversation->account_name}</dd>
+					<dt class="col-sm-5">{_'conversations.column.customer'}</dt>
+					<dd class="col-sm-7 text-break">{$conversation->customer_external_id}</dd>
+					<dt class="col-sm-5">{_'conversations.detail.last-customer'}</dt>
+					<dd class="col-sm-7">{if $conversation->last_customer_message_at !== null}{$conversation->last_customer_message_at|localTime}{else}—{/if}</dd>
+				</dl>
+				<p class="text-body-secondary mt-2 mb-0">{_($conversation->human_takeover_at === null ? 'conversations.detail.ai-note' : 'conversations.detail.takeover-note')}</p>
+			</div>
+		</div>
+
+		<div class="card mb-3">
+			<div class="card-header">{_'conversations.detail.replies'}</div>
+			<div n:if="$canAct && $observe" class="card-body border-bottom small text-body-secondary">{_'events.detail.actions.observe'}</div>
+			{if $actions === []}
+				<div class="card-body">
+					<p class="text-body-secondary mb-0">{_'conversations.detail.no-replies'}</p>
+				</div>
+			{else}
+				<ul class="list-group list-group-flush">
+					{foreach $actions as $action}
+						{include '../@action.latte', action: $action, replies: $replies, draft: $draft, canRead: $canRead, canAct: $canAct, observe: $observe, id: $conversation->id}
+					{/foreach}
+				</ul>
+			{/if}
+		</div>
+	</div>
+</div>

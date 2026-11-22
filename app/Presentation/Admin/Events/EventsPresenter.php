@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Presentation\Admin\Events;
 
-use App\Ai\ReplyGenerator;
 use App\Audit\AuditAction;
 use App\Audit\AuditLog;
 use App\Comment\Comments;
+use App\Conversation\Conversations;
 use App\Ingest\EventOverview;
 use App\Ingest\EventStatus;
 use App\Ingest\EventStore;
@@ -18,10 +18,9 @@ use App\Moderation\Mode;
 use App\Moderation\Policies;
 use App\Outbox\Actions;
 use App\Outbox\ActionType;
-use App\Outbox\InvalidAction;
 use App\Operator\Authorization;
+use App\Presentation\Admin\ActionReview;
 use App\Presentation\Admin\AdminPresenter;
-use Nette\Application\UI\Form;
 use Nette\Database\Row;
 use Nette\Utils\Paginator;
 
@@ -34,6 +33,8 @@ use Nette\Utils\Paginator;
  */
 final class EventsPresenter extends AdminPresenter
 {
+	use ActionReview;
+
 	private const PerPage = 50;
 
 
@@ -46,6 +47,7 @@ final class EventsPresenter extends AdminPresenter
 		private readonly Comments $comments,
 		private readonly Actions $actions,
 		private readonly Policies $policies,
+		private readonly Conversations $conversations,
 	) {
 		parent::__construct();
 	}
@@ -81,34 +83,16 @@ final class EventsPresenter extends AdminPresenter
 		$decisions = $this->decisions->forEvent($id);
 		$comment = $this->comment($event);
 		$actions = $comment === null ? [] : $this->actions->forComment($comment->id);
+		[$replies, $draft] = $this->replyTexts($actions, $canRead);
 
 		$content = null;
 		$explanations = [];
-		$replies = [];
 		if ($canRead) {
 			$content = $this->store->normalized($id);
 			foreach ($decisions as $decision) {
 				$explanations[$decision->id] = $this->decisions->reason($decision);
 			}
-			foreach ($actions as $action) {
-				$replies[$action->id] = $this->actions->text($action);
-			}
 			$this->audit->write($this->operatorId(), AuditAction::EventContentView, 'event', $id);
-		}
-
-		// The pending reply with a draft is approved through the form, possibly edited.
-		$draft = null;
-		foreach ($actions as $action) {
-			if ($action->type === ActionType::Reply->value && $action->status === 'pending' && ($replies[$action->id] ?? null) !== null) {
-				$draft = $action->id;
-				$form = $this->getComponent('replyForm');
-				assert($form instanceof Form);
-				$form->setDefaults([
-					'action' => $action->id,
-					'text' => $replies[$action->id],
-				]);
-				break;
-			}
 		}
 
 		$this->template->setParameters([
@@ -124,49 +108,13 @@ final class EventsPresenter extends AdminPresenter
 				&& $content->text !== null
 				&& !$this->decisions->classified($id),
 			'comment' => $comment,
+			'conversationId' => $this->conversationId($event),
 			'actions' => $actions,
 			'replies' => $replies,
 			'draft' => $draft,
 			'canAct' => $canRead && $this->getUser()->isAllowed(Authorization::Actions, Authorization::Edit),
 			'observe' => $this->policies->active()->mode === Mode::Observe,
 		]);
-	}
-
-
-	/**
-	 * Approval of a reply draft, with the text as the moderator left it.
-	 */
-	protected function createComponentReplyForm(): Form
-	{
-		$form = $this->forms->create();
-		$form->addHidden('action');
-		$form->addTextArea('text', 'events.detail.actions.reply-text', rows: 4)
-			->setRequired('form.error.required')
-			->setMaxLength(ReplyGenerator::MaxLength);
-		$form->addSubmit('approve', 'events.detail.actions.approve-reply');
-
-		$form->onSuccess[] = function (Form $form): void {
-			$values = $form->getValues();
-			$this->act(
-				(int) $this->getParameter('id'),
-				fn(int $operatorId) => $this->actions->approve((int) $values['action'], $operatorId, (string) $values['text']),
-				'events.detail.actions.approved',
-			);
-		};
-
-		return $form;
-	}
-
-
-	public function handleApprove(int $id, int $action): void
-	{
-		$this->act($id, fn(int $operatorId) => $this->actions->approve($action, $operatorId), 'events.detail.actions.approved');
-	}
-
-
-	public function handleReject(int $id, int $action): void
-	{
-		$this->act($id, fn(int $operatorId) => $this->actions->reject($action, $operatorId), 'events.detail.actions.rejected');
 	}
 
 
@@ -183,22 +131,22 @@ final class EventsPresenter extends AdminPresenter
 	}
 
 
-	/**
-	 * @param \Closure(int): mixed $change
-	 */
-	private function act(int $id, \Closure $change, string $message): void
+	protected function reviewedActions(): Actions
 	{
-		$this->requireAllowed(Authorization::Events, Authorization::Edit);
-		$this->requireAllowed(Authorization::Actions, Authorization::Edit);
-		try {
-			$change($this->operatorId());
-			$this->flashMessage($message, 'success');
-		} catch (InvalidAction $e) {
-			$this->flashMessage($e->getMessage(), 'danger');
-		}
-		$this->redirect('detail', [
-			'id' => $id,
-		]);
+		return $this->actions;
+	}
+
+
+	/**
+	 * Conversation of a customer message event; null for other events or before the projection.
+	 */
+	private function conversationId(Row $event): ?int
+	{
+		$message = $event->account_id !== null && $event->external_id !== null && $event->event_type === EventType::MessageReceived->value
+			? $this->conversations->message($event->account_id, $event->external_id)
+			: null;
+
+		return $message === null ? null : (int) $message->conversation_id;
 	}
 
 

@@ -192,7 +192,7 @@ test('automatic mode with auto hide queues the action without a human', function
 
 	$dispatcher->send($row->outbox_id, lastAttempt: false);
 	Assert::same('sent', $action($id)->status);
-	Assert::same('fb:c3', $meta->writes[2]['comment']);
+	Assert::same('fb:c3', $meta->writes[2]['comment'] ?? null);
 });
 
 

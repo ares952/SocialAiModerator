@@ -16,7 +16,8 @@ use Nette\StaticClass;
  *   evaluation results;
  * - moderator: also edits knowledge drafts and the evaluation samples (and sees their texts),
  *   reads the customer content of events with the AI explanation (Events + Edit), and approves,
- *   rejects or requests hiding and unhiding of comments (Actions + Edit);
+ *   rejects or requests hiding and unhiding of comments (Actions + Edit), reads conversations,
+ *   takes them over and releases them (Conversations + Edit);
  * - admin: everything, including publishing knowledge, policies, the panic switch, evaluation
  *   runs, accounts, operators, the audit log and the retention periods.
  */
@@ -27,6 +28,7 @@ final class Authorization
 	public const Dashboard = 'dashboard';
 	public const Events = 'events';
 	public const Actions = 'actions';
+	public const Conversations = 'conversations';
 	public const Operators = 'operators';
 	public const Policy = 'policy';
 	public const Knowledge = 'knowledge';
@@ -51,6 +53,7 @@ final class Authorization
 			self::Dashboard,
 			self::Events,
 			self::Actions,
+			self::Conversations,
 			self::Policy,
 			self::Knowledge,
 			self::Evaluation,
@@ -66,6 +69,7 @@ final class Authorization
 			self::Evaluation,
 			self::Events,
 			self::Actions,
+			self::Conversations,
 		], self::Edit);
 		$acl->allow(Role::Admin->value);
 

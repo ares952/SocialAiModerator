@@ -7,6 +7,7 @@ namespace App\Moderation;
 use App\Comment\Visibility;
 use App\Outbox\ActionTarget;
 use App\Outbox\ActionType;
+use App\Outbox\ConversationTarget;
 
 /**
  * Deterministic decision about a classified comment or message (specification §5.4). The model's
@@ -68,7 +69,7 @@ final class PolicyEngine
 	 * replying always need a human. A comment that is removed or already in the requested state is
 	 * not touched; the account's own comment and a comment edited since the action was created are
 	 * neither hidden nor answered, a hidden comment is not answered and a comment gets at most one
-	 * reply.
+	 * reply. A reply to a private message follows conversationBlocks().
 	 *
 	 * @return list<string>
 	 */
@@ -77,7 +78,7 @@ final class PolicyEngine
 		bool $approvedByHuman,
 		Policy $policy,
 		AutomationContext $context,
-		ActionTarget $target,
+		ActionTarget|ConversationTarget $target,
 	): array {
 		$blocked = [];
 		if ($policy->mode === Mode::Observe) {
@@ -102,6 +103,21 @@ final class PolicyEngine
 			$blocked[] = 'account_inactive';
 		}
 
+		return [
+			...$blocked,
+			...($target instanceof ConversationTarget
+				? $this->conversationBlocks($type, $target)
+				: $this->commentBlocks($type, $target)),
+		];
+	}
+
+
+	/**
+	 * @return list<string>
+	 */
+	private function commentBlocks(ActionType $type, ActionTarget $target): array
+	{
+		$blocked = [];
 		$visibility = $target->visibility;
 		$state = match (true) {
 			$visibility === Visibility::Removed => 'comment_removed',
@@ -120,6 +136,37 @@ final class PolicyEngine
 			$blocked[] = 'comment_changed';
 		}
 		if ($type === ActionType::Reply && $target->replied) {
+			$blocked[] = 'already_replied';
+		}
+
+		return $blocked;
+	}
+
+
+	/**
+	 * A private message is only answered: inside the standard window at the moment of sending,
+	 * at most once, never after the customer unsent it, and an AI text never while an operator
+	 * has taken the conversation over. HUMAN_AGENT is never used, so there is no longer window.
+	 *
+	 * @return list<string>
+	 */
+	private function conversationBlocks(ActionType $type, ConversationTarget $target): array
+	{
+		if ($type !== ActionType::Reply) {
+			throw new \LogicException("A private message cannot be {$type->value}.");
+		}
+
+		$blocked = [];
+		if (!$target->windowOpen) {
+			$blocked[] = 'window_expired';
+		}
+		if ($target->takenOver && $target->drafted) {
+			$blocked[] = 'human_takeover';
+		}
+		if ($target->deleted) {
+			$blocked[] = 'message_deleted';
+		}
+		if ($target->replied) {
 			$blocked[] = 'already_replied';
 		}
 

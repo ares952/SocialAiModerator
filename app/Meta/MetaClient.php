@@ -33,4 +33,16 @@ interface MetaClient
 	 * @throws MetaWriteUnavailable nothing was sent
 	 */
 	public function replyComment(Platform $platform, AccessToken $token, string $commentId, #[\SensitiveParameter] string $text): string;
+
+
+	/**
+	 * Sends a private message to a customer inside the standard window (Messenger or Instagram
+	 * Direct). Never with the HUMAN_AGENT tag.
+	 *
+	 * @param string $recipientId PSID or IGSID with the platform prefix
+	 * @return string ID of the message with the platform prefix
+	 * @throws MetaFailure
+	 * @throws MetaWriteUnavailable nothing was sent
+	 */
+	public function sendMessage(Platform $platform, AccessToken $token, string $recipientId, #[\SensitiveParameter] string $text): string;
 }

@@ -59,3 +59,10 @@ test('moderation actions: viewers read, moderators approve and request', functio
 	Assert::true($acl->isAllowed('moderator', Authorization::Actions, Authorization::Edit));
 	Assert::false($acl->isAllowed('moderator', Authorization::Actions, Authorization::Manage));
 });
+
+
+test('conversations: viewers see metadata, moderators read, take over and release', function () use ($acl): void {
+	Assert::true($acl->isAllowed('viewer', Authorization::Conversations, Authorization::View));
+	Assert::false($acl->isAllowed('viewer', Authorization::Conversations, Authorization::Edit));
+	Assert::true($acl->isAllowed('moderator', Authorization::Conversations, Authorization::Edit));
+});
